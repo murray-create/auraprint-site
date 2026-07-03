@@ -89,6 +89,16 @@ input[type=range]{accent-color:var(--magenta);height:34px}
 
 /* products */
 section.products{padding:90px 0}
+.cat-tabs{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:30px}
+.cat-tab{padding:12px 26px;border-radius:999px;font-weight:700;font-size:15px;border:2px solid var(--ink);background:transparent;cursor:pointer;transition:.2s;font-family:'Inter',sans-serif}
+.cat-tab:hover{background:var(--ink);color:#fff}
+.cat-tab.active{background:var(--aura);border-color:transparent;color:#fff;box-shadow:0 8px 24px rgba(236,72,153,.35)}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:30px}
+.chips a{font-size:13.5px;font-weight:600;padding:7px 16px;border-radius:999px;background:#fff;border:1px solid #e5ded5;transition:.2s}
+.chips a:hover{border-color:var(--violet);color:var(--violet)}
+.cat-panel{display:none}
+.cat-panel.active{display:block}
+.cat-desc{color:#6b6560;margin-bottom:18px;max-width:640px}
 .sec-head{display:flex;justify-content:space-between;align-items:end;margin-bottom:44px;gap:20px;flex-wrap:wrap}
 .sec-head h2{font-size:clamp(30px,4vw,48px)}
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:26px}
@@ -235,20 +245,64 @@ footer li a:hover{color:#fff}
   <div class="wrap">
     <div class="sec-head">
       <div>
-        <h2>Price it. Print it. <span class="grad-text">Love it.</span></h2>
-        <p style="color:#6b6560;margin-top:10px">Every product below has live online pricing and artwork checks built in.</p>
+        <h2>Shop by <span class="grad-text">category</span></h2>
+        <p style="color:#6b6560;margin-top:10px">Every product has live online pricing or a fast quote, with artwork checks built in.</p>
       </div>
       <a class="btn btn-ghost" href="#">All products</a>
     </div>
-    <div class="grid">
-      <a class="card" href="#"><div class="thumb">🪪</div><div class="body"><h3>Business Cards</h3><p>350gsm to NV Velvet luxury with Spot UV and metallics.</p><div class="from">from <em>$89</em></div></div><div class="go">→</div></a>
-      <a class="card" href="#"><div class="thumb">🚩</div><div class="body"><h3>Pull Up Banners</h3><p>Economy to premium bases, print that pops indoors and out.</p><div class="from">from <em>$208</em></div></div><div class="go">→</div></a>
-      <a class="card" href="#"><div class="thumb">🪧</div><div class="body"><h3>Corflute Signs</h3><p>Real estate, site signage and event boards, any size.</p><div class="from">from <em>$67</em></div></div><div class="go">→</div></a>
-      <a class="card" href="#"><div class="thumb">📄</div><div class="body"><h3>Flyers & Brochures</h3><p>DL to A3, folded or flat, letterbox-ready.</p><div class="from">from <em>$156</em></div></div><div class="go">→</div></a>
-      <a class="card" href="#"><div class="thumb">📚</div><div class="body"><h3>Booklets</h3><p>Saddle stitched, wire and perfect bound, 8 to 200+ pages.</p><div class="from">get a quote</div></div><div class="go">→</div></a>
-      <a class="card" href="#"><div class="thumb">🏷️</div><div class="body"><h3>Stickers & Labels</h3><p>Sheets, rolls, die-cut shapes, indoor and outdoor.</p><div class="from">get a quote</div></div><div class="go">→</div></a>
-      <a class="card" href="#"><div class="thumb">☕</div><div class="body"><h3>Promo Products</h3><p>10,000+ branded items: mugs, pens, totes, tech and more.</p><div class="from">browse range</div></div><div class="go">→</div></a>
-      <a class="card" href="#"><div class="thumb">👕</div><div class="body"><h3>Apparel & Workwear</h3><p>Uniforms, hi-vis and merch, decorated your way.</p><div class="from">browse range</div></div><div class="go">→</div></a>
+
+    <div class="cat-tabs" role="tablist">
+      <button class="cat-tab active" data-cat="print">Print</button>
+      <button class="cat-tab" data-cat="signage">Signage &amp; Display</button>
+      <button class="cat-tab" data-cat="promo">Promo &amp; Apparel</button>
+    </div>
+
+    <!-- PRINT -->
+    <div class="cat-panel active" id="panel-print">
+      <p class="cat-desc">Small format print, fulfilled through Australia's biggest trade networks. Cards, marketing material and bound books with instant online pricing.</p>
+      <div class="chips">
+        <a href="#">Business Cards</a><a href="#">NV Velvet Cards</a><a href="#">Flyers</a><a href="#">Brochures</a><a href="#">Postcards</a><a href="#">Letterheads</a><a href="#">Envelopes</a><a href="#">Presentation Folders</a><a href="#">Menus</a><a href="#">Greeting Cards</a><a href="#">Booklets</a><a href="#">Perfect Bound Books</a><a href="#">Invoice Books (NCR)</a><a href="#">Notepads</a><a href="#">Calendars</a><a href="#">Loyalty Cards</a>
+      </div>
+      <div class="grid">
+        <a class="card" href="#"><div class="thumb">🪪</div><div class="body"><h3>Business Cards</h3><p>350gsm to NV Velvet luxury with Spot UV and metallics.</p><div class="from">from <em>$89</em></div></div><div class="go">→</div></a>
+        <a class="card" href="#"><div class="thumb">📄</div><div class="body"><h3>Flyers &amp; Brochures</h3><p>DL to A3, folded or flat, letterbox-ready.</p><div class="from">from <em>$156</em></div></div><div class="go">→</div></a>
+        <a class="card" href="#"><div class="thumb">📚</div><div class="body"><h3>Booklets</h3><p>Saddle stitched, wire and perfect bound, 8 to 200+ pages.</p><div class="from">get a quote</div></div><div class="go">→</div></a>
+        <a class="card" href="#"><div class="thumb">✉️</div><div class="body"><h3>Stationery</h3><p>Letterheads, envelopes and with-comps that match your brand.</p><div class="from">from <em>$120</em></div></div><div class="go">→</div></a>
+        <a class="card" href="#"><div class="thumb">🗂️</div><div class="body"><h3>Presentation Folders</h3><p>Gloss, matt or velvet with business card slits.</p><div class="from">get a quote</div></div><div class="go">→</div></a>
+        <a class="card" href="#"><div class="thumb">🧾</div><div class="body"><h3>Invoice Books (NCR)</h3><p>Duplicate and triplicate carbonless books, numbered.</p><div class="from">get a quote</div></div><div class="go">→</div></a>
+      </div>
+    </div>
+
+    <!-- SIGNAGE -->
+    <div class="cat-panel" id="panel-signage">
+      <p class="cat-desc">Wide format is our specialty. Site signage, banners, flags and event displays printed tough for Queensland conditions.</p>
+      <div class="chips">
+        <a href="#">Corflute Signs</a><a href="#">A-Frames</a><a href="#">Aluminium Composite</a><a href="#">Safety Signs</a><a href="#">Posters</a><a href="#">Stickers &amp; Labels</a><a href="#">Magnets</a><a href="#">Pull Up Banners</a><a href="#">Outdoor Banners</a><a href="#">Teardrop Flags</a><a href="#">Fence Mesh</a><a href="#">Exhibition Displays</a><a href="#">Media Walls</a><a href="#">Marquees</a><a href="#">Standees</a>
+      </div>
+      <div class="grid">
+        <a class="card" href="#"><div class="thumb">🪧</div><div class="body"><h3>Corflute Signs</h3><p>Real estate, site signage and event boards, any size.</p><div class="from">from <em>$67</em></div></div><div class="go">→</div></a>
+        <a class="card" href="#"><div class="thumb">🚩</div><div class="body"><h3>Pull Up Banners</h3><p>Economy to premium bases, print that pops indoors and out.</p><div class="from">from <em>$208</em></div></div><div class="go">→</div></a>
+        <a class="card" href="#"><div class="thumb">🏁</div><div class="body"><h3>Teardrop Flags</h3><p>Single or double sided with ground and base options.</p><div class="from">get a quote</div></div><div class="go">→</div></a>
+        <a class="card" href="#"><div class="thumb">🏷️</div><div class="body"><h3>Stickers &amp; Labels</h3><p>Sheets, rolls, die-cut shapes, indoor and outdoor.</p><div class="from">get a quote</div></div><div class="go">→</div></a>
+        <a class="card" href="#"><div class="thumb">🖼️</div><div class="body"><h3>Posters</h3><p>Offset and wide format, A2 to billboard scale.</p><div class="from">from <em>$45</em></div></div><div class="go">→</div></a>
+        <a class="card" href="#"><div class="thumb">🎪</div><div class="body"><h3>Events &amp; Display</h3><p>Media walls, marquees, tablecloths and exhibition kits.</p><div class="from">get a quote</div></div><div class="go">→</div></a>
+      </div>
+    </div>
+
+    <!-- PROMO -->
+    <div class="cat-panel" id="panel-promo">
+      <p class="cat-desc">10,000+ branded products with live stock from our supplier network, decorated your way. Browse the full catalogue on-site, no redirects.</p>
+      <div class="chips">
+        <a href="#">Mugs &amp; Cups</a><a href="#">Bottles &amp; Tumblers</a><a href="#">Stubby Coolers</a><a href="#">Tote Bags</a><a href="#">Keyrings</a><a href="#">Pens</a><a href="#">Notebooks</a><a href="#">Lanyards</a><a href="#">Tech &amp; USB</a><a href="#">Eco Range</a><a href="#">Tees &amp; Polos</a><a href="#">Hoodies &amp; Jackets</a><a href="#">Hi-Vis &amp; Workwear</a><a href="#">Caps &amp; Hats</a><a href="#">Uniforms</a>
+      </div>
+      <div class="grid">
+        <a class="card" href="#"><div class="thumb">☕</div><div class="body"><h3>Drinkware</h3><p>Mugs, bottles, tumblers and stubby coolers, branded to pop.</p><div class="from">browse range</div></div><div class="go">→</div></a>
+        <a class="card" href="#"><div class="thumb">🖊️</div><div class="body"><h3>Pens &amp; Office</h3><p>The classics that never stop working for your brand.</p><div class="from">browse range</div></div><div class="go">→</div></a>
+        <a class="card" href="#"><div class="thumb">👕</div><div class="body"><h3>Tees &amp; Polos</h3><p>Retail-quality apparel, printed or embroidered.</p><div class="from">browse range</div></div><div class="go">→</div></a>
+        <a class="card" href="#"><div class="thumb">🦺</div><div class="body"><h3>Hi-Vis &amp; Workwear</h3><p>Compliant workwear and uniforms, decorated your way.</p><div class="from">browse range</div></div><div class="go">→</div></a>
+        <a class="card" href="#"><div class="thumb">🧢</div><div class="body"><h3>Caps &amp; Hats</h3><p>Embroidered caps, truckers and brims for every crew.</p><div class="from">browse range</div></div><div class="go">→</div></a>
+        <a class="card" href="#"><div class="thumb">🌱</div><div class="body"><h3>Eco Range</h3><p>Sustainable merch that says something about your brand.</p><div class="from">browse range</div></div><div class="go">→</div></a>
+      </div>
     </div>
   </div>
 </section>
@@ -333,6 +387,15 @@ function render(){
 sel.addEventListener('change',render); qty.addEventListener('input',render); render();
 // marquee duplicate for seamless loop
 const m=document.getElementById('marq'); m.innerHTML+=m.innerHTML;
+// category tabs
+document.querySelectorAll('.cat-tab').forEach(tab=>{
+  tab.addEventListener('click',()=>{
+    document.querySelectorAll('.cat-tab').forEach(t=>t.classList.remove('active'));
+    document.querySelectorAll('.cat-panel').forEach(p=>p.classList.remove('active'));
+    tab.classList.add('active');
+    document.getElementById('panel-'+tab.dataset.cat).classList.add('active');
+  });
+});
 </script>
 </body>
 </html>
