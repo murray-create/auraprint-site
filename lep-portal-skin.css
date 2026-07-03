@@ -1,0 +1,284 @@
+/* ============================================================
+   AURA PRINT & PROMO - LEP Print Portal custom skin
+   Target: https://printportal.cloud/wl/159459 (Bootstrap 3 + AngularJS)
+   Usage: host publicly, paste URL into Print Portal > Style URL.
+   Loads AFTER the portal's own CSS, so overrides cascade cleanly.
+   ============================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Archivo+Black&family=Inter:wght@400;500;600;700&display=swap');
+
+:root {
+  --aura-ink: #0F0F10;
+  --aura-paper: #FAF8F5;
+  --aura-violet: #7C3AED;
+  --aura-magenta: #EC4899;
+  --aura-orange: #F97316;
+  --aura-gradient: linear-gradient(90deg, #7C3AED 0%, #EC4899 50%, #F97316 100%);
+  --aura-grey: #6B6B70;
+  --aura-line: #E5E1DB;
+  --aura-radius: 10px;
+}
+
+/* ---------- Base ---------- */
+
+body {
+  background: var(--aura-paper) !important;
+  font-family: 'Inter', -apple-system, sans-serif !important;
+  color: var(--aura-ink) !important;
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+#mc.container {
+  max-width: 100%;
+  padding-top: 8px;
+}
+
+/* ---------- Header / navbar ---------- */
+
+.navbar-default {
+  background: var(--aura-ink) !important;
+  border: none !important;
+  border-radius: var(--aura-radius);
+  position: relative;
+  overflow: hidden;
+}
+
+/* signature aura gradient strip along the navbar base */
+.navbar-default::after {
+  content: '';
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  height: 4px;
+  background: var(--aura-gradient);
+}
+
+.navbar-default .navbar-brand,
+.navbar-default h4,
+.navbar-default .ng-binding {
+  color: #fff !important;
+}
+
+.navbar-default .nav-pills > li > a {
+  color: #fff !important;
+  font-weight: 600;
+  border-radius: 999px;
+  transition: background .2s ease;
+}
+
+.navbar-default .nav-pills > li > a:hover,
+.navbar-default .nav-pills > li.active > a {
+  background: var(--aura-violet) !important;
+  color: #fff !important;
+}
+
+/* ---------- Headings ---------- */
+
+h1, h2, h3, h4, legend, .jobH4 {
+  font-family: 'Archivo Black', 'Inter', sans-serif !important;
+  color: var(--aura-ink) !important;
+  letter-spacing: -0.01em;
+  text-transform: uppercase;
+}
+
+h4.jobH4 {
+  font-size: 20px;
+  padding-bottom: 6px;
+  border-bottom: 3px solid;
+  border-image: linear-gradient(90deg, #7C3AED, #EC4899, #F97316) 1;
+  display: inline-block;
+}
+
+legend {
+  border-bottom: 2px solid var(--aura-line) !important;
+  font-size: 17px !important;
+  padding-bottom: 8px;
+}
+
+/* ---------- Forms ---------- */
+
+.form-horizontal .control-label {
+  color: var(--aura-ink) !important;
+  font-weight: 600 !important;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.form-control,
+input[type="text"],
+input[type="number"],
+select,
+textarea {
+  background: #fff !important;
+  border: 1.5px solid var(--aura-line) !important;
+  border-radius: var(--aura-radius) !important;
+  color: var(--aura-ink) !important;
+  box-shadow: none !important;
+  height: 42px;
+  font-size: 15px !important;
+  transition: border-color .15s ease, box-shadow .15s ease;
+}
+
+textarea { height: auto; }
+
+.form-control:focus,
+input:focus,
+select:focus {
+  border-color: var(--aura-violet) !important;
+  box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.18) !important;
+  outline: none !important;
+}
+
+.input-group-addon {
+  background: var(--aura-ink) !important;
+  color: #fff !important;
+  border: 1.5px solid var(--aura-ink) !important;
+  border-radius: var(--aura-radius) !important;
+  font-weight: 600;
+  font-size: 13px;
+}
+
+.input-group .form-control:first-child,
+.input-group-addon:first-child {
+  border-top-right-radius: 0 !important;
+  border-bottom-right-radius: 0 !important;
+}
+
+.input-group .form-control:last-child,
+.input-group-addon:last-child {
+  border-top-left-radius: 0 !important;
+  border-bottom-left-radius: 0 !important;
+}
+
+.radio-inline, .checkbox-inline, label {
+  color: var(--aura-ink);
+  font-weight: 500;
+}
+
+input[type="radio"], input[type="checkbox"] {
+  accent-color: var(--aura-violet);
+  width: 16px;
+  height: 16px;
+}
+
+/* ---------- Buttons ---------- */
+
+.btn {
+  border-radius: 999px !important;
+  font-weight: 700 !important;
+  font-size: 14px !important;
+  padding: 9px 22px !important;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  transition: transform .12s ease, box-shadow .12s ease, filter .12s ease;
+  border: none !important;
+}
+
+.btn:hover { transform: translateY(-1px); }
+.btn:active { transform: translateY(0); }
+
+/* primary action - aura gradient */
+.btn-success,
+.btn-primary {
+  background: var(--aura-gradient) !important;
+  color: #fff !important;
+  box-shadow: 0 4px 14px rgba(236, 72, 153, 0.35) !important;
+}
+
+.btn-success:hover,
+.btn-primary:hover {
+  filter: brightness(1.08);
+  box-shadow: 0 6px 20px rgba(236, 72, 153, 0.45) !important;
+}
+
+/* secondary - ink outline */
+.btn-default {
+  background: transparent !important;
+  color: var(--aura-ink) !important;
+  box-shadow: inset 0 0 0 2px var(--aura-ink) !important;
+}
+
+.btn-default:hover {
+  background: var(--aura-ink) !important;
+  color: #fff !important;
+}
+
+.btn-danger {
+  background: #DC2626 !important;
+  color: #fff !important;
+}
+
+/* ---------- Panels / wells / tables ---------- */
+
+.panel, .well {
+  background: #fff !important;
+  border: 1px solid var(--aura-line) !important;
+  border-radius: var(--aura-radius) !important;
+  box-shadow: 0 2px 10px rgba(15, 15, 16, 0.05) !important;
+}
+
+.panel-heading {
+  background: var(--aura-ink) !important;
+  color: #fff !important;
+  border-radius: var(--aura-radius) var(--aura-radius) 0 0 !important;
+  font-family: 'Archivo Black', sans-serif;
+  text-transform: uppercase;
+}
+
+.table > thead > tr > th {
+  background: var(--aura-ink);
+  color: #fff;
+  border: none;
+  text-transform: uppercase;
+  font-size: 12px;
+  letter-spacing: 0.05em;
+}
+
+.table > tbody > tr:hover { background: #F3EFFF; }
+
+/* ---------- Price / totals - oversized numerals ---------- */
+
+[class*="price"], [class*="total"], [class*="Total"] {
+  font-family: 'Archivo Black', sans-serif;
+  font-size: 1.35em;
+  color: var(--aura-ink);
+}
+
+/* ---------- Links / misc ---------- */
+
+a {
+  color: var(--aura-violet);
+  font-weight: 600;
+}
+
+a:hover {
+  color: var(--aura-magenta);
+  text-decoration: none;
+}
+
+fieldset { margin-bottom: 18px; }
+
+.alert-info {
+  background: #F3EFFF !important;
+  border: 1px solid var(--aura-violet) !important;
+  color: var(--aura-ink) !important;
+  border-radius: var(--aura-radius) !important;
+}
+
+.alert-danger {
+  border-radius: var(--aura-radius) !important;
+}
+
+/* progress indicators, if present */
+.progress { border-radius: 999px; }
+.progress-bar { background: var(--aura-gradient) !important; }
+
+/* ---------- Scrollbar polish ---------- */
+
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: var(--aura-paper); }
+::-webkit-scrollbar-thumb {
+  background: var(--aura-ink);
+  border-radius: 999px;
+}
