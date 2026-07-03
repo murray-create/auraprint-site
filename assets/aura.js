@@ -64,9 +64,9 @@ const FOOTER = `
       <div><h4>Products</h4><ul><li><a href="business-cards.html">Business Cards</a></li><li><a href="flyers.html">Flyers</a></li><li><a href="corflute-signs.html">Corflute Signs</a></li><li><a href="pull-up-banners.html">Pull Up Banners</a></li><li><a href="signage.html">Stickers</a></li><li><a href="promo.html">Promo Products</a></li><li><a href="promo.html">Workwear</a></li></ul></div>
       <div><h4>Company</h4><ul><li><a href="about.html">About</a></li><li><a href="#">Portfolio</a></li><li><a href="#">Reviews</a></li><li><a href="blog.html">Blog</a></li><li><a href="art-setup.html">Artwork Setup Guide</a></li><li><a href="trade-terms.html">Terms of Trade</a></li><li><a href="privacy-policy.html">Privacy Policy</a></li><li><a href="refund-policy.html">Refunds &amp; Reprints</a></li></ul></div>
       <div><h4>Contact</h4><ul>
-        <li>3/1 Packer Road, Baringa QLD 4551</li>
+        <li>4/1 Packer Road, Baringa QLD 4551</li>
         <li><a href="tel:1300291277">1300 291 277</a></li>
-        <li><a href="mailto:hello@auraprint.com.au">hello@auraprint.com.au</a></li>
+        <li><a class="email-link" data-u="admin" data-d="auraprint.com.au"></a></li>
         <li>Mon-Fri 8:30am - 5pm</li>
         <li style="margin-top:10px"><b style="color:#fff">Need it fast? Ask about express options.</b></li>
       </ul></div>
@@ -89,6 +89,15 @@ const FOOTER = `
   </div>
 </div>`;
 
+/* Spam-resistant email links: assembled in JS so the address never appears in the HTML source */
+function fillEmails(){
+  document.querySelectorAll('a.email-link').forEach(function(a){
+    var em = (a.dataset.u || 'admin') + String.fromCharCode(64) + (a.dataset.d || 'auraprint.com.au');
+    a.href = 'mai' + 'lto:' + em;
+    if (!a.textContent.trim()) a.textContent = em;
+  });
+}
+
 document.addEventListener('DOMContentLoaded', function(){
   document.body.insertAdjacentHTML('afterbegin', HEADER);
 
@@ -101,10 +110,12 @@ document.addEventListener('DOMContentLoaded', function(){
     s.setAttribute('crossorigin', '*');
     document.head.appendChild(s);
     document.body.insertAdjacentHTML('beforeend', FOOTER.replace(/<button id="aura-chat-btn"[\s\S]*$/, ''));
+    fillEmails();
     const m0=document.getElementById('marq'); if(m0) m0.innerHTML+=m0.innerHTML;
     return;
   }
   document.body.insertAdjacentHTML('beforeend', FOOTER);
+  fillEmails();
 
   /* ---------- chat bot (demo brain - production version will be AI-powered) ---------- */
   const body=document.getElementById('chat-body'), quick=document.getElementById('chat-quick'),
