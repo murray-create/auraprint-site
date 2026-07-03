@@ -1,0 +1,18 @@
+{
+  "print": {
+    "name": "Print",
+    "slug": "print",
+    "hero": "PRINT THAT WORKS AS HARD AS YOU DO",
+    "heroAccent": "WORKS AS HARD AS YOU DO",
+    "intro": "Small format print fulfilled through Australia's biggest trade networks: instant pricing, human preflight checks, and a proof you approve before anything hits the press.",
+    "subcats": ["Cards & Stationery", "Marketing Material", "Books & Booklets"]
+  },
+  "signage": {
+    "name": "Signage & Display",
+    "slug": "signage",
+    "hero": "WIDE FORMAT IS OUR HOME TURF",
+    "heroAccent": "OUR HOME TURF",
+    "intro": "This is what we do in-house, every day. Site signage, banners, flags and event displays printed tough for Queensland sun, wind and weather.",
+    "subcats": ["Signs & Stickers", "Banners & Flags", "Events & Display"]
+  }
+}

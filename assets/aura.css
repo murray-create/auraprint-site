@@ -149,8 +149,28 @@ footer li a:hover{color:#fff}
 .chat-input input:focus{outline:none;border-color:var(--violet)}
 .chat-input button{width:44px;height:44px;border-radius:50%;background:var(--aura);color:#fff;border:none;cursor:pointer;font-size:17px}
 
+/* photo-first cards */
+.card .thumb.photo{padding:0;background:#fff}
+.card .thumb.photo img{width:100%;height:100%;object-fit:cover;transition:transform .45s ease}
+.card:hover .thumb.photo img{transform:scale(1.05)}
+.cardfoot{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.cardtag{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;
+  background:var(--aura);-webkit-background-clip:text;background-clip:text;color:transparent;white-space:nowrap}
+
+/* configurator layout (product pages) */
+.config{display:grid;grid-template-columns:1fr 1fr;gap:50px;padding:60px 0}
+.gallery .main{aspect-ratio:4/3;background:#efe9e1;border-radius:20px;display:flex;align-items:center;justify-content:center;font-size:110px;border:1px solid #ece6de;overflow:hidden}
+.gallery .main.photo{background:#fff}
+.gallery .main.photo img{width:100%;height:100%;object-fit:cover}
+.trust{display:flex;gap:20px;margin-top:20px;font-size:13.5px;font-weight:600;color:#6b6560;flex-wrap:wrap}
+.trust span b{color:var(--ink)}
+h1.prod{font-size:clamp(28px,3.4vw,42px);margin-bottom:10px}
+.optlabel{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#555;margin:22px 0 10px}
+.split{display:grid;grid-template-columns:1fr 1fr;gap:50px}
+
 @media(max-width:900px){
   .navlinks{display:none}
   footer .cols{grid-template-columns:1fr 1fr}
   .split{grid-template-columns:1fr !important}
+  .config{grid-template-columns:1fr}
 }

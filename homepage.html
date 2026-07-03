@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en-AU">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Printing & Promotional Products Sunshine Coast | Aura Print & Promo</title>
+<meta name="description" content="Instant online print pricing. Business cards, banners, corflute signs and 10,000+ promo products. Sunshine Coast owned, Australia-wide delivery.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#0F0F10; --paper:#FAF8F5; --violet:#7C3AED; --magenta:#EC4899; --orange:#F97316;
+  --aura:linear-gradient(100deg,var(--violet),var(--magenta) 55%,var(--orange));
+  --radius:14px;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:'Inter',sans-serif;background:var(--paper);color:var(--ink);line-height:1.6}
+h1,h2,h3,.display{font-family:'Archivo Black',sans-serif;line-height:1.05;letter-spacing:-.01em}
+a{color:inherit;text-decoration:none}
+img{max-width:100%;display:block}
+.wrap{max-width:1240px;margin:0 auto;padding:0 24px}
+.grad-text{background:var(--aura);-webkit-background-clip:text;background-clip:text;color:transparent}
+.btn{display:inline-block;padding:14px 28px;border-radius:999px;font-weight:700;font-size:15px;transition:.25s;cursor:pointer;border:none}
+.btn-aura{background:var(--aura);color:#fff;box-shadow:0 8px 30px rgba(236,72,153,.35)}
+.btn-aura:hover{transform:translateY(-2px);box-shadow:0 14px 40px rgba(236,72,153,.5)}
+.btn-ghost{border:2px solid var(--ink);color:var(--ink)}
+.btn-ghost:hover{background:var(--ink);color:#fff}
+
+/* utility bar */
+.util{background:var(--ink);color:#fff;font-size:13px}
+.util .wrap{display:flex;justify-content:space-between;align-items:center;height:38px}
+.util a{opacity:.85}.util a:hover{opacity:1}
+.util .left,.util .right{display:flex;gap:22px;align-items:center}
+.util .tag{background:var(--aura);-webkit-background-clip:text;background-clip:text;color:transparent;font-weight:700}
+
+/* nav */
+nav.main{position:sticky;top:0;background:rgba(250,248,245,.92);backdrop-filter:blur(10px);border-bottom:1px solid #e8e2da;z-index:100}
+nav.main .wrap{display:flex;align-items:center;gap:34px;height:74px}
+.logo{font-family:'Archivo Black',sans-serif;font-size:24px}
+.logo span{background:var(--aura);-webkit-background-clip:text;background-clip:text;color:transparent}
+.navlinks{display:flex;gap:28px;font-weight:600;font-size:15px;flex:1}
+.navlinks>div{position:relative;padding:26px 0;cursor:pointer}
+.navlinks>div:hover>a{color:var(--magenta)}
+.mega{position:absolute;top:100%;left:-20px;background:#fff;border:1px solid #eee;border-radius:var(--radius);
+  box-shadow:0 30px 60px rgba(15,15,16,.14);padding:28px;display:none;gap:40px;min-width:560px}
+.navlinks>div:hover .mega{display:flex}
+.mega h4{font-size:12px;text-transform:uppercase;letter-spacing:.1em;color:var(--magenta);margin-bottom:12px}
+.mega ul{list-style:none}
+.mega li{padding:5px 0;font-weight:500;font-size:14.5px;white-space:nowrap}
+.mega li a:hover{color:var(--violet)}
+.nav-cta{display:flex;gap:12px;align-items:center}
+
+/* hero */
+.hero{position:relative;overflow:hidden;padding:90px 0 70px;background:var(--ink);color:#fff}
+.hero::before{content:"";position:absolute;width:900px;height:900px;border-radius:50%;
+  background:radial-gradient(circle,rgba(124,58,237,.55),rgba(236,72,153,.25) 45%,transparent 70%);
+  top:-320px;right:-220px;filter:blur(10px);animation:pulse 8s ease-in-out infinite alternate}
+@keyframes pulse{to{transform:scale(1.15) rotate(8deg)}}
+.hero .wrap{position:relative;display:grid;grid-template-columns:1.15fr .85fr;gap:60px;align-items:center}
+.hero h1{font-size:clamp(40px,5.6vw,72px);margin:18px 0 22px}
+.kicker{display:inline-block;font-size:13px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;
+  border:1px solid rgba(255,255,255,.25);padding:8px 16px;border-radius:999px;color:#f3d9ff}
+.hero p.lead{font-size:19px;color:#cfc9c2;max-width:520px;margin-bottom:34px}
+.hero .actions{display:flex;gap:16px;flex-wrap:wrap}
+.stats{display:flex;gap:44px;margin-top:52px}
+.stats b{font-family:'Archivo Black',sans-serif;font-size:30px;display:block}
+.stats span{font-size:13px;color:#a8a29b}
+
+/* quoter */
+.quoter{background:#fff;color:var(--ink);border-radius:20px;padding:30px;box-shadow:0 40px 80px rgba(0,0,0,.45)}
+.quoter h3{font-size:19px;margin-bottom:4px}
+.quoter .sub{font-size:13px;color:#777;margin-bottom:20px}
+.quoter label{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#555;display:block;margin:14px 0 6px}
+.quoter select,.quoter input[type=range]{width:100%}
+.quoter select{padding:12px;border:2px solid #e8e2da;border-radius:10px;font-size:15px;font-weight:600;background:#fff}
+.qty-row{display:flex;justify-content:space-between;font-weight:700;font-size:14px;margin-top:6px}
+.price-box{margin-top:22px;background:var(--paper);border-radius:14px;padding:18px 20px;display:flex;justify-content:space-between;align-items:center}
+.price-box .from{font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:#777}
+.price-box .amount{font-family:'Archivo Black',sans-serif;font-size:34px}
+.price-box .gst{font-size:12px;color:#777}
+.quoter .btn{width:100%;text-align:center;margin-top:18px}
+input[type=range]{accent-color:var(--magenta);height:34px}
+
+/* marquee */
+.marquee{background:var(--aura);color:#fff;overflow:hidden;padding:12px 0;font-weight:700;font-size:14px;letter-spacing:.12em;text-transform:uppercase}
+.marquee .track{display:flex;gap:48px;white-space:nowrap;animation:scroll 28s linear infinite;width:max-content}
+@keyframes scroll{to{transform:translateX(-50%)}}
+
+/* products */
+section.products{padding:90px 0}
+.cat-tabs{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:30px}
+.cat-tab{padding:12px 26px;border-radius:999px;font-weight:700;font-size:15px;border:2px solid var(--ink);background:transparent;cursor:pointer;transition:.2s;font-family:'Inter',sans-serif}
+.cat-tab:hover{background:var(--ink);color:#fff}
+.cat-tab.active{background:var(--aura);border-color:transparent;color:#fff;box-shadow:0 8px 24px rgba(236,72,153,.35)}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:30px}
+.chips a{font-size:13.5px;font-weight:600;padding:7px 16px;border-radius:999px;background:#fff;border:1px solid #e5ded5;transition:.2s}
+.chips a:hover{border-color:var(--violet);color:var(--violet)}
+.cat-panel{display:none}
+.cat-panel.active{display:block}
+.cat-desc{color:#6b6560;margin-bottom:18px;max-width:640px}
+.sec-head{display:flex;justify-content:space-between;align-items:end;margin-bottom:44px;gap:20px;flex-wrap:wrap}
+.sec-head h2{font-size:clamp(30px,4vw,48px)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:26px}
+.card{background:#fff;border-radius:var(--radius);overflow:hidden;border:1px solid #ece6de;transition:.3s;position:relative}
+.card:hover{transform:translateY(-6px);box-shadow:0 24px 50px rgba(15,15,16,.12)}
+.card .thumb{aspect-ratio:4/3;background:#efe9e1;display:flex;align-items:center;justify-content:center;font-size:52px}
+.card .body{padding:20px 22px 24px}
+.card h3{font-size:18px;margin-bottom:6px}
+.card p{font-size:14px;color:#6b6560;margin-bottom:12px}
+.card .from{font-weight:800;font-size:15px}
+.card .from em{font-style:normal;background:var(--aura);-webkit-background-clip:text;background-clip:text;color:transparent}
+.card .go{position:absolute;top:14px;right:14px;background:var(--ink);color:#fff;width:34px;height:34px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;opacity:0;transition:.3s}
+.card:hover .go{opacity:1}
+
+/* trust band */
+.band{background:var(--ink);color:#fff;padding:80px 0}
+.band .wrap{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center}
+.band h2{font-size:clamp(28px,3.6vw,44px);margin-bottom:18px}
+.band p{color:#b8b2ab;margin-bottom:14px}
+.reviews{display:grid;gap:16px}
+.review{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:var(--radius);padding:20px 22px;font-size:14.5px}
+.review .stars{color:#FBBF24;letter-spacing:2px;margin-bottom:8px}
+.review b{display:block;margin-top:10px;font-size:13px;color:#d8d2cb}
+
+/* steps */
+.steps{padding:90px 0}
+.steps .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:30px;margin-top:40px}
+.step{background:#fff;border:1px solid #ece6de;border-radius:var(--radius);padding:30px}
+.step .num{font-family:'Archivo Black',sans-serif;font-size:44px;background:var(--aura);-webkit-background-clip:text;background-clip:text;color:transparent}
+.step h3{font-size:19px;margin:12px 0 8px}
+.step p{font-size:14.5px;color:#6b6560}
+
+/* footer */
+footer{background:var(--ink);color:#fff;padding:70px 0 30px}
+footer .cols{display:grid;grid-template-columns:2fr 1fr 1fr 1.4fr;gap:44px;margin-bottom:50px}
+footer h4{font-size:13px;text-transform:uppercase;letter-spacing:.12em;color:#f3d9ff;margin-bottom:16px}
+footer ul{list-style:none}
+footer li{padding:4px 0;font-size:14px;color:#b8b2ab}
+footer li a:hover{color:#fff}
+.newsletter{display:flex;gap:10px;margin-top:14px}
+.newsletter input{flex:1;padding:12px 16px;border-radius:999px;border:none;font-size:14px}
+.legal{border-top:1px solid rgba(255,255,255,.12);padding-top:22px;font-size:12.5px;color:#8a847d;display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px}
+
+@media(max-width:900px){
+  .hero .wrap,.band .wrap{grid-template-columns:1fr}
+  .steps .grid3{grid-template-columns:1fr}
+  footer .cols{grid-template-columns:1fr 1fr}
+  .navlinks{display:none}
+}
+</style>
+</head>
+<body>
+
+<div class="util">
+  <div class="wrap">
+    <div class="left">
+      <a href="tel:1300291277"><b>1300 291 277</b></a>
+      <a href="#">WhatsApp</a>
+      <a href="#">Upload artwork</a>
+    </div>
+    <div class="right">
+      <span class="tag">Sunshine Coast owned. Australia-wide delivery.</span>
+      <a href="#">Track order</a>
+    </div>
+  </div>
+</div>
+
+<nav class="main">
+  <div class="wrap">
+    <a class="logo" href="#">AURA<span>PRINT</span></a>
+    <div class="navlinks">
+      <div><a href="#">Print ▾</a>
+        <div class="mega">
+          <div><h4>Cards & Stationery</h4><ul><li><a href="#">Business Cards</a></li><li><a href="#">NV Velvet Cards</a></li><li><a href="#">Letterheads</a></li><li><a href="#">Envelopes</a></li><li><a href="#">Loyalty Cards</a></li></ul></div>
+          <div><h4>Marketing</h4><ul><li><a href="#">Flyers</a></li><li><a href="#">Brochures</a></li><li><a href="#">Postcards</a></li><li><a href="#">Presentation Folders</a></li><li><a href="#">Menus</a></li></ul></div>
+          <div><h4>Books & Booklets</h4><ul><li><a href="#">Saddle Stitched Booklets</a></li><li><a href="#">Perfect Bound Books</a></li><li><a href="#">Invoice Books (NCR)</a></li><li><a href="#">Notepads</a></li><li><a href="#">Calendars</a></li></ul></div>
+        </div>
+      </div>
+      <div><a href="#">Signage & Display ▾</a>
+        <div class="mega">
+          <div><h4>Signs</h4><ul><li><a href="#">Corflute Signs</a></li><li><a href="#">A-Frames</a></li><li><a href="#">Posters</a></li><li><a href="#">Stickers & Labels</a></li><li><a href="#">Magnets</a></li></ul></div>
+          <div><h4>Banners & Flags</h4><ul><li><a href="#">Pull Up Banners</a></li><li><a href="#">Outdoor Banners</a></li><li><a href="#">Teardrop Flags</a></li><li><a href="#">Fence Mesh</a></li></ul></div>
+          <div><h4>Events & Display</h4><ul><li><a href="#">Exhibition Displays</a></li><li><a href="#">Media Walls</a></li><li><a href="#">Marquees</a></li><li><a href="#">Printed Tablecloths</a></li></ul></div>
+        </div>
+      </div>
+      <div><a href="#">Promo & Apparel ▾</a>
+        <div class="mega">
+          <div><h4>Drinkware & Gifts</h4><ul><li><a href="#">Mugs & Cups</a></li><li><a href="#">Bottles & Tumblers</a></li><li><a href="#">Stubby Coolers</a></li><li><a href="#">Tote Bags</a></li></ul></div>
+          <div><h4>Apparel</h4><ul><li><a href="#">Tees & Polos</a></li><li><a href="#">Hoodies</a></li><li><a href="#">Hi-Vis & Workwear</a></li><li><a href="#">Caps & Hats</a></li></ul></div>
+          <div><h4>Office & Tech</h4><ul><li><a href="#">Pens</a></li><li><a href="#">Notebooks</a></li><li><a href="#">Lanyards</a></li><li><a href="#">Eco Range</a></li></ul></div>
+        </div>
+      </div>
+      <div><a href="#quoter">Instant Price</a></div>
+      <div><a href="#">About</a></div>
+      <div><a href="#">Blog</a></div>
+    </div>
+    <div class="nav-cta">
+      <a class="btn btn-ghost" href="#" style="padding:10px 20px">Login</a>
+      <a class="btn btn-aura" href="#quoter" style="padding:10px 22px">Get a Quote</a>
+    </div>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="wrap">
+    <div>
+      <span class="kicker">Printing the City of Colour since day one</span>
+      <h1>BOLD PRINT.<br><span class="grad-text">INSTANT PRICES.</span><br>ZERO GUESSWORK.</h1>
+      <p class="lead">Business cards to building-wrap banners, plus 10,000+ promotional products. Price it online in seconds, approve your proof, and we handle the rest.</p>
+      <div class="actions">
+        <a class="btn btn-aura" href="#quoter">Price my job now</a>
+        <a class="btn btn-ghost" href="#products" style="border-color:#fff;color:#fff">Browse products</a>
+      </div>
+      <div class="stats">
+        <div><b class="grad-text">10,000+</b><span>promo products</span></div>
+        <div><b class="grad-text">Next day</b><span>express turnaround</span></div>
+        <div><b class="grad-text">100%</b><span>Australian owned</span></div>
+      </div>
+    </div>
+
+    <div class="quoter" id="quoter">
+      <h3>Get an instant price</h3>
+      <div class="sub">Live pricing. No email required.</div>
+      <label for="prod">Product</label>
+      <select id="prod"></select>
+      <label for="qty">Quantity</label>
+      <input type="range" id="qty" min="0" max="4" step="1" value="1">
+      <div class="qty-row"><span id="qtyLabel">500</span><span id="specLabel"></span></div>
+      <div class="price-box">
+        <div><div class="from">Your price</div><div class="gst">inc. GST, ex. delivery</div></div>
+        <div class="amount grad-text" id="price">$0</div>
+      </div>
+      <button class="btn btn-aura">Order this online →</button>
+    </div>
+  </div>
+</header>
+
+<div class="marquee"><div class="track" id="marq">
+  <span>Business Cards</span><span>✺</span><span>Pull Up Banners</span><span>✺</span><span>Corflute Signs</span><span>✺</span><span>Flyers</span><span>✺</span><span>Stickers</span><span>✺</span><span>Teardrop Flags</span><span>✺</span><span>Booklets</span><span>✺</span><span>Mugs & Merch</span><span>✺</span><span>Workwear</span><span>✺</span>
+</div></div>
+
+<section class="products" id="products">
+  <div class="wrap">
+    <div class="sec-head">
+      <div>
+        <h2>Shop by <span class="grad-text">category</span></h2>
+        <p style="color:#6b6560;margin-top:10px">Every product has live online pricing or a fast quote, with artwork checks built in.</p>
+      </div>
+      <a class="btn btn-ghost" href="#">All products</a>
+    </div>
+
+    <div class="cat-tabs" role="tablist">
+      <button class="cat-tab active" data-cat="print">Print</button>
+      <button class="cat-tab" data-cat="signage">Signage &amp; Display</button>
+      <button class="cat-tab" data-cat="promo">Promo &amp; Apparel</button>
+    </div>
+
+    <!-- PRINT -->
+    <div class="cat-panel active" id="panel-print">
+      <p class="cat-desc">Small format print, fulfilled through Australia's biggest trade networks. Cards, marketing material and bound books with instant online pricing.</p>
+      <div class="chips">
+        <a href="#">Business Cards</a><a href="#">NV Velvet Cards</a><a href="#">Flyers</a><a href="#">Brochures</a><a href="#">Postcards</a><a href="#">Letterheads</a><a href="#">Envelopes</a><a href="#">Presentation Folders</a><a href="#">Menus</a><a href="#">Greeting Cards</a><a href="#">Booklets</a><a href="#">Perfect Bound Books</a><a href="#">Invoice Books (NCR)</a><a href="#">Notepads</a><a href="#">Calendars</a><a href="#">Loyalty Cards</a>
+      </div>
+      <div class="grid">
+        <a class="card" href="#"><div class="thumb">🪪</div><div class="body"><h3>Business Cards</h3><p>350gsm to NV Velvet luxury with Spot UV and metallics.</p><div class="from">from <em>$89</em></div></div><div class="go">→</div></a>
+        <a class="card" href="#"><div class="thumb">📄</div><div class="body"><h3>Flyers &amp; Brochures</h3><p>DL to A3, folded or flat, letterbox-ready.</p><div class="from">from <em>$156</em></div></div><div class="go">→</div></a>
+        <a class="card" href="#"><div class="thumb">📚</div><div class="body"><h3>Booklets</h3><p>Saddle stitched, wire and perfect bound, 8 to 200+ pages.</p><div class="from">get a quote</div></div><div class="go">→</div></a>
+        <a class="card" href="#"><div class="thumb">✉️</div><div class="body"><h3>Stationery</h3><p>Letterheads, envelopes and with-comps that match your brand.</p><div class="from">from <em>$120</em></div></div><div class="go">→</div></a>
+        <a class="card" href="#"><div class="thumb">🗂️</div><div class="body"><h3>Presentation Folders</h3><p>Gloss, matt or velvet with business card slits.</p><div class="from">get a quote</div></div><div class="go">→</div></a>
+        <a class="card" href="#"><div class="thumb">🧾</div><div class="body"><h3>Invoice Books (NCR)</h3><p>Duplicate and triplicate carbonless books, numbered.</p><div class="from">get a quote</div></div><div class="go">→</div></a>
+      </div>
+    </div>
+
+    <!-- SIGNAGE -->
+    <div class="cat-panel" id="panel-signage">
+      <p class="cat-desc">Wide format is our specialty. Site signage, banners, flags and event displays printed tough for Queensland conditions.</p>
+      <div class="chips">
+        <a href="#">Corflute Signs</a><a href="#">A-Frames</a><a href="#">Aluminium Composite</a><a href="#">Safety Signs</a><a href="#">Posters</a><a href="#">Stickers &amp; Labels</a><a href="#">Magnets</a><a href="#">Pull Up Banners</a><a href="#">Outdoor Banners</a><a href="#">Teardrop Flags</a><a href="#">Fence Mesh</a><a href="#">Exhibition Displays</a><a href="#">Media Walls</a><a href="#">Marquees</a><a href="#">Standees</a>
+      </div>
+      <div class="grid">
+        <a class="card" href="#"><div class="thumb">🪧</div><div class="body"><h3>Corflute Signs</h3><p>Real estate, site signage and event boards, any size.</p><div class="from">from <em>$67</em></div></div><div class="go">→</div></a>
+        <a class="card" href="#"><div class="thumb">🚩</div><div class="body"><h3>Pull Up Banners</h3><p>Economy to premium bases, print that pops indoors and out.</p><div class="from">from <em>$208</em></div></div><div class="go">→</div></a>
+        <a class="card" href="#"><div class="thumb">🏁</div><div class="body"><h3>Teardrop Flags</h3><p>Single or double sided with ground and base options.</p><div class="from">get a quote</div></div><div class="go">→</div></a>
+        <a class="card" href="#"><div class="thumb">🏷️</div><div class="body"><h3>Stickers &amp; Labels</h3><p>Sheets, rolls, die-cut shapes, indoor and outdoor.</p><div class="from">get a quote</div></div><div class="go">→</div></a>
+        <a class="card" href="#"><div class="thumb">🖼️</div><div class="body"><h3>Posters</h3><p>Offset and wide format, A2 to billboard scale.</p><div class="from">from <em>$45</em></div></div><div class="go">→</div></a>
+        <a class="card" href="#"><div class="thumb">🎪</div><div class="body"><h3>Events &amp; Display</h3><p>Media walls, marquees, tablecloths and exhibition kits.</p><div class="from">get a quote</div></div><div class="go">→</div></a>
+      </div>
+    </div>
+
+    <!-- PROMO -->
+    <div class="cat-panel" id="panel-promo">
+      <p class="cat-desc">10,000+ branded products with live stock from our supplier network, decorated your way. Browse the full catalogue on-site, no redirects.</p>
+      <div class="chips">
+        <a href="#">Mugs &amp; Cups</a><a href="#">Bottles &amp; Tumblers</a><a href="#">Stubby Coolers</a><a href="#">Tote Bags</a><a href="#">Keyrings</a><a href="#">Pens</a><a href="#">Notebooks</a><a href="#">Lanyards</a><a href="#">Tech &amp; USB</a><a href="#">Eco Range</a><a href="#">Tees &amp; Polos</a><a href="#">Hoodies &amp; Jackets</a><a href="#">Hi-Vis &amp; Workwear</a><a href="#">Caps &amp; Hats</a><a href="#">Uniforms</a>
+      </div>
+      <div class="grid">
+        <a class="card" href="#"><div class="thumb">☕</div><div class="body"><h3>Drinkware</h3><p>Mugs, bottles, tumblers and stubby coolers, branded to pop.</p><div class="from">browse range</div></div><div class="go">→</div></a>
+        <a class="card" href="#"><div class="thumb">🖊️</div><div class="body"><h3>Pens &amp; Office</h3><p>The classics that never stop working for your brand.</p><div class="from">browse range</div></div><div class="go">→</div></a>
+        <a class="card" href="#"><div class="thumb">👕</div><div class="body"><h3>Tees &amp; Polos</h3><p>Retail-quality apparel, printed or embroidered.</p><div class="from">browse range</div></div><div class="go">→</div></a>
+        <a class="card" href="#"><div class="thumb">🦺</div><div class="body"><h3>Hi-Vis &amp; Workwear</h3><p>Compliant workwear and uniforms, decorated your way.</p><div class="from">browse range</div></div><div class="go">→</div></a>
+        <a class="card" href="#"><div class="thumb">🧢</div><div class="body"><h3>Caps &amp; Hats</h3><p>Embroidered caps, truckers and brims for every crew.</p><div class="from">browse range</div></div><div class="go">→</div></a>
+        <a class="card" href="#"><div class="thumb">🌱</div><div class="body"><h3>Eco Range</h3><p>Sustainable merch that says something about your brand.</p><div class="from">browse range</div></div><div class="go">→</div></a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="band">
+  <div class="wrap">
+    <div>
+      <h2>Strength, experience and a <span class="grad-text">reputation to print on.</span></h2>
+      <p>We are wide-format specialists based in Baringa on the Sunshine Coast, backed by Australia's biggest trade print networks. That means big-brand capability with a local's accountability.</p>
+      <p>Every job gets a human check, a digital proof for your approval, and a turnaround promise we actually keep. Need it next day? Say the word.</p>
+      <a class="btn btn-aura" href="#" style="margin-top:14px">Meet the team</a>
+    </div>
+    <div class="reviews">
+      <div class="review"><div class="stars">★★★★★</div>"Ordered corflutes at 4pm, picked them up next morning. Unreal quality and the price beat everyone online." <b>— Local real estate agency</b></div>
+      <div class="review"><div class="stars">★★★★★</div>"The velvet business cards get comments in every meeting. The online proof process made it painless." <b>— Sunshine Coast consultant</b></div>
+      <div class="review"><div class="stars">★★★★★</div>"One supplier for our uniforms, signage and flyers. Aura just handles it." <b>— Café owner, Caloundra</b></div>
+    </div>
+  </div>
+</section>
+
+<section class="steps">
+  <div class="wrap">
+    <h2 style="font-size:clamp(28px,3.6vw,44px)">From idea to delivered in <span class="grad-text">four steps</span></h2>
+    <div class="grid3">
+      <div class="step"><div class="num">01</div><h3>Price it instantly</h3><p>Pick your product, spec and quantity. See your price live, no waiting on emails.</p></div>
+      <div class="step"><div class="num">02</div><h3>Upload artwork</h3><p>Send print-ready files or use our templates. Our preflight checks catch problems early.</p></div>
+      <div class="step"><div class="num">03</div><h3>Approve your proof</h3><p>A digital proof lands in your inbox. Nothing prints until you say so.</p></div>
+      <div class="step"><div class="num">04</div><h3>Printed & delivered</h3><p>Pickup in Baringa or delivery Australia-wide. Express next-day options available.</p></div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="cols">
+      <div>
+        <a class="logo" href="#" style="color:#fff">AURA<span>PRINT</span></a>
+        <p style="color:#b8b2ab;font-size:14px;margin-top:14px">Bold print and promotional products from the Sunshine Coast, delivered Australia-wide.</p>
+        <h4 style="margin-top:24px">Get 10% off your first order</h4>
+        <div class="newsletter"><input type="email" placeholder="Your email address"><button class="btn btn-aura" style="padding:12px 22px">Join</button></div>
+      </div>
+      <div><h4>Products</h4><ul><li><a href="#">Business Cards</a></li><li><a href="#">Flyers</a></li><li><a href="#">Corflute Signs</a></li><li><a href="#">Pull Up Banners</a></li><li><a href="#">Stickers</a></li><li><a href="#">Promo Products</a></li><li><a href="#">Workwear</a></li></ul></div>
+      <div><h4>Company</h4><ul><li><a href="#">About</a></li><li><a href="#">Portfolio</a></li><li><a href="#">Reviews</a></li><li><a href="#">Blog</a></li><li><a href="#">Artwork Setup Guides</a></li><li><a href="#">Terms of Trade</a></li><li><a href="#">Privacy</a></li></ul></div>
+      <div><h4>Contact</h4><ul>
+        <li>3/1 Packer Road, Baringa QLD 4551</li>
+        <li><a href="tel:1300291277">1300 291 277</a></li>
+        <li><a href="mailto:hello@auraprint.com.au">hello@auraprint.com.au</a></li>
+        <li>Mon-Fri 8:30am - 5pm</li>
+        <li style="margin-top:10px"><b style="color:#fff">Need it fast? Next-day express available.</b></li>
+      </ul></div>
+    </div>
+    <div class="legal">
+      <span>© 2026 Aura Print & Promo. 100% Australian owned.</span>
+      <span>ABN 00 000 000 000 | Sunshine Coast, QLD</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+// Demo pricing data mirrors the pricing-engine seed (illustrative prices, inc GST display).
+const PRODUCTS = {
+  'Business Cards 350gsm Matt 2S': {spec:'90x55mm, printed 2 sides', qtys:[250,500,750,1000,2000], prices:[75,89,107,124,246]},
+  'NV Velvet Business Cards':      {spec:'450gsm Artboard, NV 2S',   qtys:[250,500,750,1000,2000], prices:[189,254,318,381,758]},
+  'A5 Flyers 150gsm Gloss':        {spec:'A5, printed 2 sides',      qtys:[500,1000,1500,2500,5000], prices:[156,213,268,363,720]},
+  'Corflute Signs 900x600':        {spec:'5mm corflute, 1 side',     qtys:[1,5,10,20,50], prices:[67,273,458,905,2244]},
+  'Premium Pull Up Banner':        {spec:'850x2000mm inc. carry bag',qtys:[1,2,5,10,20], prices:[208,404,915,1804,3564]},
+};
+const sel=document.getElementById('prod'), qty=document.getElementById('qty'),
+      qtyLabel=document.getElementById('qtyLabel'), price=document.getElementById('price'),
+      specLabel=document.getElementById('specLabel');
+Object.keys(PRODUCTS).forEach(k=>{const o=document.createElement('option');o.textContent=k;sel.appendChild(o);});
+function render(){
+  const p=PRODUCTS[sel.value], i=+qty.value;
+  qtyLabel.textContent=p.qtys[i].toLocaleString()+' units';
+  specLabel.textContent=p.spec;
+  // animated counter
+  const target=p.prices[i]; const start=parseFloat(price.dataset.v||0); const t0=performance.now();
+  function tick(t){const k=Math.min(1,(t-t0)/350);const v=start+(target-start)*k;
+    price.textContent='$'+Math.round(v).toLocaleString();if(k<1)requestAnimationFrame(tick);else price.dataset.v=target;}
+  requestAnimationFrame(tick);
+}
+sel.addEventListener('change',render); qty.addEventListener('input',render); render();
+// marquee duplicate for seamless loop
+const m=document.getElementById('marq'); m.innerHTML+=m.innerHTML;
+// category tabs
+document.querySelectorAll('.cat-tab').forEach(tab=>{
+  tab.addEventListener('click',()=>{
+    document.querySelectorAll('.cat-tab').forEach(t=>t.classList.remove('active'));
+    document.querySelectorAll('.cat-panel').forEach(p=>p.classList.remove('active'));
+    tab.classList.add('active');
+    document.getElementById('panel-'+tab.dataset.cat).classList.add('active');
+  });
+});
+</script>
+</body>
+</html>

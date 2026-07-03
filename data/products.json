@@ -1,0 +1,1625 @@
+[
+ {
+  "slug": "business-cards",
+  "name": "Business Cards",
+  "cat": "print",
+  "sub": "Cards & Stationery",
+  "icon": "🪪",
+  "badge": "Most popular",
+  "desc": "90x55mm. From everyday 350gsm to thick NV Velvet with Spot UV and metallic foil.",
+  "seo": "Business Cards Sunshine Coast - Instant Online Pricing",
+  "from": 89,
+  "portal": true,
+  "template": "business-cards",
+  "opts": [
+   {
+    "label": "Stock",
+    "g": "stock",
+    "choices": [
+     {
+      "n": "350gsm Matt Laminate",
+      "m": 1,
+      "on": true
+     },
+     {
+      "n": "350gsm Gloss",
+      "m": 1.05
+     },
+     {
+      "n": "450gsm NV Velvet",
+      "m": 2.1
+     },
+     {
+      "n": "NV Velvet + Spot UV",
+      "m": 2.9
+     }
+    ]
+   },
+   {
+    "label": "Sides",
+    "g": "sides",
+    "choices": [
+     {
+      "n": "Single sided",
+      "m": 0.85
+     },
+     {
+      "n": "Double sided",
+      "m": 1,
+      "on": true
+     }
+    ]
+   },
+   {
+    "label": "Corners",
+    "g": "corners",
+    "choices": [
+     {
+      "n": "Square",
+      "a": 0,
+      "on": true
+     },
+     {
+      "n": "Rounded (7mm)",
+      "a": 15
+     }
+    ]
+   },
+   {
+    "label": "Quantity",
+    "g": "qty",
+    "choices": [
+     {
+      "n": "250",
+      "b": 75
+     },
+     {
+      "n": "500",
+      "b": 89,
+      "on": true
+     },
+     {
+      "n": "750",
+      "b": 107
+     },
+     {
+      "n": "1000",
+      "b": 124
+     },
+     {
+      "n": "2000",
+      "b": 246
+     }
+    ]
+   },
+   {
+    "label": "Turnaround",
+    "g": "speed",
+    "choices": [
+     {
+      "n": "Standard",
+      "s": 1,
+      "on": true
+     },
+     {
+      "n": "Next day",
+      "s": 1.35
+     },
+     {
+      "n": "Same day",
+      "s": 1.7
+     }
+    ]
+   }
+  ],
+  "specs": [
+   "Trim size: 90 x 55mm",
+   "Bleed: 3mm all sides (96 x 61mm total)",
+   "Colour: CMYK, 300dpi minimum",
+   "Format: Print-ready PDF preferred"
+  ],
+  "faqs": [
+   [
+    "What is NV Velvet?",
+    "NV Velvet is a luxurious soft-touch laminate over thick 450gsm artboard. It feels like suede and makes colours pop. Add Spot UV for glossy highlights."
+   ],
+   [
+    "How fast can I get my cards?",
+    "Standard turnaround is 3-5 business days plus delivery. Next-day and same-day production are available on this product - select your speed above."
+   ],
+   [
+    "Do I see a proof before printing?",
+    "Always. A digital proof lands in your inbox and nothing prints until you approve it."
+   ]
+  ],
+  "related": [
+   "letterheads",
+   "presentation-folders",
+   "pull-up-banners"
+  ],
+  "img": "assets/img/business-cards.jpg"
+ },
+ {
+  "slug": "nv-velvet-business-cards",
+  "name": "NV Velvet Business Cards",
+  "cat": "print",
+  "sub": "Cards & Stationery",
+  "icon": "✨",
+  "desc": "Soft-touch velvet laminate over 450gsm artboard. The card people remember.",
+  "seo": "NV Velvet Business Cards Australia",
+  "from": 189,
+  "portal": true,
+  "template": "business-cards",
+  "opts": [
+   {
+    "label": "Finish",
+    "g": "stock",
+    "choices": [
+     {
+      "n": "NV Velvet 2 sides",
+      "m": 1,
+      "on": true
+     },
+     {
+      "n": "NV + Spot UV 1 side",
+      "m": 1.35
+     },
+     {
+      "n": "NV + Metallic Foil",
+      "m": 1.6
+     }
+    ]
+   },
+   {
+    "label": "Quantity",
+    "g": "qty",
+    "choices": [
+     {
+      "n": "250",
+      "b": 189
+     },
+     {
+      "n": "500",
+      "b": 254,
+      "on": true
+     },
+     {
+      "n": "1000",
+      "b": 381
+     },
+     {
+      "n": "2000",
+      "b": 758
+     }
+    ]
+   }
+  ],
+  "specs": [
+   "Trim size: 90 x 55mm",
+   "Bleed: 3mm all sides",
+   "Colour: CMYK, 300dpi. Supply foil/UV as spot layer",
+   "Format: Print-ready PDF"
+  ],
+  "faqs": [
+   [
+    "Why do these feel so good?",
+    "The NV (velvet) laminate is a micro-textured soft-touch film over thick artboard - it feels like suede and resists fingerprints."
+   ],
+   [
+    "Can I add foil?",
+    "Yes - gold, silver and rose metallic foil, supplied as a separate spot layer in your artwork. Ask if you need help setting it up."
+   ]
+  ],
+  "related": [
+   "business-cards",
+   "presentation-folders",
+   "letterheads"
+  ],
+  "img": "assets/img/nv-velvet.jpg"
+ },
+ {
+  "slug": "flyers",
+  "name": "Flyers",
+  "cat": "print",
+  "sub": "Marketing Material",
+  "icon": "📄",
+  "desc": "DL to A3 on stocks from 130gsm to 350gsm. Letterbox-ready and event-proof.",
+  "seo": "Flyer Printing Sunshine Coast",
+  "from": 156,
+  "portal": true,
+  "template": "flyers",
+  "opts": [
+   {
+    "label": "Size",
+    "g": "size",
+    "choices": [
+     {
+      "n": "DL",
+      "m": 0.8
+     },
+     {
+      "n": "A5",
+      "m": 1,
+      "on": true
+     },
+     {
+      "n": "A4",
+      "m": 1.35
+     },
+     {
+      "n": "A3",
+      "m": 1.9
+     }
+    ]
+   },
+   {
+    "label": "Stock",
+    "g": "stock",
+    "choices": [
+     {
+      "n": "130gsm Gloss",
+      "m": 0.9
+     },
+     {
+      "n": "150gsm Gloss",
+      "m": 1,
+      "on": true
+     },
+     {
+      "n": "250gsm",
+      "m": 1.25
+     },
+     {
+      "n": "350gsm",
+      "m": 1.5
+     }
+    ]
+   },
+   {
+    "label": "Sides",
+    "g": "sides",
+    "choices": [
+     {
+      "n": "Single",
+      "m": 0.85
+     },
+     {
+      "n": "Double",
+      "m": 1,
+      "on": true
+     }
+    ]
+   },
+   {
+    "label": "Quantity",
+    "g": "qty",
+    "choices": [
+     {
+      "n": "500",
+      "b": 156,
+      "on": true
+     },
+     {
+      "n": "1000",
+      "b": 213
+     },
+     {
+      "n": "2500",
+      "b": 363
+     },
+     {
+      "n": "5000",
+      "b": 720
+     }
+    ]
+   }
+  ],
+  "specs": [
+   "Bleed: 3mm all sides",
+   "Colour: CMYK, 300dpi",
+   "Format: Print-ready PDF"
+  ],
+  "faqs": [
+   [
+    "Which stock for letterbox drops?",
+    "130-150gsm gloss keeps unit cost low for volume. Go 250gsm+ for handouts that need to feel substantial."
+   ],
+   [
+    "Can you organise distribution?",
+    "We can connect you with local letterbox distribution partners - ask via chat."
+   ]
+  ],
+  "related": [
+   "brochures",
+   "postcards",
+   "posters"
+  ],
+  "img": "assets/img/flyers.jpg"
+ },
+ {
+  "slug": "brochures",
+  "name": "Brochures",
+  "cat": "print",
+  "sub": "Marketing Material",
+  "icon": "📖",
+  "desc": "Half fold, tri fold, Z fold and gate fold on premium stocks.",
+  "seo": "Brochure Printing Sunshine Coast",
+  "from": 189,
+  "portal": true,
+  "template": "brochures",
+  "opts": [
+   {
+    "label": "Fold",
+    "g": "fold",
+    "choices": [
+     {
+      "n": "Half fold",
+      "m": 1,
+      "on": true
+     },
+     {
+      "n": "Tri fold",
+      "m": 1.05
+     },
+     {
+      "n": "Z fold",
+      "m": 1.05
+     },
+     {
+      "n": "Gate fold",
+      "m": 1.2
+     }
+    ]
+   },
+   {
+    "label": "Size (flat)",
+    "g": "size",
+    "choices": [
+     {
+      "n": "A4 to DL",
+      "m": 1,
+      "on": true
+     },
+     {
+      "n": "A3 to A4",
+      "m": 1.45
+     }
+    ]
+   },
+   {
+    "label": "Stock",
+    "g": "stock",
+    "choices": [
+     {
+      "n": "150gsm Gloss",
+      "m": 1,
+      "on": true
+     },
+     {
+      "n": "170gsm Silk",
+      "m": 1.1
+     },
+     {
+      "n": "250gsm",
+      "m": 1.3
+     }
+    ]
+   },
+   {
+    "label": "Quantity",
+    "g": "qty",
+    "choices": [
+     {
+      "n": "500",
+      "b": 189,
+      "on": true
+     },
+     {
+      "n": "1000",
+      "b": 246
+     },
+     {
+      "n": "2500",
+      "b": 429
+     },
+     {
+      "n": "5000",
+      "b": 810
+     }
+    ]
+   }
+  ],
+  "specs": [
+   "Bleed: 3mm all sides",
+   "Supply flat size with fold marks",
+   "Colour: CMYK, 300dpi"
+  ],
+  "faqs": [
+   [
+    "Which fold should I pick?",
+    "Tri fold suits menus and service lists; half fold gives bigger panels for imagery; gate fold makes an impact for premium offers."
+   ]
+  ],
+  "related": [
+   "flyers",
+   "presentation-folders",
+   "menus"
+  ],
+  "img": "assets/img/brochures.jpg"
+ },
+ {
+  "slug": "postcards",
+  "name": "Postcards",
+  "cat": "print",
+  "sub": "Marketing Material",
+  "icon": "💌",
+  "desc": "Direct mail that stands out. A6 to A5 on thick stocks.",
+  "seo": "Postcard Printing Australia",
+  "from": 98,
+  "portal": true,
+  "template": "postcards",
+  "quote": false,
+  "opts": [
+   {
+    "label": "Size",
+    "g": "size",
+    "choices": [
+     {
+      "n": "A6",
+      "m": 1,
+      "on": true
+     },
+     {
+      "n": "DL",
+      "m": 1.15
+     },
+     {
+      "n": "A5",
+      "m": 1.3
+     }
+    ]
+   },
+   {
+    "label": "Stock",
+    "g": "stock",
+    "choices": [
+     {
+      "n": "300gsm Gloss",
+      "m": 1,
+      "on": true
+     },
+     {
+      "n": "350gsm Matt Laminate 1S",
+      "m": 1.2
+     },
+     {
+      "n": "420gsm Natural",
+      "m": 1.4
+     }
+    ]
+   },
+   {
+    "label": "Quantity",
+    "g": "qty",
+    "choices": [
+     {
+      "n": "250",
+      "b": 98,
+      "on": true
+     },
+     {
+      "n": "500",
+      "b": 128
+     },
+     {
+      "n": "1000",
+      "b": 184
+     },
+     {
+      "n": "2500",
+      "b": 345
+     }
+    ]
+   }
+  ],
+  "specs": [
+   "Bleed: 3mm all sides",
+   "Leave address side 60% uncoated for mailing",
+   "CMYK, 300dpi"
+  ],
+  "faqs": [
+   [
+    "Can you laminate one side only?",
+    "Yes - matt laminate the image side and leave the mailing side writable."
+   ]
+  ],
+  "related": [
+   "flyers",
+   "greeting-cards",
+   "business-cards"
+  ],
+  "img": "assets/img/postcards.jpg"
+ },
+ {
+  "slug": "letterheads",
+  "name": "Letterheads",
+  "cat": "print",
+  "sub": "Cards & Stationery",
+  "icon": "✉️",
+  "desc": "Offset quality on premium uncoated and laser-safe stocks.",
+  "seo": "Letterhead Printing Australia",
+  "from": 120,
+  "portal": true,
+  "template": "letterheads",
+  "opts": [
+   {
+    "label": "Stock",
+    "g": "stock",
+    "choices": [
+     {
+      "n": "100gsm Laser",
+      "m": 1,
+      "on": true
+     },
+     {
+      "n": "110gsm Premium Uncoated",
+      "m": 1.15
+     },
+     {
+      "n": "120gsm Linen",
+      "m": 1.35
+     }
+    ]
+   },
+   {
+    "label": "Quantity",
+    "g": "qty",
+    "choices": [
+     {
+      "n": "250",
+      "b": 120,
+      "on": true
+     },
+     {
+      "n": "500",
+      "b": 168
+     },
+     {
+      "n": "1000",
+      "b": 256
+     },
+     {
+      "n": "2500",
+      "b": 510
+     }
+    ]
+   }
+  ],
+  "specs": [
+   "Trim: 210 x 297mm (A4)",
+   "Bleed: 3mm",
+   "Laser-safe stocks available for office printers"
+  ],
+  "faqs": [
+   [
+    "Will it work in my office printer?",
+    "Yes - choose the laser-safe stock and it runs through any office laser or inkjet without smudging."
+   ]
+  ],
+  "related": [
+   "envelopes",
+   "with-compliments",
+   "business-cards"
+  ],
+  "img": "assets/img/letterheads.jpg"
+ },
+ {
+  "slug": "envelopes",
+  "name": "Envelopes",
+  "cat": "print",
+  "sub": "Cards & Stationery",
+  "icon": "📮",
+  "desc": "Printed DL to C4, plain face or window, any volume.",
+  "seo": "Printed Envelopes Australia",
+  "portal": true,
+  "quote": true,
+  "template": "envelopes",
+  "specs": [
+   "Sizes: DL, DLX, C5, C4",
+   "Window and plain face",
+   "Print: full colour or 1-2 spot colours"
+  ],
+  "faqs": [
+   [
+    "What's the minimum order?",
+    "500 for printed envelopes; smaller runs are possible digitally - ask for a quote."
+   ]
+  ],
+  "related": [
+   "letterheads",
+   "with-compliments",
+   "invoice-books"
+  ]
+ },
+ {
+  "slug": "with-compliments",
+  "name": "With Compliments Slips",
+  "cat": "print",
+  "sub": "Cards & Stationery",
+  "icon": "📝",
+  "desc": "The finishing touch for your stationery suite. DL size to match your letterhead.",
+  "seo": "With Compliments Slips Printing",
+  "portal": true,
+  "quote": true,
+  "template": "with-compliments",
+  "specs": [
+   "Trim: 210 x 99mm (DL)",
+   "Bleed: 3mm",
+   "Match stock to your letterhead"
+  ],
+  "faqs": [
+   [
+    "Can you match my letterhead design?",
+    "Yes - send your letterhead file and we'll adapt it, or order both together and save."
+   ]
+  ],
+  "related": [
+   "letterheads",
+   "envelopes",
+   "business-cards"
+  ]
+ },
+ {
+  "slug": "loyalty-cards",
+  "name": "Loyalty Cards",
+  "cat": "print",
+  "sub": "Cards & Stationery",
+  "icon": "💳",
+  "desc": "Keep customers coming back. Business card size with stamp grids or numbering.",
+  "seo": "Loyalty Card Printing",
+  "portal": true,
+  "quote": true,
+  "template": "business-cards",
+  "specs": [
+   "Trim: 90 x 55mm",
+   "Uncoated back for stamping",
+   "Optional numbering / perforation"
+  ],
+  "faqs": [
+   [
+    "Which stock takes stamps best?",
+    "Uncoated or matt cello one side - the back stays raw so ink stamps dry instantly."
+   ]
+  ],
+  "related": [
+   "business-cards",
+   "flyers",
+   "menus"
+  ],
+  "img": "assets/img/loyalty-cards.jpg"
+ },
+ {
+  "slug": "presentation-folders",
+  "name": "Presentation Folders",
+  "cat": "print",
+  "sub": "Marketing Material",
+  "icon": "🗂️",
+  "desc": "Gloss, matt or velvet with business card slits and capacity spines.",
+  "seo": "Presentation Folder Printing Australia",
+  "portal": true,
+  "quote": true,
+  "template": "presentation-folders",
+  "specs": [
+   "A4 with 5mm or 10mm capacity",
+   "Business card slits standard",
+   "Matt, gloss or velvet laminate"
+  ],
+  "faqs": [
+   [
+    "Do folders come flat or made up?",
+    "Your choice - flat packs save freight, made-up saves your time."
+   ]
+  ],
+  "related": [
+   "business-cards",
+   "letterheads",
+   "brochures"
+  ],
+  "img": "assets/img/presentation-folders.jpg"
+ },
+ {
+  "slug": "menus",
+  "name": "Menus",
+  "cat": "print",
+  "sub": "Marketing Material",
+  "icon": "🍽️",
+  "desc": "Flat, folded or laminated for table service. Spill-proof options for venues.",
+  "seo": "Menu Printing Sunshine Coast",
+  "portal": true,
+  "quote": true,
+  "template": "menus",
+  "specs": [
+   "DL, A4, A3 folded",
+   "Celloglaze or full lamination for wipe-clean",
+   "Round corners available"
+  ],
+  "faqs": [
+   [
+    "What survives a busy venue?",
+    "350gsm with matt laminate both sides and round corners - wipeable and won't fray."
+   ]
+  ],
+  "related": [
+   "flyers",
+   "brochures",
+   "loyalty-cards"
+  ],
+  "img": "assets/img/menus.jpg"
+ },
+ {
+  "slug": "greeting-cards",
+  "name": "Greeting Cards",
+  "cat": "print",
+  "sub": "Marketing Material",
+  "icon": "🎉",
+  "desc": "Folded cards for retail, events and corporate Christmas lists.",
+  "seo": "Greeting Card Printing Australia",
+  "portal": true,
+  "quote": true,
+  "template": "greeting-cards",
+  "specs": [
+   "A6 folded standard (A5 flat)",
+   "Scored for clean folding",
+   "Envelopes available"
+  ],
+  "faqs": [
+   [
+    "Can you supply envelopes?",
+    "Yes - plain or printed envelopes to suit every card size."
+   ]
+  ],
+  "related": [
+   "postcards",
+   "calendars",
+   "business-cards"
+  ],
+  "img": "assets/img/greeting-cards.jpg"
+ },
+ {
+  "slug": "booklets",
+  "name": "Saddle Stitched Booklets",
+  "cat": "print",
+  "sub": "Books & Booklets",
+  "icon": "📚",
+  "desc": "8-64 pages, self cover or plus cover. Catalogues, programs and magazines.",
+  "seo": "Booklet Printing Australia",
+  "portal": true,
+  "quote": true,
+  "template": "booklets",
+  "specs": [
+   "Page count in multiples of 4",
+   "Supply as single pages, not spreads",
+   "3mm bleed, 300dpi"
+  ],
+  "faqs": [
+   [
+    "How many pages can saddle stitch hold?",
+    "Up to about 64 pages depending on stock. Beyond that, go perfect bound."
+   ],
+   [
+    "Self cover or plus cover?",
+    "Self cover uses the same stock throughout; plus cover wraps heavier stock around lighter text pages."
+   ]
+  ],
+  "related": [
+   "perfect-bound-books",
+   "wiro-booklets",
+   "brochures"
+  ]
+ },
+ {
+  "slug": "perfect-bound-books",
+  "name": "Perfect Bound Books",
+  "cat": "print",
+  "sub": "Books & Booklets",
+  "icon": "📕",
+  "desc": "Square spine, bookshop finish. Annual reports, look books and manuals.",
+  "seo": "Perfect Bound Book Printing Australia",
+  "portal": true,
+  "quote": true,
+  "template": "booklets",
+  "specs": [
+   "40+ pages recommended",
+   "Allow spine width in cover artwork",
+   "3mm bleed, 300dpi"
+  ],
+  "faqs": [
+   [
+    "What's the minimum page count?",
+    "Roughly 40 pages so the spine has enough thickness to bind cleanly."
+   ]
+  ],
+  "related": [
+   "booklets",
+   "wiro-booklets",
+   "presentation-folders"
+  ]
+ },
+ {
+  "slug": "wiro-booklets",
+  "name": "Wiro Bound Booklets",
+  "cat": "print",
+  "sub": "Books & Booklets",
+  "icon": "🌀",
+  "desc": "Lay-flat manuals, workbooks and calendars with metal wire binding.",
+  "seo": "Wiro Bound Booklet Printing",
+  "portal": true,
+  "quote": true,
+  "template": "booklets",
+  "specs": [
+   "Lays completely flat",
+   "Optional clear cover and board back",
+   "Punch margin: 10mm binding edge"
+  ],
+  "faqs": [
+   [
+    "Why choose wiro?",
+    "Anything people write in - training manuals, workbooks, planners - should lay flat. Wiro does that."
+   ]
+  ],
+  "related": [
+   "booklets",
+   "calendars",
+   "notepads"
+  ],
+  "img": "assets/img/wiro-booklets.jpg"
+ },
+ {
+  "slug": "invoice-books",
+  "name": "Invoice Books (NCR)",
+  "cat": "print",
+  "sub": "Books & Booklets",
+  "icon": "🧾",
+  "desc": "Carbonless duplicate and triplicate books, numbered and perforated.",
+  "seo": "NCR Invoice Book Printing Australia",
+  "portal": true,
+  "quote": true,
+  "template": "invoice-books",
+  "specs": [
+   "Duplicate or triplicate NCR sets",
+   "Sequential numbering standard",
+   "A4, A5 or DL"
+  ],
+  "faqs": [
+   [
+    "Can you match my current book?",
+    "Send a photo of your existing book and we'll match layout and numbering sequence."
+   ]
+  ],
+  "related": [
+   "notepads",
+   "letterheads",
+   "envelopes"
+  ]
+ },
+ {
+  "slug": "notepads",
+  "name": "Notepads",
+  "cat": "print",
+  "sub": "Books & Booklets",
+  "icon": "📒",
+  "desc": "Branded pads, glued head, 25-100 sheets. Desk real estate for your brand.",
+  "seo": "Notepad Printing Australia",
+  "portal": true,
+  "quote": true,
+  "template": "notepads",
+  "specs": [
+   "A4, A5, A6 or DL",
+   "25, 50 or 100 sheets per pad",
+   "Optional board back"
+  ],
+  "faqs": [
+   [
+    "What sheet count works best?",
+    "50 sheets balances thickness and cost for giveaways; 100 for serious desk pads."
+   ]
+  ],
+  "related": [
+   "invoice-books",
+   "calendars",
+   "pens"
+  ]
+ },
+ {
+  "slug": "calendars",
+  "name": "Calendars",
+  "cat": "print",
+  "sub": "Books & Booklets",
+  "icon": "📅",
+  "desc": "Wall and desk calendars, wiro bound. Twelve months of brand visibility.",
+  "seo": "Calendar Printing Australia",
+  "portal": true,
+  "quote": true,
+  "template": "calendars",
+  "specs": [
+   "A4/A3 wall or DL desk",
+   "Wiro bound with hanger",
+   "Artwork: 13 pages (cover + 12 months)"
+  ],
+  "faqs": [
+   [
+    "When should I order for Christmas?",
+    "Artwork approved by mid-November guarantees pre-Christmas delivery."
+   ]
+  ],
+  "related": [
+   "wiro-booklets",
+   "greeting-cards",
+   "notepads"
+  ]
+ },
+ {
+  "slug": "corflute-signs",
+  "name": "Corflute Signs",
+  "cat": "signage",
+  "sub": "Signs & Stickers",
+  "icon": "🪧",
+  "desc": "Real estate, builders and event boards on 3mm or 5mm corflute, any size.",
+  "seo": "Corflute Signs Sunshine Coast",
+  "from": 67,
+  "portal": false,
+  "template": "corflute-easysigns",
+  "opts": [
+   {
+    "label": "Size",
+    "g": "size",
+    "choices": [
+     {
+      "n": "600x450",
+      "m": 0.7
+     },
+     {
+      "n": "900x600",
+      "m": 1,
+      "on": true
+     },
+     {
+      "n": "1200x900",
+      "m": 1.8
+     },
+     {
+      "n": "2400x1200",
+      "m": 3.6
+     }
+    ]
+   },
+   {
+    "label": "Thickness",
+    "g": "stock",
+    "choices": [
+     {
+      "n": "3mm",
+      "m": 0.9
+     },
+     {
+      "n": "5mm",
+      "m": 1,
+      "on": true
+     }
+    ]
+   },
+   {
+    "label": "Sides",
+    "g": "sides",
+    "choices": [
+     {
+      "n": "Single",
+      "m": 1,
+      "on": true
+     },
+     {
+      "n": "Double",
+      "m": 1.6
+     }
+    ]
+   },
+   {
+    "label": "Quantity",
+    "g": "qty",
+    "choices": [
+     {
+      "n": "1",
+      "b": 67,
+      "on": true
+     },
+     {
+      "n": "5",
+      "b": 273
+     },
+     {
+      "n": "10",
+      "b": 458
+     },
+     {
+      "n": "20",
+      "b": 905
+     }
+    ]
+   }
+  ],
+  "specs": [
+   "Bleed: 10mm all sides",
+   "Colour: CMYK, 150dpi at full size",
+   "Eyelets on request - mark positions"
+  ],
+  "faqs": [
+   [
+    "How long do they last outside?",
+    "12-24 months in Queensland sun. UV inks resist fading; the board itself is weatherproof."
+   ]
+  ],
+  "related": [
+   "a-frames",
+   "fence-mesh",
+   "stickers"
+  ],
+  "img": "assets/img/corflute-signs.jpg"
+ },
+ {
+  "slug": "a-frames",
+  "name": "A-Frames",
+  "cat": "signage",
+  "sub": "Signs & Stickers",
+  "icon": "🅰️",
+  "desc": "Metal A-frames with replaceable corflute or ACM inserts. Footpath workhorses.",
+  "seo": "A-Frame Signs Australia",
+  "portal": false,
+  "quote": true,
+  "template": "a-frames-easysigns",
+  "specs": [
+   "Standard 900x600 insert",
+   "Metal frame + 5mm inserts",
+   "Double sided as standard"
+  ],
+  "faqs": [
+   [
+    "Can I replace just the inserts?",
+    "Yes - keep the frame, swap the message. Inserts are a fraction of the full price."
+   ]
+  ],
+  "related": [
+   "corflute-signs",
+   "aluminium-signs",
+   "pull-up-banners"
+  ],
+  "img": "assets/img/a-frames.jpg"
+ },
+ {
+  "slug": "aluminium-signs",
+  "name": "Aluminium Composite Signs",
+  "cat": "signage",
+  "sub": "Signs & Stickers",
+  "icon": "🔩",
+  "desc": "Premium rigid ACM signage that stays flat and lasts years outdoors.",
+  "seo": "Aluminium Composite Signs Australia",
+  "portal": false,
+  "quote": true,
+  "template": "acm-easysigns",
+  "specs": [
+   "3mm ACM panel",
+   "Direct print, UV stable",
+   "Drilled holes / standoffs optional"
+  ],
+  "faqs": [
+   [
+    "ACM vs corflute?",
+    "ACM is rigid, premium and lasts 5+ years - the right call for shopfronts and permanent signage. Corflute wins on price for short campaigns."
+   ]
+  ],
+  "related": [
+   "corflute-signs",
+   "safety-signs",
+   "a-frames"
+  ]
+ },
+ {
+  "slug": "safety-signs",
+  "name": "Safety Signs",
+  "cat": "signage",
+  "sub": "Signs & Stickers",
+  "icon": "⚠️",
+  "desc": "Compliant site and workplace signage to AS 1319, stock or custom.",
+  "seo": "Safety Signs Australia",
+  "portal": false,
+  "quote": true,
+  "template": "safety-easysigns",
+  "specs": [
+   "AS 1319 compliant layouts",
+   "Corflute, ACM or self-adhesive",
+   "Custom site signage available"
+  ],
+  "faqs": [
+   [
+    "Are your signs compliant?",
+    "Yes - standard designs follow AS 1319. Send your site requirements and we'll spec the right signs."
+   ]
+  ],
+  "related": [
+   "aluminium-signs",
+   "corflute-signs",
+   "stickers"
+  ]
+ },
+ {
+  "slug": "posters",
+  "name": "Posters",
+  "cat": "signage",
+  "sub": "Signs & Stickers",
+  "icon": "🖼️",
+  "desc": "Offset and wide format posters, A2 to billboard scale.",
+  "seo": "Poster Printing Sunshine Coast",
+  "from": 45,
+  "portal": true,
+  "template": "posters",
+  "opts": [
+   {
+    "label": "Size",
+    "g": "size",
+    "choices": [
+     {
+      "n": "A2",
+      "m": 1,
+      "on": true
+     },
+     {
+      "n": "A1",
+      "m": 1.6
+     },
+     {
+      "n": "A0",
+      "m": 2.5
+     }
+    ]
+   },
+   {
+    "label": "Stock",
+    "g": "stock",
+    "choices": [
+     {
+      "n": "170gsm Satin",
+      "m": 1,
+      "on": true
+     },
+     {
+      "n": "200gsm Gloss",
+      "m": 1.15
+     },
+     {
+      "n": "Synthetic (waterproof)",
+      "m": 1.8
+     }
+    ]
+   },
+   {
+    "label": "Quantity",
+    "g": "qty",
+    "choices": [
+     {
+      "n": "1",
+      "b": 45,
+      "on": true
+     },
+     {
+      "n": "5",
+      "b": 140
+     },
+     {
+      "n": "10",
+      "b": 230
+     },
+     {
+      "n": "25",
+      "b": 480
+     }
+    ]
+   }
+  ],
+  "specs": [
+   "Bleed: 5mm",
+   "CMYK, 150dpi at full size"
+  ],
+  "faqs": [
+   [
+    "Indoor or outdoor?",
+    "Paper stocks for indoors; synthetic for anything that might get wet."
+   ]
+  ],
+  "related": [
+   "corflute-signs",
+   "pull-up-banners",
+   "stickers"
+  ],
+  "img": "assets/img/posters.jpg"
+ },
+ {
+  "slug": "stickers",
+  "name": "Stickers & Labels",
+  "cat": "signage",
+  "sub": "Signs & Stickers",
+  "icon": "🏷️",
+  "desc": "Die-cut shapes, rolls and sheets. Indoor, outdoor and machine-apply.",
+  "seo": "Sticker Printing Australia",
+  "portal": true,
+  "quote": true,
+  "template": "stickers",
+  "specs": [
+   "Kiss cut or die cut",
+   "Gloss, matt or clear vinyl",
+   "Rolls for machine application"
+  ],
+  "faqs": [
+   [
+    "What's the difference between kiss cut and die cut?",
+    "Kiss cut leaves the backing intact (easy peeling on sheets); die cut cuts through everything for individual stickers."
+   ]
+  ],
+  "related": [
+   "safety-signs",
+   "vehicle-magnets",
+   "posters"
+  ],
+  "img": "assets/img/stickers.jpg"
+ },
+ {
+  "slug": "vehicle-magnets",
+  "name": "Vehicle Magnets",
+  "cat": "signage",
+  "sub": "Signs & Stickers",
+  "icon": "🧲",
+  "desc": "Turn the ute into a billboard. Heavy-duty magnetic material, rounded corners.",
+  "seo": "Vehicle Magnet Printing Australia",
+  "portal": false,
+  "quote": true,
+  "template": "magnets-easysigns",
+  "specs": [
+   "0.85mm magnetic material",
+   "Rounded corners standard",
+   "UV laminated for stone chips"
+  ],
+  "faqs": [
+   [
+    "Will they fly off at highway speed?",
+    "Not when fitted to a clean, flat steel panel. We include care instructions with every set."
+   ]
+  ],
+  "related": [
+   "stickers",
+   "corflute-signs",
+   "aluminium-signs"
+  ]
+ },
+ {
+  "slug": "pull-up-banners",
+  "name": "Pull Up Banners",
+  "cat": "signage",
+  "sub": "Banners & Flags",
+  "icon": "🚩",
+  "badge": "Best seller",
+  "desc": "Economy to premium bases with vivid print. Includes padded carry bag.",
+  "seo": "Pull Up Banners Sunshine Coast",
+  "from": 208,
+  "portal": false,
+  "template": "pullup-easysigns",
+  "opts": [
+   {
+    "label": "Base",
+    "g": "stock",
+    "choices": [
+     {
+      "n": "Economy",
+      "m": 0.75
+     },
+     {
+      "n": "Premium",
+      "m": 1,
+      "on": true
+     },
+     {
+      "n": "Double sided",
+      "m": 1.7
+     }
+    ]
+   },
+   {
+    "label": "Size",
+    "g": "size",
+    "choices": [
+     {
+      "n": "850x2000mm",
+      "m": 1,
+      "on": true
+     },
+     {
+      "n": "1200x2000mm",
+      "m": 1.35
+     },
+     {
+      "n": "1500x2000mm",
+      "m": 1.6
+     }
+    ]
+   },
+   {
+    "label": "Quantity",
+    "g": "qty",
+    "choices": [
+     {
+      "n": "1",
+      "b": 208,
+      "on": true
+     },
+     {
+      "n": "2",
+      "b": 404
+     },
+     {
+      "n": "5",
+      "b": 915
+     },
+     {
+      "n": "10",
+      "b": 1804
+     }
+    ]
+   }
+  ],
+  "specs": [
+   "Bleed: none, but keep text 100mm from bottom",
+   "CMYK, 150dpi at full size",
+   "Include 100mm bottom wrap allowance"
+  ],
+  "faqs": [
+   [
+    "Economy or premium base?",
+    "Premium bases are heavier, more stable, and survive years of events. Economy suits one-off campaigns."
+   ],
+   [
+    "What's in the box?",
+    "Banner fitted to base, pole and padded carry bag - ready to stand in 30 seconds."
+   ]
+  ],
+  "related": [
+   "teardrop-flags",
+   "media-walls",
+   "corflute-signs"
+  ],
+  "img": "assets/img/pull-up-banners.jpg"
+ },
+ {
+  "slug": "teardrop-flags",
+  "name": "Teardrop Flags",
+  "cat": "signage",
+  "sub": "Banners & Flags",
+  "icon": "🎏",
+  "desc": "Single or double sided knitted polyester with spike, cross or water bases.",
+  "seo": "Teardrop Flags Australia",
+  "portal": false,
+  "quote": true,
+  "template": "teardrop-easysigns",
+  "specs": [
+   "Sizes: small (2.3m) to large (4.2m)",
+   "Single side reads reversed on back",
+   "Base options: spike, cross, water, wall"
+  ],
+  "faqs": [
+   [
+    "Single or double sided?",
+    "Single sided shows a mirror image on the back and flies lighter. Double sided reads correctly both ways but needs more wind."
+   ]
+  ],
+  "related": [
+   "pull-up-banners",
+   "outdoor-banners",
+   "fence-mesh"
+  ]
+ },
+ {
+  "slug": "outdoor-banners",
+  "name": "Outdoor Vinyl Banners",
+  "cat": "signage",
+  "sub": "Banners & Flags",
+  "icon": "🌬️",
+  "desc": "Hemmed and eyeletted heavy-duty vinyl, any size, built for weather.",
+  "seo": "Vinyl Banner Printing Australia",
+  "portal": false,
+  "quote": true,
+  "template": "vinyl-easysigns",
+  "specs": [
+   "510gsm vinyl standard",
+   "Hems + eyelets every 500mm",
+   "Wind slits available for exposed sites"
+  ],
+  "faqs": [
+   [
+    "What size can you print?",
+    "Any size - large banners are welded in sections with no visible join at viewing distance."
+   ]
+  ],
+  "related": [
+   "fence-mesh",
+   "teardrop-flags",
+   "corflute-signs"
+  ],
+  "img": "assets/img/outdoor-banners.jpg"
+ },
+ {
+  "slug": "fence-mesh",
+  "name": "Fence Mesh Banners",
+  "cat": "signage",
+  "sub": "Banners & Flags",
+  "icon": "🕸️",
+  "desc": "Construction site wraps that let wind through. Builders' favourite billboard.",
+  "seo": "Fence Mesh Printing Australia",
+  "portal": false,
+  "quote": true,
+  "template": "mesh-easysigns",
+  "specs": [
+   "Standard drops to suit temp fencing",
+   "~37% airflow mesh",
+   "Eyelets + cable ties included"
+  ],
+  "faqs": [
+   [
+    "How do I fix it to temporary fencing?",
+    "Cable ties through the eyelets, top and bottom every panel. We supply the ties."
+   ]
+  ],
+  "related": [
+   "outdoor-banners",
+   "corflute-signs",
+   "safety-signs"
+  ],
+  "img": "assets/img/fence-mesh.jpg"
+ },
+ {
+  "slug": "media-walls",
+  "name": "Media Walls",
+  "cat": "signage",
+  "sub": "Events & Display",
+  "icon": "🖼️",
+  "desc": "Straight or curved backdrops for events, launches and step-and-repeats.",
+  "seo": "Media Walls Australia",
+  "portal": false,
+  "quote": true,
+  "template": "mediawall-easysigns",
+  "specs": [
+   "Fabric print, aluminium frame",
+   "Sizes 2.4m to 6m wide",
+   "Packs into wheeled bag"
+  ],
+  "faqs": [
+   [
+    "How long to set up?",
+    "Two people, ten minutes, no tools. The fabric zips over the frame like a pillowcase."
+   ]
+  ],
+  "related": [
+   "pull-up-banners",
+   "marquees",
+   "tablecloths"
+  ]
+ },
+ {
+  "slug": "marquees",
+  "name": "Marquees",
+  "cat": "signage",
+  "sub": "Events & Display",
+  "icon": "⛺",
+  "desc": "Printed canopies, walls and flags for markets and events. 2.4m to 6m.",
+  "seo": "Printed Marquees Australia",
+  "portal": false,
+  "quote": true,
+  "template": "marquee-easysigns",
+  "specs": [
+   "Heavy-duty hex frames",
+   "Full colour dye-sub canopy",
+   "Walls, half-walls and counters optional"
+  ],
+  "faqs": [
+   [
+    "What wind rating are the frames?",
+    "Commercial hex frames handle typical market conditions when pegged/weighted - we include weight recommendations."
+   ]
+  ],
+  "related": [
+   "media-walls",
+   "teardrop-flags",
+   "tablecloths"
+  ]
+ },
+ {
+  "slug": "standees",
+  "name": "Standees & Cut Outs",
+  "cat": "signage",
+  "sub": "Events & Display",
+  "icon": "🧍",
+  "desc": "Life-size (and larger) cardboard and corflute cut-outs with strut backs.",
+  "seo": "Standee Printing Australia",
+  "portal": false,
+  "quote": true,
+  "template": "standee-easysigns",
+  "specs": [
+   "Up to 2.4m tall single piece",
+   "Corflute or laminated board",
+   "Fold-out strut back included"
+  ],
+  "faqs": [
+   [
+    "What file do you need?",
+    "A high-res photo (300dpi at half scale or better) with a clear subject - we handle the cut path."
+   ]
+  ],
+  "related": [
+   "media-walls",
+   "posters",
+   "corflute-signs"
+  ],
+  "img": "assets/img/standees.jpg"
+ },
+ {
+  "slug": "tablecloths",
+  "name": "Printed Tablecloths",
+  "cat": "signage",
+  "sub": "Events & Display",
+  "icon": "🪑",
+  "desc": "Fitted or throw-style, full colour dye-sublimation. Machine washable.",
+  "seo": "Printed Tablecloths Australia",
+  "portal": false,
+  "quote": true,
+  "template": "tablecloth-easysigns",
+  "specs": [
+   "Fits standard 1.8m trestle",
+   "Fitted or throw style",
+   "Machine washable polyester"
+  ],
+  "faqs": [
+   [
+    "Will the print fade in the wash?",
+    "No - dye-sublimation embeds ink in the fabric. Cold wash, hang dry."
+   ]
+  ],
+  "related": [
+   "marquees",
+   "media-walls",
+   "pull-up-banners"
+  ]
+ },
+ {
+  "slug": "exhibition-displays",
+  "name": "Exhibition Displays",
+  "cat": "signage",
+  "sub": "Events & Display",
+  "icon": "🎪",
+  "desc": "Complete expo kits: walls, counters, lighting and shipping cases.",
+  "seo": "Exhibition Display Systems Australia",
+  "portal": false,
+  "quote": true,
+  "template": "exhibition-easysigns",
+  "specs": [
+   "Modular wall systems",
+   "Printed counters + literature stands",
+   "LED lighting kits"
+  ],
+  "faqs": [
+   [
+    "Can you design the whole stand?",
+    "Yes - send your floor plan and brand assets and we'll design, print and pack the lot."
+   ]
+  ],
+  "related": [
+   "media-walls",
+   "pull-up-banners",
+   "marquees"
+  ]
+ }
+]

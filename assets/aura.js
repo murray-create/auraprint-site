@@ -20,16 +20,16 @@ const HEADER = `
     <div class="navlinks">
       <div><a href="print.html">Print ▾</a>
         <div class="mega">
-          <div><h4>Cards &amp; Stationery</h4><ul><li><a href="business-cards.html">Business Cards</a></li><li><a href="business-cards.html">NV Velvet Cards</a></li><li><a href="print.html">Letterheads</a></li><li><a href="print.html">Envelopes</a></li><li><a href="print.html">Loyalty Cards</a></li></ul></div>
-          <div><h4>Marketing</h4><ul><li><a href="print.html">Flyers</a></li><li><a href="print.html">Brochures</a></li><li><a href="print.html">Postcards</a></li><li><a href="print.html">Presentation Folders</a></li><li><a href="print.html">Menus</a></li></ul></div>
-          <div><h4>Books &amp; Booklets</h4><ul><li><a href="print.html">Saddle Stitched Booklets</a></li><li><a href="print.html">Perfect Bound Books</a></li><li><a href="print.html">Invoice Books (NCR)</a></li><li><a href="print.html">Notepads</a></li><li><a href="print.html">Calendars</a></li></ul></div>
+          <div><h4>Cards &amp; Stationery</h4><ul><li><a href="business-cards.html">Business Cards</a></li><li><a href="nv-velvet-business-cards.html">NV Velvet Cards</a></li><li><a href="letterheads.html">Letterheads</a></li><li><a href="envelopes.html">Envelopes</a></li><li><a href="loyalty-cards.html">Loyalty Cards</a></li></ul></div>
+          <div><h4>Marketing</h4><ul><li><a href="flyers.html">Flyers</a></li><li><a href="brochures.html">Brochures</a></li><li><a href="postcards.html">Postcards</a></li><li><a href="presentation-folders.html">Presentation Folders</a></li><li><a href="menus.html">Menus</a></li></ul></div>
+          <div><h4>Books &amp; Booklets</h4><ul><li><a href="booklets.html">Saddle Stitched Booklets</a></li><li><a href="perfect-bound-books.html">Perfect Bound Books</a></li><li><a href="invoice-books.html">Invoice Books (NCR)</a></li><li><a href="notepads.html">Notepads</a></li><li><a href="calendars.html">Calendars</a></li></ul></div>
         </div>
       </div>
       <div><a href="signage.html">Signage &amp; Display ▾</a>
         <div class="mega">
-          <div><h4>Signs</h4><ul><li><a href="signage.html">Corflute Signs</a></li><li><a href="signage.html">A-Frames</a></li><li><a href="signage.html">Posters</a></li><li><a href="signage.html">Stickers &amp; Labels</a></li><li><a href="signage.html">Magnets</a></li></ul></div>
-          <div><h4>Banners &amp; Flags</h4><ul><li><a href="signage.html">Pull Up Banners</a></li><li><a href="signage.html">Outdoor Banners</a></li><li><a href="signage.html">Teardrop Flags</a></li><li><a href="signage.html">Fence Mesh</a></li></ul></div>
-          <div><h4>Events &amp; Display</h4><ul><li><a href="signage.html">Exhibition Displays</a></li><li><a href="signage.html">Media Walls</a></li><li><a href="signage.html">Marquees</a></li><li><a href="signage.html">Printed Tablecloths</a></li></ul></div>
+          <div><h4>Signs</h4><ul><li><a href="corflute-signs.html">Corflute Signs</a></li><li><a href="a-frames.html">A-Frames</a></li><li><a href="posters.html">Posters</a></li><li><a href="stickers.html">Stickers &amp; Labels</a></li><li><a href="vehicle-magnets.html">Magnets</a></li></ul></div>
+          <div><h4>Banners &amp; Flags</h4><ul><li><a href="pull-up-banners.html">Pull Up Banners</a></li><li><a href="outdoor-banners.html">Outdoor Banners</a></li><li><a href="teardrop-flags.html">Teardrop Flags</a></li><li><a href="fence-mesh.html">Fence Mesh</a></li></ul></div>
+          <div><h4>Events &amp; Display</h4><ul><li><a href="exhibition-displays.html">Exhibition Displays</a></li><li><a href="media-walls.html">Media Walls</a></li><li><a href="marquees.html">Marquees</a></li><li><a href="tablecloths.html">Printed Tablecloths</a></li></ul></div>
         </div>
       </div>
       <div><a href="promo.html">Promo &amp; Apparel ▾</a>
@@ -40,6 +40,7 @@ const HEADER = `
         </div>
       </div>
       <div><a href="index.html#quoter">Instant Price</a></div>
+      <div><a href="order.html">Order Online</a></div>
       <div><a href="about.html">About</a></div>
       <div><a href="contact.html">Contact</a></div>
     </div>
@@ -60,14 +61,14 @@ const FOOTER = `
         <h4 style="margin-top:24px">Get 10% off your first order</h4>
         <div class="newsletter"><input type="email" placeholder="Your email address"><button class="btn btn-aura" style="padding:12px 22px">Join</button></div>
       </div>
-      <div><h4>Products</h4><ul><li><a href="business-cards.html">Business Cards</a></li><li><a href="print.html">Flyers</a></li><li><a href="signage.html">Corflute Signs</a></li><li><a href="signage.html">Pull Up Banners</a></li><li><a href="signage.html">Stickers</a></li><li><a href="promo.html">Promo Products</a></li><li><a href="promo.html">Workwear</a></li></ul></div>
+      <div><h4>Products</h4><ul><li><a href="business-cards.html">Business Cards</a></li><li><a href="flyers.html">Flyers</a></li><li><a href="corflute-signs.html">Corflute Signs</a></li><li><a href="pull-up-banners.html">Pull Up Banners</a></li><li><a href="signage.html">Stickers</a></li><li><a href="promo.html">Promo Products</a></li><li><a href="promo.html">Workwear</a></li></ul></div>
       <div><h4>Company</h4><ul><li><a href="about.html">About</a></li><li><a href="#">Portfolio</a></li><li><a href="#">Reviews</a></li><li><a href="#">Blog</a></li><li><a href="#">Artwork Setup Guides</a></li><li><a href="#">Terms of Trade</a></li><li><a href="#">Privacy</a></li></ul></div>
       <div><h4>Contact</h4><ul>
         <li>3/1 Packer Road, Baringa QLD 4551</li>
         <li><a href="tel:1300291277">1300 291 277</a></li>
         <li><a href="mailto:hello@auraprint.com.au">hello@auraprint.com.au</a></li>
         <li>Mon-Fri 8:30am - 5pm</li>
-        <li style="margin-top:10px"><b style="color:#fff">Need it fast? Next-day express available.</b></li>
+        <li style="margin-top:10px"><b style="color:#fff">Need it fast? Ask about express options.</b></li>
       </ul></div>
     </div>
     <div class="legal">
@@ -90,6 +91,19 @@ const FOOTER = `
 
 document.addEventListener('DOMContentLoaded', function(){
   document.body.insertAdjacentHTML('afterbegin', HEADER);
+
+  /* Tawk.to live chat: if configured, load it and skip the demo bot */
+  const cfg = window.AURA_CONFIG || {};
+  if (cfg.tawkId) {
+    window.Tawk_API = window.Tawk_API || {}; window.Tawk_LoadStart = new Date();
+    const s = document.createElement('script');
+    s.async = true; s.src = 'https://embed.tawk.to/' + cfg.tawkId; s.charset = 'UTF-8';
+    s.setAttribute('crossorigin', '*');
+    document.head.appendChild(s);
+    document.body.insertAdjacentHTML('beforeend', FOOTER.replace(/<button id="aura-chat-btn"[\s\S]*$/, ''));
+    const m0=document.getElementById('marq'); if(m0) m0.innerHTML+=m0.innerHTML;
+    return;
+  }
   document.body.insertAdjacentHTML('beforeend', FOOTER);
 
   /* ---------- chat bot (demo brain - production version will be AI-powered) ---------- */
