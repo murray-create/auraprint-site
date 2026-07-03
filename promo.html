@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Promotional Products & Branded Apparel | Aura Print & Promo</title>
-<meta name="description" content="10,000+ promotional products and branded apparel with live stock. Mugs, pens, workwear, caps and eco merch, decorated on the Sunshine Coast.">
+<meta name="description" content="800+ promotional products and branded apparel with live supplier stock and instant pricing. Mugs, pens, drinkware, bags, caps and eco merch, decorated for the Sunshine Coast and Australia-wide.">
 <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="assets/aura.css">
 <style>
@@ -15,11 +15,22 @@
 .stock.low{color:#D97706}
 .detail{position:fixed;inset:0;background:rgba(15,15,16,.6);z-index:200;display:none;align-items:center;justify-content:center;padding:20px}
 .detail.open{display:flex}
-.detail .box{background:#fff;border-radius:24px;max-width:760px;width:100%;max-height:88vh;overflow-y:auto;padding:38px;position:relative}
+.detail .box{background:#fff;border-radius:24px;max-width:820px;width:100%;max-height:90vh;overflow-y:auto;padding:38px;position:relative}
 .detail .close{position:absolute;top:18px;right:20px;font-size:22px;cursor:pointer;background:none;border:none}
 .detail .split2{display:grid;grid-template-columns:1fr 1.2fr;gap:30px}
 @media(max-width:700px){.detail .split2{grid-template-columns:1fr}}
-.detail .big{aspect-ratio:1;background:#efe9e1;border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:90px}
+.detail .big{aspect-ratio:1;background:#efe9e1;border-radius:16px;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.detail .big img{width:100%;height:100%;object-fit:contain;mix-blend-mode:multiply}
+.detail .field{margin-bottom:12px}
+.detail .field label{display:block;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#8a847d;margin-bottom:5px}
+.detail select,.detail input[type=number]{width:100%;padding:11px 14px;border:2px solid #e8e2da;border-radius:12px;font-size:15px;font-family:'Inter',sans-serif;background:#fff}
+.detail select:focus,.detail input[type=number]:focus{outline:none;border-color:var(--violet)}
+.breaks{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
+.breaks button{border:1.5px solid #e8e2da;background:#faf7f2;border-radius:999px;padding:4px 12px;font-size:12.5px;font-weight:600;cursor:pointer}
+.breaks button:hover{border-color:var(--violet)}
+.card .thumb.photo{background:#f5f1ea}
+.card .thumb.photo img{width:100%;height:100%;object-fit:contain;mix-blend-mode:multiply;padding:10px}
+#loadmore{display:block;margin:36px auto 0}
 </style>
 </head>
 <body>
@@ -27,28 +38,20 @@
 <div class="page-hero">
   <div class="wrap">
     <div class="crumbs"><a href="index.html">Home</a> / <b style="color:#fff">Promo &amp; Apparel</b></div>
-    <h1>10,000+ WAYS TO <span class="grad-text">WEAR YOUR BRAND</span></h1>
-    <p>Live catalogue with real-time stock from our supplier network. Pick a product, choose decoration, and we'll quote it fast. On the live site this feed comes straight from the PromoBrands API.</p>
+    <h1>800+ WAYS TO <span class="grad-text">WEAR YOUR BRAND</span></h1>
+    <p>Real products, real stock, instant pricing - fed straight from our supplier network. Pick a product, choose decoration and quantity, and see your price on the spot.</p>
   </div>
 </div>
 
 <section class="pad">
   <div class="wrap">
     <div class="toolbar">
-      <input type="text" id="search" placeholder="Search 10,000+ products...">
+      <input type="text" id="search" placeholder="Search 800+ products...">
     </div>
-    <div class="chips" id="filters">
-      <button class="on" data-f="all">All</button>
-      <button data-f="drinkware">Drinkware</button>
-      <button data-f="office">Pens &amp; Office</button>
-      <button data-f="bags">Bags</button>
-      <button data-f="tech">Tech</button>
-      <button data-f="apparel">Apparel</button>
-      <button data-f="headwear">Headwear</button>
-      <button data-f="eco">Eco Range</button>
-    </div>
+    <div class="chips" id="filters"><button class="on" data-f="all">All</button></div>
     <div class="grid" id="catalogue"></div>
     <p id="noresults" style="display:none;color:#8a847d;text-align:center;padding:40px 0">No products match. Try another search or category.</p>
+    <button class="btn btn-ghost" id="loadmore" style="display:none">Show more products ↓</button>
   </div>
 </section>
 
@@ -58,98 +61,150 @@
     <button class="close" onclick="document.getElementById('detail').classList.remove('open')">✕</button>
     <div class="split2">
       <div>
-        <div class="big" id="dThumb">☕</div>
+        <div class="big" id="dThumb"></div>
         <p class="stock" id="dStock" style="margin-top:12px"></p>
+        <p id="dColours" style="font-size:12.5px;color:#8a847d;margin-top:6px"></p>
       </div>
       <div>
-        <h2 id="dName" style="font-size:26px;margin-bottom:8px"></h2>
-        <p id="dDesc" style="color:#6b6560;font-size:14.5px;margin-bottom:16px"></p>
-        <div class="field"><label>Decoration method</label>
-          <select id="dDeco"></select>
-        </div>
+        <h2 id="dName" style="font-size:26px;margin-bottom:4px"></h2>
+        <p id="dCode" style="font-size:12.5px;color:#8a847d;margin-bottom:8px"></p>
+        <p id="dDesc" style="color:#6b6560;font-size:14px;margin-bottom:14px"></p>
+        <div class="field" id="fService"><label>Service</label><select id="dService"></select></div>
+        <div class="field"><label>Decoration method</label><select id="dDeco"></select></div>
         <div class="field"><label>Quantity</label>
-          <select id="dQty"><option>50</option><option selected>100</option><option>250</option><option>500</option><option>1000</option></select>
+          <input type="number" id="dQty" min="1" step="1" value="100">
+          <div class="breaks" id="dBreaks"></div>
         </div>
-        <div class="price-box" style="margin-top:20px">
-          <div><div class="from">Indicative price</div><div class="gst">ex. GST, ex. delivery</div></div>
+        <div class="price-box" style="margin-top:16px">
+          <div><div class="from">Your price</div><div class="gst" id="dGst">ex. GST, ex. delivery</div></div>
           <div class="amount grad-text" id="dPrice"></div>
         </div>
-        <a class="btn btn-aura" href="quote.html" style="width:100%;text-align:center;margin-top:16px">Request exact quote →</a>
-        <p style="font-size:12px;color:#8a847d;margin-top:10px">Includes setup fee. Live site pulls exact price breaks and stock from the supplier API.</p>
+        <p id="dUnit" style="font-size:13px;color:#6b6560;margin-top:8px"></p>
+        <a class="btn btn-aura" id="dQuote" href="quote.html" style="width:100%;text-align:center;margin-top:14px">Lock it in - request exact quote →</a>
+        <p style="font-size:12px;color:#8a847d;margin-top:10px" id="dNote">Price includes decoration setup. Delivery quoted separately.</p>
       </div>
     </div>
   </div>
 </div>
 
+<script src="assets/config.js"></script>
 <script src="assets/aura.js"></script>
 <script>
-/* Mock catalogue shaped like the PromoBrands API response */
-const CATALOGUE=[
- {code:'M100',name:'Vienna Coffee Mug',cat:'drinkware',icon:'☕',desc:'330ml ceramic mug, 14 colours.',unit:4.9,setup:75,onHand:12400,deco:['Pad Print','Sublimation'],eco:false,tag:'Best seller'},
- {code:'B220',name:'Alpine Drink Bottle 600ml',cat:'drinkware',icon:'🍶',desc:'BPA-free with flip lid.',unit:6.8,setup:75,onHand:8200,deco:['Pad Print','Laser Engrave'],eco:false},
- {code:'T310',name:'Thermo Tumbler 450ml',cat:'drinkware',icon:'🥤',desc:'Double-wall stainless, keeps hot 6hrs.',unit:12.4,setup:90,onHand:640,deco:['Laser Engrave','Full Colour Wrap'],eco:false},
- {code:'S440',name:'Stubby Cooler',cat:'drinkware',icon:'🍺',desc:'5mm neoprene, full colour.',unit:5.2,setup:60,onHand:25000,deco:['Sublimation'],eco:false},
- {code:'P510',name:'Nitro Stylus Pen',cat:'office',icon:'🖊️',desc:'Metal barrel with stylus tip.',unit:2.1,setup:60,onHand:41000,deco:['Laser Engrave','Pad Print'],eco:false,tag:'Under $3'},
- {code:'N520',name:'A5 Eco Notebook',cat:'office',icon:'📓',desc:'Recycled cover, 160 lined pages.',unit:6.4,setup:75,onHand:5300,deco:['Screen Print','Debossing'],eco:true},
- {code:'L530',name:'Lanyard 20mm',cat:'office',icon:'🎗️',desc:'Full colour both sides, safety clip.',unit:2.4,setup:80,onHand:18000,deco:['Sublimation'],eco:false},
- {code:'G610',name:'Jute Tote Bag',cat:'bags',icon:'👜',desc:'Natural jute with cotton handles.',unit:5.9,setup:85,onHand:7600,deco:['Screen Print'],eco:true},
- {code:'G620',name:'Cotton Tote 140gsm',cat:'bags',icon:'🛍️',desc:'The classic calico carry-all.',unit:3.2,setup:70,onHand:22000,deco:['Screen Print','DTG'],eco:true},
- {code:'K710',name:'Wireless Charger Pad',cat:'tech',icon:'⚡',desc:'10W fast charge, rubber ring.',unit:14.8,setup:95,onHand:900,deco:['Pad Print','Laser Engrave'],eco:false},
- {code:'U720',name:'USB-C Flash Drive 32GB',cat:'tech',icon:'💾',desc:'Swivel body, dual connector.',unit:9.6,setup:90,onHand:3100,deco:['Laser Engrave','Pad Print'],eco:false},
- {code:'A810',name:'Classic Cotton Tee',cat:'apparel',icon:'👕',desc:'180gsm combed cotton, 12 colours.',unit:8.9,setup:80,onHand:15400,deco:['Screen Print','DTG','Embroidery'],eco:false},
- {code:'A820',name:'Pique Polo',cat:'apparel',icon:'👔',desc:'220gsm cotton-poly blend.',unit:16.5,setup:80,onHand:9800,deco:['Embroidery','Screen Print'],eco:false,tag:'Uniform ready'},
- {code:'A830',name:'Hi-Vis Day/Night Shirt',cat:'apparel',icon:'🦺',desc:'AS/NZS compliant with tape.',unit:24.9,setup:80,onHand:4700,deco:['Embroidery','Heat Transfer'],eco:false},
- {code:'A840',name:'Zip Hoodie 320gsm',cat:'apparel',icon:'🧥',desc:'Brushed fleece, kangaroo pocket.',unit:28.4,setup:85,onHand:2100,deco:['Embroidery','Screen Print','DTG'],eco:false},
- {code:'H910',name:'Structured Cap',cat:'headwear',icon:'🧢',desc:'6 panel cotton twill, snapback.',unit:7.8,setup:70,onHand:11300,deco:['Embroidery','Heat Transfer'],eco:false},
- {code:'H920',name:'Bucket Hat',cat:'headwear',icon:'👒',desc:'Cotton twill, festival favourite.',unit:9.2,setup:70,onHand:860,deco:['Embroidery'],eco:false},
- {code:'E010',name:'Bamboo Pen',cat:'eco',icon:'🎋',desc:'Sustainable bamboo barrel.',unit:2.8,setup:60,onHand:9700,deco:['Laser Engrave'],eco:true,tag:'Eco'},
- {code:'E020',name:'Wheat Straw Coffee Cup',cat:'eco',icon:'🌾',desc:'Reusable 400ml, plastic-free.',unit:8.4,setup:75,onHand:3900,deco:['Pad Print'],eco:true,tag:'Eco'},
- {code:'E030',name:'Seed Paper Bookmark',cat:'eco',icon:'🌱',desc:'Plant it and it grows.',unit:1.9,setup:55,onHand:14000,deco:['Full Colour Print'],eco:true,tag:'Eco'},
-];
+const GST=0.10, PAGE=48;
 const grid=document.getElementById('catalogue'), search=document.getElementById('search'),
-      filters=document.getElementById('filters'), noRes=document.getElementById('noresults');
-let cat='all';
-function money(n){return '$'+n.toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2})}
+      filters=document.getElementById('filters'), noRes=document.getElementById('noresults'),
+      more=document.getElementById('loadmore');
+let CATALOGUE=[], cat='all', shown=PAGE, current=null;
+const esc=s=>String(s??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/"/g,'&quot;');
+const money=n=>'$'+n.toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2});
+
+fetch('data/promo-catalogue.json').then(r=>r.json()).then(data=>{
+  CATALOGUE=data;
+  // build category chips from the live data (top 10 + Eco)
+  const counts={};
+  data.forEach(p=>{counts[p.cat]=(counts[p.cat]||0)+1});
+  Object.entries(counts).sort((a,b)=>b[1]-a[1]).slice(0,10).forEach(([name])=>{
+    if(name==='New')return;
+    const b=document.createElement('button'); b.dataset.f=name; b.textContent=name; filters.appendChild(b);
+  });
+  const eco=document.createElement('button'); eco.dataset.f='__eco'; eco.textContent='Eco Range'; filters.appendChild(eco);
+  renderCatalogue();
+});
+
+function matches(p,q){
+  if(cat==='__eco'&&!p.eco)return false;
+  if(cat!=='all'&&cat!=='__eco'&&!p.cats.includes(cat))return false;
+  if(q&&!(p.name.toLowerCase().includes(q)||p.desc.toLowerCase().includes(q)||p.code.toLowerCase().includes(q)||(p.appa||'').toLowerCase().includes(q)))return false;
+  return true;
+}
 function renderCatalogue(){
-  const q=search.value.toLowerCase();
-  const items=CATALOGUE.filter(p=>(cat==='all'||p.cat===cat||(cat==='eco'&&p.eco))&&(!q||p.name.toLowerCase().includes(q)||p.desc.toLowerCase().includes(q)));
+  const q=search.value.trim().toLowerCase();
+  const items=CATALOGUE.filter(p=>matches(p,q));
   grid.innerHTML='';
   noRes.style.display=items.length?'none':'block';
-  items.forEach(p=>{
-    const low=p.onHand<1000;
+  items.slice(0,shown).forEach(p=>{
+    const low=p.onHand>0&&p.onHand<500;
     const el=document.createElement('a');
-    el.className='card'; el.href='#'; el.onclick=e=>{e.preventDefault();openDetail(p);};
-    el.innerHTML=(p.tag?`<span class="badge">${p.tag}</span>`:'')+
-      `<div class="thumb">${p.icon}</div><div class="body"><h3>${p.name}</h3><p>${p.desc}</p>
+    el.className='card'; el.href='#'+p.code;
+    el.onclick=e=>{e.preventDefault();openDetail(p);};
+    const badge=p.trending?'Trending':p.isNew?'New':p.eco?'Eco':'';
+    const thumb=p.img?`<div class="thumb photo"><img loading="lazy" src="${esc(p.img)}" alt="${esc(p.name)}"></div>`:`<div class="thumb">🎁</div>`;
+    const stock=p.onHand>0?`<span class="stock ${low?'low':''}">${low?'Low stock: ':'In stock: '}${p.onHand.toLocaleString()}</span>`:'<span class="stock low">Made to order</span>';
+    el.innerHTML=(badge?`<span class="badge">${badge}</span>`:'')+thumb+
+      `<div class="body"><h3>${esc(p.name)}</h3><p>${esc(p.desc.slice(0,90))}</p>
       <div style="display:flex;justify-content:space-between;align-items:center">
-        <div class="from">from <em>${money(p.unit)}</em> ea</div>
-        <span class="stock ${low?'low':''}">${low?'Low stock: ':'In stock: '}${p.onHand.toLocaleString()}</span>
+        <div class="from">from <em>${money(p.from)}</em> ea</div>${stock}
       </div></div><div class="go">→</div>`;
     grid.appendChild(el);
   });
+  more.style.display=items.length>shown?'block':'none';
+  more.textContent=`Show more products ↓ (${Math.min(shown,items.length)} of ${items.length})`;
+}
+more.onclick=()=>{shown+=PAGE;renderCatalogue()};
+
+/* ---- pricing: mirrors the Aura pricing engine (unit breaks -> interpolate, + imprint/unit + setup, nearest dollar) ---- */
+function unitAt(breaks,q){
+  if(q<=breaks[0].q)return{u:breaks[0].u,minQ:breaks[0].q};
+  for(let i=1;i<breaks.length;i++){
+    if(q===breaks[i].q)return{u:breaks[i].u};
+    if(q<breaks[i].q){
+      const a=breaks[i-1],b=breaks[i],k=(q-a.q)/(b.q-a.q);
+      return{u:a.u+(b.u-a.u)*k};
+    }
+  }
+  return{u:breaks[breaks.length-1].u};
+}
+function calc(){
+  const p=current; if(!p)return;
+  const t=p.tables[+document.getElementById('dService').value||0];
+  const imp=p.imprints[+document.getElementById('dDeco').value]||null;
+  let q=Math.max(1,Math.round(+document.getElementById('dQty').value||0));
+  const {u,minQ}=unitAt(t.breaks,q);
+  const billQ=minQ?Math.max(q,minQ):q;
+  const setup=imp?p.setup:0;
+  const ex=Math.round(u*billQ+(imp?imp.u*billQ:0)+setup);
+  const inc=Math.round(ex*(1+GST)*100)/100;
+  document.getElementById('dPrice').textContent=money(ex);
+  document.getElementById('dGst').textContent='ex. GST, ex. delivery ('+money(inc)+' inc. GST)';
+  document.getElementById('dUnit').textContent=(minQ&&q<minQ?`Minimum order ${minQ} - priced at ${minQ}. `:'')+
+    `Works out to ${money(Math.round(ex/billQ*100)/100)} each`+(imp?` including ${imp.name.toLowerCase()} + setup.`:' unbranded.');
+  document.getElementById('dQuote').href=`quote.html?product=${encodeURIComponent(p.code)}&name=${encodeURIComponent(p.name)}&qty=${billQ}&deco=${encodeURIComponent(imp?imp.name:'Unbranded')}&service=${encodeURIComponent(t.name)}`;
 }
 function openDetail(p){
-  document.getElementById('dThumb').textContent=p.icon;
+  current=p;
+  const thumb=document.getElementById('dThumb');
+  thumb.innerHTML=p.img?`<img src="${esc(p.img)}" alt="${esc(p.name)}">`:'🎁';
   document.getElementById('dName').textContent=p.name;
-  document.getElementById('dDesc').textContent=p.desc+' Item code '+p.code+'.';
-  document.getElementById('dStock').textContent=(p.onHand<1000?'⚠️ Low stock: ':'✅ In stock: ')+p.onHand.toLocaleString()+' units (live from supplier)';
-  const deco=document.getElementById('dDeco'); deco.innerHTML='';
-  p.deco.forEach(d=>{const o=document.createElement('option');o.textContent=d;deco.appendChild(o);});
-  const calc=()=>{
-    const qty=+document.getElementById('dQty').value;
-    const disc=qty>=1000?.78:qty>=500?.85:qty>=250?.92:1;
-    document.getElementById('dPrice').textContent=money(Math.round((p.unit*disc*qty+p.setup)*100)/100);
-  };
-  document.getElementById('dQty').onchange=calc; deco.onchange=calc; calc();
+  document.getElementById('dCode').textContent='Item code '+p.code+(p.appa?' · '+p.appa:'');
+  document.getElementById('dDesc').textContent=p.desc;
+  document.getElementById('dStock').textContent=p.onHand>0
+    ?(p.onHand<500?'⚠️ Low stock: ':'✅ In stock: ')+p.onHand.toLocaleString()+' units'
+    :'Made to order - lead time applies';
+  document.getElementById('dColours').textContent=p.colours&&p.colours.length
+    ?'Colours: '+p.colours.map(c=>c.c).join(', '):'';
+  const svc=document.getElementById('dService');
+  svc.innerHTML=p.tables.map((t,i)=>`<option value="${i}">${esc(t.name)}</option>`).join('');
+  document.getElementById('fService').style.display=p.tables.length>1?'':'none';
+  const deco=document.getElementById('dDeco');
+  deco.innerHTML=p.imprints.length
+    ?p.imprints.map((m,i)=>`<option value="${i}">${esc(m.name)}${m.size?' - '+esc(m.size):''}</option>`).join('')+'<option value="-1">Unbranded (no decoration)</option>'
+    :'<option value="-1">Unbranded</option>';
+  const qty=document.getElementById('dQty');
+  const minQ=p.tables[0].breaks[0].q;
+  qty.value=Math.max(minQ,50);
+  document.getElementById('dBreaks').innerHTML=p.tables[0].breaks.map(b=>`<button type="button" data-q="${b.q}">${b.q}</button>`).join('');
+  document.getElementById('dBreaks').onclick=e=>{if(e.target.dataset.q){qty.value=e.target.dataset.q;calc();}};
+  document.getElementById('dNote').textContent=(p.stockAsAt?'Stock as at '+p.stockAsAt.slice(0,10)+'. ':'')+'Price includes decoration setup. Delivery quoted separately.';
+  svc.onchange=calc; deco.onchange=calc; qty.oninput=calc;
+  calc();
   document.getElementById('detail').classList.add('open');
 }
 filters.addEventListener('click',e=>{
   if(e.target.tagName!=='BUTTON')return;
   filters.querySelectorAll('button').forEach(b=>b.classList.remove('on'));
-  e.target.classList.add('on'); cat=e.target.dataset.f; renderCatalogue();
+  e.target.classList.add('on'); cat=e.target.dataset.f; shown=PAGE; renderCatalogue();
 });
-search.addEventListener('input',renderCatalogue);
-renderCatalogue();
+search.addEventListener('input',()=>{shown=PAGE;renderCatalogue()});
 </script>
 </body>
 </html>

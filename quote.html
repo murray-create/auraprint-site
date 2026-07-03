@@ -28,14 +28,14 @@
       <div class="field"><label>Email *</label><input type="email" placeholder="jane@business.com.au"></div>
       <div class="field"><label>Phone</label><input type="tel" placeholder="04xx xxx xxx"></div>
       <div class="field"><label>Product *</label>
-        <select>
+        <select id="qProduct">
           <option>Business Cards</option><option>Flyers / Brochures</option><option>Booklets</option>
           <option>Corflute Signs</option><option>Banners / Flags</option><option>Stickers &amp; Labels</option>
           <option>Promotional Products</option><option>Apparel / Workwear</option><option>Something else</option>
         </select>
       </div>
-      <div class="field"><label>Quantity</label><input type="text" placeholder="e.g. 500"></div>
-      <div class="field"><label>Tell us about the job *</label><textarea rows="4" placeholder="Size, stock, finish, deadline - whatever you know. We'll fill the gaps."></textarea></div>
+      <div class="field"><label>Quantity</label><input type="text" id="qQty" placeholder="e.g. 500"></div>
+      <div class="field"><label>Tell us about the job *</label><textarea rows="4" id="qJob" placeholder="Size, stock, finish, deadline - whatever you know. We'll fill the gaps."></textarea></div>
       <div class="field"><label>Artwork (optional)</label>
         <div class="upload">📎 Drag files here or click to upload<br><span style="font-size:12.5px">PDF, AI, JPG, PNG up to 100MB. Canva links welcome too.</span></div>
       </div>
@@ -62,5 +62,20 @@
 </section>
 
 <script src="assets/aura.js"></script>
+<script>
+/* Pre-fill from product pages and the promo catalogue (?product=CODE&name=&qty=&deco=&service=) */
+(function(){
+  const p=new URLSearchParams(location.search);
+  if(!p.get('product'))return;
+  const code=p.get('product'),name=p.get('name')||'',qty=p.get('qty')||'',deco=p.get('deco')||'',svc=p.get('service')||'';
+  if(name||deco){ // promo item
+    document.getElementById('qProduct').value='Promotional Products';
+    if(qty)document.getElementById('qQty').value=qty;
+    document.getElementById('qJob').value=[name?name+' (item '+code+')':'Item '+code,deco&&'Decoration: '+deco,svc&&'Service: '+svc].filter(Boolean).join('\n');
+  }else{
+    document.getElementById('qJob').value='Product: '+code;
+  }
+})();
+</script>
 </body>
 </html>
