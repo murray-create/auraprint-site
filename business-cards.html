@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en-AU">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Business Cards Sunshine Coast - Instant Online Pricing | Aura Print</title>
+<meta name="description" content="Premium business cards printed on the Sunshine Coast. 350gsm to NV Velvet luxury. Instant online pricing, next-day express available.">
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/aura.css">
+<style>
+.config{display:grid;grid-template-columns:1fr 1fr;gap:50px;padding:60px 0}
+.gallery .main{aspect-ratio:4/3;background:#efe9e1;border-radius:20px;display:flex;align-items:center;justify-content:center;font-size:110px;border:1px solid #ece6de}
+.gallery .row{display:flex;gap:12px;margin-top:12px}
+.gallery .row div{flex:1;aspect-ratio:1;background:#efe9e1;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:30px;cursor:pointer;border:2px solid transparent;transition:.2s}
+.gallery .row div:hover{border-color:var(--violet)}
+.trust{display:flex;gap:20px;margin-top:20px;font-size:13.5px;font-weight:600;color:#6b6560;flex-wrap:wrap}
+.trust span b{color:var(--ink)}
+h1.prod{font-size:clamp(28px,3.4vw,42px);margin-bottom:10px}
+.optlabel{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#555;margin:22px 0 10px}
+.split{display:grid;grid-template-columns:1fr 1fr;gap:50px}
+</style>
+</head>
+<body>
+
+<div class="page-hero" style="padding:40px 0 36px">
+  <div class="wrap">
+    <div class="crumbs"><a href="index.html">Home</a> / <a href="print.html">Print</a> / <b style="color:#fff">Business Cards</b></div>
+  </div>
+</div>
+
+<section>
+  <div class="wrap config">
+    <div class="gallery">
+      <div class="main" id="mainThumb">🪪</div>
+      <div class="row">
+        <div onclick="document.getElementById('mainThumb').textContent='🪪'">🪪</div>
+        <div onclick="document.getElementById('mainThumb').textContent='✨'">✨</div>
+        <div onclick="document.getElementById('mainThumb').textContent='🖤'">🖤</div>
+        <div onclick="document.getElementById('mainThumb').textContent='📐'">📐</div>
+      </div>
+      <div class="trust">
+        <span>★★★★★ <b>Google reviews</b></span>
+        <span>⚡ <b>Next-day express</b></span>
+        <span>🇦🇺 <b>100% Australian owned</b></span>
+      </div>
+    </div>
+
+    <div>
+      <h1 class="prod">BUSINESS CARDS <span class="grad-text">THAT MEAN BUSINESS</span></h1>
+      <p style="color:#6b6560;margin-bottom:6px">90x55mm. From everyday 350gsm to thick NV Velvet with Spot UV and metallic foil. Price updates live as you build your card.</p>
+
+      <div class="optlabel">Stock</div>
+      <div class="opts" data-group="stock">
+        <button class="opt on" data-mult="1">350gsm Matt Laminate</button>
+        <button class="opt" data-mult="1.05">350gsm Gloss</button>
+        <button class="opt" data-mult="2.1">450gsm NV Velvet</button>
+        <button class="opt" data-mult="2.9">NV Velvet + Spot UV</button>
+      </div>
+
+      <div class="optlabel">Sides</div>
+      <div class="opts" data-group="sides">
+        <button class="opt" data-mult="0.85">Single sided</button>
+        <button class="opt on" data-mult="1">Double sided</button>
+      </div>
+
+      <div class="optlabel">Corners</div>
+      <div class="opts" data-group="corners">
+        <button class="opt on" data-add="0">Square</button>
+        <button class="opt" data-add="15">Rounded (7mm)</button>
+      </div>
+
+      <div class="optlabel">Quantity</div>
+      <div class="opts" data-group="qty">
+        <button class="opt" data-base="75">250</button>
+        <button class="opt on" data-base="89">500</button>
+        <button class="opt" data-base="107">750</button>
+        <button class="opt" data-base="124">1000</button>
+        <button class="opt" data-base="246">2000</button>
+      </div>
+
+      <div class="optlabel">Turnaround</div>
+      <div class="opts" data-group="speed">
+        <button class="opt on" data-mult2="1">Standard (3-5 days)</button>
+        <button class="opt" data-mult2="1.35">Next day ⚡</button>
+      </div>
+
+      <div class="price-box" style="margin-top:28px">
+        <div><div class="from">Your price</div><div class="gst">inc. GST, ex. delivery</div></div>
+        <div class="amount grad-text" id="price">$89</div>
+      </div>
+      <div style="display:flex;gap:12px;margin-top:18px;flex-wrap:wrap">
+        <a class="btn btn-aura" href="#" style="flex:1;text-align:center">Order &amp; upload artwork →</a>
+        <a class="btn btn-ghost" href="quote.html">Custom quote</a>
+      </div>
+      <p style="font-size:12.5px;color:#8a847d;margin-top:12px">Prototype pricing for demonstration. Live site prices come from the Aura pricing engine.</p>
+    </div>
+  </div>
+</section>
+
+<section class="band">
+  <div class="wrap split">
+    <div>
+      <h2 style="font-size:clamp(24px,3vw,36px);margin-bottom:16px">Artwork <span class="grad-text">setup specs</span></h2>
+      <ul style="list-style:none;color:#b8b2ab;font-size:15px;line-height:2.1">
+        <li>📐 <b style="color:#fff">Trim size:</b> 90 x 55mm</li>
+        <li>✂️ <b style="color:#fff">Bleed:</b> 3mm all sides (96 x 61mm total)</li>
+        <li>🖨️ <b style="color:#fff">Colour:</b> CMYK, 300dpi minimum</li>
+        <li>📄 <b style="color:#fff">Format:</b> Print-ready PDF preferred</li>
+        <li>🎨 <b style="color:#fff">Canva users:</b> Follow our Canva print setup guide</li>
+      </ul>
+      <a class="btn btn-aura" href="#" style="margin-top:20px">Download template</a>
+    </div>
+    <div>
+      <h2 style="font-size:clamp(24px,3vw,36px);margin-bottom:16px">Why print with <span class="grad-text">Aura?</span></h2>
+      <p style="color:#b8b2ab">Every card is preflight-checked by a human before it prints, and you approve a digital proof first. Nothing goes to press until you're happy. Pick up in Baringa or have them couriered anywhere in Australia.</p>
+    </div>
+  </div>
+</section>
+
+<section class="pad faq">
+  <div class="wrap" style="max-width:860px">
+    <h2 style="font-size:clamp(26px,3.4vw,40px);margin-bottom:30px">Frequently asked <span class="grad-text">questions</span></h2>
+    <details><summary>What is NV Velvet?</summary><p>NV (Neenah Velvet) is a luxurious soft-touch laminate over thick 450gsm artboard. It feels like suede and makes colours pop. Add Spot UV for glossy highlights over the velvet finish.</p></details>
+    <details><summary>How fast can I get my cards?</summary><p>Standard turnaround is 3-5 business days plus delivery. Next-day express is available on most stocks if you order and approve artwork before 10am.</p></details>
+    <details><summary>Can you design my card?</summary><p>Yes. Our design team can create or refresh your card from $99. Ask via the quote form or live chat.</p></details>
+    <details><summary>Do I see a proof before printing?</summary><p>Always. A digital proof lands in your inbox and nothing prints until you approve it.</p></details>
+  </div>
+</section>
+
+<section class="pad" style="padding-top:0">
+  <div class="wrap">
+    <div class="sec-head"><h2>You might also <span class="grad-text">need</span></h2></div>
+    <div class="grid">
+      <a class="card" href="print.html"><div class="thumb">✉️</div><div class="body"><h3>Letterheads</h3><p>Match your new cards.</p><div class="from">from <em>$120</em></div></div></a>
+      <a class="card" href="print.html"><div class="thumb">📄</div><div class="body"><h3>With Compliments</h3><p>The full stationery suite.</p><div class="from">get a quote</div></div></a>
+      <a class="card" href="signage.html"><div class="thumb">🚩</div><div class="body"><h3>Pull Up Banners</h3><p>For your next event.</p><div class="from">from <em>$208</em></div></div></a>
+      <a class="card" href="promo.html"><div class="thumb">🖊️</div><div class="body"><h3>Branded Pens</h3><p>Leave more than a card.</p><div class="from">browse range</div></div></a>
+    </div>
+  </div>
+</section>
+
+<script src="assets/aura.js"></script>
+<script>
+function calc(){
+  const base=+document.querySelector('[data-group=qty] .on').dataset.base;
+  const mult=+document.querySelector('[data-group=stock] .on').dataset.mult;
+  const sides=+document.querySelector('[data-group=sides] .on').dataset.mult;
+  const add=+document.querySelector('[data-group=corners] .on').dataset.add;
+  const speed=+document.querySelector('[data-group=speed] .on').dataset.mult2;
+  const total=Math.round((base*mult*sides+add)*speed);
+  const el=document.getElementById('price');
+  const start=parseFloat(el.dataset.v||0), t0=performance.now();
+  function tick(t){const k=Math.min(1,(t-t0)/300);el.textContent='$'+Math.round(start+(total-start)*k).toLocaleString();
+    if(k<1)requestAnimationFrame(tick);else el.dataset.v=total;}
+  requestAnimationFrame(tick);
+}
+document.querySelectorAll('.opts').forEach(g=>{
+  g.addEventListener('click',e=>{
+    if(!e.target.classList.contains('opt'))return;
+    g.querySelectorAll('.opt').forEach(o=>o.classList.remove('on'));
+    e.target.classList.add('on'); calc();
+  });
+});
+calc();
+</script>
+</body>
+</html>
