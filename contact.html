@@ -36,17 +36,20 @@
         <li><b>Chat</b> The bubble in the corner - go on, try it</li>
       </ul>
     </div>
-    <div class="panel">
+    <form class="panel" data-aura-form data-subject="New contact message">
       <h2 style="font-size:24px;margin-bottom:6px">Send a message</h2>
-      <p style="color:#6b6560;font-size:14px">We reply within one business hour.</p>
-      <div class="field"><label>Your name *</label><input type="text" placeholder="Jane Smith"></div>
-      <div class="field"><label>Email *</label><input type="email" placeholder="jane@business.com.au"></div>
-      <div class="field"><label>Message *</label><textarea rows="5" placeholder="How can we help?"></textarea></div>
-      <button class="btn btn-aura" style="width:100%;margin-top:22px" onclick="this.textContent='✓ Sent! Talk soon.';this.style.pointerEvents='none'">Send message →</button>
-    </div>
+      <p style="color:#6b6560;font-size:14px">We reply within one business hour (Mon-Fri 8:30-5).</p>
+      <div class="field"><label>Your name *</label><input type="text" name="name" required placeholder="Jane Smith"></div>
+      <div class="field"><label>Email *</label><input type="email" name="email" required placeholder="jane@business.com.au"></div>
+      <div class="field"><label>Phone</label><input type="tel" name="phone" placeholder="04xx xxx xxx"></div>
+      <div class="field"><label>Message *</label><textarea rows="5" name="message" required placeholder="How can we help?"></textarea></div>
+      <input type="checkbox" name="botcheck" style="display:none" tabindex="-1" autocomplete="off">
+      <button type="submit" class="btn btn-aura" style="width:100%;margin-top:22px">Send message →</button>
+    </form>
   </div>
 </section>
 
+<script src="assets/config.js"></script>
 <script src="assets/aura.js"></script>
 </body>
 </html>
