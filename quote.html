@@ -21,26 +21,27 @@
 
 <section class="pad">
   <div class="wrap split">
-    <div class="panel">
+    <form class="panel" data-aura-form data-subject="New quote request">
       <h2 style="font-size:24px;margin-bottom:6px">Job details</h2>
-      <p style="color:#6b6560;font-size:14px">On the live site this form pre-fills from the product you were viewing and creates a draft estimate in our system automatically.</p>
-      <div class="field"><label>Your name *</label><input type="text" placeholder="Jane Smith"></div>
-      <div class="field"><label>Email *</label><input type="email" placeholder="jane@business.com.au"></div>
-      <div class="field"><label>Phone</label><input type="tel" placeholder="04xx xxx xxx"></div>
+      <p style="color:#6b6560;font-size:14px">Tell us about the job and we'll price it, usually within the hour (Mon-Fri 8:30-5).</p>
+      <div class="field"><label>Your name *</label><input type="text" name="name" required placeholder="Jane Smith"></div>
+      <div class="field"><label>Email *</label><input type="email" name="email" required placeholder="jane@business.com.au"></div>
+      <div class="field"><label>Phone</label><input type="tel" name="phone" placeholder="04xx xxx xxx"></div>
       <div class="field"><label>Product *</label>
-        <select id="qProduct">
+        <select id="qProduct" name="product" required>
           <option>Business Cards</option><option>Flyers / Brochures</option><option>Booklets</option>
           <option>Corflute Signs</option><option>Banners / Flags</option><option>Stickers &amp; Labels</option>
           <option>Promotional Products</option><option>Apparel / Workwear</option><option>Something else</option>
         </select>
       </div>
-      <div class="field"><label>Quantity</label><input type="text" id="qQty" placeholder="e.g. 500"></div>
-      <div class="field"><label>Tell us about the job *</label><textarea rows="4" id="qJob" placeholder="Size, stock, finish, deadline - whatever you know. We'll fill the gaps."></textarea></div>
-      <div class="field"><label>Artwork (optional)</label>
-        <div class="upload">📎 Drag files here or click to upload<br><span style="font-size:12.5px">PDF, AI, JPG, PNG up to 100MB. Canva links welcome too.</span></div>
-      </div>
-      <button class="btn btn-aura" style="width:100%;margin-top:22px" onclick="this.textContent='✓ Sent! We\'ll be in touch within the hour.';this.style.pointerEvents='none'">Send my quote request →</button>
-    </div>
+      <div class="field"><label>Quantity</label><input type="text" id="qQty" name="quantity" placeholder="e.g. 500"></div>
+      <div class="field"><label>Tell us about the job *</label><textarea rows="4" id="qJob" name="job_details" required placeholder="Size, stock, finish, deadline - whatever you know. We'll fill the gaps."></textarea></div>
+      <div class="field"><label>Artwork link (optional)</label><input type="url" name="artwork_link" placeholder="Paste a Canva, Drive or Dropbox link"><span style="display:block;margin-top:5px;font-size:12.5px;color:#8a847d">Or we'll request your files once the quote is approved.</span></div>
+      <input type="hidden" name="source_product_code" id="qCode" value="">
+      <input type="hidden" name="source_page" id="qSrc" value="">
+      <input type="checkbox" name="botcheck" style="display:none" tabindex="-1" autocomplete="off">
+      <button type="submit" class="btn btn-aura" style="width:100%;margin-top:22px">Send my quote request →</button>
+    </form>
 
     <div>
       <div class="panel" style="margin-bottom:22px">
@@ -61,13 +62,16 @@
   </div>
 </section>
 
+<script src="assets/config.js"></script>
 <script src="assets/aura.js"></script>
 <script>
 /* Pre-fill from product pages and the promo catalogue (?product=CODE&name=&qty=&deco=&service=) */
 (function(){
   const p=new URLSearchParams(location.search);
+  const src=document.getElementById('qSrc'); if(src) src.value=document.referrer||location.href;
   if(!p.get('product'))return;
   const code=p.get('product'),name=p.get('name')||'',qty=p.get('qty')||'',deco=p.get('deco')||'',svc=p.get('service')||'';
+  const codeEl=document.getElementById('qCode'); if(codeEl) codeEl.value=code;
   if(name||deco){ // promo item
     document.getElementById('qProduct').value='Promotional Products';
     if(qty)document.getElementById('qQty').value=qty;
