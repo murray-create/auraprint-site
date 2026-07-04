@@ -98,8 +98,62 @@ function fillEmails(){
   });
 }
 
+/* Enquiry + quote forms -> Web3Forms (emails admin@auraprint.com.au on every submit).
+   Any <form data-aura-form> is wired automatically. Requires AURA_CONFIG.web3formsKey.
+   Free tier has no file attachments, so artwork is captured as a link/description here
+   and the real upload happens once the full backend is built. */
+function wireForms(){
+  var CFG = (window.AURA_CONFIG || {});
+  var ENDPOINT = 'https://api.web3forms.com/submit';
+  document.querySelectorAll('form[data-aura-form]').forEach(function(form){
+    var status = form.querySelector('.form-status');
+    if (!status){ status = document.createElement('p'); status.className = 'form-status'; status.style.cssText = 'margin-top:14px;font-size:14px;min-height:20px'; form.appendChild(status); }
+    form.addEventListener('submit', function(e){
+      e.preventDefault();
+      /* honeypot: bots fill hidden field, humans never do */
+      var hp = form.querySelector('input[name="botcheck"]');
+      if (hp && hp.checked) return;
+      /* required-field guard */
+      var missing = [];
+      form.querySelectorAll('[required]').forEach(function(el){ if(!String(el.value||'').trim()) missing.push(el); });
+      if (missing.length){ missing[0].focus(); status.style.color = '#c0392b'; status.textContent = 'Please fill the required fields (marked *).'; return; }
+
+      var btn = form.querySelector('button[type="submit"], button:not([type])');
+      var em = 'admin' + String.fromCharCode(64) + 'auraprint.com.au';
+      if (!CFG.web3formsKey){
+        status.style.color = '#c0392b';
+        status.innerHTML = 'Our form isn’t connected yet — please call <b>1300 291 277</b> or email <b>' + em + '</b> and we’ll jump straight on it.';
+        return;
+      }
+      var data = new FormData(form);
+      data.append('access_key', CFG.web3formsKey);
+      if (!data.get('subject')) data.append('subject', (form.getAttribute('data-subject') || 'New website enquiry') + ' – Aura Print');
+      data.append('from_name', 'Aura Print website');
+      var original = btn ? btn.textContent : '';
+      if (btn){ btn.disabled = true; btn.textContent = 'Sending…'; }
+      status.style.color = '#6b6560'; status.textContent = '';
+      fetch(ENDPOINT, { method:'POST', body:data })
+        .then(function(r){ return r.json(); })
+        .then(function(res){
+          if (res.success){
+            form.querySelectorAll('input,textarea,select').forEach(function(el){ if(el.type!=='hidden' && el.type!=='checkbox') el.value=''; });
+            status.style.color = '#1a8a4a';
+            status.innerHTML = '✓ Thanks! Your request is in — we’ll be in touch within the hour (Mon–Fri 8:30–5).';
+            if (btn){ btn.textContent = '✓ Sent'; }
+          } else { throw new Error(res.message || 'failed'); }
+        })
+        .catch(function(){
+          status.style.color = '#c0392b';
+          status.innerHTML = 'Something went wrong sending that. Please call <b>1300 291 277</b> or email <b>' + em + '</b> and we’ll sort it right away.';
+          if (btn){ btn.disabled = false; btn.textContent = original; }
+        });
+    });
+  });
+}
+
 document.addEventListener('DOMContentLoaded', function(){
   document.body.insertAdjacentHTML('afterbegin', HEADER);
+  wireForms();
 
   /* Tawk.to live chat: if configured, load it and skip the demo bot */
   const cfg = window.AURA_CONFIG || {};
