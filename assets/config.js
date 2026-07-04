@@ -6,5 +6,11 @@ window.AURA_CONFIG = {
   tawkId: "6a47acded339301d469eebb0/1jsjvmhi0",
 
   /* LEP Print Portal white-label URL */
-  portalUrl: "https://printportal.cloud/wl/159459"
+  portalUrl: "https://printportal.cloud/wl/159459",
+
+  /* Web3Forms access key: enquiry + quote forms email you on every submission.
+     Get a free key at web3forms.com - enter admin@auraprint.com.au, check that
+     inbox for the access key, and paste it here. Until then the forms show a
+     friendly "call or email us" fallback instead of silently failing. */
+  web3formsKey: "3b1dfdc0-cfad-4985-abe6-43a73f47c348"
 };
