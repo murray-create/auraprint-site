@@ -12,5 +12,12 @@ window.AURA_CONFIG = {
      Get a free key at web3forms.com - enter admin@auraprint.com.au, check that
      inbox for the access key, and paste it here. Until then the forms show a
      friendly "call or email us" fallback instead of silently failing. */
-  web3formsKey: "3b1dfdc0-cfad-4985-abe6-43a73f47c348"
+  web3formsKey: "3b1dfdc0-cfad-4985-abe6-43a73f47c348",
+
+  /* Supabase (Aura CRM database). Every enquiry is stored in the leads table.
+     The publishable key below is safe to expose: it can only INSERT enquiries,
+     never read them (enforced by row-level security). Staff read the leads
+     via the password-protected admin inbox. */
+  supabaseUrl: "https://pwjxkzifitybvtnrfxfi.supabase.co",
+  supabaseKey: "sb_publishable_HYMPZZd4CPpmWktzmht7Jg_xD1C-QZ1"
 };
