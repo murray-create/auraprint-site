@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en-AU">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex,nofollow">
+<title>Lead Inbox | Aura Print CRM</title>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/aura.css">
+<style>
+  body{background:#f6f3ee}
+  .admin-wrap{max-width:1200px;margin:0 auto;padding:28px 20px}
+  .admin-head{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:22px}
+  .admin-head h1{font-size:26px;margin:0}
+  .muted{color:#8a847d;font-size:13px}
+  .login{max-width:380px;margin:8vh auto;background:#fff;border:1px solid #e8e2da;border-radius:16px;padding:30px}
+  .login h1{font-size:22px;margin:0 0 6px}
+  .login .field{margin:14px 0}
+  .login label{display:block;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#666;margin-bottom:6px}
+  .login input{width:100%;padding:12px;border:2px solid #e8e2da;border-radius:10px;font-size:15px}
+  .btn-sm{padding:9px 16px;border-radius:9px;font-weight:700;font-size:13px;border:none;cursor:pointer}
+  .filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+  .chip{padding:7px 14px;border-radius:999px;font-weight:700;font-size:13px;border:2px solid #e0d9d0;background:#fff;cursor:pointer;color:#555}
+  .chip.active{background:var(--ink,#1a1a1a);color:#fff;border-color:transparent}
+  table{width:100%;border-collapse:collapse;background:#fff;border-radius:14px;overflow:hidden;box-shadow:0 1px 0 #e8e2da}
+  th,td{text-align:left;padding:12px 14px;font-size:13.5px;vertical-align:top;border-bottom:1px solid #f0ece5}
+  th{background:#faf7f2;font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:#8a847d}
+  tr:last-child td{border-bottom:none}
+  .lead-name{font-weight:700}
+  .lead-contact a{color:#c026a3;text-decoration:none}
+  .job{max-width:320px;white-space:pre-wrap;color:#555}
+  .status-sel{padding:6px 8px;border-radius:8px;border:2px solid #e0d9d0;font-weight:700;font-size:12.5px;background:#fff}
+  .s-new{color:#b45309}.s-contacted{color:#2563eb}.s-quoted{color:#7c3aed}.s-won{color:#15803d}.s-lost{color:#9ca3af}
+  .pill{display:inline-block;padding:2px 8px;border-radius:999px;font-size:11px;font-weight:700;background:#f0ece5;color:#6b6560}
+  .err{color:#c0392b;font-size:13.5px;margin-top:10px}
+  .saved{color:#15803d;font-size:11px;margin-left:6px;opacity:0;transition:opacity .2s}
+  .saved.show{opacity:1}
+  .empty{text-align:center;color:#8a847d;padding:40px}
+</style>
+</head>
+<body>
+
+<!-- LOGIN GATE -->
+<div id="login" class="login" style="display:none">
+  <h1>Aura CRM</h1>
+  <p class="muted">Staff sign in to view enquiries.</p>
+  <div class="field"><label>Email</label><input id="lEmail" type="email" autocomplete="username" placeholder="admin@auraprint.com.au"></div>
+  <div class="field"><label>Password</label><input id="lPass" type="password" autocomplete="current-password" placeholder="••••••••"></div>
+  <button id="lBtn" class="btn btn-aura" style="width:100%">Sign in</button>
+  <div id="lErr" class="err"></div>
+</div>
+
+<!-- APP -->
+<div id="app" class="admin-wrap" style="display:none">
+  <div class="admin-head">
+    <div>
+      <h1>Lead Inbox</h1>
+      <div class="muted" id="count">Loading…</div>
+    </div>
+    <div>
+      <button id="refreshBtn" class="chip">↻ Refresh</button>
+      <button id="signout" class="btn-sm" style="background:#efe9e1;color:#555">Sign out</button>
+    </div>
+  </div>
+
+  <div class="filters" id="filters">
+    <button class="chip active" data-f="all">All</button>
+    <button class="chip" data-f="new">New</button>
+    <button class="chip" data-f="contacted">Contacted</button>
+    <button class="chip" data-f="quoted">Quoted</button>
+    <button class="chip" data-f="won">Won</button>
+    <button class="chip" data-f="lost">Lost</button>
+  </div>
+
+  <div id="tableWrap"></div>
+</div>
+
+<script src="assets/config.js?v=20260707a"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+(function(){
+  var CFG = window.AURA_CONFIG || {};
+  var loginEl = document.getElementById('login'), appEl = document.getElementById('app');
+  if (!CFG.supabaseUrl || !CFG.supabaseKey){
+    loginEl.style.display='block';
+    document.getElementById('lErr').textContent = 'Database not configured (missing Supabase settings).';
+    return;
+  }
+  var sb = supabase.createClient(CFG.supabaseUrl, CFG.supabaseKey);
+  var STATUSES = ['new','contacted','quoted','won','lost'];
+  var currentFilter = 'all', allLeads = [];
+
+  function esc(s){ return String(s==null?'':s).replace(/[&<>"]/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
+  function fmtDate(s){ var d=new Date(s); return d.toLocaleDateString('en-AU',{day:'2-digit',month:'short'})+' '+d.toLocaleTimeString('en-AU',{hour:'2-digit',minute:'2-digit'}); }
+
+  async function showApp(){
+    loginEl.style.display='none'; appEl.style.display='block';
+    await loadLeads();
+  }
+  function showLogin(){ appEl.style.display='none'; loginEl.style.display='block'; }
+
+  async function loadLeads(){
+    document.getElementById('count').textContent = 'Loading…';
+    var res = await sb.from('leads').select('*').order('created_at',{ascending:false});
+    if (res.error){ document.getElementById('tableWrap').innerHTML = '<div class="empty">Could not load leads: '+esc(res.error.message)+'</div>'; return; }
+    allLeads = res.data || [];
+    render();
+  }
+
+  function render(){
+    var rows = allLeads.filter(function(l){ return currentFilter==='all' || l.status===currentFilter; });
+    var newCount = allLeads.filter(function(l){return l.status==='new';}).length;
+    document.getElementById('count').textContent = allLeads.length+' total · '+newCount+' new';
+    if (!rows.length){ document.getElementById('tableWrap').innerHTML = '<div class="empty">No leads'+(currentFilter==='all'?' yet.':' in this view.')+'</div>'; return; }
+    var html = '<table><thead><tr>'+
+      '<th>Received</th><th>Contact</th><th>Category</th><th>Qty</th><th>Job</th><th>Source</th><th>Status</th>'+
+      '</tr></thead><tbody>';
+    rows.forEach(function(l){
+      var art = l.artwork_link ? '<div><a href="'+esc(l.artwork_link)+'" target="_blank" rel="noopener">artwork ↗</a></div>' : '';
+      html += '<tr>'+
+        '<td>'+esc(fmtDate(l.created_at))+'</td>'+
+        '<td><div class="lead-name">'+esc(l.name)+'</div>'+
+          '<div class="lead-contact"><a href="mailto:'+esc(l.email)+'">'+esc(l.email)+'</a></div>'+
+          (l.phone?'<div class="muted">'+esc(l.phone)+'</div>':'')+
+          (l.company?'<div class="muted">'+esc(l.company)+'</div>':'')+'</td>'+
+        '<td>'+esc(l.category||'—')+'</td>'+
+        '<td>'+esc(l.quantity||'—')+'</td>'+
+        '<td><div class="job">'+esc(l.job_details||'—')+'</div>'+art+'</td>'+
+        '<td><span class="pill">'+esc(l.source_form||'—')+'</span>'+(l.source_product_code?'<div class="muted">'+esc(l.source_product_code)+'</div>':'')+'</td>'+
+        '<td>'+statusSelect(l)+'<span class="saved" id="saved-'+l.id+'">saved</span></td>'+
+        '</tr>';
+    });
+    html += '</tbody></table>';
+    document.getElementById('tableWrap').innerHTML = html;
+    document.querySelectorAll('.status-sel').forEach(function(sel){
+      sel.addEventListener('change', function(){ updateStatus(sel.dataset.id, sel.value); });
+    });
+  }
+
+  function statusSelect(l){
+    var opts = STATUSES.map(function(s){ return '<option value="'+s+'"'+(l.status===s?' selected':'')+'>'+s+'</option>'; }).join('');
+    return '<select class="status-sel s-'+esc(l.status)+'" data-id="'+l.id+'">'+opts+'</select>';
+  }
+
+  async function updateStatus(id, status){
+    var res = await sb.from('leads').update({status:status}).eq('id', id);
+    var badge = document.getElementById('saved-'+id);
+    if (res.error){ alert('Could not update: '+res.error.message); return; }
+    var l = allLeads.find(function(x){return x.id===id;}); if (l) l.status=status;
+    if (badge){ badge.classList.add('show'); setTimeout(function(){ badge.classList.remove('show'); }, 1200); }
+    // recolour + refresh counts
+    document.getElementById('count').textContent = allLeads.length+' total · '+allLeads.filter(function(x){return x.status==='new';}).length+' new';
+  }
+
+  // filters
+  document.getElementById('filters').addEventListener('click', function(e){
+    var b = e.target.closest('.chip'); if(!b) return;
+    currentFilter = b.dataset.f;
+    document.querySelectorAll('#filters .chip').forEach(function(c){ c.classList.toggle('active', c===b); });
+    render();
+  });
+  document.getElementById('refreshBtn').addEventListener('click', loadLeads);
+
+  // auth
+  document.getElementById('lBtn').addEventListener('click', signIn);
+  document.getElementById('lPass').addEventListener('keydown', function(e){ if(e.key==='Enter') signIn(); });
+  async function signIn(){
+    var email = document.getElementById('lEmail').value.trim();
+    var pass = document.getElementById('lPass').value;
+    var err = document.getElementById('lErr'); err.textContent='';
+    var btn = document.getElementById('lBtn'); btn.disabled=true; btn.textContent='Signing in…';
+    var res = await sb.auth.signInWithPassword({ email:email, password:pass });
+    btn.disabled=false; btn.textContent='Sign in';
+    if (res.error){ err.textContent = res.error.message; return; }
+    showApp();
+  }
+  document.getElementById('signout').addEventListener('click', async function(){ await sb.auth.signOut(); showLogin(); });
+
+  // resume session
+  sb.auth.getSession().then(function(r){ if (r.data.session) showApp(); else showLogin(); });
+})();
+</script>
+</body>
+</html>
