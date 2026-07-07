@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en-AU">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex,nofollow">
+<title>Pricing Audit | Aura Print CRM</title>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/aura.css">
+<style>
+  body{background:#f6f3ee}
+  .wrap2{max-width:1180px;margin:0 auto;padding:26px 18px}
+  .head{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:8px}
+  .head h1{font-size:24px;margin:0}
+  .muted{color:#8a847d;font-size:13px}
+  .login{max-width:380px;margin:8vh auto;background:#fff;border:1px solid #e8e2da;border-radius:16px;padding:30px}
+  .login .field{margin:14px 0}.login label{display:block;font-size:12px;font-weight:700;text-transform:uppercase;color:#666;margin-bottom:6px}
+  .login input{width:100%;padding:12px;border:2px solid #e8e2da;border-radius:10px;font-size:15px}
+  .legend{display:flex;gap:16px;flex-wrap:wrap;margin:14px 0;font-size:12.5px;color:#6b6560}
+  table{width:100%;border-collapse:collapse;background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 1px 0 #e8e2da}
+  th,td{padding:9px 10px;font-size:13px;text-align:left;border-bottom:1px solid #f0ece5}
+  th{background:#faf7f2;font-size:10.5px;text-transform:uppercase;letter-spacing:.04em;color:#8a847d;position:sticky;top:0}
+  tr.grp td{background:#efe9e1;font-weight:800;text-transform:uppercase;font-size:11px;letter-spacing:.05em}
+  input.num{width:74px;padding:6px 7px;border:2px solid #e0d9d0;border-radius:7px;font-size:13px;font-weight:600;text-align:right}
+  .badge{display:inline-block;padding:2px 8px;border-radius:999px;font-size:10.5px;font-weight:800;letter-spacing:.03em}
+  .b-real{background:#dcfce7;color:#15803d}.b-est{background:#fef3c7;color:#b45309}
+  .marg{font-weight:800}.marg.lo{color:#c0392b}.marg.ok{color:#15803d}.marg.mid{color:#b45309}
+  .sup{font-size:11px;color:#6b6560}
+  .btn-xs{padding:5px 9px;border-radius:7px;border:none;font-weight:700;font-size:11.5px;cursor:pointer;background:#efe9e1;color:#333}
+  .btn-xs.save{background:var(--aura,#ec4899);color:#fff}
+  .saved{color:#15803d;font-size:11px;margin-left:6px;opacity:0;transition:.2s}.saved.show{opacity:1}
+  .err{color:#c0392b;font-size:13px;margin-top:10px}
+</style>
+</head>
+<body>
+
+<div id="login" class="login" style="display:none">
+  <h1 style="font-size:22px;margin-bottom:4px">Aura Pricing</h1>
+  <p class="muted">Staff sign in.</p>
+  <div class="field"><label>Email</label><input id="lEmail" type="email" placeholder="admin@auraprint.com.au"></div>
+  <div class="field"><label>Password</label><input id="lPass" type="password"></div>
+  <button id="lBtn" class="btn btn-aura" style="width:100%">Sign in</button>
+  <div id="lErr" class="err"></div>
+</div>
+
+<div id="app" class="wrap2" style="display:none">
+  <div class="head">
+    <div><h1>Pricing Audit — Business Cards</h1>
+      <div class="muted" id="sub">Every price, its real cost, the chosen supplier, and your margin. Edit any value.</div></div>
+    <div><button id="signout" class="btn-xs">Sign out</button></div>
+  </div>
+  <div class="legend">
+    <span><b>Margin target 52%.</b> Freight baked: CMYKhub $13.95, LEP $9.90.</span>
+    <span><span class="badge b-real">REAL</span> from your invoice</span>
+    <span><span class="badge b-est">ESTIMATE</span> from trade list, needs confirming</span>
+  </div>
+  <div id="tableWrap"></div>
+  <p class="muted" style="margin-top:14px">Tip: type your real supplier cost, hit “Apply 52%” to set the sell price, then Save. Saving marks the row confirmed.</p>
+</div>
+
+<script src="assets/config.js?v=20260707a"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+(function(){
+  var CFG=window.AURA_CONFIG||{};
+  var FREIGHT={CMYKHUB:13.95,LEP:9.90,EASYSIGNS:0};
+  var MARGIN=0.52, GST=0.10;
+  var loginEl=document.getElementById('login'), appEl=document.getElementById('app');
+  if(!CFG.supabaseUrl){ loginEl.style.display='block'; document.getElementById('lErr').textContent='Database not configured.'; return; }
+  var sb=supabase.createClient(CFG.supabaseUrl,CFG.supabaseKey);
+  var prices=[], audit={};
+
+  function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
+  function key(r){return r.stock+'|'+r.sides+'|'+r.qty;}
+  function landed(a){return (a? a.cost_cents/100:0)+(a?(FREIGHT[a.supplier]||0):0);}
+  function marginOf(priceInc,a){ var sellEx=priceInc/(1+GST); var l=landed(a); return sellEx>0?(sellEx-l)/sellEx*100:0; }
+
+  async function load(){
+    var p=await sb.from('bc_prices').select('*').order('stock').order('sides').order('qty');
+    var a=await sb.from('bc_audit').select('*');
+    if(p.error||a.error){ document.getElementById('tableWrap').innerHTML='<div class="err">'+esc((p.error||a.error).message)+'</div>'; return; }
+    prices=p.data; audit={}; (a.data||[]).forEach(function(x){audit[key(x)]=x;});
+    render();
+  }
+
+  function render(){
+    var html='<table><thead><tr><th>Qty</th><th>Cost ex GST</th><th>Supplier</th><th>Sell inc GST</th><th>Margin</th><th>Status</th><th></th></tr></thead><tbody>';
+    var lastGrp='';
+    prices.forEach(function(r){
+      var a=audit[key(r)]||{};
+      var grp=r.stock+' · '+(r.sides==='2S'?'Double sided':'Single sided');
+      if(grp!==lastGrp){ html+='<tr class="grp"><td colspan="7">'+esc(grp)+'</td></tr>'; lastGrp=grp; }
+      var costD=(a.cost_cents!=null?(a.cost_cents/100).toFixed(2):'');
+      var sellD=(r.price_cents/100).toFixed(0);
+      html+='<tr data-k="'+esc(key(r))+'">'+
+        '<td>'+r.qty.toLocaleString()+'</td>'+
+        '<td>$<input class="num cost" value="'+costD+'"></td>'+
+        '<td><span class="sup">'+esc(a.supplier||'—')+'</span></td>'+
+        '<td>$<input class="num sell" value="'+sellD+'"></td>'+
+        '<td class="mcell"></td>'+
+        '<td>'+badge(r.source)+'</td>'+
+        '<td><button class="btn-xs apply">Apply 52%</button> <button class="btn-xs save">Save</button><span class="saved">saved</span></td>'+
+        '</tr>';
+    });
+    html+='</tbody></table>';
+    document.getElementById('tableWrap').innerHTML=html;
+    document.querySelectorAll('#tableWrap tr[data-k]').forEach(bindRow);
+    recalcAll();
+  }
+  function badge(src){ return src==='real'?'<span class="badge b-real">REAL</span>':'<span class="badge b-est">ESTIMATE</span>'; }
+
+  function rowData(tr){
+    var k=tr.dataset.k, r=prices.find(function(x){return key(x)===k;}), a=audit[k]||{supplier:null};
+    return {k:k,r:r,a:a,cost:tr.querySelector('.cost'),sell:tr.querySelector('.sell'),mcell:tr.querySelector('.mcell')};
+  }
+  function showMargin(d){
+    var a={cost_cents:Math.round(parseFloat(d.cost.value||0)*100),supplier:d.a.supplier};
+    var m=marginOf(parseFloat(d.sell.value||0),a);
+    var cls=m<35?'lo':(m<48?'mid':'ok');
+    d.mcell.innerHTML='<span class="marg '+cls+'">'+m.toFixed(0)+'%</span>';
+  }
+  function recalcAll(){ document.querySelectorAll('#tableWrap tr[data-k]').forEach(function(tr){ showMargin(rowData(tr)); }); }
+
+  function bindRow(tr){
+    var d=rowData(tr);
+    d.cost.addEventListener('input',function(){showMargin(d);});
+    d.sell.addEventListener('input',function(){showMargin(d);});
+    tr.querySelector('.apply').addEventListener('click',function(){
+      var cost=parseFloat(d.cost.value||0), fr=FREIGHT[d.a.supplier]||9.90;
+      var sell=Math.round((cost+fr)/(1-MARGIN)*(1+GST));
+      d.sell.value=sell; showMargin(d);
+    });
+    tr.querySelector('.save').addEventListener('click',function(){ saveRow(tr,d); });
+  }
+
+  async function saveRow(tr,d){
+    var priceCents=Math.round(parseFloat(d.sell.value||0)*100);
+    var costCents=Math.round(parseFloat(d.cost.value||0)*100);
+    var badgeCell=tr.children[5], savedEl=tr.querySelector('.saved');
+    var r1=await sb.from('bc_prices').update({price_cents:priceCents,source:'real'}).eq('stock',d.r.stock).eq('sides',d.r.sides).eq('qty',d.r.qty);
+    var r2=await sb.from('bc_audit').update({cost_cents:costCents,source:'real'}).eq('stock',d.r.stock).eq('sides',d.r.sides).eq('qty',d.r.qty);
+    if(r1.error||r2.error){ alert('Save failed: '+((r1.error||r2.error).message)); return; }
+    d.r.price_cents=priceCents; d.r.source='real'; (audit[d.k]||(audit[d.k]={})).cost_cents=costCents; audit[d.k].source='real';
+    badgeCell.innerHTML=badge('real');
+    savedEl.classList.add('show'); setTimeout(function(){savedEl.classList.remove('show');},1200);
+  }
+
+  // auth
+  document.getElementById('lBtn').addEventListener('click',signIn);
+  document.getElementById('lPass').addEventListener('keydown',function(e){if(e.key==='Enter')signIn();});
+  async function signIn(){
+    var b=document.getElementById('lBtn'); b.disabled=true; b.textContent='Signing in…';
+    var res=await sb.auth.signInWithPassword({email:document.getElementById('lEmail').value.trim(),password:document.getElementById('lPass').value});
+    b.disabled=false; b.textContent='Sign in';
+    if(res.error){ document.getElementById('lErr').textContent=res.error.message; return; }
+    show();
+  }
+  document.getElementById('signout').addEventListener('click',async function(){ await sb.auth.signOut(); loginEl.style.display='block'; appEl.style.display='none'; });
+  function show(){ loginEl.style.display='none'; appEl.style.display='block'; load(); }
+  sb.auth.getSession().then(function(r){ if(r.data.session) show(); else loginEl.style.display='block'; });
+})();
+</script>
+</body>
+</html>
