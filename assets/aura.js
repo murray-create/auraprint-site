@@ -102,6 +102,44 @@ function fillEmails(){
    Any <form data-aura-form> is wired automatically. Requires AURA_CONFIG.web3formsKey.
    Free tier has no file attachments, so artwork is captured as a link/description here
    and the real upload happens once the full backend is built. */
+/* Map a form's fields to the leads table columns. */
+function collectLead(form){
+  var g = function(n){ var el = form.querySelector('[name="'+n+'"]'); return el ? String(el.value||'').trim() : null; };
+  var page = (location.pathname.split('/').pop() || '');
+  var lead = {
+    name:                g('name'),
+    email:               g('email'),
+    phone:               g('phone'),
+    company:             g('company'),
+    category:            g('product') || g('category'),
+    quantity:            g('quantity'),
+    job_details:         g('job_details') || g('message'),
+    artwork_link:        g('artwork_link'),
+    source_form:         page.indexOf('contact') > -1 ? 'contact' : 'quote',
+    source_page:         g('source_page') || page,
+    source_product_code: g('source_product_code'),
+    user_agent:          navigator.userAgent
+  };
+  Object.keys(lead).forEach(function(k){ if (lead[k] == null || lead[k] === '') delete lead[k]; });
+  return lead;
+}
+
+/* Store the enquiry in the Supabase leads table. Resolves {ok|skipped}. */
+function saveLead(CFG, lead){
+  if (!CFG.supabaseUrl || !CFG.supabaseKey) return Promise.resolve({ skipped:true });
+  return fetch(CFG.supabaseUrl + '/rest/v1/leads', {
+    method: 'POST',
+    headers: {
+      'apikey':        CFG.supabaseKey,
+      'Authorization': 'Bearer ' + CFG.supabaseKey,
+      'Content-Type':  'application/json',
+      'Prefer':        'return=minimal'
+    },
+    body: JSON.stringify(lead)
+  }).then(function(r){ return { ok:r.ok, status:r.status }; })
+    .catch(function(){ return { ok:false }; });
+}
+
 function wireForms(){
   var CFG = (window.AURA_CONFIG || {});
   var ENDPOINT = 'https://api.web3forms.com/submit';
@@ -120,33 +158,49 @@ function wireForms(){
 
       var btn = form.querySelector('button[type="submit"], button:not([type])');
       var em = 'admin' + String.fromCharCode(64) + 'auraprint.com.au';
-      if (!CFG.web3formsKey){
+      var hasSupabase = !!(CFG.supabaseUrl && CFG.supabaseKey);
+      if (!CFG.web3formsKey && !hasSupabase){
         status.style.color = '#c0392b';
         status.innerHTML = 'Our form isn’t connected yet — please call <b>1300 291 277</b> or email <b>' + em + '</b> and we’ll jump straight on it.';
         return;
       }
-      var data = new FormData(form);
-      data.append('access_key', CFG.web3formsKey);
-      if (!data.get('subject')) data.append('subject', (form.getAttribute('data-subject') || 'New website enquiry') + ' – Aura Print');
-      data.append('from_name', 'Aura Print website');
       var original = btn ? btn.textContent : '';
       if (btn){ btn.disabled = true; btn.textContent = 'Sending…'; }
       status.style.color = '#6b6560'; status.textContent = '';
-      fetch(ENDPOINT, { method:'POST', body:data })
-        .then(function(r){ return r.json(); })
-        .then(function(res){
-          if (res.success){
-            form.querySelectorAll('input,textarea,select').forEach(function(el){ if(el.type!=='hidden' && el.type!=='checkbox') el.value=''; });
-            status.style.color = '#1a8a4a';
-            status.innerHTML = '✓ Thanks! Your request is in — we’ll be in touch within the hour (Mon–Fri 8:30–5).';
-            if (btn){ btn.textContent = '✓ Sent'; }
-          } else { throw new Error(res.message || 'failed'); }
-        })
-        .catch(function(){
+
+      /* Primary: store the enquiry in the CRM database. */
+      var dbSave = saveLead(CFG, collectLead(form));
+
+      /* Parallel: email alert to admin@auraprint.com.au (best effort). */
+      var mail;
+      if (CFG.web3formsKey){
+        var data = new FormData(form);
+        data.append('access_key', CFG.web3formsKey);
+        if (!data.get('subject')) data.append('subject', (form.getAttribute('data-subject') || 'New website enquiry') + ' – Aura Print');
+        data.append('from_name', 'Aura Print website');
+        mail = fetch(ENDPOINT, { method:'POST', body:data })
+          .then(function(r){ return r.json(); })
+          .then(function(res){ return !!res.success; })
+          .catch(function(){ return false; });
+      } else {
+        mail = Promise.resolve(false);
+      }
+
+      Promise.allSettled([dbSave, mail]).then(function(rs){
+        var db = rs[0].value || {};
+        var stored  = rs[0].status === 'fulfilled' && (db.ok || db.skipped);
+        var emailed = rs[1].status === 'fulfilled' && rs[1].value === true;
+        if (stored || emailed){
+          form.querySelectorAll('input,textarea,select').forEach(function(el){ if(el.type!=='hidden' && el.type!=='checkbox') el.value=''; });
+          status.style.color = '#1a8a4a';
+          status.innerHTML = '✓ Thanks! Your request is in — we’ll be in touch within the hour (Mon–Fri 8:30–5).';
+          if (btn){ btn.textContent = '✓ Sent'; }
+        } else {
           status.style.color = '#c0392b';
           status.innerHTML = 'Something went wrong sending that. Please call <b>1300 291 277</b> or email <b>' + em + '</b> and we’ll sort it right away.';
           if (btn){ btn.disabled = false; btn.textContent = original; }
-        });
+        }
+      });
     });
   });
 }
@@ -197,7 +251,7 @@ document.addEventListener('DOMContentLoaded', function(){
   function respond(key){
     awaitingEmail=false;
     if(key==='price') botReply('Easy! Most products have <b>instant online pricing</b> — try the quoter on the <a href="index.html#quoter" style="color:var(--violet);font-weight:700">homepage</a> or open any product page. For anything custom, I can arrange a quote — just tell me the product and quantity.');
-    else if(key==='turnaround') botReply('Standard turnaround is <b>3-5 business days</b> plus delivery. Need it faster? Next-day and same-day express options are available on many products — pick your speed in the configurator.');
+    else if(key==='turnaround') botReply('Standard turnaround is <b>3-5 business days</b>, plus a day or two in transit. Need it faster? Next-day and same-day express options are available on many products — pick your speed in the configurator.');
     else if(key==='artwork') botReply('We accept <b>print-ready PDFs</b> with 3mm bleed and crop marks. Working from Canva? Our setup guides cover that too. You can upload artwork on any product page or via <a href="quote.html" style="color:var(--violet);font-weight:700">the quote form</a> and our preflight check will catch any problems.');
     else if(key==='human') { botReply('No worries — leave your <b>email or phone number</b> and one of the team will get back to you within the hour (Mon-Fri 8:30-5). Or call us now on <b>1300 291 277</b>.'); awaitingEmail=true; }
     else if(key==='thanks') botReply('Anytime! Anything else I can help with?');
