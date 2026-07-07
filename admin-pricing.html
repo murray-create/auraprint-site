@@ -84,7 +84,7 @@
       return a.qty-b.qty;
     });
     var html='', lastGrp='';
-    function open(){ return '<table><thead><tr><th>Qty</th><th>LEP</th><th>CMYKhub</th><th>EasySigns</th><th>Your real</th><th>Cheapest</th><th>Sell inc GST</th></tr></thead><tbody>'; }
+    function open(){ return '<table><thead><tr><th>Qty</th><th>LEP</th><th>CMYKhub</th><th>Your real</th><th>Cheapest</th><th>Sell inc GST</th></tr></thead><tbody>'; }
     rows.forEach(function(r){
       var grp=r.tier+'  ·  '+(r.sides==='2S'?'Double sided':'Single sided');
       if(grp!==lastGrp){ if(lastGrp) html+='</tbody></table>'; html+='<h3 style="font-size:14px;margin:20px 0 6px">'+esc(grp)+'</h3>'+open(); lastGrp=grp; }
@@ -94,7 +94,6 @@
         '<td>'+r.qty.toLocaleString()+'</td>'+
         cell('LEP',r.lep_cents)+
         cell('CMYKHUB',r.cmyk_cents)+
-        cell('EASYSIGNS',r.easy_cents)+
         '<td class="'+(r.real_cents!=null?'real':'na')+'">'+(r.real_cents==null?'—':money(r.real_cents))+'</td>'+
         '<td><span class="chip c-'+w+'">'+esc(win)+'</span></td>'+
         '<td class="sell">$'+(r.sell_cents/100).toFixed(0)+'</td>'+
