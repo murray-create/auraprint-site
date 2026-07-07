@@ -229,7 +229,7 @@ footer li a:hover{color:#fff}
       <input type="range" id="qty" min="0" max="4" step="1" value="1">
       <div class="qty-row"><span id="qtyLabel">500</span><span id="specLabel"></span></div>
       <div class="price-box">
-        <div><div class="from">Your price</div><div class="gst">inc. GST, ex. delivery</div></div>
+        <div><div class="from">Your price</div><div class="gst" id="qGst">inc. GST, ex. delivery</div></div>
         <div class="amount grad-text" id="price">$0</div>
       </div>
       <button class="btn btn-aura">Order this online →</button>
@@ -364,9 +364,9 @@ footer li a:hover{color:#fff}
 <script>
 // Demo pricing data mirrors the pricing-engine seed (illustrative prices, inc GST display).
 const PRODUCTS = {
-  'Business Cards 350gsm Matt 2S': {spec:'90x55mm, printed 2 sides', qtys:[250,500,750,1000,2000], prices:[75,89,107,124,246]},
-  'NV Velvet Business Cards':      {spec:'450gsm Artboard, NV 2S',   qtys:[250,500,750,1000,2000], prices:[189,254,318,381,758]},
-  'A5 Flyers 150gsm Gloss':        {spec:'A5, printed 2 sides',      qtys:[500,1000,1500,2500,5000], prices:[156,213,268,363,720]},
+  'Business Cards 350gsm Matt 2S': {spec:'90x55mm, printed 2 sides', qtys:[250,500,750,1000,2000], prices:[75,89,107,124,246], delivery:true},
+  'NV Velvet Business Cards':      {spec:'450gsm Artboard, NV 2S',   qtys:[250,500,750,1000,2000], prices:[189,254,318,381,758], delivery:true},
+  'A5 Flyers 150gsm Gloss':        {spec:'A5, printed 2 sides',      qtys:[500,1000,1500,2500,5000], prices:[156,213,268,363,720], delivery:true},
   'Corflute Signs 900x600':        {spec:'5mm corflute, 1 side',     qtys:[1,5,10,20,50], prices:[67,273,458,905,2244]},
   'Premium Pull Up Banner':        {spec:'850x2000mm inc. carry bag',qtys:[1,2,5,10,20], prices:[208,404,915,1804,3564]},
 };
@@ -378,8 +378,10 @@ function render(){
   const p=PRODUCTS[sel.value], i=+qty.value;
   qtyLabel.textContent=p.qtys[i].toLocaleString()+' units';
   specLabel.textContent=p.spec;
+  const fee=p.delivery?13.5:0;
+  const qg=document.getElementById('qGst'); if(qg) qg.textContent=p.delivery?'inc. GST & delivery':'inc. GST, ex. delivery';
   // animated counter
-  const target=p.prices[i]; const start=parseFloat(price.dataset.v||0); const t0=performance.now();
+  const target=Math.ceil(p.prices[i]+fee); const start=parseFloat(price.dataset.v||0); const t0=performance.now();
   function tick(t){const k=Math.min(1,(t-t0)/350);const v=start+(target-start)*k;
     price.textContent='$'+Math.round(v).toLocaleString();if(k<1)requestAnimationFrame(tick);else price.dataset.v=target;}
   requestAnimationFrame(tick);

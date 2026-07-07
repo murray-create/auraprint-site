@@ -4,7 +4,7 @@
   "name": "Business Cards",
   "cat": "print",
   "sub": "Cards & Stationery",
-  "icon": "🪪",
+  "icon": "\ud83e\udeaa",
   "badge": "Most popular",
   "desc": "90x55mm. From everyday 350gsm to thick NV Velvet with Spot UV and metallic foil.",
   "seo": "Business Cards Sunshine Coast - Instant Online Pricing",
@@ -137,14 +137,19 @@
    "presentation-folders",
    "pull-up-banners"
   ],
-  "img": "assets/img/business-cards.jpg"
+  "img": "assets/img/business-cards.jpg",
+  "suppliers": [
+   "CMYKhub",
+   "Easy Signs",
+   "LEP"
+  ]
  },
  {
   "slug": "nv-velvet-business-cards",
   "name": "NV Velvet Business Cards",
   "cat": "print",
   "sub": "Cards & Stationery",
-  "icon": "✨",
+  "icon": "\u2728",
   "desc": "Soft-touch velvet laminate over 450gsm artboard. The card people remember.",
   "seo": "NV Velvet Business Cards Australia",
   "from": 189,
@@ -215,14 +220,17 @@
    "presentation-folders",
    "letterheads"
   ],
-  "img": "assets/img/nv-velvet.jpg"
+  "img": "assets/img/nv-velvet.jpg",
+  "suppliers": [
+   "CMYKhub"
+  ]
  },
  {
   "slug": "flyers",
   "name": "Flyers",
   "cat": "print",
   "sub": "Marketing Material",
-  "icon": "📄",
+  "icon": "\ud83d\udcc4",
   "desc": "DL to A3 on stocks from 130gsm to 350gsm. Letterbox-ready and event-proof.",
   "seo": "Flyer Printing Sunshine Coast",
   "from": 156,
@@ -334,14 +342,19 @@
    "postcards",
    "posters"
   ],
-  "img": "assets/img/flyers.jpg"
+  "img": "https://www.easysigns.com.au/uploads/content/products/gallery/flyers.jpg",
+  "suppliers": [
+   "CMYKhub",
+   "Easy Signs"
+  ],
+  "imgReal": true
  },
  {
   "slug": "brochures",
   "name": "Brochures",
   "cat": "print",
   "sub": "Marketing Material",
-  "icon": "📖",
+  "icon": "\ud83d\udcd6",
   "desc": "Half fold, tri fold, Z fold and gate fold on premium stocks.",
   "seo": "Brochure Printing Sunshine Coast",
   "from": 189,
@@ -445,14 +458,20 @@
    "presentation-folders",
    "menus"
   ],
-  "img": "assets/img/brochures.jpg"
+  "img": "https://www.easysigns.com.au/uploads/content/products/gallery/brochures.jpg",
+  "suppliers": [
+   "CMYKhub",
+   "Easy Signs",
+   "LEP"
+  ],
+  "imgReal": true
  },
  {
   "slug": "postcards",
   "name": "Postcards",
   "cat": "print",
   "sub": "Marketing Material",
-  "icon": "💌",
+  "icon": "\ud83d\udc8c",
   "desc": "Direct mail that stands out. A6 to A5 on thick stocks.",
   "seo": "Postcard Printing Australia",
   "from": 98,
@@ -538,14 +557,19 @@
    "greeting-cards",
    "business-cards"
   ],
-  "img": "assets/img/postcards.jpg"
+  "img": "https://www.easysigns.com.au/uploads/content/products/gallery/postcards.jpg",
+  "suppliers": [
+   "Easy Signs",
+   "LEP"
+  ],
+  "imgReal": true
  },
  {
   "slug": "letterheads",
   "name": "Letterheads",
   "cat": "print",
   "sub": "Cards & Stationery",
-  "icon": "✉️",
+  "icon": "\u2709\ufe0f",
   "desc": "Offset quality on premium uncoated and laser-safe stocks.",
   "seo": "Letterhead Printing Australia",
   "from": 120,
@@ -618,7 +642,7 @@
   "name": "Envelopes",
   "cat": "print",
   "sub": "Cards & Stationery",
-  "icon": "📮",
+  "icon": "\ud83d\udcee",
   "desc": "Printed DL to C4, plain face or window, any volume.",
   "seo": "Printed Envelopes Australia",
   "portal": true,
@@ -646,7 +670,7 @@
   "name": "With Compliments Slips",
   "cat": "print",
   "sub": "Cards & Stationery",
-  "icon": "📝",
+  "icon": "\ud83d\udcdd",
   "desc": "The finishing touch for your stationery suite. DL size to match your letterhead.",
   "seo": "With Compliments Slips Printing",
   "portal": true,
@@ -674,7 +698,7 @@
   "name": "Loyalty Cards",
   "cat": "print",
   "sub": "Cards & Stationery",
-  "icon": "💳",
+  "icon": "\ud83d\udcb3",
   "desc": "Keep customers coming back. Business card size with stamp grids or numbering.",
   "seo": "Loyalty Card Printing",
   "portal": true,
@@ -703,7 +727,7 @@
   "name": "Presentation Folders",
   "cat": "print",
   "sub": "Marketing Material",
-  "icon": "🗂️",
+  "icon": "\ud83d\uddc2\ufe0f",
   "desc": "Gloss, matt or velvet with business card slits and capacity spines.",
   "seo": "Presentation Folder Printing Australia",
   "portal": true,
@@ -725,14 +749,18 @@
    "letterheads",
    "brochures"
   ],
-  "img": "assets/img/presentation-folders.jpg"
+  "img": "assets/img/presentation-folders.jpg",
+  "from": 206,
+  "suppliers": [
+   "LEP"
+  ]
  },
  {
   "slug": "menus",
   "name": "Menus",
   "cat": "print",
   "sub": "Marketing Material",
-  "icon": "🍽️",
+  "icon": "\ud83c\udf7d\ufe0f",
   "desc": "Flat, folded or laminated for table service. Spill-proof options for venues.",
   "seo": "Menu Printing Sunshine Coast",
   "portal": true,
@@ -754,14 +782,19 @@
    "brochures",
    "loyalty-cards"
   ],
-  "img": "assets/img/menus.jpg"
+  "img": "https://www.easysigns.com.au/uploads/content/products/gallery/menus.jpg",
+  "from": 46,
+  "suppliers": [
+   "Easy Signs"
+  ],
+  "imgReal": true
  },
  {
   "slug": "greeting-cards",
   "name": "Greeting Cards",
   "cat": "print",
   "sub": "Marketing Material",
-  "icon": "🎉",
+  "icon": "\ud83c\udf89",
   "desc": "Folded cards for retail, events and corporate Christmas lists.",
   "seo": "Greeting Card Printing Australia",
   "portal": true,
@@ -783,14 +816,19 @@
    "calendars",
    "business-cards"
   ],
-  "img": "assets/img/greeting-cards.jpg"
+  "img": "assets/img/greeting-cards.jpg",
+  "from": 57,
+  "suppliers": [
+   "Easy Signs",
+   "LEP"
+  ]
  },
  {
   "slug": "booklets",
   "name": "Saddle Stitched Booklets",
   "cat": "print",
   "sub": "Books & Booklets",
-  "icon": "📚",
+  "icon": "\ud83d\udcda",
   "desc": "8-64 pages, self cover or plus cover. Catalogues, programs and magazines.",
   "seo": "Booklet Printing Australia",
   "portal": true,
@@ -815,6 +853,11 @@
    "perfect-bound-books",
    "wiro-booklets",
    "brochures"
+  ],
+  "from": 106,
+  "suppliers": [
+   "CMYKhub",
+   "Easy Signs"
   ]
  },
  {
@@ -822,7 +865,7 @@
   "name": "Perfect Bound Books",
   "cat": "print",
   "sub": "Books & Booklets",
-  "icon": "📕",
+  "icon": "\ud83d\udcd5",
   "desc": "Square spine, bookshop finish. Annual reports, look books and manuals.",
   "seo": "Perfect Bound Book Printing Australia",
   "portal": true,
@@ -850,7 +893,7 @@
   "name": "Wiro Bound Booklets",
   "cat": "print",
   "sub": "Books & Booklets",
-  "icon": "🌀",
+  "icon": "\ud83c\udf00",
   "desc": "Lay-flat manuals, workbooks and calendars with metal wire binding.",
   "seo": "Wiro Bound Booklet Printing",
   "portal": true,
@@ -879,7 +922,7 @@
   "name": "Invoice Books (NCR)",
   "cat": "print",
   "sub": "Books & Booklets",
-  "icon": "🧾",
+  "icon": "\ud83e\uddfe",
   "desc": "Carbonless duplicate and triplicate books, numbered and perforated.",
   "seo": "NCR Invoice Book Printing Australia",
   "portal": true,
@@ -907,7 +950,7 @@
   "name": "Notepads",
   "cat": "print",
   "sub": "Books & Booklets",
-  "icon": "📒",
+  "icon": "\ud83d\udcd2",
   "desc": "Branded pads, glued head, 25-100 sheets. Desk real estate for your brand.",
   "seo": "Notepad Printing Australia",
   "portal": true,
@@ -928,6 +971,10 @@
    "invoice-books",
    "calendars",
    "pens"
+  ],
+  "from": 255,
+  "suppliers": [
+   "LEP"
   ]
  },
  {
@@ -935,7 +982,7 @@
   "name": "Calendars",
   "cat": "print",
   "sub": "Books & Booklets",
-  "icon": "📅",
+  "icon": "\ud83d\udcc5",
   "desc": "Wall and desk calendars, wiro bound. Twelve months of brand visibility.",
   "seo": "Calendar Printing Australia",
   "portal": true,
@@ -956,6 +1003,11 @@
    "wiro-booklets",
    "greeting-cards",
    "notepads"
+  ],
+  "from": 64,
+  "suppliers": [
+   "CMYKhub",
+   "LEP"
   ]
  },
  {
@@ -963,7 +1015,7 @@
   "name": "Corflute Signs",
   "cat": "signage",
   "sub": "Signs & Stickers",
-  "icon": "🪧",
+  "icon": "\ud83e\udea7",
   "desc": "Real estate, builders and event boards on 3mm or 5mm corflute, any size.",
   "seo": "Corflute Signs Sunshine Coast",
   "from": 67,
@@ -1063,14 +1115,17 @@
    "fence-mesh",
    "stickers"
   ],
-  "img": "assets/img/corflute-signs.jpg"
+  "img": "assets/img/corflute-signs.jpg",
+  "suppliers": [
+   "Easy Signs"
+  ]
  },
  {
   "slug": "a-frames",
   "name": "A-Frames",
   "cat": "signage",
   "sub": "Signs & Stickers",
-  "icon": "🅰️",
+  "icon": "\ud83c\udd70\ufe0f",
   "desc": "Metal A-frames with replaceable corflute or ACM inserts. Footpath workhorses.",
   "seo": "A-Frame Signs Australia",
   "portal": false,
@@ -1092,14 +1147,19 @@
    "aluminium-signs",
    "pull-up-banners"
   ],
-  "img": "assets/img/a-frames.jpg"
+  "img": "assets/img/a-frames.jpg",
+  "from": 128,
+  "suppliers": [
+   "CMYKhub",
+   "Easy Signs"
+  ]
  },
  {
   "slug": "aluminium-signs",
   "name": "Aluminium Composite Signs",
   "cat": "signage",
   "sub": "Signs & Stickers",
-  "icon": "🔩",
+  "icon": "\ud83d\udd29",
   "desc": "Premium rigid ACM signage that stays flat and lasts years outdoors.",
   "seo": "Aluminium Composite Signs Australia",
   "portal": false,
@@ -1120,6 +1180,10 @@
    "corflute-signs",
    "safety-signs",
    "a-frames"
+  ],
+  "from": 182,
+  "suppliers": [
+   "Easy Signs"
   ]
  },
  {
@@ -1127,7 +1191,7 @@
   "name": "Safety Signs",
   "cat": "signage",
   "sub": "Signs & Stickers",
-  "icon": "⚠️",
+  "icon": "\u26a0\ufe0f",
   "desc": "Compliant site and workplace signage to AS 1319, stock or custom.",
   "seo": "Safety Signs Australia",
   "portal": false,
@@ -1155,7 +1219,7 @@
   "name": "Posters",
   "cat": "signage",
   "sub": "Signs & Stickers",
-  "icon": "🖼️",
+  "icon": "\ud83d\uddbc\ufe0f",
   "desc": "Offset and wide format posters, A2 to billboard scale.",
   "seo": "Poster Printing Sunshine Coast",
   "from": 45,
@@ -1239,14 +1303,20 @@
    "pull-up-banners",
    "stickers"
   ],
-  "img": "assets/img/posters.jpg"
+  "img": "https://www.easysigns.com.au/uploads/content/products/gallery/posters.jpg",
+  "suppliers": [
+   "CMYKhub",
+   "Easy Signs",
+   "LEP"
+  ],
+  "imgReal": true
  },
  {
   "slug": "stickers",
   "name": "Stickers & Labels",
   "cat": "signage",
   "sub": "Signs & Stickers",
-  "icon": "🏷️",
+  "icon": "\ud83c\udff7\ufe0f",
   "desc": "Die-cut shapes, rolls and sheets. Indoor, outdoor and machine-apply.",
   "seo": "Sticker Printing Australia",
   "portal": true,
@@ -1275,7 +1345,7 @@
   "name": "Vehicle Magnets",
   "cat": "signage",
   "sub": "Signs & Stickers",
-  "icon": "🧲",
+  "icon": "\ud83e\uddf2",
   "desc": "Turn the ute into a billboard. Heavy-duty magnetic material, rounded corners.",
   "seo": "Vehicle Magnet Printing Australia",
   "portal": false,
@@ -1296,6 +1366,10 @@
    "stickers",
    "corflute-signs",
    "aluminium-signs"
+  ],
+  "from": 182,
+  "suppliers": [
+   "Easy Signs"
   ]
  },
  {
@@ -1303,7 +1377,7 @@
   "name": "Pull Up Banners",
   "cat": "signage",
   "sub": "Banners & Flags",
-  "icon": "🚩",
+  "icon": "\ud83d\udea9",
   "badge": "Best seller",
   "desc": "Economy to premium bases with vivid print. Includes padded carry bag.",
   "seo": "Pull Up Banners Sunshine Coast",
@@ -1393,14 +1467,18 @@
    "media-walls",
    "corflute-signs"
   ],
-  "img": "assets/img/pull-up-banners.jpg"
+  "img": "assets/img/pull-up-banners.jpg",
+  "suppliers": [
+   "CMYKhub",
+   "Easy Signs"
+  ]
  },
  {
   "slug": "teardrop-flags",
   "name": "Teardrop Flags",
   "cat": "signage",
   "sub": "Banners & Flags",
-  "icon": "🎏",
+  "icon": "\ud83c\udf8f",
   "desc": "Single or double sided knitted polyester with spike, cross or water bases.",
   "seo": "Teardrop Flags Australia",
   "portal": false,
@@ -1421,6 +1499,10 @@
    "pull-up-banners",
    "outdoor-banners",
    "fence-mesh"
+  ],
+  "from": 172,
+  "suppliers": [
+   "Easy Signs"
   ]
  },
  {
@@ -1428,7 +1510,7 @@
   "name": "Outdoor Vinyl Banners",
   "cat": "signage",
   "sub": "Banners & Flags",
-  "icon": "🌬️",
+  "icon": "\ud83c\udf2c\ufe0f",
   "desc": "Hemmed and eyeletted heavy-duty vinyl, any size, built for weather.",
   "seo": "Vinyl Banner Printing Australia",
   "portal": false,
@@ -1450,14 +1532,19 @@
    "teardrop-flags",
    "corflute-signs"
   ],
-  "img": "assets/img/outdoor-banners.jpg"
+  "img": "assets/img/outdoor-banners.jpg",
+  "from": 108,
+  "suppliers": [
+   "CMYKhub",
+   "Easy Signs"
+  ]
  },
  {
   "slug": "fence-mesh",
   "name": "Fence Mesh Banners",
   "cat": "signage",
   "sub": "Banners & Flags",
-  "icon": "🕸️",
+  "icon": "\ud83d\udd78\ufe0f",
   "desc": "Construction site wraps that let wind through. Builders' favourite billboard.",
   "seo": "Fence Mesh Printing Australia",
   "portal": false,
@@ -1479,14 +1566,18 @@
    "corflute-signs",
    "safety-signs"
   ],
-  "img": "assets/img/fence-mesh.jpg"
+  "img": "assets/img/fence-mesh.jpg",
+  "from": 182,
+  "suppliers": [
+   "Easy Signs"
+  ]
  },
  {
   "slug": "media-walls",
   "name": "Media Walls",
   "cat": "signage",
   "sub": "Events & Display",
-  "icon": "🖼️",
+  "icon": "\ud83d\uddbc\ufe0f",
   "desc": "Straight or curved backdrops for events, launches and step-and-repeats.",
   "seo": "Media Walls Australia",
   "portal": false,
@@ -1507,6 +1598,10 @@
    "pull-up-banners",
    "marquees",
    "tablecloths"
+  ],
+  "from": 195,
+  "suppliers": [
+   "Easy Signs"
   ]
  },
  {
@@ -1514,7 +1609,7 @@
   "name": "Marquees",
   "cat": "signage",
   "sub": "Events & Display",
-  "icon": "⛺",
+  "icon": "\u26fa",
   "desc": "Printed canopies, walls and flags for markets and events. 2.4m to 6m.",
   "seo": "Printed Marquees Australia",
   "portal": false,
@@ -1535,6 +1630,10 @@
    "media-walls",
    "teardrop-flags",
    "tablecloths"
+  ],
+  "from": 44,
+  "suppliers": [
+   "Easy Signs"
   ]
  },
  {
@@ -1542,7 +1641,7 @@
   "name": "Standees & Cut Outs",
   "cat": "signage",
   "sub": "Events & Display",
-  "icon": "🧍",
+  "icon": "\ud83e\uddcd",
   "desc": "Life-size (and larger) cardboard and corflute cut-outs with strut backs.",
   "seo": "Standee Printing Australia",
   "portal": false,
@@ -1564,14 +1663,18 @@
    "posters",
    "corflute-signs"
   ],
-  "img": "assets/img/standees.jpg"
+  "img": "assets/img/standees.jpg",
+  "from": 131,
+  "suppliers": [
+   "Easy Signs"
+  ]
  },
  {
   "slug": "tablecloths",
   "name": "Printed Tablecloths",
   "cat": "signage",
   "sub": "Events & Display",
-  "icon": "🪑",
+  "icon": "\ud83e\ude91",
   "desc": "Fitted or throw-style, full colour dye-sublimation. Machine washable.",
   "seo": "Printed Tablecloths Australia",
   "portal": false,
@@ -1592,6 +1695,10 @@
    "marquees",
    "media-walls",
    "pull-up-banners"
+  ],
+  "from": 2376,
+  "suppliers": [
+   "Easy Signs"
   ]
  },
  {
@@ -1599,7 +1706,7 @@
   "name": "Exhibition Displays",
   "cat": "signage",
   "sub": "Events & Display",
-  "icon": "🎪",
+  "icon": "\ud83c\udfaa",
   "desc": "Complete expo kits: walls, counters, lighting and shipping cases.",
   "seo": "Exhibition Display Systems Australia",
   "portal": false,
@@ -1620,6 +1727,1653 @@
    "media-walls",
    "pull-up-banners",
    "marquees"
+  ],
+  "from": 7237,
+  "suppliers": [
+   "Easy Signs"
   ]
+ },
+ {
+  "slug": "acoustic-panels",
+  "name": "Acoustic Panels",
+  "cat": "signage",
+  "sub": "Signs & Stickers",
+  "desc": "Acoustic Panels produced through our Easy Signs trade network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
+  "seo": "Acoustic Panels Sunshine Coast | Aura Print & Promo",
+  "from": 182,
+  "quote": true,
+  "suppliers": [
+   "Easy Signs"
+  ],
+  "img": "https://www.easysigns.com.au/uploads/content/products/gallery/acoustic-panels.jpg",
+  "specs": [
+   "Supplied by: Easy Signs",
+   "Custom sizes and finishes available",
+   "Print-ready PDF preferred, we check every file"
+  ],
+  "faqs": [
+   [
+    "How do I get a price?",
+    "Hit Request a Quote with your size, quantity and finish. We price it against our trade network and reply fast, usually same business day."
+   ],
+   [
+    "Do you deliver?",
+    "Yes, Australia-wide. We are Sunshine Coast based with national delivery."
+   ]
+  ],
+  "related": [],
+  "imgReal": true
+ },
+ {
+  "slug": "acrylic-reception-signs",
+  "name": "Acrylic Reception Signs",
+  "cat": "signage",
+  "sub": "Signs & Stickers",
+  "desc": "Acrylic Reception Signs produced through our Easy Signs trade network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
+  "seo": "Acrylic Reception Signs Sunshine Coast | Aura Print & Promo",
+  "from": 364,
+  "quote": true,
+  "suppliers": [
+   "Easy Signs"
+  ],
+  "img": "https://www.easysigns.com.au/uploads/content/products/gallery/acrylic-reception-panel-signs.jpg",
+  "specs": [
+   "Supplied by: Easy Signs",
+   "Custom sizes and finishes available",
+   "Print-ready PDF preferred, we check every file"
+  ],
+  "faqs": [
+   [
+    "How do I get a price?",
+    "Hit Request a Quote with your size, quantity and finish. We price it against our trade network and reply fast, usually same business day."
+   ],
+   [
+    "Do you deliver?",
+    "Yes, Australia-wide. We are Sunshine Coast based with national delivery."
+   ]
+  ],
+  "related": [],
+  "imgReal": true
+ },
+ {
+  "slug": "acrylic-signs",
+  "name": "Acrylic Signs",
+  "cat": "signage",
+  "sub": "Signs & Stickers",
+  "desc": "Acrylic Signs produced through our Easy Signs trade network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
+  "seo": "Acrylic Signs Sunshine Coast | Aura Print & Promo",
+  "from": 131,
+  "quote": true,
+  "suppliers": [
+   "Easy Signs"
+  ],
+  "img": "https://www.easysigns.com.au/uploads/content/products/gallery/acrylic-perspex-panel-signs.jpg",
+  "specs": [
+   "Supplied by: Easy Signs",
+   "Custom sizes and finishes available",
+   "Print-ready PDF preferred, we check every file"
+  ],
+  "faqs": [
+   [
+    "How do I get a price?",
+    "Hit Request a Quote with your size, quantity and finish. We price it against our trade network and reply fast, usually same business day."
+   ],
+   [
+    "Do you deliver?",
+    "Yes, Australia-wide. We are Sunshine Coast based with national delivery."
+   ]
+  ],
+  "related": [],
+  "imgReal": true
+ },
+ {
+  "slug": "arch-banners",
+  "name": "Arch Banners",
+  "cat": "signage",
+  "sub": "Banners & Flags",
+  "desc": "Arch Banners produced through our Easy Signs trade network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
+  "seo": "Arch Banners Sunshine Coast | Aura Print & Promo",
+  "from": 405,
+  "quote": true,
+  "suppliers": [
+   "Easy Signs"
+  ],
+  "img": "https://www.easysigns.com.au/uploads/content/products/gallery/arch-banners.jpg",
+  "specs": [
+   "Supplied by: Easy Signs",
+   "Custom sizes and finishes available",
+   "Print-ready PDF preferred, we check every file"
+  ],
+  "faqs": [
+   [
+    "How do I get a price?",
+    "Hit Request a Quote with your size, quantity and finish. We price it against our trade network and reply fast, usually same business day."
+   ],
+   [
+    "Do you deliver?",
+    "Yes, Australia-wide. We are Sunshine Coast based with national delivery."
+   ]
+  ],
+  "related": [],
+  "imgReal": true
+ },
+ {
+  "slug": "auction-paddles",
+  "name": "Auction Paddles",
+  "cat": "signage",
+  "sub": "Events & Display",
+  "desc": "Auction Paddles produced through our Easy Signs trade network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
+  "seo": "Auction Paddles Sunshine Coast | Aura Print & Promo",
+  "from": 131,
+  "quote": true,
+  "suppliers": [
+   "Easy Signs"
+  ],
+  "img": "https://www.easysigns.com.au/uploads/content/products/gallery/auction-paddles.jpg",
+  "specs": [
+   "Supplied by: Easy Signs",
+   "Custom sizes and finishes available",
+   "Print-ready PDF preferred, we check every file"
+  ],
+  "faqs": [
+   [
+    "How do I get a price?",
+    "Hit Request a Quote with your size, quantity and finish. We price it against our trade network and reply fast, usually same business day."
+   ],
+   [
+    "Do you deliver?",
+    "Yes, Australia-wide. We are Sunshine Coast based with national delivery."
+   ]
+  ],
+  "related": [],
+  "imgReal": true
+ },
+ {
+  "slug": "bollard-signs",
+  "name": "Bollard Signs",
+  "cat": "signage",
+  "sub": "Signs & Stickers",
+  "desc": "Bollard Signs produced through our Easy Signs trade network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
+  "seo": "Bollard Signs Sunshine Coast | Aura Print & Promo",
+  "from": 131,
+  "quote": true,
+  "suppliers": [
+   "Easy Signs"
+  ],
+  "img": "https://www.easysigns.com.au/uploads/content/products/gallery/bollard-signs.jpg",
+  "specs": [
+   "Supplied by: Easy Signs",
+   "Custom sizes and finishes available",
+   "Print-ready PDF preferred, we check every file"
+  ],
+  "faqs": [
+   [
+    "How do I get a price?",
+    "Hit Request a Quote with your size, quantity and finish. We price it against our trade network and reply fast, usually same business day."
+   ],
+   [
+    "Do you deliver?",
+    "Yes, Australia-wide. We are Sunshine Coast based with national delivery."
+   ]
+  ],
+  "related": [],
+  "imgReal": true
+ },
+ {
+  "slug": "bow-banners",
+  "name": "Bow Banners",
+  "cat": "signage",
+  "sub": "Banners & Flags",
+  "desc": "Bow Banners produced through our Easy Signs trade network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
+  "seo": "Bow Banners Sunshine Coast | Aura Print & Promo",
+  "from": 161,
+  "quote": true,
+  "suppliers": [
+   "Easy Signs"
+  ],
+  "img": "https://www.easysigns.com.au/uploads/content/products/gallery/bowbanner-f-shape-flag.jpg",
+  "specs": [
+   "Supplied by: Easy Signs",
+   "Custom sizes and finishes available",
+   "Print-ready PDF preferred, we check every file"
+  ],
+  "faqs": [
+   [
+    "How do I get a price?",
+    "Hit Request a Quote with your size, quantity and finish. We price it against our trade network and reply fast, usually same business day."
+   ],
+   [
+    "Do you deliver?",
+    "Yes, Australia-wide. We are Sunshine Coast based with national delivery."
+   ]
+  ],
+  "related": [],
+  "imgReal": true
+ },
+ {
+  "slug": "bumper-stickers",
+  "name": "Bumper Stickers",
+  "cat": "signage",
+  "sub": "Signs & Stickers",
+  "desc": "Bumper Stickers produced through our Easy Signs trade network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
+  "seo": "Bumper Stickers Sunshine Coast | Aura Print & Promo",
+  "from": 182,
+  "quote": true,
+  "suppliers": [
+   "Easy Signs"
+  ],
+  "img": "https://www.easysigns.com.au/uploads/content/products/gallery/bumper-stickers.jpg",
+  "specs": [
+   "Supplied by: Easy Signs",
+   "Custom sizes and finishes available",
+   "Print-ready PDF preferred, we check every file"
+  ],
+  "faqs": [
+   [
+    "How do I get a price?",
+    "Hit Request a Quote with your size, quantity and finish. We price it against our trade network and reply fast, usually same business day."
+   ],
+   [
+    "Do you deliver?",
+    "Yes, Australia-wide. We are Sunshine Coast based with national delivery."
+   ]
+  ],
+  "related": [],
+  "imgReal": true
+ },
+ {
+  "slug": "cardboard-signs",
+  "name": "Cardboard Signs",
+  "cat": "signage",
+  "sub": "Signs & Stickers",
+  "desc": "Cardboard Signs produced through our Easy Signs trade network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
+  "seo": "Cardboard Signs Sunshine Coast | Aura Print & Promo",
+  "from": 182,
+  "quote": true,
+  "suppliers": [
+   "Easy Signs"
+  ],
+  "img": "https://www.easysigns.com.au/uploads/content/products/gallery/cardboard-signs.jpg",
+  "specs": [
+   "Supplied by: Easy Signs",
+   "Custom sizes and finishes available",
+   "Print-ready PDF preferred, we check every file"
+  ],
+  "faqs": [
+   [
+    "How do I get a price?",
+    "Hit Request a Quote with your size, quantity and finish. We price it against our trade network and reply fast, usually same business day."
+   ],
+   [
+    "Do you deliver?",
+    "Yes, Australia-wide. We are Sunshine Coast based with national delivery."
+   ]
+  ],
+  "related": [],
+  "imgReal": true
+ },
+ {
+  "slug": "collapsible-seg-lightbox-display",
+  "name": "Collapsible SEG Lightbox Display",
+  "cat": "signage",
+  "sub": "Events & Display",
+  "desc": "Collapsible SEG Lightbox Display produced through our Easy Signs trade network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
+  "seo": "Collapsible SEG Lightbox Display Sunshine Coast | Aura Print & Promo",
+  "from": 148,
+  "quote": true,
+  "suppliers": [
+   "Easy Signs"
+  ],
+  "img": "https://www.easysigns.com.au/uploads/content/products/gallery/seg-lightbox-display.jpg",
+  "specs": [
+   "Supplied by: Easy Signs",
+   "Custom sizes and finishes available",
+   "Print-ready PDF preferred, we check every file"
+  ],
+  "faqs": [
+   [
+    "How do I get a price?",
+    "Hit Request a Quote with your size, quantity and finish. We price it against our trade network and reply fast, usually same business day."
+   ],
+   [
+    "Do you deliver?",
+    "Yes, Australia-wide. We are Sunshine Coast based with national delivery."
+   ]
+  ],
+  "related": [],
+  "imgReal": true
+ },
+ {
+  "slug": "construction-signs",
+  "name": "Construction Signs",
+  "cat": "signage",
+  "sub": "Signs & Stickers",
+  "desc": "Construction Signs produced through our Easy Signs trade network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
+  "seo": "Construction Signs Sunshine Coast | Aura Print & Promo",
+  "from": 182,
+  "quote": true,
+  "suppliers": [
+   "Easy Signs"
+  ],
+  "img": "https://www.easysigns.com.au/uploads/content/products/gallery/construction-signs.jpg",
+  "specs": [
+   "Supplied by: Easy Signs",
+   "Custom sizes and finishes available",
+   "Print-ready PDF preferred, we check every file"
+  ],
+  "faqs": [
+   [
+    "How do I get a price?",
+    "Hit Request a Quote with your size, quantity and finish. We price it against our trade network and reply fast, usually same business day."
+   ],
+   [
+    "Do you deliver?",
+    "Yes, Australia-wide. We are Sunshine Coast based with national delivery."
+   ]
+  ],
+  "related": [],
+  "imgReal": true
+ },
+ {
+  "slug": "crowd-control-barriers",
+  "name": "Crowd Control Barriers",
+  "cat": "signage",
+  "sub": "Events & Display",
+  "desc": "Crowd Control Barriers produced through our Easy Signs trade network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
+  "seo": "Crowd Control Barriers Sunshine Coast | Aura Print & Promo",
+  "from": 104,
+  "quote": true,
+  "suppliers": [
+   "Easy Signs"
+  ],
+  "img": "https://www.easysigns.com.au/uploads/content/products/gallery/crowd-control-barriers.jpg",
+  "specs": [
+   "Supplied by: Easy Signs",
+   "Custom sizes and finishes available",
+   "Print-ready PDF preferred, we check every file"
+  ],
+  "faqs": [
+   [
+    "How do I get a price?",
+    "Hit Request a Quote with your size, quantity and finish. We price it against our trade network and reply fast, usually same business day."
+   ],
+   [
+    "Do you deliver?",
+    "Yes, Australia-wide. We are Sunshine Coast based with national delivery."
+   ]
+  ],
+  "related": [],
+  "imgReal": true
+ },
+ {
+  "slug": "custom-flat-sheet",
+  "name": "Custom Flat Sheet",
+  "cat": "print",
+  "sub": "Marketing Material",
+  "desc": "Custom Flat Sheet produced through our CMYKhub trade network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
+  "seo": "Custom Flat Sheet Sunshine Coast | Aura Print & Promo",
+  "from": 54,
+  "quote": true,
+  "suppliers": [
+   "CMYKhub"
+  ],
+  "img": "assets/img/brochures.jpg",
+  "imgTodo": true,
+  "specs": [
+   "Supplied by: CMYKhub",
+   "Custom sizes and finishes available",
+   "Print-ready PDF preferred, we check every file"
+  ],
+  "faqs": [
+   [
+    "How do I get a price?",
+    "Hit Request a Quote with your size, quantity and finish. We price it against our trade network and reply fast, usually same business day."
+   ],
+   [
+    "Do you deliver?",
+    "Yes, Australia-wide. We are Sunshine Coast based with national delivery."
+   ]
+  ],
+  "related": []
+ },
+ {
+  "slug": "custom-label-rolls",
+  "name": "Custom Label Rolls",
+  "cat": "signage",
+  "sub": "Signs & Stickers",
+  "desc": "Custom Label Rolls produced through our Easy Signs trade network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
+  "seo": "Custom Label Rolls Sunshine Coast | Aura Print & Promo",
+  "from": 218,
+  "quote": true,
+  "suppliers": [
+   "Easy Signs"
+  ],
+  "img": "https://www.easysigns.com.au/uploads/content/products/gallery/custom-label-rolls.jpg",
+  "specs": [
+   "Supplied by: Easy Signs",
+   "Custom sizes and finishes available",
+   "Print-ready PDF preferred, we check every file"
+  ],
+  "faqs": [
+   [
+    "How do I get a price?",
+    "Hit Request a Quote with your size, quantity and finish. We price it against our trade network and reply fast, usually same business day."
+   ],
+   [
+    "Do you deliver?",
+    "Yes, Australia-wide. We are Sunshine Coast based with national delivery."
+   ]
+  ],
+  "related": [],
+  "imgReal": true
+ },
+ {
+  "slug": "custom-printed-coasters",
+  "name": "Custom Printed Coasters",
+  "cat": "print",
+  "sub": "Cards & Stationery",
+  "desc": "Custom Printed Coasters produced through our Easy Signs trade network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
+  "seo": "Custom Printed Coasters Sunshine Coast | Aura Print & Promo",
+  "from": 80,
+  "quote": true,
+  "suppliers": [
+   "Easy Signs"
+  ],
+  "img": "https://www.easysigns.com.au/uploads/content/products/gallery/custom_coasters.jpg",
+  "specs": [
+   "Supplied by: Easy Signs",
+   "Custom sizes and finishes available",
+   "Print-ready PDF preferred, we check every file"
+  ],
+  "faqs": [
+   [
+    "How do I get a price?",
+    "Hit Request a Quote with your size, quantity and finish. We price it against our trade network and reply fast, usually same business day."
+   ],
+   [
+    "Do you deliver?",
+    "Yes, Australia-wide. We are Sunshine Coast based with national delivery."
+   ]
+  ],
+  "related": [],
+  "imgReal": true
+ },
+ {
+  "slug": "custom-printed-flat-mailing-boxes",
+  "name": "Custom Printed Flat Mailing Boxes",
+  "cat": "print",
+  "sub": "Marketing Material",
+  "desc": "Custom Printed Flat Mailing Boxes produced through our Easy Signs trade network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
+  "seo": "Custom Printed Flat Mailing Boxes Sunshine Coast | Aura Print & Promo",
+  "from": 249,
+  "quote": true,
+  "suppliers": [
+   "Easy Signs"
+  ],
+  "img": "https://www.easysigns.com.au/uploads/content/products/gallery/custom-printed-flat-mailing-boxes.jpg",
+  "specs": [
+   "Supplied by: Easy Signs",
+   "Custom sizes and finishes available",
+   "Print-ready PDF preferred, we check every file"
+  ],
+  "faqs": [
+   [
+    "How do I get a price?",
+    "Hit Request a Quote with your size, quantity and finish. We price it against our trade network and reply fast, usually same business day."
+   ],
+   [
+    "Do you deliver?",
+    "Yes, Australia-wide. We are Sunshine Coast based with national delivery."
+   ]
+  ],
+  "related": [],
+  "imgReal": true
+ },
+ {
+  "slug": "custom-stickers",
+  "name": "Custom Stickers",
+  "cat": "signage",
+  "sub": "Signs & Stickers",
+  "desc": "Custom Stickers produced through our Easy Signs trade network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
+  "seo": "Custom Stickers Sunshine Coast | Aura Print & Promo",
+  "from": 182,
+  "quote": true,
+  "suppliers": [
+   "Easy Signs"
+  ],
+  "img": "https://www.easysigns.com.au/uploads/content/products/gallery/custom-printed-stickers.jpg",
+  "specs": [
+   "Supplied by: Easy Signs",
+   "Custom sizes and finishes available",
+   "Print-ready PDF preferred, we check every file"
+  ],
+  "faqs": [
+   [
+    "How do I get a price?",
+    "Hit Request a Quote with your size, quantity and finish. We price it against our trade network and reply fast, usually same business day."
+   ],
+   [
+    "Do you deliver?",
+    "Yes, Australia-wide. We are Sunshine Coast based with national delivery."
+   ]
+  ],
+  "related": [],
+  "imgReal": true
+ },
+ {
+  "slug": "deck-chairs",
+  "name": "Deck Chairs",
+  "cat": "signage",
+  "sub": "Events & Display",
+  "desc": "Deck Chairs produced through our Easy Signs trade network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
+  "seo": "Deck Chairs Sunshine Coast | Aura Print & Promo",
+  "from": 131,
+  "quote": true,
+  "suppliers": [
+   "Easy Signs"
+  ],
+  "img": "https://www.easysigns.com.au/uploads/content/products/gallery/deck-chairs.jpg",
+  "specs": [
+   "Supplied by: Easy Signs",
+   "Custom sizes and finishes available",
+   "Print-ready PDF preferred, we check every file"
+  ],
+  "faqs": [
+   [
+    "How do I get a price?",
+    "Hit Request a Quote with your size, quantity and finish. We price it against our trade network and reply fast, usually same business day."
+   ],
+   [
+    "Do you deliver?",
+    "Yes, Australia-wide. We are Sunshine Coast based with national delivery."
+   ]
+  ],
+  "related": [],
+  "imgReal": true
+ },
+ {
+  "slug": "director-chairs",
+  "name": "Director Chairs",
+  "cat": "signage",
+  "sub": "Events & Display",
+  "desc": "Director Chairs produced through our Easy Signs trade network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
+  "seo": "Director Chairs Sunshine Coast | Aura Print & Promo",
+  "from": 65,
+  "quote": true,
+  "suppliers": [
+   "Easy Signs"
+  ],
+  "img": "https://www.easysigns.com.au/uploads/content/products/gallery/director-chairs.jpg",
+  "specs": [
+   "Supplied by: Easy Signs",
+   "Custom sizes and finishes available",
+   "Print-ready PDF preferred, we check every file"
+  ],
+  "faqs": [
+   [
+    "How do I get a price?",
+    "Hit Request a Quote with your size, quantity and finish. We price it against our trade network and reply fast, usually same business day."
+   ],
+   [
+    "Do you deliver?",
+    "Yes, Australia-wide. We are Sunshine Coast based with national delivery."
+   ]
+  ],
+  "related": [],
+  "imgReal": true
+ },
+ {
+  "slug": "dtf-gang-sheets",
+  "name": "DTF Gang Sheets",
+  "cat": "print",
+  "sub": "Marketing Material",
+  "desc": "DTF Gang Sheets produced through our CMYKhub trade network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
+  "seo": "DTF Gang Sheets Sunshine Coast | Aura Print & Promo",
+  "from": 57,
+  "quote": true,
+  "suppliers": [
+   "CMYKhub"
+  ],
+  "img": "assets/img/brochures.jpg",
+  "imgTodo": true,
+  "specs": [
+   "Supplied by: CMYKhub",
+   "Custom sizes and finishes available",
+   "Print-ready PDF preferred, we check every file"
+  ],
+  "faqs": [
+   [
+    "How do I get a price?",
+    "Hit Request a Quote with your size, quantity and finish. We price it against our trade network and reply fast, usually same business day."
+   ],
+   [
+    "Do you deliver?",
+    "Yes, Australia-wide. We are Sunshine Coast based with national delivery."
+   ]
+  ],
+  "related": []
+ },
+ {
+  "slug": "dump-bins",
+  "name": "Dump Bins",
+  "cat": "signage",
+  "sub": "Events & Display",
+  "desc": "Dump Bins produced through our Easy Signs trade network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
+  "seo": "Dump Bins Sunshine Coast | Aura Print & Promo",
+  "from": 131,
+  "quote": true,
+  "suppliers": [
+   "Easy Signs"
+  ],
+  "img": "https://www.easysigns.com.au/uploads/content/products/gallery/dump-bin.jpg",
+  "specs": [
+   "Supplied by: Easy Signs",
+   "Custom sizes and finishes available",
+   "Print-ready PDF preferred, we check every file"
+  ],
+  "faqs": [
+   [
+    "How do I get a price?",
+    "Hit Request a Quote with your size, quantity and finish. We price it against our trade network and reply fast, usually same business day."
+   ],
+   [
+    "Do you deliver?",
+    "Yes, Australia-wide. We are Sunshine Coast based with national delivery."
+   ]
+  ],
+  "related": [],
+  "imgReal": true
+ },
+ {
+  "slug": "electrostatic-stickers",
+  "name": "Electrostatic Stickers",
+  "cat": "signage",
+  "sub": "Signs & Stickers",
+  "desc": "Electrostatic Stickers produced through our CMYKhub trade network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
+  "seo": "Electrostatic Stickers Sunshine Coast | Aura Print & Promo",
+  "from": 105,
+  "quote": true,
+  "suppliers": [
+   "CMYKhub"
+  ],
+  "img": "assets/img/stickers.jpg",
+  "imgTodo": true,
+  "specs": [
+   "Supplied by: CMYKhub",
+   "Custom sizes and finishes available",
+   "Print-ready PDF preferred, we check every file"
+  ],
+  "faqs": [
+   [
+    "How do I get a price?",
+    "Hit Request a Quote with your size, quantity and finish. We price it against our trade network and reply fast, usually same business day."
+   ],
+   [
+    "Do you deliver?",
+    "Yes, Australia-wide. We are Sunshine Coast based with national delivery."
+   ]
+  ],
+  "related": []
+ },
+ {
+  "slug": "end-sign-flags",
+  "name": "End Sign Flags",
+  "cat": "signage",
+  "sub": "Banners & Flags",
+  "desc": "End Sign Flags produced through our Easy Signs trade network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
+  "seo": "End Sign Flags Sunshine Coast | Aura Print & Promo",
+  "from": 26,
+  "quote": true,
+  "suppliers": [
+   "Easy Signs"
+  ],
+  "img": "https://www.easysigns.com.au/uploads/content/products/gallery/end-sign-flags.jpg",
+  "specs": [
+   "Supplied by: Easy Signs",
+   "Custom sizes and finishes available",
+   "Print-ready PDF preferred, we check every file"
+  ],
+  "faqs": [
+   [
+    "How do I get a price?",
+    "Hit Request a Quote with your size, quantity and finish. We price it against our trade network and reply fast, usually same business day."
+   ],
+   [
+    "Do you deliver?",
+    "Yes, Australia-wide. We are Sunshine Coast based with national delivery."
+   ]
+  ],
+  "related": [],
+  "imgReal": true
+ },
+ {
+  "slug": "fabric-display-cubes",
+  "name": "Fabric Display Cubes",
+  "cat": "signage",
+  "sub": "Events & Display",
+  "desc": "Fabric Display Cubes produced through our Easy Signs trade network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
+  "seo": "Fabric Display Cubes Sunshine Coast | Aura Print & Promo",
+  "from": 120,
+  "quote": true,
+  "suppliers": [
+   "Easy Signs"
+  ],
+  "img": "https://www.easysigns.com.au/uploads/content/products/gallery/fabric-display-cubes.jpg",
+  "specs": [
+   "Supplied by: Easy Signs",
+   "Custom sizes and finishes available",
+   "Print-ready PDF preferred, we check every file"
+  ],
+  "faqs": [
+   [
+    "How do I get a price?",
+    "Hit Request a Quote with your size, quantity and finish. We price it against our trade network and reply fast, usually same business day."
+   ],
+   [
+    "Do you deliver?",
+    "Yes, Australia-wide. We are Sunshine Coast based with national delivery."
+   ]
+  ],
+  "related": [],
+  "imgReal": true
+ },
+ {
+  "slug": "floor-stickers",
+  "name": "Floor Stickers",
+  "cat": "signage",
+  "sub": "Signs & Stickers",
+  "desc": "Floor Stickers produced through our Easy Signs trade network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
+  "seo": "Floor Stickers Sunshine Coast | Aura Print & Promo",
+  "from": 182,
+  "quote": true,
+  "suppliers": [
+   "Easy Signs"
+  ],
+  "img": "https://www.easysigns.com.au/uploads/content/products/gallery/floor-graphics.jpg",
+  "specs": [
+   "Supplied by: Easy Signs",
+   "Custom sizes and finishes available",
+   "Print-ready PDF preferred, we check every file"
+  ],
+  "faqs": [
+   [
+    "How do I get a price?",
+    "Hit Request a Quote with your size, quantity and finish. We price it against our trade network and reply fast, usually same business day."
+   ],
+   [
+    "Do you deliver?",
+    "Yes, Australia-wide. We are Sunshine Coast based with national delivery."
+   ]
+  ],
+  "related": [],
+  "imgReal": true
+ },
+ {
+  "slug": "foam-pvc-signs",
+  "name": "Foam PVC Signs",
+  "cat": "signage",
+  "sub": "Signs & Stickers",
+  "desc": "Foam PVC Signs produced through our Easy Signs trade network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
+  "seo": "Foam PVC Signs Sunshine Coast | Aura Print & Promo",
+  "from": 182,
+  "quote": true,
+  "suppliers": [
+   "Easy Signs"
+  ],
+  "img": "https://www.easysigns.com.au/uploads/content/products/gallery/foam-pvc-signs.jpg",
+  "specs": [
+   "Supplied by: Easy Signs",
+   "Custom sizes and finishes available",
+   "Print-ready PDF preferred, we check every file"
+  ],
+  "faqs": [
+   [
+    "How do I get a price?",
+    "Hit Request a Quote with your size, quantity and finish. We price it against our trade network and reply fast, usually same business day."
+   ],
+   [
+    "Do you deliver?",
+    "Yes, Australia-wide. We are Sunshine Coast based with national delivery."
+   ]
+  ],
+  "related": [],
+  "imgReal": true
+ },
+ {
+  "slug": "golf-score-cards",
+  "name": "Golf Score Cards",
+  "cat": "print",
+  "sub": "Cards & Stationery",
+  "desc": "Golf Score Cards produced through our LEP trade network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
+  "seo": "Golf Score Cards Sunshine Coast | Aura Print & Promo",
+  "from": 1527,
+  "quote": true,
+  "suppliers": [
+   "LEP"
+  ],
+  "img": "assets/img/business-cards.jpg",
+  "imgTodo": true,
+  "specs": [
+   "Supplied by: LEP",
+   "Custom sizes and finishes available",
+   "Print-ready PDF preferred, we check every file"
+  ],
+  "faqs": [
+   [
+    "How do I get a price?",
+    "Hit Request a Quote with your size, quantity and finish. We price it against our trade network and reply fast, usually same business day."
+   ],
+   [
+    "Do you deliver?",
+    "Yes, Australia-wide. We are Sunshine Coast based with national delivery."
+   ]
+  ],
+  "related": []
+ },
+ {
+  "slug": "ground-spikes-sign-holders",
+  "name": "Ground Spikes & Sign Holders",
+  "cat": "signage",
+  "sub": "Signs & Stickers",
+  "desc": "Ground Spikes & Sign Holders produced through our Easy Signs trade network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
+  "seo": "Ground Spikes & Sign Holders Sunshine Coast | Aura Print & Promo",
+  "from": 253,
+  "quote": true,
+  "suppliers": [
+   "Easy Signs"
+  ],
+  "img": "https://www.easysigns.com.au/uploads/content/products/gallery/ground-spikes-signholders.jpg",
+  "specs": [
+   "Supplied by: Easy Signs",
+   "Custom sizes and finishes available",
+   "Print-ready PDF preferred, we check every file"
+  ],
+  "faqs": [
+   [
+    "How do I get a price?",
+    "Hit Request a Quote with your size, quantity and finish. We price it against our trade network and reply fast, usually same business day."
+   ],
+   [
+    "Do you deliver?",
+    "Yes, Australia-wide. We are Sunshine Coast based with national delivery."
+   ]
+  ],
+  "related": [],
+  "imgReal": true
+ },
+ {
+  "slug": "invitations",
+  "name": "Invitations",
+  "cat": "print",
+  "sub": "Marketing Material",
+  "desc": "Invitations produced through our Easy Signs trade network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
+  "seo": "Invitations Sunshine Coast | Aura Print & Promo",
+  "from": 52,
+  "quote": true,
+  "suppliers": [
+   "Easy Signs"
+  ],
+  "img": "https://www.easysigns.com.au/uploads/content/products/gallery/invitations.jpg",
+  "specs": [
+   "Supplied by: Easy Signs",
+   "Custom sizes and finishes available",
+   "Print-ready PDF preferred, we check every file"
+  ],
+  "faqs": [
+   [
+    "How do I get a price?",
+    "Hit Request a Quote with your size, quantity and finish. We price it against our trade network and reply fast, usually same business day."
+   ],
+   [
+    "Do you deliver?",
+    "Yes, Australia-wide. We are Sunshine Coast based with national delivery."
+   ]
+  ],
+  "related": [],
+  "imgReal": true
+ },
+ {
+  "slug": "large-format-stickers-sav",
+  "name": "Large Format Stickers (SAV)",
+  "cat": "signage",
+  "sub": "Signs & Stickers",
+  "desc": "Large Format Stickers (SAV) produced through our Easy Signs trade network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
+  "seo": "Large Format Stickers (SAV) Sunshine Coast | Aura Print & Promo",
+  "from": 182,
+  "quote": true,
+  "suppliers": [
+   "Easy Signs"
+  ],
+  "img": "https://www.easysigns.com.au/uploads/content/products/gallery/large-format-stickers-sav.jpg",
+  "specs": [
+   "Supplied by: Easy Signs",
+   "Custom sizes and finishes available",
+   "Print-ready PDF preferred, we check every file"
+  ],
+  "faqs": [
+   [
+    "How do I get a price?",
+    "Hit Request a Quote with your size, quantity and finish. We price it against our trade network and reply fast, usually same business day."
+   ],
+   [
+    "Do you deliver?",
+    "Yes, Australia-wide. We are Sunshine Coast based with national delivery."
+   ]
+  ],
+  "related": [],
+  "imgReal": true
+ },
+ {
+  "slug": "modular-seg-lightbox-display",
+  "name": "Modular SEG Lightbox Display",
+  "cat": "signage",
+  "sub": "Events & Display",
+  "desc": "Modular SEG Lightbox Display produced through our Easy Signs trade network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
+  "seo": "Modular SEG Lightbox Display Sunshine Coast | Aura Print & Promo",
+  "from": 1322,
+  "quote": true,
+  "suppliers": [
+   "Easy Signs"
+  ],
+  "img": "https://www.easysigns.com.au/uploads/content/products/gallery/modular-seg-lightbox-display.jpg",
+  "specs": [
+   "Supplied by: Easy Signs",
+   "Custom sizes and finishes available",
+   "Print-ready PDF preferred, we check every file"
+  ],
+  "faqs": [
+   [
+    "How do I get a price?",
+    "Hit Request a Quote with your size, quantity and finish. We price it against our trade network and reply fast, usually same business day."
+   ],
+   [
+    "Do you deliver?",
+    "Yes, Australia-wide. We are Sunshine Coast based with national delivery."
+   ]
+  ],
+  "related": [],
+  "imgReal": true
+ },
+ {
+  "slug": "novelty-cheques",
+  "name": "Novelty Cheques",
+  "cat": "signage",
+  "sub": "Events & Display",
+  "desc": "Novelty Cheques produced through our Easy Signs trade network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
+  "seo": "Novelty Cheques Sunshine Coast | Aura Print & Promo",
+  "from": 131,
+  "quote": true,
+  "suppliers": [
+   "Easy Signs"
+  ],
+  "img": "https://www.easysigns.com.au/uploads/content/products/gallery/novelty-cheques.jpg",
+  "specs": [
+   "Supplied by: Easy Signs",
+   "Custom sizes and finishes available",
+   "Print-ready PDF preferred, we check every file"
+  ],
+  "faqs": [
+   [
+    "How do I get a price?",
+    "Hit Request a Quote with your size, quantity and finish. We price it against our trade network and reply fast, usually same business day."
+   ],
+   [
+    "Do you deliver?",
+    "Yes, Australia-wide. We are Sunshine Coast based with national delivery."
+   ]
+  ],
+  "related": [],
+  "imgReal": true
+ },
+ {
+  "slug": "one-way-window-films",
+  "name": "One Way Window Films",
+  "cat": "signage",
+  "sub": "Signs & Stickers",
+  "desc": "One Way Window Films produced through our Easy Signs trade network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
+  "seo": "One Way Window Films Sunshine Coast | Aura Print & Promo",
+  "from": 182,
+  "quote": true,
+  "suppliers": [
+   "Easy Signs"
+  ],
+  "img": "https://www.easysigns.com.au/uploads/content/products/gallery/one-way-vision-window-graphics.jpg",
+  "specs": [
+   "Supplied by: Easy Signs",
+   "Custom sizes and finishes available",
+   "Print-ready PDF preferred, we check every file"
+  ],
+  "faqs": [
+   [
+    "How do I get a price?",
+    "Hit Request a Quote with your size, quantity and finish. We price it against our trade network and reply fast, usually same business day."
+   ],
+   [
+    "Do you deliver?",
+    "Yes, Australia-wide. We are Sunshine Coast based with national delivery."
+   ]
+  ],
+  "related": [],
+  "imgReal": true
+ },
+ {
+  "slug": "outdoor-custom-stickers",
+  "name": "Outdoor Custom Stickers",
+  "cat": "signage",
+  "sub": "Signs & Stickers",
+  "desc": "Outdoor Custom Stickers produced through our Easy Signs trade network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
+  "seo": "Outdoor Custom Stickers Sunshine Coast | Aura Print & Promo",
+  "from": 182,
+  "quote": true,
+  "suppliers": [
+   "Easy Signs"
+  ],
+  "img": "https://www.easysigns.com.au/uploads/content/products/gallery/outdoor-custom-stickers.jpg",
+  "specs": [
+   "Supplied by: Easy Signs",
+   "Custom sizes and finishes available",
+   "Print-ready PDF preferred, we check every file"
+  ],
+  "faqs": [
+   [
+    "How do I get a price?",
+    "Hit Request a Quote with your size, quantity and finish. We price it against our trade network and reply fast, usually same business day."
+   ],
+   [
+    "Do you deliver?",
+    "Yes, Australia-wide. We are Sunshine Coast based with national delivery."
+   ]
+  ],
+  "related": [],
+  "imgReal": true
+ },
+ {
+  "slug": "parking-signs",
+  "name": "Parking Signs",
+  "cat": "signage",
+  "sub": "Signs & Stickers",
+  "desc": "Parking Signs produced through our Easy Signs trade network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
+  "seo": "Parking Signs Sunshine Coast | Aura Print & Promo",
+  "from": 73,
+  "quote": true,
+  "suppliers": [
+   "Easy Signs"
+  ],
+  "img": "https://www.easysigns.com.au/uploads/content/products/gallery/parking-signs.jpg",
+  "specs": [
+   "Supplied by: Easy Signs",
+   "Custom sizes and finishes available",
+   "Print-ready PDF preferred, we check every file"
+  ],
+  "faqs": [
+   [
+    "How do I get a price?",
+    "Hit Request a Quote with your size, quantity and finish. We price it against our trade network and reply fast, usually same business day."
+   ],
+   [
+    "Do you deliver?",
+    "Yes, Australia-wide. We are Sunshine Coast based with national delivery."
+   ]
+  ],
+  "related": [],
+  "imgReal": true
+ },
+ {
+  "slug": "plastic-election-signs",
+  "name": "Plastic Election Signs",
+  "cat": "signage",
+  "sub": "Signs & Stickers",
+  "desc": "Plastic Election Signs produced through our Easy Signs trade network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
+  "seo": "Plastic Election Signs Sunshine Coast | Aura Print & Promo",
+  "from": 182,
+  "quote": true,
+  "suppliers": [
+   "Easy Signs"
+  ],
+  "img": "https://www.easysigns.com.au/uploads/content/products/gallery/plastic-election-signs.jpg",
+  "specs": [
+   "Supplied by: Easy Signs",
+   "Custom sizes and finishes available",
+   "Print-ready PDF preferred, we check every file"
+  ],
+  "faqs": [
+   [
+    "How do I get a price?",
+    "Hit Request a Quote with your size, quantity and finish. We price it against our trade network and reply fast, usually same business day."
+   ],
+   [
+    "Do you deliver?",
+    "Yes, Australia-wide. We are Sunshine Coast based with national delivery."
+   ]
+  ],
+  "related": [],
+  "imgReal": true
+ },
+ {
+  "slug": "rally-signs",
+  "name": "Rally Signs",
+  "cat": "signage",
+  "sub": "Signs & Stickers",
+  "desc": "Rally Signs produced through our Easy Signs trade network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
+  "seo": "Rally Signs Sunshine Coast | Aura Print & Promo",
+  "from": 182,
+  "quote": true,
+  "suppliers": [
+   "Easy Signs"
+  ],
+  "img": "https://www.easysigns.com.au/uploads/content/products/gallery/rally-signs.jpg",
+  "specs": [
+   "Supplied by: Easy Signs",
+   "Custom sizes and finishes available",
+   "Print-ready PDF preferred, we check every file"
+  ],
+  "faqs": [
+   [
+    "How do I get a price?",
+    "Hit Request a Quote with your size, quantity and finish. We price it against our trade network and reply fast, usually same business day."
+   ],
+   [
+    "Do you deliver?",
+    "Yes, Australia-wide. We are Sunshine Coast based with national delivery."
+   ]
+  ],
+  "related": [],
+  "imgReal": true
+ },
+ {
+  "slug": "rectangle-flags",
+  "name": "Rectangle Flags",
+  "cat": "signage",
+  "sub": "Banners & Flags",
+  "desc": "Rectangle Flags produced through our Easy Signs trade network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
+  "seo": "Rectangle Flags Sunshine Coast | Aura Print & Promo",
+  "from": 170,
+  "quote": true,
+  "suppliers": [
+   "Easy Signs"
+  ],
+  "img": "https://www.easysigns.com.au/uploads/content/products/gallery/rectangle-flags.jpg",
+  "specs": [
+   "Supplied by: Easy Signs",
+   "Custom sizes and finishes available",
+   "Print-ready PDF preferred, we check every file"
+  ],
+  "faqs": [
+   [
+    "How do I get a price?",
+    "Hit Request a Quote with your size, quantity and finish. We price it against our trade network and reply fast, usually same business day."
+   ],
+   [
+    "Do you deliver?",
+    "Yes, Australia-wide. We are Sunshine Coast based with national delivery."
+   ]
+  ],
+  "related": [],
+  "imgReal": true
+ },
+ {
+  "slug": "reflective-signs",
+  "name": "Reflective Signs",
+  "cat": "signage",
+  "sub": "Signs & Stickers",
+  "desc": "Reflective Signs produced through our Easy Signs trade network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
+  "seo": "Reflective Signs Sunshine Coast | Aura Print & Promo",
+  "from": 182,
+  "quote": true,
+  "suppliers": [
+   "Easy Signs"
+  ],
+  "img": "https://www.easysigns.com.au/uploads/content/products/gallery/reflective-signs.jpg",
+  "specs": [
+   "Supplied by: Easy Signs",
+   "Custom sizes and finishes available",
+   "Print-ready PDF preferred, we check every file"
+  ],
+  "faqs": [
+   [
+    "How do I get a price?",
+    "Hit Request a Quote with your size, quantity and finish. We price it against our trade network and reply fast, usually same business day."
+   ],
+   [
+    "Do you deliver?",
+    "Yes, Australia-wide. We are Sunshine Coast based with national delivery."
+   ]
+  ],
+  "related": [],
+  "imgReal": true
+ },
+ {
+  "slug": "replacement-flags",
+  "name": "Replacement Flags",
+  "cat": "signage",
+  "sub": "Banners & Flags",
+  "desc": "Replacement Flags produced through our Easy Signs trade network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
+  "seo": "Replacement Flags Sunshine Coast | Aura Print & Promo",
+  "from": 64,
+  "quote": true,
+  "suppliers": [
+   "Easy Signs"
+  ],
+  "img": "https://www.easysigns.com.au/uploads/content/products/gallery/replacement-flags.jpg",
+  "specs": [
+   "Supplied by: Easy Signs",
+   "Custom sizes and finishes available",
+   "Print-ready PDF preferred, we check every file"
+  ],
+  "faqs": [
+   [
+    "How do I get a price?",
+    "Hit Request a Quote with your size, quantity and finish. We price it against our trade network and reply fast, usually same business day."
+   ],
+   [
+    "Do you deliver?",
+    "Yes, Australia-wide. We are Sunshine Coast based with national delivery."
+   ]
+  ],
+  "related": [],
+  "imgReal": true
+ },
+ {
+  "slug": "rigid-boards",
+  "name": "Rigid Boards",
+  "cat": "signage",
+  "sub": "Signs & Stickers",
+  "desc": "Rigid Boards produced through our CMYKhub trade network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
+  "seo": "Rigid Boards Sunshine Coast | Aura Print & Promo",
+  "from": 95,
+  "quote": true,
+  "suppliers": [
+   "CMYKhub"
+  ],
+  "img": "assets/img/corflute-signs.jpg",
+  "imgTodo": true,
+  "specs": [
+   "Supplied by: CMYKhub",
+   "Custom sizes and finishes available",
+   "Print-ready PDF preferred, we check every file"
+  ],
+  "faqs": [
+   [
+    "How do I get a price?",
+    "Hit Request a Quote with your size, quantity and finish. We price it against our trade network and reply fast, usually same business day."
+   ],
+   [
+    "Do you deliver?",
+    "Yes, Australia-wide. We are Sunshine Coast based with national delivery."
+   ]
+  ],
+  "related": []
+ },
+ {
+  "slug": "roll-labels",
+  "name": "Roll Labels",
+  "cat": "signage",
+  "sub": "Signs & Stickers",
+  "desc": "Roll Labels produced through our CMYKhub trade network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
+  "seo": "Roll Labels Sunshine Coast | Aura Print & Promo",
+  "from": 181,
+  "quote": true,
+  "suppliers": [
+   "CMYKhub"
+  ],
+  "img": "assets/img/labels.jpg",
+  "imgTodo": true,
+  "specs": [
+   "Supplied by: CMYKhub",
+   "Custom sizes and finishes available",
+   "Print-ready PDF preferred, we check every file"
+  ],
+  "faqs": [
+   [
+    "How do I get a price?",
+    "Hit Request a Quote with your size, quantity and finish. We price it against our trade network and reply fast, usually same business day."
+   ],
+   [
+    "Do you deliver?",
+    "Yes, Australia-wide. We are Sunshine Coast based with national delivery."
+   ]
+  ],
+  "related": []
+ },
+ {
+  "slug": "screenboard-signs",
+  "name": "Screenboard Signs",
+  "cat": "signage",
+  "sub": "Signs & Stickers",
+  "desc": "Screenboard Signs produced through our Easy Signs trade network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
+  "seo": "Screenboard Signs Sunshine Coast | Aura Print & Promo",
+  "from": 131,
+  "quote": true,
+  "suppliers": [
+   "Easy Signs"
+  ],
+  "img": "https://www.easysigns.com.au/uploads/content/products/gallery/screenboard.jpg",
+  "specs": [
+   "Supplied by: Easy Signs",
+   "Custom sizes and finishes available",
+   "Print-ready PDF preferred, we check every file"
+  ],
+  "faqs": [
+   [
+    "How do I get a price?",
+    "Hit Request a Quote with your size, quantity and finish. We price it against our trade network and reply fast, usually same business day."
+   ],
+   [
+    "Do you deliver?",
+    "Yes, Australia-wide. We are Sunshine Coast based with national delivery."
+   ]
+  ],
+  "related": [],
+  "imgReal": true
+ },
+ {
+  "slug": "seg-fabric",
+  "name": "SEG Fabric",
+  "cat": "signage",
+  "sub": "Events & Display",
+  "desc": "SEG Fabric produced through our Easy Signs trade network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
+  "seo": "SEG Fabric Sunshine Coast | Aura Print & Promo",
+  "from": 131,
+  "quote": true,
+  "suppliers": [
+   "Easy Signs"
+  ],
+  "img": "https://www.easysigns.com.au/uploads/content/products/gallery/seg-fabric.jpg",
+  "specs": [
+   "Supplied by: Easy Signs",
+   "Custom sizes and finishes available",
+   "Print-ready PDF preferred, we check every file"
+  ],
+  "faqs": [
+   [
+    "How do I get a price?",
+    "Hit Request a Quote with your size, quantity and finish. We price it against our trade network and reply fast, usually same business day."
+   ],
+   [
+    "Do you deliver?",
+    "Yes, Australia-wide. We are Sunshine Coast based with national delivery."
+   ]
+  ],
+  "related": [],
+  "imgReal": true
+ },
+ {
+  "slug": "selfie-frames",
+  "name": "Selfie Frames",
+  "cat": "signage",
+  "sub": "Events & Display",
+  "desc": "Selfie Frames produced through our Easy Signs trade network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
+  "seo": "Selfie Frames Sunshine Coast | Aura Print & Promo",
+  "from": 131,
+  "quote": true,
+  "suppliers": [
+   "Easy Signs"
+  ],
+  "img": "https://www.easysigns.com.au/uploads/content/products/gallery/selfie-frames.jpg",
+  "specs": [
+   "Supplied by: Easy Signs",
+   "Custom sizes and finishes available",
+   "Print-ready PDF preferred, we check every file"
+  ],
+  "faqs": [
+   [
+    "How do I get a price?",
+    "Hit Request a Quote with your size, quantity and finish. We price it against our trade network and reply fast, usually same business day."
+   ],
+   [
+    "Do you deliver?",
+    "Yes, Australia-wide. We are Sunshine Coast based with national delivery."
+   ]
+  ],
+  "related": [],
+  "imgReal": true
+ },
+ {
+  "slug": "stackable-cubes",
+  "name": "Stackable Cubes",
+  "cat": "signage",
+  "sub": "Events & Display",
+  "desc": "Stackable Cubes produced through our Easy Signs trade network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
+  "seo": "Stackable Cubes Sunshine Coast | Aura Print & Promo",
+  "from": 131,
+  "quote": true,
+  "suppliers": [
+   "Easy Signs"
+  ],
+  "img": "https://www.easysigns.com.au/uploads/content/products/gallery/stackable-cubes.jpg",
+  "specs": [
+   "Supplied by: Easy Signs",
+   "Custom sizes and finishes available",
+   "Print-ready PDF preferred, we check every file"
+  ],
+  "faqs": [
+   [
+    "How do I get a price?",
+    "Hit Request a Quote with your size, quantity and finish. We price it against our trade network and reply fast, usually same business day."
+   ],
+   [
+    "Do you deliver?",
+    "Yes, Australia-wide. We are Sunshine Coast based with national delivery."
+   ]
+  ],
+  "related": [],
+  "imgReal": true
+ },
+ {
+  "slug": "stationery-same-day",
+  "name": "Stationery Same Day",
+  "cat": "print",
+  "sub": "Cards & Stationery",
+  "desc": "Stationery Same Day produced through our LEP trade network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
+  "seo": "Stationery Same Day Sunshine Coast | Aura Print & Promo",
+  "from": 83,
+  "quote": true,
+  "suppliers": [
+   "LEP"
+  ],
+  "img": "assets/img/brochures.jpg",
+  "imgTodo": true,
+  "specs": [
+   "Supplied by: LEP",
+   "Custom sizes and finishes available",
+   "Print-ready PDF preferred, we check every file"
+  ],
+  "faqs": [
+   [
+    "How do I get a price?",
+    "Hit Request a Quote with your size, quantity and finish. We price it against our trade network and reply fast, usually same business day."
+   ],
+   [
+    "Do you deliver?",
+    "Yes, Australia-wide. We are Sunshine Coast based with national delivery."
+   ]
+  ],
+  "related": []
+ },
+ {
+  "slug": "vinyl-pole-banners",
+  "name": "Vinyl Pole Banners",
+  "cat": "signage",
+  "sub": "Banners & Flags",
+  "desc": "Vinyl Pole Banners produced through our Easy Signs trade network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
+  "seo": "Vinyl Pole Banners Sunshine Coast | Aura Print & Promo",
+  "from": 175,
+  "quote": true,
+  "suppliers": [
+   "Easy Signs"
+  ],
+  "img": "https://www.easysigns.com.au/uploads/content/products/gallery/vinyl-pole-banner.jpg",
+  "specs": [
+   "Supplied by: Easy Signs",
+   "Custom sizes and finishes available",
+   "Print-ready PDF preferred, we check every file"
+  ],
+  "faqs": [
+   [
+    "How do I get a price?",
+    "Hit Request a Quote with your size, quantity and finish. We price it against our trade network and reply fast, usually same business day."
+   ],
+   [
+    "Do you deliver?",
+    "Yes, Australia-wide. We are Sunshine Coast based with national delivery."
+   ]
+  ],
+  "related": [],
+  "imgReal": true
+ },
+ {
+  "slug": "vinyl-stickers",
+  "name": "Vinyl Stickers",
+  "cat": "signage",
+  "sub": "Signs & Stickers",
+  "desc": "Vinyl Stickers produced through our CMYKhub trade network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
+  "seo": "Vinyl Stickers Sunshine Coast | Aura Print & Promo",
+  "from": 102,
+  "quote": true,
+  "suppliers": [
+   "CMYKhub"
+  ],
+  "img": "assets/img/stickers.jpg",
+  "imgTodo": true,
+  "specs": [
+   "Supplied by: CMYKhub",
+   "Custom sizes and finishes available",
+   "Print-ready PDF preferred, we check every file"
+  ],
+  "faqs": [
+   [
+    "How do I get a price?",
+    "Hit Request a Quote with your size, quantity and finish. We price it against our trade network and reply fast, usually same business day."
+   ],
+   [
+    "Do you deliver?",
+    "Yes, Australia-wide. We are Sunshine Coast based with national delivery."
+   ]
+  ],
+  "related": []
+ },
+ {
+  "slug": "wall-murals",
+  "name": "Wall Murals",
+  "cat": "signage",
+  "sub": "Events & Display",
+  "desc": "Wall Murals produced through our Easy Signs trade network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
+  "seo": "Wall Murals Sunshine Coast | Aura Print & Promo",
+  "from": 182,
+  "quote": true,
+  "suppliers": [
+   "Easy Signs"
+  ],
+  "img": "https://www.easysigns.com.au/uploads/content/products/gallery/wall-murals.jpg",
+  "specs": [
+   "Supplied by: Easy Signs",
+   "Custom sizes and finishes available",
+   "Print-ready PDF preferred, we check every file"
+  ],
+  "faqs": [
+   [
+    "How do I get a price?",
+    "Hit Request a Quote with your size, quantity and finish. We price it against our trade network and reply fast, usually same business day."
+   ],
+   [
+    "Do you deliver?",
+    "Yes, Australia-wide. We are Sunshine Coast based with national delivery."
+   ]
+  ],
+  "related": [],
+  "imgReal": true
+ },
+ {
+  "slug": "window-graphics",
+  "name": "Window Graphics",
+  "cat": "signage",
+  "sub": "Signs & Stickers",
+  "desc": "Window Graphics produced through our Easy Signs trade network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
+  "seo": "Window Graphics Sunshine Coast | Aura Print & Promo",
+  "from": 131,
+  "quote": true,
+  "suppliers": [
+   "Easy Signs"
+  ],
+  "img": "https://www.easysigns.com.au/uploads/content/products/gallery/digitally-printed-window-graphics.jpg",
+  "specs": [
+   "Supplied by: Easy Signs",
+   "Custom sizes and finishes available",
+   "Print-ready PDF preferred, we check every file"
+  ],
+  "faqs": [
+   [
+    "How do I get a price?",
+    "Hit Request a Quote with your size, quantity and finish. We price it against our trade network and reply fast, usually same business day."
+   ],
+   [
+    "Do you deliver?",
+    "Yes, Australia-wide. We are Sunshine Coast based with national delivery."
+   ]
+  ],
+  "related": [],
+  "imgReal": true
+ },
+ {
+  "slug": "wiro-magazines",
+  "name": "Wiro Magazines",
+  "cat": "print",
+  "sub": "Books & Booklets",
+  "desc": "Wiro Magazines produced through our LEP trade network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
+  "seo": "Wiro Magazines Sunshine Coast | Aura Print & Promo",
+  "from": 207,
+  "quote": true,
+  "suppliers": [
+   "LEP"
+  ],
+  "img": "assets/img/brochures.jpg",
+  "imgTodo": true,
+  "specs": [
+   "Supplied by: LEP",
+   "Custom sizes and finishes available",
+   "Print-ready PDF preferred, we check every file"
+  ],
+  "faqs": [
+   [
+    "How do I get a price?",
+    "Hit Request a Quote with your size, quantity and finish. We price it against our trade network and reply fast, usually same business day."
+   ],
+   [
+    "Do you deliver?",
+    "Yes, Australia-wide. We are Sunshine Coast based with national delivery."
+   ]
+  ],
+  "related": []
+ },
+ {
+  "slug": "x-banners",
+  "name": "X Banners",
+  "cat": "signage",
+  "sub": "Banners & Flags",
+  "desc": "X Banners produced through our Easy Signs trade network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
+  "seo": "X Banners Sunshine Coast | Aura Print & Promo",
+  "from": 57,
+  "quote": true,
+  "suppliers": [
+   "Easy Signs"
+  ],
+  "img": "https://www.easysigns.com.au/uploads/content/products/gallery/x-banner-stand.jpg",
+  "specs": [
+   "Supplied by: Easy Signs",
+   "Custom sizes and finishes available",
+   "Print-ready PDF preferred, we check every file"
+  ],
+  "faqs": [
+   [
+    "How do I get a price?",
+    "Hit Request a Quote with your size, quantity and finish. We price it against our trade network and reply fast, usually same business day."
+   ],
+   [
+    "Do you deliver?",
+    "Yes, Australia-wide. We are Sunshine Coast based with national delivery."
+   ]
+  ],
+  "related": [],
+  "imgReal": true
  }
 ]
