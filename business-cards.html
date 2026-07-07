@@ -32,42 +32,40 @@
       
       <div class="optlabel">Stock</div>
       <div class="opts" data-group="stock">
-        <button class="opt on" data-mult="1">350gsm Matt Laminate</button>
-        <button class="opt" data-mult="1.05">350gsm Gloss</button>
-        <button class="opt" data-mult="2.1">450gsm NV Velvet</button>
-        <button class="opt" data-mult="2.9">NV Velvet + Spot UV</button>
+        <button class="opt" data-val="310gsm Artboard">310gsm Artboard</button>
+        <button class="opt on" data-val="350gsm Matt Laminate">350gsm + Matt Laminate</button>
+        <button class="opt" data-val="350gsm Gloss Laminate">350gsm + Gloss Laminate</button>
+        <button class="opt" data-val="400gsm Premium Matt">400gsm Premium Matt</button>
+        <button class="opt" data-val="450gsm NV Velvet">450gsm NV Velvet</button>
       </div>
       <div class="optlabel">Sides</div>
       <div class="opts" data-group="sides">
-        <button class="opt" data-mult="0.85">Single sided</button>
-        <button class="opt on" data-mult="1">Double sided</button>
-      </div>
-      <div class="optlabel">Corners</div>
-      <div class="opts" data-group="corners">
-        <button class="opt on" data-add="0">Square</button>
-        <button class="opt" data-add="15">Rounded (7mm)</button>
+        <button class="opt" data-val="1S">Single sided</button>
+        <button class="opt on" data-val="2S">Double sided</button>
       </div>
       <div class="optlabel">Quantity</div>
       <div class="opts" data-group="qty">
-        <button class="opt" data-base="75">250</button>
-        <button class="opt on" data-base="89">500</button>
-        <button class="opt" data-base="107">750</button>
-        <button class="opt" data-base="124">1000</button>
-        <button class="opt" data-base="246">2000</button>
+        <button class="opt" data-val="250">250</button>
+        <button class="opt on" data-val="500">500</button>
+        <button class="opt" data-val="1000">1000</button>
+        <button class="opt" data-val="2500">2500</button>
+        <button class="opt" data-val="5000">5000</button>
       </div>
       <div class="optlabel">Turnaround</div>
-      <div class="opts" data-group="speed">
-        <button class="opt on" data-mult2="1">Standard</button>
-        <button class="opt" data-mult2="1.35">Next day</button>
-        <button class="opt" data-mult2="1.7">Same day</button>
+      <div class="opts" data-group="turn">
+        <button class="opt on" data-val="standard">Standard</button>
+        <button class="opt" data-val="sameday">Same day</button>
       </div>
       <div class="price-box" style="margin-top:28px">
-        <div><div class="from">Your price</div><div class="gst">inc. GST, ex. delivery</div></div>
-        <div class="amount grad-text" id="price">$89</div>
+        <div><div class="from">Your price</div><div class="gst" id="gstLabel">inc. GST &amp; delivery</div></div>
+        <div class="amount grad-text" id="price">—</div>
       </div>
-      <div style="display:flex;gap:12px;margin-top:18px;flex-wrap:wrap"><a class="btn btn-aura" href="order.html?product=business-cards" style="flex:1;text-align:center">Order &amp; upload artwork →</a>
-       <a class="btn btn-ghost" href="quote.html?product=business-cards">Custom quote</a></div>
-      <p style="font-size:12.5px;color:#8a847d;margin-top:12px">Prototype pricing for demonstration. Live prices come from the Aura pricing engine.</p>
+      <div id="priceNote" style="font-size:13px;color:#8a847d;margin-top:10px"></div>
+      <div style="display:flex;gap:12px;margin-top:18px;flex-wrap:wrap">
+        <a class="btn btn-aura" id="orderCta" href="order.html?product=business-cards" style="flex:1;text-align:center">Order &amp; upload artwork →</a>
+        <a class="btn btn-ghost" href="quote.html?product=business-cards">Custom quote</a>
+      </div>
+      <p style="font-size:12.5px;color:#8a847d;margin-top:12px">Live pricing from real supplier rates. Prices include GST and standard delivery Australia-wide.</p>
     </div>
   </div>
 </section>
@@ -95,7 +93,7 @@
   <div class="wrap" style="max-width:860px">
     <h2 style="font-size:clamp(26px,3.4vw,40px);margin-bottom:30px">Frequently asked <span class="grad-text">questions</span></h2>
     <details><summary>What is NV Velvet?</summary><p>NV Velvet is a luxurious soft-touch laminate over thick 450gsm artboard. It feels like suede and makes colours pop. Add Spot UV for glossy highlights.</p></details>
-    <details><summary>How fast can I get my cards?</summary><p>Standard turnaround is 3-5 business days plus delivery. Next-day and same-day production are available on this product - select your speed above.</p></details>
+    <details><summary>How fast can I get my cards?</summary><p>Standard turnaround is 3-5 business days plus delivery. Same-day production is available on selected stocks - choose your turnaround above.</p></details>
     <details><summary>Do I see a proof before printing?</summary><p>Always. A digital proof lands in your inbox and nothing prints until you approve it.</p></details>
   </div>
 </section>
@@ -117,31 +115,52 @@
   </div>
 </section>
 
-<script src="assets/config.js"></script>
-<script src="assets/aura.js"></script>
+<script src="assets/config.js?v=20260707a"></script>
+<script src="assets/aura.js?v=20260707a"></script>
 <script>
-function calc(){
-  let base=0, mult=1, add=0, speed=1;
-  document.querySelectorAll('.opts .on').forEach(o=>{
-    if(o.dataset.base!==undefined) base=+o.dataset.base;
-    else if(o.dataset.add!==undefined) add+=+o.dataset.add;
-    else if(o.dataset.mult2!==undefined) speed=+o.dataset.mult2;
-    else if(o.dataset.mult!==undefined) mult*=+o.dataset.mult;
+/* Live pricing: reads finished sell prices from Supabase (bc_prices).
+   Costs and margins never touch the browser - only the final price is served. */
+(function(){
+  var CFG = window.AURA_CONFIG || {};
+  var priceEl=document.getElementById('price'), noteEl=document.getElementById('priceNote'),
+      gstEl=document.getElementById('gstLabel'), cta=document.getElementById('orderCta');
+  function sel(g){ var b=document.querySelector('.opts[data-group="'+g+'"] .on'); return b?b.dataset.val:null; }
+  function animateTo(v){
+    var start=parseFloat(priceEl.dataset.v||0), t0=performance.now();
+    (function tick(t){var k=Math.min(1,(t-t0)/300);priceEl.textContent='$'+Math.round(start+(v-start)*k).toLocaleString();
+      if(k<1)requestAnimationFrame(tick);else priceEl.dataset.v=v;})(performance.now());
+  }
+  var seq=0;
+  async function calc(){
+    var stock=sel('stock'), sides=sel('sides'), turn=sel('turn'), qty=sel('qty'), my=++seq;
+    if(!CFG.supabaseUrl){ priceEl.textContent='—'; return; }
+    var u=CFG.supabaseUrl+'/rest/v1/bc_prices?select=price_cents'
+      +'&stock=eq.'+encodeURIComponent(stock)+'&sides=eq.'+encodeURIComponent(sides)
+      +'&turnaround=eq.'+encodeURIComponent(turn)+'&qty=eq.'+encodeURIComponent(qty);
+    try{
+      var r=await fetch(u,{headers:{apikey:CFG.supabaseKey,Authorization:'Bearer '+CFG.supabaseKey}});
+      var d=await r.json();
+      if(my!==seq) return;
+      if(d && d[0]){
+        var dollars=Math.round(d[0].price_cents/100);
+        gstEl.textContent='inc. GST & delivery';
+        animateTo(dollars); noteEl.textContent='';
+        cta.href='order.html?product=business-cards&stock='+encodeURIComponent(stock)+'&sides='+sides+'&turn='+turn+'&qty='+qty+'&price='+dollars;
+      } else {
+        priceEl.dataset.v=0; priceEl.textContent='POA'; gstEl.textContent='';
+        noteEl.innerHTML='That combination isn’t available online yet. <a href="quote.html?product=business-cards">Get a fast quote →</a>';
+        cta.href='quote.html?product=business-cards';
+      }
+    }catch(e){ if(my===seq){ priceEl.textContent='—'; noteEl.textContent='Could not load price - please try again.'; } }
+  }
+  document.querySelectorAll('.opts').forEach(function(g){
+    g.addEventListener('click',function(e){
+      if(!e.target.classList.contains('opt'))return;
+      g.querySelectorAll('.opt').forEach(function(o){o.classList.remove('on');});
+      e.target.classList.add('on'); calc();
+    });
   });
-  const total=Math.round((base*mult+add)*speed);
-  const el=document.getElementById('price');
-  const start=parseFloat(el.dataset.v||0), t0=performance.now();
-  function tick(t){const k=Math.min(1,(t-t0)/300);el.textContent='$'+Math.round(start+(total-start)*k).toLocaleString();
-    if(k<1)requestAnimationFrame(tick);else el.dataset.v=total;}
-  requestAnimationFrame(tick);
-}
-document.querySelectorAll('.opts').forEach(g=>{
-  g.addEventListener('click',e=>{
-    if(!e.target.classList.contains('opt'))return;
-    g.querySelectorAll('.opt').forEach(o=>o.classList.remove('on'));
-    e.target.classList.add('on'); calc();
-  });
-});
-calc();</script>
+  calc();
+})();</script>
 </body>
 </html>
