@@ -9,26 +9,27 @@
 <link rel="stylesheet" href="assets/aura.css">
 <style>
   body{background:#f6f3ee}
-  .wrap2{max-width:1080px;margin:0 auto;padding:26px 18px}
-  .head{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:6px}
-  .head h1{font-size:24px;margin:0}
+  .wrap2{max-width:1180px;margin:0 auto;padding:22px 16px}
+  .head{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:8px}
+  .head h1{font-size:23px;margin:0}
   .muted{color:#8a847d;font-size:13px}
   .login{max-width:380px;margin:8vh auto;background:#fff;border:1px solid #e8e2da;border-radius:16px;padding:30px}
   .login .field{margin:14px 0}.login label{display:block;font-size:12px;font-weight:700;text-transform:uppercase;color:#666;margin-bottom:6px}
   .login input{width:100%;padding:12px;border:2px solid #e8e2da;border-radius:10px;font-size:15px}
-  .legend{display:flex;gap:18px;flex-wrap:wrap;margin:12px 0 18px;font-size:12.5px;color:#6b6560}
-  table{width:100%;border-collapse:collapse;background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 1px 0 #e8e2da;margin-bottom:8px}
-  th,td{padding:8px 11px;font-size:13px;text-align:right;border-bottom:1px solid #f0ece5}
-  th:first-child,td:first-child{text-align:left}
-  th{background:#faf7f2;font-size:10.5px;text-transform:uppercase;letter-spacing:.04em;color:#8a847d}
-  tr.grp td{background:#efe9e1;font-weight:800;text-transform:uppercase;font-size:11px;letter-spacing:.05em;text-align:left}
-  td.win{background:#dcfce7;font-weight:800;color:#15803d;border-radius:4px}
-  td.na{color:#cbc4ba}
-  .real{color:#15803d;font-weight:800}
-  .chip{display:inline-block;padding:2px 9px;border-radius:999px;font-size:11px;font-weight:800}
-  .c-LEP{background:#dbeafe;color:#1d4ed8}.c-CMYKHUB{background:#fce7f3;color:#be185d}.c-EASYSIGNS{background:#fef3c7;color:#b45309}.c-YOURREAL{background:#dcfce7;color:#15803d}
-  .sell{font-weight:800}
-  .btn-xs{padding:6px 11px;border-radius:8px;border:none;font-weight:700;font-size:12px;cursor:pointer;background:#efe9e1;color:#333}
+  .controls{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:12px 0}
+  .controls select,.controls input{padding:8px 10px;border:2px solid #e0d9d0;border-radius:9px;font-size:13px;font-weight:600;background:#fff}
+  .toggle{display:inline-flex;border:2px solid #e0d9d0;border-radius:9px;overflow:hidden}
+  .toggle button{padding:8px 14px;border:none;background:#fff;font-weight:700;font-size:13px;cursor:pointer}
+  .toggle button.on{background:var(--ink,#1a1a1a);color:#fff}
+  .cnt{font-size:12.5px;color:#8a847d;margin-left:auto}
+  table{width:100%;border-collapse:collapse;background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 1px 0 #e8e2da}
+  th,td{padding:7px 9px;font-size:12.5px;text-align:right;border-bottom:1px solid #f2efe9;white-space:nowrap}
+  th:nth-child(-n+5),td:nth-child(-n+5){text-align:left}
+  th{background:#faf7f2;font-size:10px;text-transform:uppercase;letter-spacing:.03em;color:#8a847d;position:sticky;top:0;cursor:pointer}
+  tr:hover td{background:#fbf9f5}
+  .sup{font-weight:800;font-size:10.5px;padding:1px 6px;border-radius:6px}
+  .s-LEP{background:#dbeafe;color:#1d4ed8}.s-CMYKHUB{background:#fce7f3;color:#be185d}
+  td.na{color:#d3ccc2}
   .err{color:#c0392b;font-size:13px;margin-top:10px}
 </style>
 </head>
@@ -45,16 +46,20 @@
 
 <div id="app" class="wrap2" style="display:none">
   <div class="head">
-    <div><h1>Pricing Audit — Business Cards</h1>
-      <div class="muted">Every supplier's real cost, side by side, for the whole range. Cheapest is highlighted; that's who the engine routes to.</div></div>
-    <div><button id="signout" class="btn-xs">Sign out</button></div>
+    <div><h1>Pricing Audit — Business Cards (full catalogue)</h1>
+      <div class="muted">Every LEP and CMYKhub option, all sizes. Costs ex GST. Toggle to see the sell price at 52% margin.</div></div>
+    <div><button id="signout" class="btn" style="padding:7px 12px;font-size:13px">Sign out</button></div>
   </div>
-  <div class="legend">
-    <span><b>Costs = ex GST.</b> Cheapest chosen on landed cost (incl. freight: LEP $9.90, CMYKhub $13.95).</span>
-    <span><span class="chip c-YOURREAL">YOUR REAL</span> from your invoice</span>
-    <span><b>Sell</b> = inc GST &amp; delivery at 52% margin.</span>
+  <div class="controls">
+    <select id="fSup"><option value="">All suppliers</option><option>LEP</option><option>CMYKHUB</option></select>
+    <select id="fSize"><option value="">All sizes</option></select>
+    <select id="fSides"><option value="">1S &amp; 2S</option><option value="1S">Single</option><option value="2S">Double</option></select>
+    <input id="fText" placeholder="filter stock / finish…" style="min-width:190px">
+    <span class="toggle"><button id="tCost" class="on">Cost</button><button id="tSell">Sell @52%</button></span>
+    <span class="cnt" id="cnt"></span>
   </div>
   <div id="tableWrap"><p class="muted">Loading…</p></div>
+  <p class="muted" style="margin-top:12px">Sell = (cost + freight) ÷ 0.48 × 1.10 (52% margin, inc GST). Freight: LEP $9.90, CMYKhub $13.95. Blank = supplier doesn't offer that quantity.</p>
 </div>
 
 <script src="assets/config.js?v=20260707a"></script>
@@ -62,46 +67,66 @@
 <script>
 (function(){
   var CFG=window.AURA_CONFIG||{};
+  var FR={LEP:9.90,CMYKHUB:13.95}, MARGIN=0.52, GST=0.10;
+  var QK=['q100','q250','q500','q1000','q2500','q5000'], QL=['100','250','500','1000','2500','5000'];
   var loginEl=document.getElementById('login'), appEl=document.getElementById('app');
   if(!CFG.supabaseUrl){ loginEl.style.display='block'; document.getElementById('lErr').textContent='Database not configured.'; return; }
   var sb=supabase.createClient(CFG.supabaseUrl,CFG.supabaseKey);
+  var data=[], mode='cost', sortKey='', sortDir=1;
 
-  function money(cents){ return cents==null?null:'$'+(cents/100).toFixed(2); }
   function esc(s){return String(s==null?'':s).replace(/[&<>]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;'}[c];});}
-  var ORDER=['Plain ~350gsm','Matt Laminate ~350gsm','Gloss Laminate ~350gsm','Premium 400/420gsm','Velvet / Soft-touch'];
+  function money(c){ return '$'+(c/100).toFixed(2); }
+  function sell(costCents,sup){ var landed=costCents/100+(FR[sup]||9.90); return Math.round(landed/(1-MARGIN)*(1+GST)); }
 
   async function load(){
-    var r=await sb.from('bc_compare').select('*');
+    var r=await sb.from('bc_catalogue').select('*');
     if(r.error){ document.getElementById('tableWrap').innerHTML='<div class="err">'+esc(r.error.message)+'</div>'; return; }
-    render(r.data||[]);
+    data=r.data||[];
+    var sizes=Array.from(new Set(data.map(function(x){return x.size;}))).sort();
+    var sel=document.getElementById('fSize'); sizes.forEach(function(s){ var o=document.createElement('option'); o.textContent=s; sel.appendChild(o); });
+    render();
   }
 
-  function render(rows){
-    rows.sort(function(a,b){
-      var ta=ORDER.indexOf(a.tier), tb=ORDER.indexOf(b.tier);
-      if(ta!==tb) return ta-tb;
-      if(a.sides!==b.sides) return a.sides==='2S'?-1:1;
-      return a.qty-b.qty;
+  function filtered(){
+    var sup=document.getElementById('fSup').value, size=document.getElementById('fSize').value,
+        sides=document.getElementById('fSides').value, txt=document.getElementById('fText').value.toLowerCase();
+    var rows=data.filter(function(r){
+      if(sup && r.supplier!==sup) return false;
+      if(size && r.size!==size) return false;
+      if(sides && r.sides!==sides) return false;
+      if(txt && (r.stock+' '+r.finish).toLowerCase().indexOf(txt)<0) return false;
+      return true;
     });
-    var html='', lastGrp='';
-    function open(){ return '<table><thead><tr><th>Qty</th><th>LEP</th><th>CMYKhub</th><th>Your real</th><th>Cheapest</th><th>Sell inc GST</th></tr></thead><tbody>'; }
-    rows.forEach(function(r){
-      var grp=r.tier+'  ·  '+(r.sides==='2S'?'Double sided':'Single sided');
-      if(grp!==lastGrp){ if(lastGrp) html+='</tbody></table>'; html+='<h3 style="font-size:14px;margin:20px 0 6px">'+esc(grp)+'</h3>'+open(); lastGrp=grp; }
-      var win=r.cheapest, w=win.replace(/\s/g,'');
-      function cell(sup,cents){ var c=(win===sup||(sup==='YOUR REAL'&&win==='YOUR REAL'))?'win':(cents==null?'na':''); return '<td class="'+c+'">'+(cents==null?'—':money(cents))+'</td>'; }
-      html+='<tr>'+
-        '<td>'+r.qty.toLocaleString()+'</td>'+
-        cell('LEP',r.lep_cents)+
-        cell('CMYKHUB',r.cmyk_cents)+
-        '<td class="'+(r.real_cents!=null?'real':'na')+'">'+(r.real_cents==null?'—':money(r.real_cents))+'</td>'+
-        '<td><span class="chip c-'+w+'">'+esc(win)+'</span></td>'+
-        '<td class="sell">$'+(r.sell_cents/100).toFixed(0)+'</td>'+
-        '</tr>';
-    });
-    html+='</tbody></table>';
-    document.getElementById('tableWrap').innerHTML=html;
+    if(sortKey){ rows.sort(function(a,b){ var x=a[sortKey],y=b[sortKey];
+      if(x==null)x=Infinity; if(y==null)y=Infinity;
+      if(typeof x==='string') return sortDir*String(x).localeCompare(String(y));
+      return sortDir*(x-y); }); }
+    return rows;
   }
+
+  function render(){
+    var rows=filtered();
+    document.getElementById('cnt').textContent=rows.length+' options';
+    var th='<th data-k="supplier">Supplier</th><th data-k="size">Size</th><th data-k="stock">Stock</th><th data-k="finish">Finish</th><th data-k="sides">Sides</th>'+
+      QL.map(function(q,i){return '<th data-k="'+QK[i]+'">'+q+'</th>';}).join('');
+    var body=rows.map(function(r){
+      var cells=QK.map(function(k){
+        var c=r[k];
+        if(c==null) return '<td class="na">—</td>';
+        return '<td>'+(mode==='cost'?money(c):'$'+sell(c,r.supplier))+'</td>';
+      }).join('');
+      return '<tr><td><span class="sup s-'+r.supplier+'">'+(r.supplier==='CMYKHUB'?'CMYK':'LEP')+'</span></td>'+
+        '<td>'+esc(r.size)+'</td><td>'+esc(r.stock)+'</td><td>'+esc(r.finish)+'</td><td>'+esc(r.sides)+'</td>'+cells+'</tr>';
+    }).join('');
+    document.getElementById('tableWrap').innerHTML='<table><thead><tr>'+th+'</tr></thead><tbody>'+body+'</tbody></table>';
+    document.querySelectorAll('#tableWrap th').forEach(function(h){
+      h.addEventListener('click',function(){ var k=h.dataset.k; if(sortKey===k)sortDir*=-1; else{sortKey=k;sortDir=1;} render(); });
+    });
+  }
+
+  ['fSup','fSize','fSides','fText'].forEach(function(id){ document.getElementById(id).addEventListener('input',render); });
+  document.getElementById('tCost').addEventListener('click',function(){ mode='cost'; this.classList.add('on'); document.getElementById('tSell').classList.remove('on'); render(); });
+  document.getElementById('tSell').addEventListener('click',function(){ mode='sell'; this.classList.add('on'); document.getElementById('tCost').classList.remove('on'); render(); });
 
   document.getElementById('lBtn').addEventListener('click',signIn);
   document.getElementById('lPass').addEventListener('keydown',function(e){if(e.key==='Enter')signIn();});
