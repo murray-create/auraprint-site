@@ -32,11 +32,10 @@
       
       <div class="optlabel">Stock</div>
       <div class="opts" data-group="stock">
-        <button class="opt" data-val="310gsm Artboard">310gsm Artboard</button>
-        <button class="opt on" data-val="350gsm Matt Laminate">350gsm + Matt Laminate</button>
-        <button class="opt" data-val="350gsm Gloss Laminate">350gsm + Gloss Laminate</button>
-        <button class="opt" data-val="400gsm Premium Matt">400gsm Premium Matt</button>
-        <button class="opt" data-val="450gsm NV Velvet">450gsm NV Velvet</button>
+        <button class="opt on" data-val="Matt Laminate">Matt Laminate</button>
+        <button class="opt" data-val="Gloss Laminate">Gloss Laminate</button>
+        <button class="opt" data-val="Premium 400gsm">Premium 400gsm</button>
+        <button class="opt" data-val="Velvet Soft-Touch">Velvet Soft-Touch</button>
       </div>
       <div class="optlabel">Sides</div>
       <div class="opts" data-group="sides">
@@ -50,11 +49,6 @@
         <button class="opt" data-val="1000">1000</button>
         <button class="opt" data-val="2500">2500</button>
         <button class="opt" data-val="5000">5000</button>
-      </div>
-      <div class="optlabel">Turnaround</div>
-      <div class="opts" data-group="turn">
-        <button class="opt on" data-val="standard">Standard</button>
-        <button class="opt" data-val="sameday">Same day</button>
       </div>
       <div class="price-box" style="margin-top:28px">
         <div><div class="from">Your price</div><div class="gst" id="gstLabel">inc. GST &amp; delivery</div></div>
@@ -132,7 +126,7 @@
   }
   var seq=0;
   async function calc(){
-    var stock=sel('stock'), sides=sel('sides'), turn=sel('turn'), qty=sel('qty'), my=++seq;
+    var stock=sel('stock'), sides=sel('sides'), turn='standard', qty=sel('qty'), my=++seq;
     if(!CFG.supabaseUrl){ priceEl.textContent='—'; return; }
     var u=CFG.supabaseUrl+'/rest/v1/bc_prices?select=price_cents'
       +'&stock=eq.'+encodeURIComponent(stock)+'&sides=eq.'+encodeURIComponent(sides)
