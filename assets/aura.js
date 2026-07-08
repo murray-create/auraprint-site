@@ -40,7 +40,6 @@ const HEADER = `
         </div>
       </div>
       <div><a href="index.html#quoter">Instant Price</a></div>
-      <div><a href="order.html">Order Online</a></div>
       <div><a href="about.html">About</a></div>
       <div><a href="contact.html">Contact</a></div>
     </div>
