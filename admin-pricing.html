@@ -40,6 +40,7 @@
   <p class="muted">Staff sign in.</p>
   <div class="field"><label>Email</label><input id="lEmail" type="email" placeholder="admin@auraprint.com.au"></div>
   <div class="field"><label>Password</label><input id="lPass" type="password"></div>
+  <div class="h-captcha" data-sitekey="a64203e6-71d8-4a74-ac74-70ea716c306a" style="margin-bottom:14px"></div>
   <button id="lBtn" class="btn btn-aura" style="width:100%">Sign in</button>
   <div id="lErr" class="err"></div>
 </div>
@@ -64,6 +65,7 @@
 
 <script src="assets/config.js?v=20260707a"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://js.hcaptcha.com/1/api.js" async defer></script>
 <script>
 (function(){
   var CFG=window.AURA_CONFIG||{};
@@ -131,10 +133,12 @@
   document.getElementById('lBtn').addEventListener('click',signIn);
   document.getElementById('lPass').addEventListener('keydown',function(e){if(e.key==='Enter')signIn();});
   async function signIn(){
+    var token=(window.hcaptcha&&hcaptcha.getResponse())||'';
+    if(!token){ document.getElementById('lErr').textContent='Please tick the captcha box first.'; return; }
     var b=document.getElementById('lBtn'); b.disabled=true; b.textContent='Signing in…';
-    var res=await sb.auth.signInWithPassword({email:document.getElementById('lEmail').value.trim(),password:document.getElementById('lPass').value});
+    var res=await sb.auth.signInWithPassword({email:document.getElementById('lEmail').value.trim(),password:document.getElementById('lPass').value,options:{captchaToken:token}});
     b.disabled=false; b.textContent='Sign in';
-    if(res.error){ document.getElementById('lErr').textContent=res.error.message; return; }
+    if(res.error){ document.getElementById('lErr').textContent=res.error.message; if(window.hcaptcha)hcaptcha.reset(); return; }
     show();
   }
   document.getElementById('signout').addEventListener('click',async function(){ await sb.auth.signOut(); appEl.style.display='none'; loginEl.style.display='block'; });

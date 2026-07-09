@@ -46,6 +46,7 @@
   <p class="muted">Staff sign in to view enquiries.</p>
   <div class="field"><label>Email</label><input id="lEmail" type="email" autocomplete="username" placeholder="admin@auraprint.com.au"></div>
   <div class="field"><label>Password</label><input id="lPass" type="password" autocomplete="current-password" placeholder="••••••••"></div>
+  <div class="h-captcha" data-sitekey="a64203e6-71d8-4a74-ac74-70ea716c306a" style="margin-bottom:14px"></div>
   <button id="lBtn" class="btn btn-aura" style="width:100%">Sign in</button>
   <div id="lErr" class="err"></div>
 </div>
@@ -77,6 +78,7 @@
 
 <script src="assets/config.js?v=20260707a"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://js.hcaptcha.com/1/api.js" async defer></script>
 <script>
 (function(){
   var CFG = window.AURA_CONFIG || {};
@@ -168,10 +170,12 @@
     var email = document.getElementById('lEmail').value.trim();
     var pass = document.getElementById('lPass').value;
     var err = document.getElementById('lErr'); err.textContent='';
+    var token = (window.hcaptcha && hcaptcha.getResponse()) || '';
+    if (!token){ err.textContent = 'Please tick the captcha box first.'; return; }
     var btn = document.getElementById('lBtn'); btn.disabled=true; btn.textContent='Signing in…';
-    var res = await sb.auth.signInWithPassword({ email:email, password:pass });
+    var res = await sb.auth.signInWithPassword({ email:email, password:pass, options:{ captchaToken:token } });
     btn.disabled=false; btn.textContent='Sign in';
-    if (res.error){ err.textContent = res.error.message; return; }
+    if (res.error){ err.textContent = res.error.message; if (window.hcaptcha) hcaptcha.reset(); return; }
     showApp();
   }
   document.getElementById('signout').addEventListener('click', async function(){ await sb.auth.signOut(); showLogin(); });
