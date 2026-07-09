@@ -120,12 +120,25 @@
   var priceEl = host.querySelector('#price'), noteEl = host.querySelector('#priceNote'),
       gstEl = host.querySelector('#gstLabel'), cta = host.querySelector('#orderCta');
 
+  /* Count-up is decoration only. The true value is written immediately and
+     re-asserted on a timer, so a throttled requestAnimationFrame (background
+     tab, reduced motion, slow device) can never leave a wrong number - such
+     as $0 - on screen. */
+  function setPrice(v) { priceEl.textContent = '$' + Math.round(v).toLocaleString(); }
+
   function animateTo(v) {
-    var start = parseFloat(priceEl.dataset.v || 0), t0 = performance.now();
+    var start = parseFloat(priceEl.dataset.v) || 0;
+    priceEl.dataset.v = v;
+
+    if (document.hidden || start === v) { setPrice(v); return; }
+
+    var t0 = performance.now(), done = false;
+    setTimeout(function () { if (!done && parseFloat(priceEl.dataset.v) === v) setPrice(v); }, 400);
     (function tick(t) {
+      if (parseFloat(priceEl.dataset.v) !== v) return; // superseded by a newer selection
       var k = Math.min(1, (t - t0) / 300);
-      priceEl.textContent = '$' + Math.round(start + (v - start) * k).toLocaleString();
-      if (k < 1) requestAnimationFrame(tick); else priceEl.dataset.v = v;
+      setPrice(start + (v - start) * k);
+      if (k < 1) requestAnimationFrame(tick); else { done = true; setPrice(v); }
     })(performance.now());
   }
 
