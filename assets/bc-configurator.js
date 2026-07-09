@@ -4,14 +4,23 @@
    URL (good for SEO and ad targeting) while letting a customer flip tiers in
    one click, carrying their sides + quantity across.
 
-   Prices are derived from real supplier costs with Aura's markup rules:
-     - Budget stocks: LEP Colour Printers cost (harvested 4 Jul 2026) at 50%.
-     - Premium matt/gloss laminate: CMYKhub cost at 50% (same wholesale, same price).
-     - Premium 400gsm: CMYKhub cost at 60% (slight uplift for the thicker stock).
-     - NV Velvet Soft-Touch: CMYKhub cost at 75% (luxury positioning).
-   Costs and margins never reach the browser - only the final inc-GST price.
-   In production, swap PRICES for the Supabase bc_prices feed. */
+   PRICING IS LIVE. Every price is read at page load from the Supabase
+   public.bc_prices table (anon SELECT only, enforced by row-level security).
+   There are no prices in this file. Wholesale cost, supplier and margin live
+   in staff-only tables and never reach the browser.
+
+   Each price row carries a `source`:
+     real     = reconciled against Murray's actual supplier invoices.
+     estimate = derived from harvested supplier trade lists. Shown to the
+                customer as an indicative price, confirmed on their proof
+                before they pay. Never presented as a locked price.
+
+   If a stock/sides/quantity combination has no row, or the price feed cannot
+   be reached, we show POA and route to the quote form. We never invent or
+   cache a number. */
 (function () {
+  var CFG = window.AURA_CONFIG || {};
+
   var TIERS = {
     budget: {
       key: 'budget',
@@ -26,12 +35,7 @@
         { val: '420 GSM Deluxe Artboard', label: '420gsm', sub: 'Extra thick' }
       ],
       qtys: [100, 250, 500, 1000],
-      def: { stock: '310 GSM Deluxe Artboard', sides: '2S', qty: 500 },
-      prices: {
-        '310 GSM Deluxe Artboard': { '1S': { 100: 48, 250: 53, 500: 55, 1000: 69 }, '2S': { 100: 53, 250: 56, 500: 63, 1000: 76 } },
-        '360 GSM Deluxe Artboard': { '1S': { 100: 43, 250: 47, 500: 56, 1000: 73 }, '2S': { 100: 50, 250: 59, 500: 77, 1000: 102 } },
-        '420 GSM Deluxe Artboard': { '1S': { 100: 59, 250: 64, 500: 73, 1000: 90 }, '2S': { 100: 64, 250: 73, 500: 92, 1000: 110 } }
-      }
+      def: { stock: '310 GSM Deluxe Artboard', sides: '2S', qty: 500 }
     },
     premium: {
       key: 'premium',
@@ -47,16 +51,14 @@
         { val: 'Velvet Soft-Touch', label: 'Velvet Soft-Touch', sub: 'NV luxe' }
       ],
       qtys: [250, 500, 1000, 2500, 5000],
-      def: { stock: 'Matt Laminate', sides: '2S', qty: 500 },
-      prices: {
-        'Matt Laminate': { '1S': { 250: 92, 500: 99, 1000: 132, 2500: 221, 5000: 372 }, '2S': { 250: 99, 500: 105, 1000: 139, 2500: 233, 5000: 392 } },
-        'Gloss Laminate': { '1S': { 250: 92, 500: 99, 1000: 132, 2500: 221, 5000: 372 }, '2S': { 250: 99, 500: 105, 1000: 139, 2500: 233, 5000: 392 } },
-        'Premium 400gsm': { '1S': { 250: 99, 500: 106, 1000: 141, 2500: 237, 5000: 396 }, '2S': { 250: 106, 500: 112, 1000: 147, 2500: 249, 5000: 418 } },
-        'Velvet Soft-Touch': { '1S': { 250: 109, 500: 116, 1000: 155, 2500: 258, 5000: 433 }, '2S': { 250: 116, 500: 122, 1000: 162, 2500: 272, 5000: 457 } }
-      }
+      def: { stock: 'Matt Laminate', sides: '2S', qty: 500 }
     }
   };
   var SIDES = [{ val: '1S', label: 'Single sided' }, { val: '2S', label: 'Double sided' }];
+
+  /* PRICES[stock][sides][qty] = { cents: int, source: 'real'|'estimate' } */
+  var PRICES = null;
+  var loadFailed = false;
 
   function qsParam(k) { return new URLSearchParams(location.search).get(k); }
   function nearest(target, arr) {
@@ -108,12 +110,12 @@
       '<div><div class="from">Your price</div><div class="gst" id="gstLabel">inc. GST &amp; delivery</div></div>' +
       '<div class="amount grad-text" id="price">—</div>' +
     '</div>' +
-    '<div id="priceNote" style="font-size:13px;color:#8a847d;margin-top:10px"></div>' +
+    '<div id="priceNote" style="font-size:13px;color:#8a847d;margin-top:10px">Loading live pricing…</div>' +
     '<div id="dispatch" style="font-size:13px;color:#6b6560;margin-top:10px"></div>' +
     '<div style="display:flex;gap:12px;margin-top:18px;flex-wrap:wrap">' +
       '<a class="btn btn-aura" id="orderCta" href="quote.html?product=' + tier.product + '" style="flex:1;text-align:center;min-width:220px">Get a quote &amp; upload artwork →</a>' +
     '</div>' +
-    '<p style="font-size:12.5px;color:#8a847d;margin-top:12px">Live pricing from real supplier rates. Prices include GST and standard delivery Australia-wide.</p>';
+    '<p style="font-size:12.5px;color:#8a847d;margin-top:12px">Prices are read live from our current supplier rates and include GST and standard delivery Australia-wide.</p>';
 
   var priceEl = host.querySelector('#price'), noteEl = host.querySelector('#priceNote'),
       gstEl = host.querySelector('#gstLabel'), cta = host.querySelector('#orderCta');
@@ -135,19 +137,39 @@
     }
   }
 
+  function quoteHref(stock, sides, qty) {
+    return 'quote.html?product=' + tier.product +
+           '&stock=' + encodeURIComponent(stock) + '&sides=' + sides + '&qty=' + qty;
+  }
+
+  /* No price available: never guess. Show POA and send them to a quote. */
+  function showPoa(stock, sides, qty, message) {
+    priceEl.dataset.v = 0; priceEl.textContent = 'POA'; gstEl.textContent = '';
+    noteEl.innerHTML = message + ' <a href="' + quoteHref(stock, sides, qty) + '">Get a fast quote →</a>';
+    cta.href = quoteHref(stock, sides, qty);
+  }
+
   function calc() {
     var stock = currentStock(), sides = currentSides(), qty = currentQty();
-    var map = tier.prices[stock], p = map && map[sides] && map[sides][qty];
-    if (p) {
-      gstEl.textContent = 'inc. GST & delivery';
-      animateTo(p); noteEl.textContent = '';
-      cta.href = 'quote.html?product=' + tier.product + '&stock=' + encodeURIComponent(stock) + '&sides=' + sides + '&qty=' + qty + '&price=' + p;
-    } else {
-      priceEl.dataset.v = 0; priceEl.textContent = 'POA'; gstEl.textContent = '';
-      noteEl.innerHTML = 'That combination isn’t online yet. <a href="quote.html?product=' + tier.product + '">Get a fast quote →</a>';
-      cta.href = 'quote.html?product=' + tier.product;
-    }
     refreshTierLink();
+
+    if (loadFailed) { showPoa(stock, sides, qty, 'Live pricing is unavailable right now.'); return; }
+    if (!PRICES) return; // still loading
+
+    var row = PRICES[stock] && PRICES[stock][sides] && PRICES[stock][sides][qty];
+    if (!row) { showPoa(stock, sides, qty, 'That combination isn’t online yet.'); return; }
+
+    var dollars = row.cents / 100;
+    gstEl.textContent = 'inc. GST & delivery';
+    animateTo(dollars);
+
+    if (row.source === 'real') {
+      noteEl.innerHTML = '<span style="color:#2f7d4f;font-weight:700">✓ Confirmed price.</span> This is what you pay.';
+    } else {
+      noteEl.innerHTML = '<b>Indicative price.</b> We confirm it on your proof, before you pay.';
+    }
+
+    cta.href = quoteHref(stock, sides, qty) + '&price=' + dollars.toFixed(2);
   }
 
   host.querySelectorAll('.opts').forEach(function (g) {
@@ -157,7 +179,29 @@
       btn.classList.add('on'); calc();
     });
   });
-  calc();
+
+  /* ---- live price feed ---- */
+  function loadPrices() {
+    if (!CFG.supabaseUrl || !CFG.supabaseKey) { loadFailed = true; calc(); return; }
+    var url = CFG.supabaseUrl + '/rest/v1/bc_prices?select=stock,sides,qty,price_cents,source&turnaround=eq.standard';
+    fetch(url, { headers: { apikey: CFG.supabaseKey, Authorization: 'Bearer ' + CFG.supabaseKey } })
+      .then(function (r) { if (!r.ok) throw new Error('price feed ' + r.status); return r.json(); })
+      .then(function (rows) {
+        var map = {};
+        rows.forEach(function (r) {
+          (map[r.stock] = map[r.stock] || {});
+          (map[r.stock][r.sides] = map[r.stock][r.sides] || {});
+          map[r.stock][r.sides][r.qty] = { cents: r.price_cents, source: r.source };
+        });
+        PRICES = map;
+        calc();
+      })
+      .catch(function (err) {
+        console.error('[aura] live pricing failed:', err);
+        loadFailed = true; calc();
+      });
+  }
+  loadPrices();
 
   /* Dynamic dispatch: 2 clear business days, 11am cutoff, skips weekends. */
   function isWeekend(d) { return d.getDay() === 0 || d.getDay() === 6; }
