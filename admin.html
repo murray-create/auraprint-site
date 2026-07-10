@@ -372,8 +372,63 @@
       h += '</div>';
     });
 
+    /* dispatch & tracking */
+    h += '<div class="oitem" style="margin-top:12px"><div class="oitem-head"><b>🚚 Dispatch</b>'+
+      (o.dispatched_at?'<span class="pill p-approved">dispatched '+esc(fmtDate(o.dispatched_at))+'</span>':'<span class="pill">not dispatched</span>')+'</div>';
+    if (o.tracking_number){
+      h += '<div class="proofrow">'+esc(o.tracking_carrier||'Courier')+': <b>'+esc(o.tracking_number)+'</b> '+
+        (o.tracking_url?'<a class="plink" href="'+esc(o.tracking_url)+'" target="_blank" rel="noopener">track ↗</a> ':'')+
+        '<a class="btn-sm btn-aura2" href="'+dispatchMailtoHref(o)+'">✉ Compose tracking email</a></div>';
+    } else {
+      h += '<div class="proofrow">'+
+        '<input type="text" class="dis-carrier" data-order="'+o.id+'" placeholder="Carrier e.g. ARAMEX" style="width:130px;padding:6px 8px;border:2px solid #e0d9d0;border-radius:8px">'+
+        '<input type="text" class="dis-track" data-order="'+o.id+'" placeholder="Tracking / connote no." style="width:170px;padding:6px 8px;border:2px solid #e0d9d0;border-radius:8px">'+
+        '<input type="text" class="dis-url" data-order="'+o.id+'" placeholder="Tracking URL (optional)" style="width:200px;padding:6px 8px;border:2px solid #e0d9d0;border-radius:8px">'+
+        '<button class="btn-sm btn-aura2 dis-save" data-order="'+o.id+'">Mark dispatched</button>'+
+        '<span class="muted dis-msg" data-order="'+o.id+'"></span></div>'+
+        '<div class="proofrow muted">Tip: supplier dispatch emails are also picked up automatically by the daily inbox scan when the job name contains the AP number.</div>';
+    }
+    h += '</div>';
+
     h += '<div class="events" id="events-'+o.id+'">Loading history…</div>';
     return h;
+  }
+
+  function dispatchMailtoHref(o){
+    var first = (o.contact_name||'').split(' ')[0] || 'there';
+    var subj = 'Your order '+(o.order_number||'')+' is on its way — Aura Print & Promo';
+    var body =
+      'Hi '+first+',\n\n'+
+      'Great news — your order '+(o.order_number||'')+' has been dispatched!\n\n'+
+      'Carrier: '+(o.tracking_carrier||'Courier')+'\n'+
+      'Tracking number: '+(o.tracking_number||'')+'\n'+
+      (o.tracking_url?('Track it here: '+o.tracking_url+'\n'):'')+'\n'+
+      'Please note it can take 12–24 hours for the courier to register the consignment in their system, so don\'t worry if tracking shows nothing just yet.\n\n'+
+      'Thanks again for printing with us — we\'d love to help with your next job too.\n\n'+
+      'Kind regards,\n'+
+      'Murray\n'+
+      'Aura Print & Promo\n'+
+      'e: admin@auraprint.com.au\n'+
+      'w: auraprint.com.au';
+    return 'mailto:'+encodeURIComponent(o.contact_email||'')+'?subject='+encodeURIComponent(subj)+'&body='+encodeURIComponent(body);
+  }
+
+  async function markDispatched(orderId, btn){
+    var g = function(cls){ return (document.querySelector('.'+cls+'[data-order="'+orderId+'"]')||{}).value||''; };
+    var msg = document.querySelector('.dis-msg[data-order="'+orderId+'"]');
+    var track = g('dis-track').trim();
+    if (!track){ msg.textContent = 'Enter the tracking number.'; return; }
+    btn.disabled = true; msg.textContent = 'Saving…';
+    var res = await sb.from('orders').update({
+      tracking_carrier: g('dis-carrier').trim()||null,
+      tracking_number: track,
+      tracking_url: g('dis-url').trim()||null,
+      dispatched_at: new Date().toISOString(),
+      status: 'shipped'
+    }).eq('id', orderId);
+    btn.disabled = false;
+    if (res.error){ msg.textContent = 'Failed: '+res.error.message; return; }
+    await loadOrders();
   }
 
   function mailtoHref(o, tokenLinks){
@@ -426,6 +481,9 @@
     });
     document.querySelectorAll('.make-link').forEach(function(b){
       b.addEventListener('click', function(){ createPaymentLink(b.dataset.inv, b); });
+    });
+    document.querySelectorAll('.dis-save').forEach(function(b){
+      b.addEventListener('click', function(){ markDispatched(b.dataset.order, b); });
     });
   }
 
