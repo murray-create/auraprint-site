@@ -17,7 +17,7 @@
   .card h1{font-size:22px;margin:0 0 8px}
   .card h2{font-size:17px;margin:0 0 10px}
   label{display:block;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#666;margin-bottom:6px}
-  input[type=email],textarea{width:100%;padding:12px;border:2px solid #e8e2da;border-radius:10px;font-size:15px;font-family:inherit;box-sizing:border-box}
+  input[type=email],input[type=text],textarea{width:100%;padding:12px;border:2px solid #e8e2da;border-radius:10px;font-size:15px;font-family:inherit;box-sizing:border-box}
   .btn-p{padding:12px 22px;border-radius:10px;font-weight:800;font-size:14.5px;border:none;cursor:pointer}
   .btn-approve{background:#15803d;color:#fff}
   .btn-decline{background:#fff;color:#b91c1c;border:2px solid #fca5a5}
@@ -27,16 +27,21 @@
   .pill{display:inline-block;padding:3px 10px;border-radius:999px;font-size:11.5px;font-weight:700;background:#f0ece5;color:#6b6560}
   .pill.p-approved{background:#dcfce7;color:#15803d}
   .pill.p-declined{background:#fee2e2;color:#b91c1c}
+  .pill.p-superseded{background:#fef3c7;color:#b45309}
   .pdfbox{border:2px solid #e8e2da;border-radius:12px;overflow:hidden;margin:14px 0;background:#faf7f2}
   .pdfbox iframe{width:100%;height:520px;border:none;display:block}
   .bleed-note{display:flex;gap:14px;align-items:flex-start;background:#fdf2fa;border:1px solid #f5c9e8;border-radius:12px;padding:14px 16px;margin:14px 0;font-size:13.5px;color:#555}
   .bleed-demo{flex:0 0 92px;height:64px;position:relative;background:#fff;border:2px dashed #e05fc0;border-radius:4px}
   .bleed-demo::after{content:"";position:absolute;inset:8px;border:2px solid #1a1a1a;border-radius:2px}
-  .decide{display:flex;gap:12px;flex-wrap:wrap;margin-top:14px;align-items:center}
+  .decide{margin-top:16px;background:#faf7f2;border-radius:12px;padding:16px}
+  .decide .row{display:flex;gap:12px;flex-wrap:wrap;align-items:flex-end;margin-top:12px}
+  .decide .f{flex:1;min-width:200px}
   .declinebox{display:none;margin-top:12px}
   .checklist{margin:10px 0 0;padding-left:18px;font-size:13.5px;color:#555}
   .checklist li{margin:3px 0}
   .itemhead{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+  .bigok{text-align:center;padding:30px 20px}
+  .bigok .tick{font-size:44px}
 </style>
 <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
 </head>
@@ -45,10 +50,16 @@
   <div class="brand">AURA <span>PRINT</span> &amp; PROMO</div>
   <div class="muted">Proof approval</div>
 
-  <!-- SIGN IN -->
+  <div id="loading" class="card"><span class="muted">Loading your proof…</span></div>
+
+  <!-- TOKEN FLOW (primary): unique link from the email, no sign-in -->
+  <div id="tokenview" style="display:none"></div>
+
+  <!-- MAGIC LINK FLOW (fallback: no token in URL) -->
   <div id="signin" class="card" style="display:none;max-width:430px">
-    <h1>View your proof</h1>
-    <p class="muted">Enter the email address your order was placed with. We'll send you a secure one-click sign-in link — no password needed.</p>
+    <h1>View your proofs</h1>
+    <p class="muted">If you have a proof email from us, use the link in that email — it opens your proof directly, no sign-in needed.</p>
+    <p class="muted">Otherwise, enter the email address your order was placed with and we'll send you a secure one-click link to view all your orders.</p>
     <div style="margin:14px 0"><label>Email</label><input id="mEmail" type="email" placeholder="you@example.com" autocomplete="email"></div>
     <div class="h-captcha" data-sitekey="a64203e6-71d8-4a74-ac74-70ea716c306a" style="margin-bottom:14px"></div>
     <button id="mBtn" class="btn-p btn-magic">Email me a sign-in link</button>
@@ -56,23 +67,7 @@
     <div id="mOk" class="ok" style="display:none;margin-top:12px">Link sent — check your inbox (and junk folder), then click the link on this device.</div>
   </div>
 
-  <!-- PROOFS -->
   <div id="proofs" style="display:none">
-    <div class="card">
-      <h1>Review &amp; approve your proof</h1>
-      <p class="muted" id="who"></p>
-      <div class="bleed-note">
-        <div class="bleed-demo" aria-hidden="true"></div>
-        <div><b>How to read your proof:</b> the solid black line is the <b>trim line</b> — your finished size.
-        The pink dashed edge is the <b>3&nbsp;mm bleed</b>, which is printed then trimmed away.
-        Anything important (text, logos) should sit inside the trim line; background colours and images should extend to the bleed edge.</div>
-      </div>
-      <ul class="checklist">
-        <li>Check all spelling, phone numbers and email addresses carefully.</li>
-        <li>Colours on screen are a guide only — printed colour can vary slightly.</li>
-        <li>Once you approve, the job goes to print exactly as shown.</li>
-      </ul>
-    </div>
     <div id="list"></div>
     <div class="card" style="text-align:center">
       <div class="muted">Questions? Email <a href="mailto:admin@auraprint.com.au" style="color:#c026a3">admin@auraprint.com.au</a> — nothing prints until you approve.</div>
@@ -88,13 +83,129 @@
 (function(){
   var CFG = window.AURA_CONFIG || {};
   var sb = supabase.createClient(CFG.supabaseUrl, CFG.supabaseKey);
-  var qOrder = new URLSearchParams(location.search).get('o') || '';
+  var params = new URLSearchParams(location.search);
+  var TOKEN = (params.get('t')||'').trim();
+  var qOrder = params.get('o') || '';
+  var UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
   function esc(s){ return String(s==null?'':s).replace(/[&<>"]/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
   function fmtDate(s){ var d=new Date(s); return d.toLocaleDateString('en-AU',{day:'2-digit',month:'short',year:'numeric'}); }
-  function show(id){ ['signin','proofs'].forEach(function(x){ document.getElementById(x).style.display = x===id?'':'none'; }); }
+  function show(id){ ['loading','tokenview','signin','proofs'].forEach(function(x){ document.getElementById(x).style.display = x===id?'':'none'; }); }
 
-  /* ---- magic link ---- */
+  var BLEED_HTML =
+    '<div class="bleed-note"><div class="bleed-demo" aria-hidden="true"></div>'+
+    '<div><b>How to read your proof:</b> the solid black line is the <b>trim line</b> — your finished size. '+
+    'The pink dashed edge is the <b>3&nbsp;mm bleed</b>, which is printed then trimmed away. '+
+    'Anything important (text, logos) should sit inside the trim line; background colours and images should extend to the bleed edge.</div></div>'+
+    '<ul class="checklist">'+
+    '<li>Check all spelling, phone numbers and email addresses carefully.</li>'+
+    '<li>Colours on screen are a guide only — printed colour can vary slightly.</li>'+
+    '<li>Once approved, the job goes to print exactly as shown.</li></ul>';
+
+  /* ================= TOKEN FLOW ================= */
+  var tokenProofId = null;
+  async function loadToken(){
+    if (!UUID_RE.test(TOKEN)){ tokenError('This proof link looks incomplete — please use the full link from your email.'); return; }
+    var res = await sb.rpc('get_proof_by_token', { p_token: TOKEN });
+    if (res.error){ tokenError('Could not load your proof: '+esc(res.error.message)); return; }
+    var p = res.data;
+    if (!p){ tokenError('We couldn\'t find a proof for this link. It may have been replaced by a newer version — check your latest email, or contact us.'); return; }
+    tokenProofId = p.proof_id;
+    renderToken(p);
+    /* fetch the PDF via the token endpoint */
+    try {
+      var r = await fetch(CFG.supabaseUrl+'/functions/v1/proof-file?t='+encodeURIComponent(TOKEN));
+      var j = await r.json();
+      var box = document.getElementById('tpdf');
+      if (!r.ok || !j.url){ box.innerHTML = '<div style="padding:30px" class="muted">Preview unavailable — please contact us.</div>'; return; }
+      box.innerHTML = '<iframe src="'+esc(j.url)+'#toolbar=0" title="Proof PDF"></iframe>'+
+        '<div style="padding:8px 12px;text-align:right"><a href="'+esc(j.url)+'" target="_blank" rel="noopener" style="color:#c026a3;font-weight:700;font-size:13px">Open / download PDF</a></div>';
+    } catch(e){
+      document.getElementById('tpdf').innerHTML = '<div style="padding:30px" class="muted">Preview unavailable — please contact us.</div>';
+    }
+  }
+
+  function tokenError(msg){
+    document.getElementById('tokenview').innerHTML = '<div class="card"><h1>Hmm, that didn\'t work</h1><p class="muted">'+msg+'</p>'+
+      '<p class="muted">Need help? Email <a href="mailto:admin@auraprint.com.au" style="color:#c026a3">admin@auraprint.com.au</a></p></div>';
+    show('tokenview');
+  }
+
+  function renderToken(p){
+    var h = '<div class="card">'+
+      '<div class="itemhead"><h1>'+esc(p.order_number)+' — '+esc(p.description)+'</h1>'+
+      '<span class="pill p-'+esc(p.status)+'">proof v'+p.version+' · '+esc(p.status)+'</span></div>'+
+      '<div class="muted">Quantity: '+p.qty+(p.sent_at?' · sent '+esc(fmtDate(p.sent_at)):'')+'</div>'+
+      BLEED_HTML+
+      '<div class="pdfbox" id="tpdf"><div style="padding:40px;text-align:center" class="muted">Loading proof…</div></div>';
+
+    if (p.status === 'sent'){
+      h += '<div class="decide">'+
+        '<div class="f"><label>Your name (required — recorded with your decision)</label>'+
+        '<input type="text" id="tName" placeholder="e.g. Sarah Nguyen" autocomplete="name"></div>'+
+        '<div class="row">'+
+        '<button class="btn-p btn-approve" id="tApprove">✓ Approve this proof for printing</button>'+
+        '<button class="btn-p btn-decline" id="tDeclineToggle">Request changes</button>'+
+        '</div>'+
+        '<div class="declinebox" id="tDbox">'+
+        '<label>What needs changing?</label>'+
+        '<textarea id="tDtxt" rows="3" placeholder="e.g. Phone number should be 0400 000 000, and the logo looks too close to the edge"></textarea>'+
+        '<div style="margin-top:10px"><button class="btn-p btn-decline" id="tDeclineSend">Send change request</button></div></div>'+
+        '<div class="err" id="tErr"></div>'+
+        '</div>';
+    } else if (p.status === 'approved'){
+      h += '<div class="bigok"><div class="tick">✅</div><div class="ok">Approved'+
+        (p.approver_name?' by '+esc(p.approver_name):'')+(p.decided_at?' on '+esc(fmtDate(p.decided_at)):'')+
+        '</div><div class="muted" style="margin-top:6px">Thank you! Your invoice will follow by email — production starts once payment is received.</div></div>';
+    } else if (p.status === 'declined'){
+      h += '<div class="bigok"><div class="tick">✍️</div><div><b>Changes requested</b>'+
+        (p.approver_name?' by '+esc(p.approver_name):'')+'</div>'+
+        (p.decision_comments?'<div class="muted" style="margin-top:6px">“'+esc(p.decision_comments)+'”</div>':'')+
+        '<div class="muted" style="margin-top:6px">We\'re on it — a revised proof will be emailed to you shortly.</div></div>';
+    } else if (p.status === 'superseded'){
+      h += '<div class="bigok"><div class="tick">🔁</div><div><b>A newer version of this proof exists.</b></div>'+
+        '<div class="muted" style="margin-top:6px">Please use the link in our most recent email, or contact us if you can\'t find it.</div></div>';
+    }
+    h += '</div>'+
+      '<div class="card" style="text-align:center"><div class="muted">Questions? Email <a href="mailto:admin@auraprint.com.au" style="color:#c026a3">admin@auraprint.com.au</a> — nothing prints until this proof is approved.</div></div>';
+
+    document.getElementById('tokenview').innerHTML = h;
+    show('tokenview');
+
+    var ap = document.getElementById('tApprove');
+    if (ap){
+      ap.addEventListener('click', function(){
+        var name = document.getElementById('tName').value.trim();
+        if (!name){ document.getElementById('tErr').textContent = 'Please enter your name first.'; return; }
+        if (!confirm('Approve this proof for printing? Please make sure you have checked spelling and layout — approved jobs go straight to production.')) return;
+        tokenDecide('approved', null, name, ap);
+      });
+      document.getElementById('tDeclineToggle').addEventListener('click', function(){
+        var box = document.getElementById('tDbox');
+        box.style.display = box.style.display==='block'?'none':'block';
+      });
+      document.getElementById('tDeclineSend').addEventListener('click', function(){
+        var name = document.getElementById('tName').value.trim();
+        var txt = document.getElementById('tDtxt').value.trim();
+        if (!name){ document.getElementById('tErr').textContent = 'Please enter your name first.'; return; }
+        if (!txt){ document.getElementById('tErr').textContent = 'Please tell us what needs changing.'; return; }
+        tokenDecide('declined', txt, name, this);
+      });
+    }
+  }
+
+  async function tokenDecide(decision, comments, name, btn){
+    btn.disabled = true;
+    var res = await sb.rpc('decide_proof', {
+      p_proof_id: tokenProofId, p_decision: decision, p_comments: comments,
+      p_token: TOKEN, p_approver_name: name
+    });
+    btn.disabled = false;
+    if (res.error){ document.getElementById('tErr').textContent = res.error.message; return; }
+    loadToken();
+  }
+
+  /* ================= MAGIC LINK FLOW (fallback) ================= */
   document.getElementById('mBtn').addEventListener('click', async function(){
     var email = document.getElementById('mEmail').value.trim();
     var err = document.getElementById('mErr'); err.textContent='';
@@ -104,7 +215,7 @@
     this.disabled = true; this.textContent = 'Sending…';
     var res = await sb.auth.signInWithOtp({
       email: email,
-      options: { captchaToken: token, emailRedirectTo: location.href }
+      options: { captchaToken: token, emailRedirectTo: location.origin+location.pathname }
     });
     this.disabled = false; this.textContent = 'Email me a sign-in link';
     if (res.error){ err.textContent = res.error.message; if (window.hcaptcha) hcaptcha.reset(); return; }
@@ -115,15 +226,11 @@
     await sb.auth.signOut(); show('signin');
   });
 
-  /* ---- load proofs ---- */
   async function loadProofs(){
     show('proofs');
-    var u = await sb.auth.getUser();
-    document.getElementById('who').textContent = 'Signed in as '+((u.data.user&&u.data.user.email)||'');
     try { await sb.rpc('claim_my_orders'); } catch(e){}
-
     var q = sb.from('orders')
-      .select('id,order_number,status,contact_name, order_items(id,item_no,description,qty,status, proofs(id,version,status,sent_at,decided_at,decision_comments,file_id))')
+      .select('id,order_number,status,contact_name, order_items(id,item_no,description,qty,status, proofs(id,version,status,sent_at,decided_at,decision_comments,approver_name,file_id))')
       .order('created_at',{ascending:false});
     if (qOrder) q = q.eq('order_number', qOrder);
     var res = await q;
@@ -135,48 +242,44 @@
         'If you used a different email for your order, sign out and try that one, or contact us.</div>';
       return;
     }
-    var html = '';
-    var fileIds = [];
+    var html = '<div class="card"><h1>Your proofs</h1>'+BLEED_HTML+'</div>';
     orders.forEach(function(o){
       (o.order_items||[]).forEach(function(i){
         var ps = (i.proofs||[]).slice().sort(function(a,b){return b.version-a.version;});
         var p = ps[0];
         if (!p) return;
-        fileIds.push(p.file_id);
-        html += '<div class="card" data-file="'+p.file_id+'">'+
+        html += '<div class="card">'+
           '<div class="itemhead"><h2>'+esc(o.order_number)+' — '+esc(i.description)+'</h2>'+
           '<span class="pill p-'+esc(p.status)+'">proof v'+p.version+' · '+esc(p.status)+'</span></div>'+
           '<div class="muted">Quantity: '+i.qty+(p.sent_at?' · sent '+esc(fmtDate(p.sent_at)):'')+'</div>'+
           '<div class="pdfbox" id="pdf-'+p.id+'"><div style="padding:40px;text-align:center" class="muted">Loading proof…</div></div>';
         if (p.status==='sent'){
-          html += '<div class="decide">'+
+          html += '<div class="decide"><div class="row">'+
             '<button class="btn-p btn-approve" data-p="'+p.id+'">✓ Approve this proof</button>'+
             '<button class="btn-p btn-decline" data-p="'+p.id+'">Request changes</button>'+
             '<span class="err" id="derr-'+p.id+'"></span></div>'+
             '<div class="declinebox" id="dbox-'+p.id+'">'+
             '<label>What needs changing?</label>'+
-            '<textarea id="dtxt-'+p.id+'" rows="3" placeholder="e.g. Phone number should be 0400 000 000, and the logo looks too close to the edge"></textarea>'+
-            '<div style="margin-top:10px"><button class="btn-p btn-decline" data-send="'+p.id+'">Send change request</button></div></div>';
+            '<textarea id="dtxt-'+p.id+'" rows="3"></textarea>'+
+            '<div style="margin-top:10px"><button class="btn-p btn-decline" data-send="'+p.id+'">Send change request</button></div></div></div>';
         } else if (p.status==='approved'){
-          html += '<div class="ok" style="margin-top:8px">Approved'+(p.decided_at?' on '+esc(fmtDate(p.decided_at)):'')+' — thank you! Your invoice will follow by email.</div>';
+          html += '<div class="ok" style="margin-top:8px">Approved'+(p.approver_name?' by '+esc(p.approver_name):'')+(p.decided_at?' on '+esc(fmtDate(p.decided_at)):'')+' — thank you! Your invoice will follow by email.</div>';
         } else if (p.status==='declined'){
-          html += '<div class="muted" style="margin-top:8px">You requested changes'+(p.decision_comments?': “'+esc(p.decision_comments)+'”':'')+'. A revised proof is on its way.</div>';
+          html += '<div class="muted" style="margin-top:8px">Changes requested'+(p.decision_comments?': “'+esc(p.decision_comments)+'”':'')+'. A revised proof is on its way.</div>';
         }
         html += '</div>';
       });
     });
-    list.innerHTML = html || '<div class="card">No proofs are ready for review yet — we\'ll email you when one is.</div>';
+    list.innerHTML = html;
 
-    /* load PDFs */
     orders.forEach(function(o){ (o.order_items||[]).forEach(function(i){
       var ps=(i.proofs||[]).slice().sort(function(a,b){return b.version-a.version;}); var p=ps[0]; if(!p) return;
       loadPdf(p);
     });});
 
-    /* decision buttons */
     list.querySelectorAll('.btn-approve').forEach(function(b){
       b.addEventListener('click', function(){
-        if (!confirm('Approve this proof for printing? Please make sure you have checked spelling and layout — approved jobs go straight to production.')) return;
+        if (!confirm('Approve this proof for printing? Approved jobs go straight to production.')) return;
         decide(b.dataset.p, 'approved', null, b);
       });
     });
@@ -212,18 +315,21 @@
     btn.disabled = false;
     if (res.error){
       var el = document.getElementById('derr-'+proofId);
-      if (el) el.textContent = res.error.message;
-      else alert(res.error.message);
+      if (el) el.textContent = res.error.message; else alert(res.error.message);
       return;
     }
     loadProofs();
   }
 
-  /* magic-link redirects land with a session (detectSessionInUrl default true) */
-  sb.auth.onAuthStateChange(function(event, session){
-    if (event === 'SIGNED_IN' && session) loadProofs();
-  });
-  sb.auth.getSession().then(function(r){ if (r.data.session) loadProofs(); else show('signin'); });
+  /* ================= ROUTING ================= */
+  if (TOKEN){
+    loadToken();
+  } else {
+    sb.auth.onAuthStateChange(function(event, session){
+      if (event === 'SIGNED_IN' && session) loadProofs();
+    });
+    sb.auth.getSession().then(function(r){ if (r.data.session) loadProofs(); else show('signin'); });
+  }
 })();
 </script>
 </body>

@@ -261,7 +261,7 @@
   async function loadOrders(){
     document.getElementById('count').textContent = 'Loading…';
     var res = await sb.from('orders')
-      .select('*, order_items(*, proofs(id,version,status,sent_at,decided_at,decision_comments,file_id))')
+      .select('*, order_items(*, proofs(id,version,status,sent_at,decided_at,decision_comments,approver_name,approval_token,file_id))')
       .order('created_at',{ascending:false});
     if (res.error){ document.getElementById('ordersWrap').innerHTML = '<div class="empty">Could not load orders: '+esc(res.error.message)+'</div>'; return; }
     allOrders = res.data || [];
@@ -303,8 +303,7 @@
   }
 
   function orderDetail(o){
-    var proofLink = PROOF_BASE + '?o=' + encodeURIComponent(o.order_number||'');
-    var h = '';
+    var h = '', tokenLinks = [];
     (o.order_items||[]).forEach(function(i){
       var p = latestProof(i);
       h += '<div class="oitem" data-item="'+i.id+'">'+
@@ -313,38 +312,50 @@
       if (p){
         h += '<div class="proofrow">Latest proof: v'+p.version+' <span class="pill p-'+esc(p.status)+'">'+esc(p.status)+'</span>'+
           (p.sent_at?' <span class="muted">sent '+esc(fmtDate(p.sent_at))+'</span>':'')+
-          (p.decided_at?' <span class="muted">decided '+esc(fmtDate(p.decided_at))+'</span>':'')+
+          (p.decided_at?' <span class="muted">decided '+esc(fmtDate(p.decided_at))+(p.approver_name?' by '+esc(p.approver_name):'')+'</span>':'')+
           (p.decision_comments?'<div class="muted" style="width:100%">Customer: “'+esc(p.decision_comments)+'”</div>':'')+
           '</div>';
+        if (p.approval_token){
+          var link = PROOF_BASE + '?t=' + p.approval_token;
+          if (p.status==='sent') tokenLinks.push({desc:i.description, link:link});
+          h += '<div class="proofrow"><b>One-click approval link'+(p.status!=='sent'?' (v'+p.version+', '+esc(p.status)+')':'')+':</b> '+
+            '<a class="plink" href="'+esc(link)+'" target="_blank" rel="noopener">open ↗</a> '+
+            '<button class="btn-sm btn-ghost copy-link" data-link="'+esc(link)+'">Copy link</button></div>';
+        }
       }
       h += '<div class="proofrow">'+
         '<input type="file" accept="application/pdf" class="proof-file" data-item="'+i.id+'">'+
         '<button class="btn-sm btn-aura2 proof-send" data-item="'+i.id+'" data-order="'+o.id+'">Upload &amp; send proof</button>'+
         '<span class="muted proof-msg" data-item="'+i.id+'"></span>'+
         '</div>';
-      h += '<div class="proofrow muted">The PDF you upload should include the trim line and 3&nbsp;mm bleed guides — that exact file is what the customer approves.</div>';
+      h += '<div class="proofrow muted">The PDF you upload should include the trim line and 3&nbsp;mm bleed guides — that exact file is what the customer approves. Anyone with the link can approve (they must type their name), so it\'s safe to forward.</div>';
       h += '</div>';
     });
-    h += '<div class="proofrow" style="margin-top:12px">'+
-      '<b>Customer approval link:</b> <a class="plink" href="'+esc(proofLink)+'" target="_blank" rel="noopener">'+esc(proofLink)+'</a>'+
-      '<a class="btn-sm btn-ghost" href="'+mailtoHref(o, proofLink)+'">✉ Compose email</a>'+
-      '</div>';
+    if (tokenLinks.length){
+      h += '<div class="proofrow" style="margin-top:12px">'+
+        '<a class="btn-sm btn-aura2" href="'+mailtoHref(o, tokenLinks)+'">✉ Compose proof email</a>'+
+        '<span class="muted">Opens in your mail program with the one-click link'+(tokenLinks.length>1?'s':'')+' prefilled.</span>'+
+        '</div>';
+    }
     h += '<div class="events" id="events-'+o.id+'">Loading history…</div>';
     return h;
   }
 
-  function mailtoHref(o, link){
+  function mailtoHref(o, tokenLinks){
     var first = (o.contact_name||'').split(' ')[0] || 'there';
     var num = o.order_number||'';
     var subj = 'Please proof your order '+num+' — Aura Print & Promo';
+    var linkBlock = tokenLinks.length===1
+      ? 'Click here to proof order '+num+':\n'+tokenLinks[0].link
+      : 'Click below to proof each item in order '+num+':\n\n'+
+        tokenLinks.map(function(l){ return '• '+l.desc+':\n  '+l.link; }).join('\n\n');
     var body =
       'Hi '+first+',\n\n'+
       'It\'s time to confirm that your artwork looks just how you want it so we can get it into production. Please read the following carefully to avoid any delays in processing your order.\n\n'+
       'More than anything, we want you to be thrilled with the finished product, so please take this proofing seriously and check for spelling or any errors that may have crept in during the processing of your files. You will receive exactly what you approve here — if there is a typo, you will be the proud owner of printing with a typo, and no one wants that. We cannot be held liable for costs incurred to replace items due to insufficient checks of the artwork proof.\n\n'+
       'On your proof, the solid line is the trim line (finished size) and the 3mm beyond it is bleed, which is trimmed away. Please check nothing important sits outside the trim line.\n\n'+
-      'Please make all approvals and change requests inside the proofing page — it notifies us instantly. There is no need to reply to this email.\n\n'+
-      'Proof your order '+num+' here:\n'+link+'\n\n'+
-      '(Sign in with this email address — we\'ll send you a secure one-click link, no password needed.)\n\n'+
+      linkBlock+'\n\n'+
+      'No sign-in needed — the link opens your proof directly, and you can forward this email to a colleague if someone else needs to approve it. Please make all approvals and change requests on the proofing page (it notifies us instantly); there is no need to reply to this email.\n\n'+
       'Nothing goes to print until you approve.\n\n'+
       'Kind regards,\n'+
       'Murray\n'+
@@ -367,6 +378,13 @@
   function bindDetail(){
     document.querySelectorAll('.proof-send').forEach(function(b){
       b.addEventListener('click', function(){ sendProof(b.dataset.order, b.dataset.item, b); });
+    });
+    document.querySelectorAll('.copy-link').forEach(function(b){
+      b.addEventListener('click', function(){
+        navigator.clipboard.writeText(b.dataset.link).then(function(){
+          b.textContent = 'Copied ✓'; setTimeout(function(){ b.textContent='Copy link'; }, 1500);
+        });
+      });
     });
   }
 
