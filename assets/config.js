@@ -32,8 +32,8 @@ window.AURA_CONFIG = {
     phone: "0404 601 314",
     email: "admin@auraprint.com.au",
     accName: "Murray Alexander Boyton t/a Aura Print",
-    bsb: "",       /* e.g. "123-456" */
-    acc: "",       /* e.g. "12345678" */
-    payid: ""      /* e.g. ABN or email registered for PayID */
+    bsb: "034-168",
+    acc: "510720",
+    payid: "0404 601 314"
   }
 };
