@@ -303,6 +303,16 @@
     bindDetail();
   }
 
+  function getTokenLinks(o){
+    var links = [];
+    (o.order_items||[]).forEach(function(i){
+      var p = latestProof(i);
+      if (p && p.approval_token && p.status==='sent')
+        links.push({desc:i.description, link: PROOF_BASE + '?t=' + p.approval_token});
+    });
+    return links;
+  }
+
   function orderDetail(o){
     var h = '', tokenLinks = [];
     (o.order_items||[]).forEach(function(i){
@@ -334,8 +344,9 @@
     });
     if (tokenLinks.length){
       h += '<div class="proofrow" style="margin-top:12px">'+
-        '<a class="btn-sm btn-aura2" href="'+mailtoHref(o, tokenLinks)+'">✉ Compose proof email</a>'+
-        '<span class="muted">Opens in your mail program with the one-click link'+(tokenLinks.length>1?'s':'')+' prefilled.</span>'+
+        '<button class="btn-sm btn-aura2 send-mail" data-kind="proof" data-order="'+o.id+'">📨 Send proof email</button>'+
+        '<a class="btn-sm btn-ghost" href="'+mailtoHref(o, tokenLinks)+'">✉ Compose instead</a>'+
+        '<span class="muted send-msg" data-order="'+o.id+'" data-kind="proof"></span>'+
         '</div>';
     }
 
@@ -353,7 +364,9 @@
       if (v.payment_link_url){
         h += '<div class="proofrow"><a class="plink" href="'+esc(v.payment_link_url)+'" target="_blank" rel="noopener">Stripe payment link ↗</a> '+
           '<button class="btn-sm btn-ghost copy-link" data-link="'+esc(v.payment_link_url)+'">Copy</button> '+
-          '<a class="btn-sm btn-ghost" href="'+invoiceMailtoHref(o, v, invUrl)+'">✉ Compose invoice email</a></div>';
+          '<button class="btn-sm btn-aura2 send-mail" data-kind="invoice" data-order="'+o.id+'" data-inv="'+v.id+'">📨 Send invoice email</button> '+
+          '<a class="btn-sm btn-ghost" href="'+invoiceMailtoHref(o, v, invUrl)+'">✉ Compose instead</a>'+
+          '<span class="muted send-msg" data-order="'+o.id+'" data-kind="invoice"></span></div>';
       } else if (v.status==='issued'){
         h += '<div class="proofrow">'+
           '<button class="btn-sm btn-aura2 make-link" data-inv="'+v.id+'">Create Stripe payment link</button>'+
@@ -378,7 +391,9 @@
     if (o.tracking_number){
       h += '<div class="proofrow">'+esc(o.tracking_carrier||'Courier')+': <b>'+esc(o.tracking_number)+'</b> '+
         (o.tracking_url?'<a class="plink" href="'+esc(o.tracking_url)+'" target="_blank" rel="noopener">track ↗</a> ':'')+
-        '<a class="btn-sm btn-aura2" href="'+dispatchMailtoHref(o)+'">✉ Compose tracking email</a></div>';
+        '<button class="btn-sm btn-aura2 send-mail" data-kind="dispatch" data-order="'+o.id+'">📨 Send tracking email</button> '+
+        '<a class="btn-sm btn-ghost" href="'+dispatchMailtoHref(o)+'">✉ Compose instead</a>'+
+        '<span class="muted send-msg" data-order="'+o.id+'" data-kind="dispatch"></span></div>';
     } else {
       h += '<div class="proofrow">'+
         '<input type="text" class="dis-carrier" data-order="'+o.id+'" placeholder="Carrier e.g. ARAMEX" style="width:130px;padding:6px 8px;border:2px solid #e0d9d0;border-radius:8px">'+
@@ -394,7 +409,7 @@
     return h;
   }
 
-  function dispatchMailtoHref(o){
+  function dispatchEmailContent(o){
     var first = (o.contact_name||'').split(' ')[0] || 'there';
     var subj = 'Your order '+(o.order_number||'')+' is on its way — Aura Print & Promo';
     var body =
@@ -410,7 +425,11 @@
       'Aura Print & Promo\n'+
       'e: admin@auraprint.com.au\n'+
       'w: auraprint.com.au';
-    return 'mailto:'+encodeURIComponent(o.contact_email||'')+'?subject='+encodeURIComponent(subj)+'&body='+encodeURIComponent(body);
+    return { subject: subj, body: body };
+  }
+  function dispatchMailtoHref(o){
+    var c = dispatchEmailContent(o);
+    return 'mailto:'+encodeURIComponent(o.contact_email||'')+'?subject='+encodeURIComponent(c.subject)+'&body='+encodeURIComponent(c.body);
   }
 
   async function markDispatched(orderId, btn){
@@ -431,7 +450,7 @@
     await loadOrders();
   }
 
-  function mailtoHref(o, tokenLinks){
+  function proofEmailContent(o, tokenLinks){
     var first = (o.contact_name||'').split(' ')[0] || 'there';
     var num = o.order_number||'';
     var subj = 'Please proof your order '+num+' — Aura Print & Promo';
@@ -452,7 +471,11 @@
       'Aura Print & Promo\n'+
       'e: admin@auraprint.com.au\n'+
       'w: auraprint.com.au';
-    return 'mailto:'+encodeURIComponent(o.contact_email||'')+'?subject='+encodeURIComponent(subj)+'&body='+encodeURIComponent(body);
+    return { subject: subj, body: body };
+  }
+  function mailtoHref(o, tokenLinks){
+    var c = proofEmailContent(o, tokenLinks);
+    return 'mailto:'+encodeURIComponent(o.contact_email||'')+'?subject='+encodeURIComponent(c.subject)+'&body='+encodeURIComponent(c.body);
   }
 
   async function loadEvents(orderId){
@@ -485,6 +508,39 @@
     document.querySelectorAll('.dis-save').forEach(function(b){
       b.addEventListener('click', function(){ markDispatched(b.dataset.order, b); });
     });
+    document.querySelectorAll('.send-mail').forEach(function(b){
+      b.addEventListener('click', function(){ sendCrmEmail(b.dataset.kind, b.dataset.order, b.dataset.inv, b); });
+    });
+  }
+
+  async function sendCrmEmail(kind, orderId, invoiceId, btn){
+    var o = allOrders.find(function(x){return x.id===orderId;}); if(!o) return;
+    var msg = document.querySelector('.send-msg[data-order="'+orderId+'"][data-kind="'+kind+'"]');
+    var c;
+    if (kind==='proof'){ c = proofEmailContent(o, getTokenLinks(o)); }
+    else if (kind==='dispatch'){ c = dispatchEmailContent(o); }
+    else if (kind==='invoice'){
+      var v = (o.invoices||[]).find(function(x){return x.id===invoiceId;}); if(!v) return;
+      var invUrl = PROOF_BASE.replace(/proof\.html$/,'invoice.html') + '?t=' + v.access_token;
+      c = invoiceEmailContent(o, v, invUrl);
+    } else return;
+    if (!confirm('Send this email to '+(o.contact_email||'')+' now?\n\nSubject: '+c.subject)) return;
+    btn.disabled = true; if (msg) msg.textContent = 'Sending…';
+    try {
+      var s = await sb.auth.getSession();
+      var r = await fetch(CFG.supabaseUrl+'/functions/v1/send-email', {
+        method:'POST',
+        headers:{ 'Content-Type':'application/json', 'Authorization':'Bearer '+s.data.session.access_token },
+        body: JSON.stringify({ to: o.contact_email, subject: c.subject, text: c.body, order_id: o.id })
+      });
+      var j = await r.json();
+      if (!r.ok || !j.ok){ if (msg) msg.textContent = (j.error||('HTTP '+r.status)); btn.disabled=false; return; }
+      if (msg) msg.textContent = 'Sent ✓';
+      btn.disabled = false;
+    } catch(e){
+      if (msg) msg.textContent = 'Failed: '+(e.message||e);
+      btn.disabled = false;
+    }
   }
 
   async function createPaymentLink(invoiceId, btn){
@@ -506,7 +562,7 @@
     }
   }
 
-  function invoiceMailtoHref(o, v, invUrl){
+  function invoiceEmailContent(o, v, invUrl){
     var first = (o.contact_name||'').split(' ')[0] || 'there';
     var subj = 'Tax invoice '+(v.invoice_number||'')+' — order '+(o.order_number||'')+' — Aura Print & Promo';
     var body =
@@ -522,7 +578,11 @@
       'Aura Print & Promo\n'+
       'e: admin@auraprint.com.au\n'+
       'w: auraprint.com.au';
-    return 'mailto:'+encodeURIComponent(o.contact_email||'')+'?subject='+encodeURIComponent(subj)+'&body='+encodeURIComponent(body);
+    return { subject: subj, body: body };
+  }
+  function invoiceMailtoHref(o, v, invUrl){
+    var c = invoiceEmailContent(o, v, invUrl);
+    return 'mailto:'+encodeURIComponent(o.contact_email||'')+'?subject='+encodeURIComponent(c.subject)+'&body='+encodeURIComponent(c.body);
   }
 
   async function recordPayment(orderId, invoiceId, btn){
