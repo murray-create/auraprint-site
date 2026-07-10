@@ -6,7 +6,7 @@
 <meta name="robots" content="noindex,nofollow">
 <title>Lead Inbox | Aura Print CRM</title>
 <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/aura.css">
+<link rel="stylesheet" href="assets/aura.css?v=20260710a">
 <style>
   body{background:#f6f3ee}
   .admin-wrap{max-width:1200px;margin:0 auto;padding:28px 20px}
@@ -37,6 +37,7 @@
   .saved.show{opacity:1}
   .empty{text-align:center;color:#8a847d;padding:40px}
 </style>
+<link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
 </head>
 <body>
 
@@ -76,7 +77,7 @@
   <div id="tableWrap"></div>
 </div>
 
-<script src="assets/config.js?v=20260707a"></script>
+<script src="assets/config.js?v=20260710a"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://js.hcaptcha.com/1/api.js" async defer></script>
 <script>
@@ -118,7 +119,14 @@
       '<th>Received</th><th>Contact</th><th>Category</th><th>Qty</th><th>Job</th><th>Source</th><th>Status</th>'+
       '</tr></thead><tbody>';
     rows.forEach(function(l){
-      var art = l.artwork_link ? '<div><a href="'+esc(l.artwork_link)+'" target="_blank" rel="noopener">artwork ↗</a></div>' : '';
+      /* Only render customer-supplied links when they are plain http(s) -
+         anything else (javascript:, data:, etc) is shown as inert text. */
+      var art = '';
+      if (l.artwork_link) {
+        art = /^https?:\/\//i.test(String(l.artwork_link).trim())
+          ? '<div><a href="'+esc(l.artwork_link)+'" target="_blank" rel="noopener noreferrer">artwork ↗</a></div>'
+          : '<div style="color:#8a847d">artwork link (unsafe scheme, not clickable): '+esc(l.artwork_link)+'</div>';
+      }
       html += '<tr>'+
         '<td>'+esc(fmtDate(l.created_at))+'</td>'+
         '<td><div class="lead-name">'+esc(l.name)+'</div>'+

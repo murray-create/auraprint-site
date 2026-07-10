@@ -6,8 +6,16 @@
 <title>Get a Printing Quote | Aura Print & Promo</title>
 <meta name="description" content="Fast custom quotes for print, signage and promotional products. Upload artwork and hear back within the hour.">
 <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/aura.css">
+<link rel="stylesheet" href="assets/aura.css?v=20260710a">
 <style>.split{display:grid;grid-template-columns:1.2fr .8fr;gap:50px;align-items:start}</style>
+<link rel="canonical" href="https://auraprint.com.au/quote.html">
+<link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Aura Print &amp; Promo">
+<meta property="og:title" content="Get a Printing Quote | Aura Print & Promo">
+<meta property="og:description" content="Fast custom quotes for print, signage and promotional products. Upload artwork and hear back within the hour.">
+<meta property="og:url" content="https://auraprint.com.au/quote.html">
+<meta property="og:image" content="https://auraprint.com.au/assets/aura-logo.png">
 </head>
 <body>
 
@@ -67,23 +75,48 @@
   </div>
 </section>
 
-<script src="assets/config.js?v=20260707a"></script>
-<script src="assets/aura.js?v=20260709a"></script>
+<script src="assets/config.js?v=20260710a"></script>
+<script src="assets/aura.js?v=20260710a"></script>
 <script>
-/* Pre-fill from product pages and the promo catalogue (?product=CODE&name=&qty=&deco=&service=) */
+/* Pre-fill from product pages, configurators and the promo catalogue.
+   Carries: ?product=SLUG&qty=&spec=&price= (configurators)
+            ?product=SLUG&stock=&sides=&qty=&price= (business cards)
+            ?product=CODE&name=&qty=&deco=&service= (promo items)
+   The customer never retypes what they already chose. */
 (function(){
   const p=new URLSearchParams(location.search);
   const src=document.getElementById('qSrc'); if(src) src.value=document.referrer||location.href;
   if(!p.get('product'))return;
-  const code=p.get('product'),name=p.get('name')||'',qty=p.get('qty')||'',deco=p.get('deco')||'',svc=p.get('service')||'';
+  const code=p.get('product'),name=p.get('name')||'',qty=p.get('qty')||'',deco=p.get('deco')||'',
+        svc=p.get('service')||'',spec=p.get('spec')||'',stock=p.get('stock')||'',
+        sides=p.get('sides')||'',price=p.get('price')||'';
   const codeEl=document.getElementById('qCode'); if(codeEl) codeEl.value=code;
-  if(name||deco){ // promo item
-    document.getElementById('qProduct').value='Promotional Products';
-    if(qty)document.getElementById('qQty').value=qty;
-    document.getElementById('qJob').value=[name?name+' (item '+code+')':'Item '+code,deco&&'Decoration: '+deco,svc&&'Service: '+svc].filter(Boolean).join('\n');
-  }else{
-    document.getElementById('qJob').value='Product: '+code;
+  const cat=document.getElementById('qProduct');
+
+  /* Map the product slug to the closest quote category. */
+  const CATS=[
+    [/business-card|letterhead|with-compliment|envelope|loyalty|stationery|invitation|notepad|calendar/, 'Business Cards & Stationery'],
+    [/flyer|brochure|booklet|postcard|menu|folder|book|magazine|invoice|poster|cheque|paddle|score/, 'Flyers, Brochures & Booklets'],
+    [/sign|banner|flag|frame|corflute|mesh|media-wall|marquee|tablecloth|display|standee|magnet|mural|graphic|film|cube|chair|barrier|bin|lightbox|seg/, 'Signage, Banners & Displays'],
+    [/sticker|label|decal/, 'Stickers & Labels'],
+  ];
+  if(name||deco){ cat.value='Promotional Products'; }
+  else { for(const [re,label] of CATS){ if(re.test(code)){ cat.value=label; break; } } }
+
+  if(qty)document.getElementById('qQty').value=qty;
+
+  const lines=[];
+  if(name||deco){
+    lines.push(name?name+' (item '+code+')':'Item '+code);
+    if(deco)lines.push('Decoration: '+deco);
+    if(svc)lines.push('Service: '+svc);
+  } else {
+    lines.push('Product: '+code.replace(/-/g,' '));
+    if(spec)lines.push(spec);
+    if(stock)lines.push('Stock: '+stock+(sides?', Sides: '+(sides==='1S'?'Single':'Double'):''));
+    if(price)lines.push('Price shown online: $'+price+' inc GST (indicative)');
   }
+  document.getElementById('qJob').value=lines.join('\n');
 })();
 </script>
 </body>

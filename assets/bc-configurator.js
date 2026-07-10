@@ -73,7 +73,10 @@
   var startSides = (qsParam('sides') === '1S' || qsParam('sides') === '2S') ? qsParam('sides') : tier.def.sides;
   var startQty = parseInt(qsParam('qty'), 10);
   startQty = (tier.qtys.indexOf(startQty) >= 0) ? startQty : tier.def.qty;
-  var startStock = tier.def.stock;
+  // Optional stock preselect (e.g. the NV Velvet page embeds the premium
+  // configurator with velvet already chosen). Must be a valid tier stock.
+  var presetStock = host.getAttribute('data-stock');
+  var startStock = tier.stocks.some(function (s) { return s.val === presetStock; }) ? presetStock : tier.def.stock;
 
   function optBtns(group, items, activeVal, render) {
     return '<div class="opts" data-group="' + group + '">' + items.map(function (it) {

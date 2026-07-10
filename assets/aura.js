@@ -5,18 +5,19 @@ const HEADER = `
   <div class="wrap">
     <div class="left">
       <a href="tel:1300291277"><b>1300 291 277</b></a>
-      <a href="#">WhatsApp</a>
       <a href="quote.html">Upload artwork</a>
     </div>
     <div class="right">
       <span class="tag">Sunshine Coast owned. Australia-wide delivery.</span>
-      <a href="#">Track order</a>
     </div>
   </div>
 </div>
 <nav class="main">
   <div class="wrap">
     <a class="logo" href="index.html">AURA<span>PRINT</span></a>
+    <button class="nav-burger" id="navBurger" aria-label="Open menu" aria-expanded="false" aria-controls="navDrawer">
+      <span></span><span></span><span></span>
+    </button>
     <div class="navlinks">
       <div><a href="print.html">Print ▾</a>
         <div class="mega">
@@ -44,11 +45,54 @@ const HEADER = `
       <div><a href="contact.html">Contact</a></div>
     </div>
     <div class="nav-cta">
-      <a class="btn btn-ghost" href="#" style="padding:10px 20px">Login</a>
       <a class="btn btn-aura" href="quote.html" style="padding:10px 22px">Get a Quote</a>
     </div>
   </div>
-</nav>`;
+</nav>
+<div class="drawer-backdrop" id="drawerBackdrop" hidden></div>
+<aside class="drawer" id="navDrawer" aria-label="Site menu" hidden>
+  <div class="drawer-head">
+    <a class="logo" href="index.html">AURA<span>PRINT</span></a>
+    <button class="drawer-close" id="drawerClose" aria-label="Close menu">✕</button>
+  </div>
+  <nav class="drawer-nav">
+    <div class="drawer-group">
+      <button class="drawer-toggle" aria-expanded="false">Print <span>▾</span></button>
+      <ul class="drawer-sub" hidden>
+        <li><a href="print.html"><b>All print products →</b></a></li>
+        <li><a href="business-cards.html">Business Cards</a></li>
+        <li><a href="flyers.html">Flyers</a></li>
+        <li><a href="brochures.html">Brochures</a></li>
+        <li><a href="postcards.html">Postcards</a></li>
+        <li><a href="letterheads.html">Letterheads</a></li>
+        <li><a href="posters.html">Posters</a></li>
+        <li><a href="booklets.html">Booklets</a></li>
+      </ul>
+    </div>
+    <div class="drawer-group">
+      <button class="drawer-toggle" aria-expanded="false">Signage &amp; Display <span>▾</span></button>
+      <ul class="drawer-sub" hidden>
+        <li><a href="signage.html"><b>All signage &amp; display →</b></a></li>
+        <li><a href="corflute-signs.html">Corflute Signs</a></li>
+        <li><a href="pull-up-banners.html">Pull Up Banners</a></li>
+        <li><a href="a-frames.html">A-Frames</a></li>
+        <li><a href="stickers.html">Stickers &amp; Labels</a></li>
+        <li><a href="teardrop-flags.html">Teardrop Flags</a></li>
+        <li><a href="outdoor-banners.html">Outdoor Banners</a></li>
+      </ul>
+    </div>
+    <div class="drawer-group">
+      <a class="drawer-link" href="promo.html">Promo &amp; Apparel</a>
+    </div>
+    <div class="drawer-group"><a class="drawer-link" href="index.html#quoter">Instant Price</a></div>
+    <div class="drawer-group"><a class="drawer-link" href="about.html">About</a></div>
+    <div class="drawer-group"><a class="drawer-link" href="contact.html">Contact</a></div>
+  </nav>
+  <div class="drawer-foot">
+    <a class="btn btn-aura" href="quote.html" style="width:100%;text-align:center">Get a Quote</a>
+    <a href="tel:1300291277" class="drawer-phone">📞 1300 291 277</a>
+  </div>
+</aside>`;
 
 const FOOTER = `
 <footer>
@@ -57,11 +101,12 @@ const FOOTER = `
       <div>
         <a class="logo" href="index.html" style="color:#fff">AURA<span>PRINT</span></a>
         <p style="color:#b8b2ab;font-size:14px;margin-top:14px">Bold print and promotional products from the Sunshine Coast, delivered Australia-wide.</p>
-        <h4 style="margin-top:24px">Get 10% off your first order</h4>
-        <div class="newsletter"><input type="email" placeholder="Your email address"><button class="btn btn-aura" style="padding:12px 22px">Join</button></div>
+        <h4 style="margin-top:24px">Print offers &amp; tips, straight to your inbox</h4>
+        <div class="newsletter"><input type="email" id="nl-email" placeholder="Your email address" aria-label="Email address for newsletter"><button class="btn btn-aura" id="nl-join" style="padding:12px 22px">Join</button></div>
+        <p id="nl-status" style="font-size:13px;min-height:18px;margin-top:8px"></p>
       </div>
       <div><h4>Products</h4><ul><li><a href="business-cards.html">Business Cards</a></li><li><a href="flyers.html">Flyers</a></li><li><a href="corflute-signs.html">Corflute Signs</a></li><li><a href="pull-up-banners.html">Pull Up Banners</a></li><li><a href="signage.html">Stickers</a></li><li><a href="promo.html">Promo Products</a></li><li><a href="promo.html">Workwear</a></li></ul></div>
-      <div><h4>Company</h4><ul><li><a href="about.html">About</a></li><li><a href="#">Portfolio</a></li><li><a href="#">Reviews</a></li><li><a href="blog.html">Blog</a></li><li><a href="art-setup.html">Artwork Setup Guide</a></li><li><a href="trade-terms.html">Terms of Trade</a></li><li><a href="privacy-policy.html">Privacy Policy</a></li><li><a href="refund-policy.html">Refunds &amp; Reprints</a></li></ul></div>
+      <div><h4>Company</h4><ul><li><a href="about.html">About</a></li><li><a href="blog.html">Blog</a></li><li><a href="art-setup.html">Artwork Setup Guide</a></li><li><a href="trade-terms.html">Terms of Trade</a></li><li><a href="privacy-policy.html">Privacy Policy</a></li><li><a href="refund-policy.html">Refunds &amp; Reprints</a></li></ul></div>
       <div><h4>Contact</h4><ul>
         <li>4/1 Packer Road, Baringa QLD 4551</li>
         <li><a href="tel:1300291277">1300 291 277</a></li>
@@ -150,10 +195,30 @@ function wireForms(){
       /* honeypot: bots fill hidden field, humans never do */
       var hp = form.querySelector('input[name="botcheck"]');
       if (hp && hp.checked) return;
-      /* required-field guard */
+      /* required-field guard: inline error under every missing field, then
+         scroll to the first one - never fail silently. */
+      form.querySelectorAll('.field-error').forEach(function(el){ el.remove(); });
+      form.querySelectorAll('.input-error').forEach(function(el){ el.classList.remove('input-error'); });
       var missing = [];
       form.querySelectorAll('[required]').forEach(function(el){ if(!String(el.value||'').trim()) missing.push(el); });
-      if (missing.length){ missing[0].focus(); status.style.color = '#c0392b'; status.textContent = 'Please fill the required fields (marked *).'; return; }
+      var emailEl = form.querySelector('input[type="email"][required], input[name="email"]');
+      var badEmail = emailEl && String(emailEl.value||'').trim() && !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(emailEl.value.trim());
+      if (badEmail && missing.indexOf(emailEl) < 0) missing.push(emailEl);
+      if (missing.length){
+        missing.forEach(function(el){
+          el.classList.add('input-error');
+          var msg = document.createElement('span');
+          msg.className = 'field-error';
+          msg.style.cssText = 'display:block;margin-top:5px;font-size:12.5px;color:#c0392b;font-weight:600';
+          msg.textContent = (el === emailEl && badEmail) ? 'That email address doesn’t look right.' : 'This field is required.';
+          el.insertAdjacentElement('afterend', msg);
+        });
+        status.style.color = '#c0392b';
+        status.textContent = 'Please fix the ' + missing.length + ' highlighted field' + (missing.length > 1 ? 's' : '') + ' above.';
+        missing[0].scrollIntoView({ behavior:'smooth', block:'center' });
+        missing[0].focus({ preventScroll:true });
+        return;
+      }
 
       var btn = form.querySelector('button[type="submit"], button:not([type])');
       var em = 'admin' + String.fromCharCode(64) + 'auraprint.com.au';
@@ -204,9 +269,63 @@ function wireForms(){
   });
 }
 
+/* Mobile drawer: burger below 900px, accordion groups, keyboard + backdrop close. */
+function wireDrawer(){
+  var burger = document.getElementById('navBurger'), drawer = document.getElementById('navDrawer'),
+      backdrop = document.getElementById('drawerBackdrop'), close = document.getElementById('drawerClose');
+  if (!burger || !drawer) return;
+  function setOpen(open){
+    drawer.hidden = !open; backdrop.hidden = !open;
+    burger.setAttribute('aria-expanded', open ? 'true' : 'false');
+    document.body.classList.toggle('drawer-open', open);
+    if (open) { var f = drawer.querySelector('a,button'); if (f) f.focus(); } else { burger.focus(); }
+  }
+  burger.addEventListener('click', function(){ setOpen(drawer.hidden); });
+  close.addEventListener('click', function(){ setOpen(false); });
+  backdrop.addEventListener('click', function(){ setOpen(false); });
+  document.addEventListener('keydown', function(e){ if (e.key === 'Escape' && !drawer.hidden) setOpen(false); });
+  drawer.querySelectorAll('.drawer-toggle').forEach(function(t){
+    t.addEventListener('click', function(){
+      var open = t.getAttribute('aria-expanded') === 'true';
+      t.setAttribute('aria-expanded', open ? 'false' : 'true');
+      t.nextElementSibling.hidden = open;
+    });
+  });
+}
+
+/* Footer newsletter -> leads table (source_form 'newsletter'). */
+function wireNewsletter(){
+  var btn = document.getElementById('nl-join'), input = document.getElementById('nl-email'),
+      status = document.getElementById('nl-status');
+  if (!btn || !input) return;
+  function submit(){
+    var em = String(input.value || '').trim();
+    if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(em)){
+      status.style.color = '#f2b8a2'; status.textContent = 'Please enter a valid email address.'; input.focus(); return;
+    }
+    btn.disabled = true; btn.textContent = '…';
+    saveLead(window.AURA_CONFIG || {}, {
+      email: em, source_form: 'newsletter',
+      source_page: location.pathname.split('/').pop() || 'index.html',
+      job_details: 'Newsletter signup (footer)', user_agent: navigator.userAgent
+    }).then(function(r){
+      if (r.ok || r.skipped){
+        input.value = ''; status.style.color = '#8fd3a8'; status.textContent = '✓ You’re on the list.';
+        btn.textContent = '✓';
+      } else {
+        status.style.color = '#f2b8a2'; status.textContent = 'That didn’t save - please try again.';
+        btn.disabled = false; btn.textContent = 'Join';
+      }
+    });
+  }
+  btn.addEventListener('click', submit);
+  input.addEventListener('keydown', function(e){ if (e.key === 'Enter') submit(); });
+}
+
 document.addEventListener('DOMContentLoaded', function(){
   document.body.insertAdjacentHTML('afterbegin', HEADER);
   wireForms();
+  wireDrawer();
 
   /* Tawk.to live chat: if configured, load it and skip the demo bot */
   const cfg = window.AURA_CONFIG || {};
@@ -218,11 +337,13 @@ document.addEventListener('DOMContentLoaded', function(){
     document.head.appendChild(s);
     document.body.insertAdjacentHTML('beforeend', FOOTER.replace(/<button id="aura-chat-btn"[\s\S]*$/, ''));
     fillEmails();
+    wireNewsletter();
     const m0=document.getElementById('marq'); if(m0) m0.innerHTML+=m0.innerHTML;
     return;
   }
   document.body.insertAdjacentHTML('beforeend', FOOTER);
   fillEmails();
+  wireNewsletter();
 
   /* ---------- chat bot (demo brain - production version will be AI-powered) ---------- */
   const body=document.getElementById('chat-body'), quick=document.getElementById('chat-quick'),
@@ -250,7 +371,7 @@ document.addEventListener('DOMContentLoaded', function(){
   function respond(key){
     awaitingEmail=false;
     if(key==='price') botReply('Easy! Most products have <b>instant online pricing</b> — try the quoter on the <a href="index.html#quoter" style="color:var(--violet);font-weight:700">homepage</a> or open any product page. For anything custom, I can arrange a quote — just tell me the product and quantity.');
-    else if(key==='turnaround') botReply('Standard turnaround is <b>3-5 business days</b>, plus a day or two in transit. Need it faster? Next-day and same-day express options are available on many products — pick your speed in the configurator.');
+    else if(key==='turnaround') botReply('Standard turnaround is <b>3-5 business days</b>, plus a day or two in transit. Next-day and same-day options exist on selected products — ask us and we’ll confirm what’s possible for your job.');
     else if(key==='artwork') botReply('We accept <b>print-ready PDFs</b> with 3mm bleed and crop marks. Working from Canva? Our setup guides cover that too. You can upload artwork on any product page or via <a href="quote.html" style="color:var(--violet);font-weight:700">the quote form</a> and our preflight check will catch any problems.');
     else if(key==='human') { botReply('No worries — leave your <b>email or phone number</b> and one of the team will get back to you within the hour (Mon-Fri 8:30-5). Or call us now on <b>1300 291 277</b>.'); awaitingEmail=true; }
     else if(key==='thanks') botReply('Anytime! Anything else I can help with?');
@@ -270,7 +391,14 @@ document.addEventListener('DOMContentLoaded', function(){
     const t=input.value.trim(); if(!t) return;
     addMsg(t,'user'); input.value='';
     const key=classify(t);
-    if(key==='_captured') botReply('Got it — thanks! ✅ A real team member will reach out shortly. (In the live site this creates a lead in the CRM and pings the team.)');
+    if(key==='_captured'){
+      saveLead(window.AURA_CONFIG || {}, {
+        email: t.indexOf('@') > -1 ? t : null, phone: t.indexOf('@') > -1 ? null : t,
+        source_form: 'chat', source_page: location.pathname.split('/').pop() || 'index.html',
+        job_details: 'Chat contact capture', user_agent: navigator.userAgent
+      });
+      botReply('Got it — thanks! ✅ A team member will reach out shortly (Mon-Fri 8:30-5).');
+    }
     else respond(key);
   }
   send.onclick=userSend;

@@ -4,114 +4,13 @@
   "name": "Business Cards",
   "cat": "print",
   "sub": "Cards & Stationery",
-  "icon": "\ud83e\udeaa",
+  "icon": "🪪",
   "badge": "Most popular",
   "desc": "90x55mm. From everyday 350gsm to thick NV Velvet with Spot UV and metallic foil.",
   "seo": "Business Cards Sunshine Coast - Instant Online Pricing",
-  "from": 89,
+  "from": 109,
   "portal": true,
   "template": "business-cards",
-  "opts": [
-   {
-    "label": "Stock",
-    "g": "stock",
-    "choices": [
-     {
-      "n": "350gsm Matt Laminate",
-      "m": 1,
-      "on": true
-     },
-     {
-      "n": "350gsm Gloss",
-      "m": 1.05
-     },
-     {
-      "n": "450gsm NV Velvet",
-      "m": 2.1
-     },
-     {
-      "n": "NV Velvet + Spot UV",
-      "m": 2.9
-     }
-    ]
-   },
-   {
-    "label": "Sides",
-    "g": "sides",
-    "choices": [
-     {
-      "n": "Single sided",
-      "m": 0.85
-     },
-     {
-      "n": "Double sided",
-      "m": 1,
-      "on": true
-     }
-    ]
-   },
-   {
-    "label": "Corners",
-    "g": "corners",
-    "choices": [
-     {
-      "n": "Square",
-      "a": 0,
-      "on": true
-     },
-     {
-      "n": "Rounded (7mm)",
-      "a": 15
-     }
-    ]
-   },
-   {
-    "label": "Quantity",
-    "g": "qty",
-    "choices": [
-     {
-      "n": "250",
-      "b": 75
-     },
-     {
-      "n": "500",
-      "b": 89,
-      "on": true
-     },
-     {
-      "n": "750",
-      "b": 107
-     },
-     {
-      "n": "1000",
-      "b": 124
-     },
-     {
-      "n": "2000",
-      "b": 246
-     }
-    ]
-   },
-   {
-    "label": "Turnaround",
-    "g": "speed",
-    "choices": [
-     {
-      "n": "Standard",
-      "s": 1,
-      "on": true
-     },
-     {
-      "n": "Next day",
-      "s": 1.35
-     },
-     {
-      "n": "Same day",
-      "s": 1.7
-     }
-    ]
-   }
-  ],
   "specs": [
    "Trim size: 90 x 55mm",
    "Bleed: 3mm all sides (96 x 61mm total)",
@@ -142,63 +41,22 @@
    "CMYKhub",
    "Easy Signs",
    "LEP"
-  ]
+  ],
+  "liveBc": {
+   "tier": "premium"
+  }
  },
  {
   "slug": "nv-velvet-business-cards",
   "name": "NV Velvet Business Cards",
   "cat": "print",
   "sub": "Cards & Stationery",
-  "icon": "\u2728",
+  "icon": "✨",
   "desc": "Soft-touch velvet laminate over 450gsm artboard. The card people remember.",
   "seo": "NV Velvet Business Cards Australia",
-  "from": 189,
+  "from": 123,
   "portal": true,
   "template": "business-cards",
-  "opts": [
-   {
-    "label": "Finish",
-    "g": "stock",
-    "choices": [
-     {
-      "n": "NV Velvet 2 sides",
-      "m": 1,
-      "on": true
-     },
-     {
-      "n": "NV + Spot UV 1 side",
-      "m": 1.35
-     },
-     {
-      "n": "NV + Metallic Foil",
-      "m": 1.6
-     }
-    ]
-   },
-   {
-    "label": "Quantity",
-    "g": "qty",
-    "choices": [
-     {
-      "n": "250",
-      "b": 189
-     },
-     {
-      "n": "500",
-      "b": 254,
-      "on": true
-     },
-     {
-      "n": "1000",
-      "b": 381
-     },
-     {
-      "n": "2000",
-      "b": 758
-     }
-    ]
-   }
-  ],
   "specs": [
    "Trim size: 90 x 55mm",
    "Bleed: 3mm all sides",
@@ -223,105 +81,24 @@
   "img": "assets/img/nv-velvet.jpg",
   "suppliers": [
    "CMYKhub"
-  ]
+  ],
+  "liveBc": {
+   "tier": "premium",
+   "stock": "Velvet Soft-Touch"
+  },
+  "liveNote": "Want <b>Spot UV</b> or <b>metallic foil</b> over the velvet? <a href=\"quote.html?product=nv-velvet-business-cards&spec=NV%20Velvet%20%2B%20Spot%20UV%20or%20foil\">Ask for a fast quote →</a>"
  },
  {
   "slug": "flyers",
   "name": "Flyers",
   "cat": "print",
   "sub": "Marketing Material",
-  "icon": "\ud83d\udcc4",
+  "icon": "📄",
   "desc": "DL to A3 on stocks from 130gsm to 350gsm. Letterbox-ready and event-proof.",
   "seo": "Flyer Printing Sunshine Coast",
-  "from": 156,
+  "from": 117,
   "portal": true,
   "template": "flyers",
-  "opts": [
-   {
-    "label": "Size",
-    "g": "size",
-    "choices": [
-     {
-      "n": "DL",
-      "m": 0.8
-     },
-     {
-      "n": "A5",
-      "m": 1,
-      "on": true
-     },
-     {
-      "n": "A4",
-      "m": 1.35
-     },
-     {
-      "n": "A3",
-      "m": 1.9
-     }
-    ]
-   },
-   {
-    "label": "Stock",
-    "g": "stock",
-    "choices": [
-     {
-      "n": "130gsm Gloss",
-      "m": 0.9
-     },
-     {
-      "n": "150gsm Gloss",
-      "m": 1,
-      "on": true
-     },
-     {
-      "n": "250gsm",
-      "m": 1.25
-     },
-     {
-      "n": "350gsm",
-      "m": 1.5
-     }
-    ]
-   },
-   {
-    "label": "Sides",
-    "g": "sides",
-    "choices": [
-     {
-      "n": "Single",
-      "m": 0.85
-     },
-     {
-      "n": "Double",
-      "m": 1,
-      "on": true
-     }
-    ]
-   },
-   {
-    "label": "Quantity",
-    "g": "qty",
-    "choices": [
-     {
-      "n": "500",
-      "b": 156,
-      "on": true
-     },
-     {
-      "n": "1000",
-      "b": 213
-     },
-     {
-      "n": "2500",
-      "b": 363
-     },
-     {
-      "n": "5000",
-      "b": 720
-     }
-    ]
-   }
-  ],
   "specs": [
    "Bleed: 3mm all sides",
    "Colour: CMYK, 300dpi",
@@ -347,101 +124,59 @@
    "CMYKhub",
    "Easy Signs"
   ],
-  "imgReal": true
+  "imgReal": true,
+  "live": {
+   "axes": [
+    [
+     "size",
+     "Size",
+     [
+      "DL",
+      "A6",
+      "A5",
+      "A4",
+      "A3"
+     ]
+    ],
+    [
+     "stock",
+     "Stock",
+     [
+      "115gsm Gloss",
+      "150gsm Gloss",
+      "170gsm Gloss",
+      "170gsm Matt",
+      "250gsm Gloss"
+     ]
+    ],
+    [
+     "sides",
+     "Sides",
+     [
+      "Single",
+      "Double"
+     ]
+    ]
+   ],
+   "default": {
+    "size": "A5",
+    "stock": "150gsm Gloss",
+    "sides": "Double"
+   },
+   "qty": 500
+  }
  },
  {
   "slug": "brochures",
   "name": "Brochures",
   "cat": "print",
   "sub": "Marketing Material",
-  "icon": "\ud83d\udcd6",
+  "icon": "📖",
   "desc": "Half fold, tri fold, Z fold and gate fold on premium stocks.",
   "seo": "Brochure Printing Sunshine Coast",
-  "from": 189,
+  "from": 271,
   "portal": true,
   "template": "brochures",
-  "opts": [
-   {
-    "label": "Fold",
-    "g": "fold",
-    "choices": [
-     {
-      "n": "Half fold",
-      "m": 1,
-      "on": true
-     },
-     {
-      "n": "Tri fold",
-      "m": 1.05
-     },
-     {
-      "n": "Z fold",
-      "m": 1.05
-     },
-     {
-      "n": "Gate fold",
-      "m": 1.2
-     }
-    ]
-   },
-   {
-    "label": "Size (flat)",
-    "g": "size",
-    "choices": [
-     {
-      "n": "A4 to DL",
-      "m": 1,
-      "on": true
-     },
-     {
-      "n": "A3 to A4",
-      "m": 1.45
-     }
-    ]
-   },
-   {
-    "label": "Stock",
-    "g": "stock",
-    "choices": [
-     {
-      "n": "150gsm Gloss",
-      "m": 1,
-      "on": true
-     },
-     {
-      "n": "170gsm Silk",
-      "m": 1.1
-     },
-     {
-      "n": "250gsm",
-      "m": 1.3
-     }
-    ]
-   },
-   {
-    "label": "Quantity",
-    "g": "qty",
-    "choices": [
-     {
-      "n": "500",
-      "b": 189,
-      "on": true
-     },
-     {
-      "n": "1000",
-      "b": 246
-     },
-     {
-      "n": "2500",
-      "b": 429
-     },
-     {
-      "n": "5000",
-      "b": 810
-     }
-    ]
-   }
-  ],
   "specs": [
    "Bleed: 3mm all sides",
    "Supply flat size with fold marks",
@@ -464,83 +199,51 @@
    "Easy Signs",
    "LEP"
   ],
-  "imgReal": true
+  "imgReal": true,
+  "live": {
+   "axes": [
+    [
+     "fold",
+     "Fold",
+     [
+      "A4 folded in half (to A5)",
+      "A4 roll fold to DL (trifold)",
+      "A4 Z fold to DL",
+      "A3 folded in half (to A4)",
+      "A5 folded in half (to A6)"
+     ]
+    ],
+    [
+     "stock",
+     "Stock",
+     [
+      "115gsm Gloss",
+      "150gsm Gloss",
+      "170gsm Gloss",
+      "170gsm Matt",
+      "250gsm Gloss"
+     ]
+    ]
+   ],
+   "default": {
+    "fold": "A4 roll fold to DL (trifold)",
+    "stock": "150gsm Gloss"
+   },
+   "qty": 500
+  }
  },
  {
   "slug": "postcards",
   "name": "Postcards",
   "cat": "print",
   "sub": "Marketing Material",
-  "icon": "\ud83d\udc8c",
+  "icon": "💌",
   "desc": "Direct mail that stands out. A6 to A5 on thick stocks.",
   "seo": "Postcard Printing Australia",
-  "from": 98,
+  "from": 158,
   "portal": true,
   "template": "postcards",
   "quote": false,
-  "opts": [
-   {
-    "label": "Size",
-    "g": "size",
-    "choices": [
-     {
-      "n": "A6",
-      "m": 1,
-      "on": true
-     },
-     {
-      "n": "DL",
-      "m": 1.15
-     },
-     {
-      "n": "A5",
-      "m": 1.3
-     }
-    ]
-   },
-   {
-    "label": "Stock",
-    "g": "stock",
-    "choices": [
-     {
-      "n": "300gsm Gloss",
-      "m": 1,
-      "on": true
-     },
-     {
-      "n": "350gsm Matt Laminate 1S",
-      "m": 1.2
-     },
-     {
-      "n": "420gsm Natural",
-      "m": 1.4
-     }
-    ]
-   },
-   {
-    "label": "Quantity",
-    "g": "qty",
-    "choices": [
-     {
-      "n": "250",
-      "b": 98,
-      "on": true
-     },
-     {
-      "n": "500",
-      "b": 128
-     },
-     {
-      "n": "1000",
-      "b": 184
-     },
-     {
-      "n": "2500",
-      "b": 345
-     }
-    ]
-   }
-  ],
   "specs": [
    "Bleed: 3mm all sides",
    "Leave address side 60% uncoated for mailing",
@@ -562,63 +265,56 @@
    "Easy Signs",
    "LEP"
   ],
-  "imgReal": true
+  "imgReal": true,
+  "live": {
+   "axes": [
+    [
+     "size",
+     "Size",
+     [
+      "A6",
+      "A5",
+      "Postcard"
+     ]
+    ],
+    [
+     "stock",
+     "Stock",
+     [
+      "310 GSM Deluxe Artboard",
+      "360 GSM Deluxe Artboard",
+      "420 GSM Deluxe Artboard",
+      "350 GSM Recycled"
+     ]
+    ],
+    [
+     "sides",
+     "Sides",
+     [
+      "Single",
+      "Double"
+     ]
+    ]
+   ],
+   "default": {
+    "size": "A6",
+    "stock": "360 GSM Deluxe Artboard",
+    "sides": "Double"
+   },
+   "qty": 500
+  }
  },
  {
   "slug": "letterheads",
   "name": "Letterheads",
   "cat": "print",
   "sub": "Cards & Stationery",
-  "icon": "\u2709\ufe0f",
+  "icon": "✉️",
   "desc": "Offset quality on premium uncoated and laser-safe stocks.",
   "seo": "Letterhead Printing Australia",
-  "from": 120,
+  "from": 263,
   "portal": true,
   "template": "letterheads",
-  "opts": [
-   {
-    "label": "Stock",
-    "g": "stock",
-    "choices": [
-     {
-      "n": "100gsm Laser",
-      "m": 1,
-      "on": true
-     },
-     {
-      "n": "110gsm Premium Uncoated",
-      "m": 1.15
-     },
-     {
-      "n": "120gsm Linen",
-      "m": 1.35
-     }
-    ]
-   },
-   {
-    "label": "Quantity",
-    "g": "qty",
-    "choices": [
-     {
-      "n": "250",
-      "b": 120,
-      "on": true
-     },
-     {
-      "n": "500",
-      "b": 168
-     },
-     {
-      "n": "1000",
-      "b": 256
-     },
-     {
-      "n": "2500",
-      "b": 510
-     }
-    ]
-   }
-  ],
   "specs": [
    "Trim: 210 x 297mm (A4)",
    "Bleed: 3mm",
@@ -635,14 +331,41 @@
    "with-compliments",
    "business-cards"
   ],
-  "img": "assets/img/letterheads.jpg"
+  "img": "assets/img/letterheads.jpg",
+  "live": {
+   "axes": [
+    [
+     "stock",
+     "Stock",
+     [
+      "90 GSM Uncoated",
+      "100 GSM Uncoated",
+      "120 GSM Uncoated",
+      "140 GSM Uncoated"
+     ]
+    ],
+    [
+     "sides",
+     "Sides",
+     [
+      "Single",
+      "Double"
+     ]
+    ]
+   ],
+   "default": {
+    "stock": "100 GSM Uncoated",
+    "sides": "Single"
+   },
+   "qty": 500
+  }
  },
  {
   "slug": "envelopes",
   "name": "Envelopes",
   "cat": "print",
   "sub": "Cards & Stationery",
-  "icon": "\ud83d\udcee",
+  "icon": "📮",
   "desc": "Printed DL to C4, plain face or window, any volume.",
   "seo": "Printed Envelopes Australia",
   "portal": true,
@@ -670,7 +393,7 @@
   "name": "With Compliments Slips",
   "cat": "print",
   "sub": "Cards & Stationery",
-  "icon": "\ud83d\udcdd",
+  "icon": "📝",
   "desc": "The finishing touch for your stationery suite. DL size to match your letterhead.",
   "seo": "With Compliments Slips Printing",
   "portal": true,
@@ -698,7 +421,7 @@
   "name": "Loyalty Cards",
   "cat": "print",
   "sub": "Cards & Stationery",
-  "icon": "\ud83d\udcb3",
+  "icon": "💳",
   "desc": "Keep customers coming back. Business card size with stamp grids or numbering.",
   "seo": "Loyalty Card Printing",
   "portal": true,
@@ -727,7 +450,7 @@
   "name": "Presentation Folders",
   "cat": "print",
   "sub": "Marketing Material",
-  "icon": "\ud83d\uddc2\ufe0f",
+  "icon": "🗂️",
   "desc": "Gloss, matt or velvet with business card slits and capacity spines.",
   "seo": "Presentation Folder Printing Australia",
   "portal": true,
@@ -760,7 +483,7 @@
   "name": "Menus",
   "cat": "print",
   "sub": "Marketing Material",
-  "icon": "\ud83c\udf7d\ufe0f",
+  "icon": "🍽️",
   "desc": "Flat, folded or laminated for table service. Spill-proof options for venues.",
   "seo": "Menu Printing Sunshine Coast",
   "portal": true,
@@ -794,7 +517,7 @@
   "name": "Greeting Cards",
   "cat": "print",
   "sub": "Marketing Material",
-  "icon": "\ud83c\udf89",
+  "icon": "🎉",
   "desc": "Folded cards for retail, events and corporate Christmas lists.",
   "seo": "Greeting Card Printing Australia",
   "portal": true,
@@ -828,7 +551,7 @@
   "name": "Saddle Stitched Booklets",
   "cat": "print",
   "sub": "Books & Booklets",
-  "icon": "\ud83d\udcda",
+  "icon": "📚",
   "desc": "8-64 pages, self cover or plus cover. Catalogues, programs and magazines.",
   "seo": "Booklet Printing Australia",
   "portal": true,
@@ -865,7 +588,7 @@
   "name": "Perfect Bound Books",
   "cat": "print",
   "sub": "Books & Booklets",
-  "icon": "\ud83d\udcd5",
+  "icon": "📕",
   "desc": "Square spine, bookshop finish. Annual reports, look books and manuals.",
   "seo": "Perfect Bound Book Printing Australia",
   "portal": true,
@@ -893,7 +616,7 @@
   "name": "Wiro Bound Booklets",
   "cat": "print",
   "sub": "Books & Booklets",
-  "icon": "\ud83c\udf00",
+  "icon": "🌀",
   "desc": "Lay-flat manuals, workbooks and calendars with metal wire binding.",
   "seo": "Wiro Bound Booklet Printing",
   "portal": true,
@@ -922,7 +645,7 @@
   "name": "Invoice Books (NCR)",
   "cat": "print",
   "sub": "Books & Booklets",
-  "icon": "\ud83e\uddfe",
+  "icon": "🧾",
   "desc": "Carbonless duplicate and triplicate books, numbered and perforated.",
   "seo": "NCR Invoice Book Printing Australia",
   "portal": true,
@@ -950,7 +673,7 @@
   "name": "Notepads",
   "cat": "print",
   "sub": "Books & Booklets",
-  "icon": "\ud83d\udcd2",
+  "icon": "📒",
   "desc": "Branded pads, glued head, 25-100 sheets. Desk real estate for your brand.",
   "seo": "Notepad Printing Australia",
   "portal": true,
@@ -982,7 +705,7 @@
   "name": "Calendars",
   "cat": "print",
   "sub": "Books & Booklets",
-  "icon": "\ud83d\udcc5",
+  "icon": "📅",
   "desc": "Wall and desk calendars, wiro bound. Twelve months of brand visibility.",
   "seo": "Calendar Printing Australia",
   "portal": true,
@@ -1015,90 +738,12 @@
   "name": "Corflute Signs",
   "cat": "signage",
   "sub": "Signs & Stickers",
-  "icon": "\ud83e\udea7",
+  "icon": "🪧",
   "desc": "Real estate, builders and event boards on 3mm or 5mm corflute, any size.",
   "seo": "Corflute Signs Sunshine Coast",
-  "from": 67,
+  "from": 163,
   "portal": false,
   "template": "corflute-easysigns",
-  "opts": [
-   {
-    "label": "Size",
-    "g": "size",
-    "choices": [
-     {
-      "n": "600x450",
-      "m": 0.7
-     },
-     {
-      "n": "900x600",
-      "m": 1,
-      "on": true
-     },
-     {
-      "n": "1200x900",
-      "m": 1.8
-     },
-     {
-      "n": "2400x1200",
-      "m": 3.6
-     }
-    ]
-   },
-   {
-    "label": "Thickness",
-    "g": "stock",
-    "choices": [
-     {
-      "n": "3mm",
-      "m": 0.9
-     },
-     {
-      "n": "5mm",
-      "m": 1,
-      "on": true
-     }
-    ]
-   },
-   {
-    "label": "Sides",
-    "g": "sides",
-    "choices": [
-     {
-      "n": "Single",
-      "m": 1,
-      "on": true
-     },
-     {
-      "n": "Double",
-      "m": 1.6
-     }
-    ]
-   },
-   {
-    "label": "Quantity",
-    "g": "qty",
-    "choices": [
-     {
-      "n": "1",
-      "b": 67,
-      "on": true
-     },
-     {
-      "n": "5",
-      "b": 273
-     },
-     {
-      "n": "10",
-      "b": 458
-     },
-     {
-      "n": "20",
-      "b": 905
-     }
-    ]
-   }
-  ],
   "specs": [
    "Bleed: 10mm all sides",
    "Colour: CMYK, 150dpi at full size",
@@ -1118,14 +763,51 @@
   "img": "assets/img/corflute-signs.jpg",
   "suppliers": [
    "Easy Signs"
-  ]
+  ],
+  "live": {
+   "axes": [
+    [
+     "size",
+     "Size",
+     [
+      "600x450mm",
+      "600x900mm",
+      "900x600mm",
+      "900x1200mm",
+      "1200x900mm"
+     ]
+    ],
+    [
+     "thickness",
+     "Thickness",
+     [
+      "3mm",
+      "5mm"
+     ]
+    ],
+    [
+     "sides",
+     "Sides",
+     [
+      "Single",
+      "Double"
+     ]
+    ]
+   ],
+   "default": {
+    "size": "900x600mm",
+    "thickness": "5mm",
+    "sides": "Single"
+   },
+   "qty": 1
+  }
  },
  {
   "slug": "a-frames",
   "name": "A-Frames",
   "cat": "signage",
   "sub": "Signs & Stickers",
-  "icon": "\ud83c\udd70\ufe0f",
+  "icon": "🅰️",
   "desc": "Metal A-frames with replaceable corflute or ACM inserts. Footpath workhorses.",
   "seo": "A-Frame Signs Australia",
   "portal": false,
@@ -1159,7 +841,7 @@
   "name": "Aluminium Composite Signs",
   "cat": "signage",
   "sub": "Signs & Stickers",
-  "icon": "\ud83d\udd29",
+  "icon": "🔩",
   "desc": "Premium rigid ACM signage that stays flat and lasts years outdoors.",
   "seo": "Aluminium Composite Signs Australia",
   "portal": false,
@@ -1191,7 +873,7 @@
   "name": "Safety Signs",
   "cat": "signage",
   "sub": "Signs & Stickers",
-  "icon": "\u26a0\ufe0f",
+  "icon": "⚠️",
   "desc": "Compliant site and workplace signage to AS 1319, stock or custom.",
   "seo": "Safety Signs Australia",
   "portal": false,
@@ -1219,75 +901,12 @@
   "name": "Posters",
   "cat": "signage",
   "sub": "Signs & Stickers",
-  "icon": "\ud83d\uddbc\ufe0f",
+  "icon": "🖼️",
   "desc": "Offset and wide format posters, A2 to billboard scale.",
   "seo": "Poster Printing Sunshine Coast",
-  "from": 45,
+  "from": 117,
   "portal": true,
   "template": "posters",
-  "opts": [
-   {
-    "label": "Size",
-    "g": "size",
-    "choices": [
-     {
-      "n": "A2",
-      "m": 1,
-      "on": true
-     },
-     {
-      "n": "A1",
-      "m": 1.6
-     },
-     {
-      "n": "A0",
-      "m": 2.5
-     }
-    ]
-   },
-   {
-    "label": "Stock",
-    "g": "stock",
-    "choices": [
-     {
-      "n": "170gsm Satin",
-      "m": 1,
-      "on": true
-     },
-     {
-      "n": "200gsm Gloss",
-      "m": 1.15
-     },
-     {
-      "n": "Synthetic (waterproof)",
-      "m": 1.8
-     }
-    ]
-   },
-   {
-    "label": "Quantity",
-    "g": "qty",
-    "choices": [
-     {
-      "n": "1",
-      "b": 45,
-      "on": true
-     },
-     {
-      "n": "5",
-      "b": 140
-     },
-     {
-      "n": "10",
-      "b": 230
-     },
-     {
-      "n": "25",
-      "b": 480
-     }
-    ]
-   }
-  ],
   "specs": [
    "Bleed: 5mm",
    "CMYK, 150dpi at full size"
@@ -1309,14 +928,44 @@
    "Easy Signs",
    "LEP"
   ],
-  "imgReal": true
+  "imgReal": true,
+  "live": {
+   "axes": [
+    [
+     "size",
+     "Size",
+     [
+      "A3",
+      "A2",
+      "A1",
+      "A0"
+     ]
+    ],
+    [
+     "stock",
+     "Stock",
+     [
+      "200gsm Poster Paper",
+      "150gsm Gloss",
+      "170gsm Gloss",
+      "170gsm Matt",
+      "250gsm Gloss"
+     ]
+    ]
+   ],
+   "default": {
+    "size": "A2",
+    "stock": "200gsm Poster Paper"
+   },
+   "qty": 10
+  }
  },
  {
   "slug": "stickers",
   "name": "Stickers & Labels",
   "cat": "signage",
   "sub": "Signs & Stickers",
-  "icon": "\ud83c\udff7\ufe0f",
+  "icon": "🏷️",
   "desc": "Die-cut shapes, rolls and sheets. Indoor, outdoor and machine-apply.",
   "seo": "Sticker Printing Australia",
   "portal": true,
@@ -1345,7 +994,7 @@
   "name": "Vehicle Magnets",
   "cat": "signage",
   "sub": "Signs & Stickers",
-  "icon": "\ud83e\uddf2",
+  "icon": "🧲",
   "desc": "Turn the ute into a billboard. Heavy-duty magnetic material, rounded corners.",
   "seo": "Vehicle Magnet Printing Australia",
   "portal": false,
@@ -1377,76 +1026,13 @@
   "name": "Pull Up Banners",
   "cat": "signage",
   "sub": "Banners & Flags",
-  "icon": "\ud83d\udea9",
+  "icon": "🚩",
   "badge": "Best seller",
   "desc": "Economy to premium bases with vivid print. Includes padded carry bag.",
   "seo": "Pull Up Banners Sunshine Coast",
-  "from": 208,
+  "from": 126,
   "portal": false,
   "template": "pullup-easysigns",
-  "opts": [
-   {
-    "label": "Base",
-    "g": "stock",
-    "choices": [
-     {
-      "n": "Economy",
-      "m": 0.75
-     },
-     {
-      "n": "Premium",
-      "m": 1,
-      "on": true
-     },
-     {
-      "n": "Double sided",
-      "m": 1.7
-     }
-    ]
-   },
-   {
-    "label": "Size",
-    "g": "size",
-    "choices": [
-     {
-      "n": "850x2000mm",
-      "m": 1,
-      "on": true
-     },
-     {
-      "n": "1200x2000mm",
-      "m": 1.35
-     },
-     {
-      "n": "1500x2000mm",
-      "m": 1.6
-     }
-    ]
-   },
-   {
-    "label": "Quantity",
-    "g": "qty",
-    "choices": [
-     {
-      "n": "1",
-      "b": 208,
-      "on": true
-     },
-     {
-      "n": "2",
-      "b": 404
-     },
-     {
-      "n": "5",
-      "b": 915
-     },
-     {
-      "n": "10",
-      "b": 1804
-     }
-    ]
-   }
-  ],
   "specs": [
    "Bleed: none, but keep text 100mm from bottom",
    "CMYK, 150dpi at full size",
@@ -1471,14 +1057,35 @@
   "suppliers": [
    "CMYKhub",
    "Easy Signs"
-  ]
+  ],
+  "live": {
+   "axes": [
+    [
+     "model",
+     "Model",
+     [
+      "Compact 600mm",
+      "Standard 850mm",
+      "Premium 850mm (black base)",
+      "Double sided 850mm",
+      "Wide 1200mm",
+      "Extra wide 1800mm",
+      "Giant 2400mm"
+     ]
+    ]
+   ],
+   "default": {
+    "model": "Standard 850mm"
+   },
+   "qty": 1
+  }
  },
  {
   "slug": "teardrop-flags",
   "name": "Teardrop Flags",
   "cat": "signage",
   "sub": "Banners & Flags",
-  "icon": "\ud83c\udf8f",
+  "icon": "🎏",
   "desc": "Single or double sided knitted polyester with spike, cross or water bases.",
   "seo": "Teardrop Flags Australia",
   "portal": false,
@@ -1510,7 +1117,7 @@
   "name": "Outdoor Vinyl Banners",
   "cat": "signage",
   "sub": "Banners & Flags",
-  "icon": "\ud83c\udf2c\ufe0f",
+  "icon": "🌬️",
   "desc": "Hemmed and eyeletted heavy-duty vinyl, any size, built for weather.",
   "seo": "Vinyl Banner Printing Australia",
   "portal": false,
@@ -1544,7 +1151,7 @@
   "name": "Fence Mesh Banners",
   "cat": "signage",
   "sub": "Banners & Flags",
-  "icon": "\ud83d\udd78\ufe0f",
+  "icon": "🕸️",
   "desc": "Construction site wraps that let wind through. Builders' favourite billboard.",
   "seo": "Fence Mesh Printing Australia",
   "portal": false,
@@ -1577,7 +1184,7 @@
   "name": "Media Walls",
   "cat": "signage",
   "sub": "Events & Display",
-  "icon": "\ud83d\uddbc\ufe0f",
+  "icon": "🖼️",
   "desc": "Straight or curved backdrops for events, launches and step-and-repeats.",
   "seo": "Media Walls Australia",
   "portal": false,
@@ -1609,7 +1216,7 @@
   "name": "Marquees",
   "cat": "signage",
   "sub": "Events & Display",
-  "icon": "\u26fa",
+  "icon": "⛺",
   "desc": "Printed canopies, walls and flags for markets and events. 2.4m to 6m.",
   "seo": "Printed Marquees Australia",
   "portal": false,
@@ -1641,7 +1248,7 @@
   "name": "Standees & Cut Outs",
   "cat": "signage",
   "sub": "Events & Display",
-  "icon": "\ud83e\uddcd",
+  "icon": "🧍",
   "desc": "Life-size (and larger) cardboard and corflute cut-outs with strut backs.",
   "seo": "Standee Printing Australia",
   "portal": false,
@@ -1674,7 +1281,7 @@
   "name": "Printed Tablecloths",
   "cat": "signage",
   "sub": "Events & Display",
-  "icon": "\ud83e\ude91",
+  "icon": "🪑",
   "desc": "Fitted or throw-style, full colour dye-sublimation. Machine washable.",
   "seo": "Printed Tablecloths Australia",
   "portal": false,
@@ -1706,7 +1313,7 @@
   "name": "Exhibition Displays",
   "cat": "signage",
   "sub": "Events & Display",
-  "icon": "\ud83c\udfaa",
+  "icon": "🎪",
   "desc": "Complete expo kits: walls, counters, lighting and shipping cases.",
   "seo": "Exhibition Display Systems Australia",
   "portal": false,
@@ -1738,7 +1345,7 @@
   "name": "Acoustic Panels",
   "cat": "signage",
   "sub": "Signs & Stickers",
-  "desc": "Acoustic Panels produced through our Easy Signs trade network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
+  "desc": "Acoustic Panels produced through our trade production network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
   "seo": "Acoustic Panels Sunshine Coast | Aura Print & Promo",
   "from": 182,
   "quote": true,
@@ -1747,7 +1354,7 @@
   ],
   "img": "https://www.easysigns.com.au/uploads/content/products/gallery/acoustic-panels.jpg",
   "specs": [
-   "Supplied by: Easy Signs",
+   "Produced in our trade network.",
    "Custom sizes and finishes available",
    "Print-ready PDF preferred, we check every file"
   ],
@@ -1769,7 +1376,7 @@
   "name": "Acrylic Reception Signs",
   "cat": "signage",
   "sub": "Signs & Stickers",
-  "desc": "Acrylic Reception Signs produced through our Easy Signs trade network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
+  "desc": "Acrylic Reception Signs produced through our trade production network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
   "seo": "Acrylic Reception Signs Sunshine Coast | Aura Print & Promo",
   "from": 364,
   "quote": true,
@@ -1778,7 +1385,7 @@
   ],
   "img": "https://www.easysigns.com.au/uploads/content/products/gallery/acrylic-reception-panel-signs.jpg",
   "specs": [
-   "Supplied by: Easy Signs",
+   "Produced in our trade network.",
    "Custom sizes and finishes available",
    "Print-ready PDF preferred, we check every file"
   ],
@@ -1800,7 +1407,7 @@
   "name": "Acrylic Signs",
   "cat": "signage",
   "sub": "Signs & Stickers",
-  "desc": "Acrylic Signs produced through our Easy Signs trade network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
+  "desc": "Acrylic Signs produced through our trade production network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
   "seo": "Acrylic Signs Sunshine Coast | Aura Print & Promo",
   "from": 131,
   "quote": true,
@@ -1809,7 +1416,7 @@
   ],
   "img": "https://www.easysigns.com.au/uploads/content/products/gallery/acrylic-perspex-panel-signs.jpg",
   "specs": [
-   "Supplied by: Easy Signs",
+   "Produced in our trade network.",
    "Custom sizes and finishes available",
    "Print-ready PDF preferred, we check every file"
   ],
@@ -1831,7 +1438,7 @@
   "name": "Arch Banners",
   "cat": "signage",
   "sub": "Banners & Flags",
-  "desc": "Arch Banners produced through our Easy Signs trade network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
+  "desc": "Arch Banners produced through our trade production network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
   "seo": "Arch Banners Sunshine Coast | Aura Print & Promo",
   "from": 405,
   "quote": true,
@@ -1840,7 +1447,7 @@
   ],
   "img": "https://www.easysigns.com.au/uploads/content/products/gallery/arch-banners.jpg",
   "specs": [
-   "Supplied by: Easy Signs",
+   "Produced in our trade network.",
    "Custom sizes and finishes available",
    "Print-ready PDF preferred, we check every file"
   ],
@@ -1862,7 +1469,7 @@
   "name": "Auction Paddles",
   "cat": "signage",
   "sub": "Events & Display",
-  "desc": "Auction Paddles produced through our Easy Signs trade network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
+  "desc": "Auction Paddles produced through our trade production network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
   "seo": "Auction Paddles Sunshine Coast | Aura Print & Promo",
   "from": 131,
   "quote": true,
@@ -1871,7 +1478,7 @@
   ],
   "img": "https://www.easysigns.com.au/uploads/content/products/gallery/auction-paddles.jpg",
   "specs": [
-   "Supplied by: Easy Signs",
+   "Produced in our trade network.",
    "Custom sizes and finishes available",
    "Print-ready PDF preferred, we check every file"
   ],
@@ -1893,7 +1500,7 @@
   "name": "Bollard Signs",
   "cat": "signage",
   "sub": "Signs & Stickers",
-  "desc": "Bollard Signs produced through our Easy Signs trade network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
+  "desc": "Bollard Signs produced through our trade production network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
   "seo": "Bollard Signs Sunshine Coast | Aura Print & Promo",
   "from": 131,
   "quote": true,
@@ -1902,7 +1509,7 @@
   ],
   "img": "https://www.easysigns.com.au/uploads/content/products/gallery/bollard-signs.jpg",
   "specs": [
-   "Supplied by: Easy Signs",
+   "Produced in our trade network.",
    "Custom sizes and finishes available",
    "Print-ready PDF preferred, we check every file"
   ],
@@ -1924,7 +1531,7 @@
   "name": "Bow Banners",
   "cat": "signage",
   "sub": "Banners & Flags",
-  "desc": "Bow Banners produced through our Easy Signs trade network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
+  "desc": "Bow Banners produced through our trade production network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
   "seo": "Bow Banners Sunshine Coast | Aura Print & Promo",
   "from": 161,
   "quote": true,
@@ -1933,7 +1540,7 @@
   ],
   "img": "https://www.easysigns.com.au/uploads/content/products/gallery/bowbanner-f-shape-flag.jpg",
   "specs": [
-   "Supplied by: Easy Signs",
+   "Produced in our trade network.",
    "Custom sizes and finishes available",
    "Print-ready PDF preferred, we check every file"
   ],
@@ -1955,7 +1562,7 @@
   "name": "Bumper Stickers",
   "cat": "signage",
   "sub": "Signs & Stickers",
-  "desc": "Bumper Stickers produced through our Easy Signs trade network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
+  "desc": "Bumper Stickers produced through our trade production network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
   "seo": "Bumper Stickers Sunshine Coast | Aura Print & Promo",
   "from": 182,
   "quote": true,
@@ -1964,7 +1571,7 @@
   ],
   "img": "https://www.easysigns.com.au/uploads/content/products/gallery/bumper-stickers.jpg",
   "specs": [
-   "Supplied by: Easy Signs",
+   "Produced in our trade network.",
    "Custom sizes and finishes available",
    "Print-ready PDF preferred, we check every file"
   ],
@@ -1986,7 +1593,7 @@
   "name": "Cardboard Signs",
   "cat": "signage",
   "sub": "Signs & Stickers",
-  "desc": "Cardboard Signs produced through our Easy Signs trade network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
+  "desc": "Cardboard Signs produced through our trade production network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
   "seo": "Cardboard Signs Sunshine Coast | Aura Print & Promo",
   "from": 182,
   "quote": true,
@@ -1995,7 +1602,7 @@
   ],
   "img": "https://www.easysigns.com.au/uploads/content/products/gallery/cardboard-signs.jpg",
   "specs": [
-   "Supplied by: Easy Signs",
+   "Produced in our trade network.",
    "Custom sizes and finishes available",
    "Print-ready PDF preferred, we check every file"
   ],
@@ -2017,7 +1624,7 @@
   "name": "Collapsible SEG Lightbox Display",
   "cat": "signage",
   "sub": "Events & Display",
-  "desc": "Collapsible SEG Lightbox Display produced through our Easy Signs trade network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
+  "desc": "Collapsible SEG Lightbox Display produced through our trade production network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
   "seo": "Collapsible SEG Lightbox Display Sunshine Coast | Aura Print & Promo",
   "from": 148,
   "quote": true,
@@ -2026,7 +1633,7 @@
   ],
   "img": "https://www.easysigns.com.au/uploads/content/products/gallery/seg-lightbox-display.jpg",
   "specs": [
-   "Supplied by: Easy Signs",
+   "Produced in our trade network.",
    "Custom sizes and finishes available",
    "Print-ready PDF preferred, we check every file"
   ],
@@ -2048,7 +1655,7 @@
   "name": "Construction Signs",
   "cat": "signage",
   "sub": "Signs & Stickers",
-  "desc": "Construction Signs produced through our Easy Signs trade network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
+  "desc": "Construction Signs produced through our trade production network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
   "seo": "Construction Signs Sunshine Coast | Aura Print & Promo",
   "from": 182,
   "quote": true,
@@ -2057,7 +1664,7 @@
   ],
   "img": "https://www.easysigns.com.au/uploads/content/products/gallery/construction-signs.jpg",
   "specs": [
-   "Supplied by: Easy Signs",
+   "Produced in our trade network.",
    "Custom sizes and finishes available",
    "Print-ready PDF preferred, we check every file"
   ],
@@ -2079,7 +1686,7 @@
   "name": "Crowd Control Barriers",
   "cat": "signage",
   "sub": "Events & Display",
-  "desc": "Crowd Control Barriers produced through our Easy Signs trade network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
+  "desc": "Crowd Control Barriers produced through our trade production network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
   "seo": "Crowd Control Barriers Sunshine Coast | Aura Print & Promo",
   "from": 104,
   "quote": true,
@@ -2088,7 +1695,7 @@
   ],
   "img": "https://www.easysigns.com.au/uploads/content/products/gallery/crowd-control-barriers.jpg",
   "specs": [
-   "Supplied by: Easy Signs",
+   "Produced in our trade network.",
    "Custom sizes and finishes available",
    "Print-ready PDF preferred, we check every file"
   ],
@@ -2110,7 +1717,7 @@
   "name": "Custom Flat Sheet",
   "cat": "print",
   "sub": "Marketing Material",
-  "desc": "Custom Flat Sheet produced through our CMYKhub trade network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
+  "desc": "Custom Flat Sheet produced through our our trade network trade network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
   "seo": "Custom Flat Sheet Sunshine Coast | Aura Print & Promo",
   "from": 54,
   "quote": true,
@@ -2120,7 +1727,7 @@
   "img": "assets/img/brochures.jpg",
   "imgTodo": true,
   "specs": [
-   "Supplied by: CMYKhub",
+   "Produced in our trade network.",
    "Custom sizes and finishes available",
    "Print-ready PDF preferred, we check every file"
   ],
@@ -2141,7 +1748,7 @@
   "name": "Custom Label Rolls",
   "cat": "signage",
   "sub": "Signs & Stickers",
-  "desc": "Custom Label Rolls produced through our Easy Signs trade network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
+  "desc": "Custom Label Rolls produced through our trade production network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
   "seo": "Custom Label Rolls Sunshine Coast | Aura Print & Promo",
   "from": 218,
   "quote": true,
@@ -2150,7 +1757,7 @@
   ],
   "img": "https://www.easysigns.com.au/uploads/content/products/gallery/custom-label-rolls.jpg",
   "specs": [
-   "Supplied by: Easy Signs",
+   "Produced in our trade network.",
    "Custom sizes and finishes available",
    "Print-ready PDF preferred, we check every file"
   ],
@@ -2172,7 +1779,7 @@
   "name": "Custom Printed Coasters",
   "cat": "print",
   "sub": "Cards & Stationery",
-  "desc": "Custom Printed Coasters produced through our Easy Signs trade network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
+  "desc": "Custom Printed Coasters produced through our trade production network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
   "seo": "Custom Printed Coasters Sunshine Coast | Aura Print & Promo",
   "from": 80,
   "quote": true,
@@ -2181,7 +1788,7 @@
   ],
   "img": "https://www.easysigns.com.au/uploads/content/products/gallery/custom_coasters.jpg",
   "specs": [
-   "Supplied by: Easy Signs",
+   "Produced in our trade network.",
    "Custom sizes and finishes available",
    "Print-ready PDF preferred, we check every file"
   ],
@@ -2203,7 +1810,7 @@
   "name": "Custom Printed Flat Mailing Boxes",
   "cat": "print",
   "sub": "Marketing Material",
-  "desc": "Custom Printed Flat Mailing Boxes produced through our Easy Signs trade network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
+  "desc": "Custom Printed Flat Mailing Boxes produced through our trade production network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
   "seo": "Custom Printed Flat Mailing Boxes Sunshine Coast | Aura Print & Promo",
   "from": 249,
   "quote": true,
@@ -2212,7 +1819,7 @@
   ],
   "img": "https://www.easysigns.com.au/uploads/content/products/gallery/custom-printed-flat-mailing-boxes.jpg",
   "specs": [
-   "Supplied by: Easy Signs",
+   "Produced in our trade network.",
    "Custom sizes and finishes available",
    "Print-ready PDF preferred, we check every file"
   ],
@@ -2234,7 +1841,7 @@
   "name": "Custom Stickers",
   "cat": "signage",
   "sub": "Signs & Stickers",
-  "desc": "Custom Stickers produced through our Easy Signs trade network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
+  "desc": "Custom Stickers produced through our trade production network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
   "seo": "Custom Stickers Sunshine Coast | Aura Print & Promo",
   "from": 182,
   "quote": true,
@@ -2243,7 +1850,7 @@
   ],
   "img": "https://www.easysigns.com.au/uploads/content/products/gallery/custom-printed-stickers.jpg",
   "specs": [
-   "Supplied by: Easy Signs",
+   "Produced in our trade network.",
    "Custom sizes and finishes available",
    "Print-ready PDF preferred, we check every file"
   ],
@@ -2265,7 +1872,7 @@
   "name": "Deck Chairs",
   "cat": "signage",
   "sub": "Events & Display",
-  "desc": "Deck Chairs produced through our Easy Signs trade network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
+  "desc": "Deck Chairs produced through our trade production network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
   "seo": "Deck Chairs Sunshine Coast | Aura Print & Promo",
   "from": 131,
   "quote": true,
@@ -2274,7 +1881,7 @@
   ],
   "img": "https://www.easysigns.com.au/uploads/content/products/gallery/deck-chairs.jpg",
   "specs": [
-   "Supplied by: Easy Signs",
+   "Produced in our trade network.",
    "Custom sizes and finishes available",
    "Print-ready PDF preferred, we check every file"
   ],
@@ -2296,7 +1903,7 @@
   "name": "Director Chairs",
   "cat": "signage",
   "sub": "Events & Display",
-  "desc": "Director Chairs produced through our Easy Signs trade network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
+  "desc": "Director Chairs produced through our trade production network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
   "seo": "Director Chairs Sunshine Coast | Aura Print & Promo",
   "from": 65,
   "quote": true,
@@ -2305,7 +1912,7 @@
   ],
   "img": "https://www.easysigns.com.au/uploads/content/products/gallery/director-chairs.jpg",
   "specs": [
-   "Supplied by: Easy Signs",
+   "Produced in our trade network.",
    "Custom sizes and finishes available",
    "Print-ready PDF preferred, we check every file"
   ],
@@ -2327,7 +1934,7 @@
   "name": "DTF Gang Sheets",
   "cat": "print",
   "sub": "Marketing Material",
-  "desc": "DTF Gang Sheets produced through our CMYKhub trade network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
+  "desc": "DTF Gang Sheets produced through our our trade network trade network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
   "seo": "DTF Gang Sheets Sunshine Coast | Aura Print & Promo",
   "from": 57,
   "quote": true,
@@ -2337,7 +1944,7 @@
   "img": "assets/img/brochures.jpg",
   "imgTodo": true,
   "specs": [
-   "Supplied by: CMYKhub",
+   "Produced in our trade network.",
    "Custom sizes and finishes available",
    "Print-ready PDF preferred, we check every file"
   ],
@@ -2358,7 +1965,7 @@
   "name": "Dump Bins",
   "cat": "signage",
   "sub": "Events & Display",
-  "desc": "Dump Bins produced through our Easy Signs trade network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
+  "desc": "Dump Bins produced through our trade production network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
   "seo": "Dump Bins Sunshine Coast | Aura Print & Promo",
   "from": 131,
   "quote": true,
@@ -2367,7 +1974,7 @@
   ],
   "img": "https://www.easysigns.com.au/uploads/content/products/gallery/dump-bin.jpg",
   "specs": [
-   "Supplied by: Easy Signs",
+   "Produced in our trade network.",
    "Custom sizes and finishes available",
    "Print-ready PDF preferred, we check every file"
   ],
@@ -2389,7 +1996,7 @@
   "name": "Electrostatic Stickers",
   "cat": "signage",
   "sub": "Signs & Stickers",
-  "desc": "Electrostatic Stickers produced through our CMYKhub trade network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
+  "desc": "Electrostatic Stickers produced through our our trade network trade network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
   "seo": "Electrostatic Stickers Sunshine Coast | Aura Print & Promo",
   "from": 105,
   "quote": true,
@@ -2399,7 +2006,7 @@
   "img": "assets/img/stickers.jpg",
   "imgTodo": true,
   "specs": [
-   "Supplied by: CMYKhub",
+   "Produced in our trade network.",
    "Custom sizes and finishes available",
    "Print-ready PDF preferred, we check every file"
   ],
@@ -2420,7 +2027,7 @@
   "name": "End Sign Flags",
   "cat": "signage",
   "sub": "Banners & Flags",
-  "desc": "End Sign Flags produced through our Easy Signs trade network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
+  "desc": "End Sign Flags produced through our trade production network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
   "seo": "End Sign Flags Sunshine Coast | Aura Print & Promo",
   "from": 26,
   "quote": true,
@@ -2429,7 +2036,7 @@
   ],
   "img": "https://www.easysigns.com.au/uploads/content/products/gallery/end-sign-flags.jpg",
   "specs": [
-   "Supplied by: Easy Signs",
+   "Produced in our trade network.",
    "Custom sizes and finishes available",
    "Print-ready PDF preferred, we check every file"
   ],
@@ -2451,7 +2058,7 @@
   "name": "Fabric Display Cubes",
   "cat": "signage",
   "sub": "Events & Display",
-  "desc": "Fabric Display Cubes produced through our Easy Signs trade network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
+  "desc": "Fabric Display Cubes produced through our trade production network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
   "seo": "Fabric Display Cubes Sunshine Coast | Aura Print & Promo",
   "from": 120,
   "quote": true,
@@ -2460,7 +2067,7 @@
   ],
   "img": "https://www.easysigns.com.au/uploads/content/products/gallery/fabric-display-cubes.jpg",
   "specs": [
-   "Supplied by: Easy Signs",
+   "Produced in our trade network.",
    "Custom sizes and finishes available",
    "Print-ready PDF preferred, we check every file"
   ],
@@ -2482,7 +2089,7 @@
   "name": "Floor Stickers",
   "cat": "signage",
   "sub": "Signs & Stickers",
-  "desc": "Floor Stickers produced through our Easy Signs trade network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
+  "desc": "Floor Stickers produced through our trade production network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
   "seo": "Floor Stickers Sunshine Coast | Aura Print & Promo",
   "from": 182,
   "quote": true,
@@ -2491,7 +2098,7 @@
   ],
   "img": "https://www.easysigns.com.au/uploads/content/products/gallery/floor-graphics.jpg",
   "specs": [
-   "Supplied by: Easy Signs",
+   "Produced in our trade network.",
    "Custom sizes and finishes available",
    "Print-ready PDF preferred, we check every file"
   ],
@@ -2513,7 +2120,7 @@
   "name": "Foam PVC Signs",
   "cat": "signage",
   "sub": "Signs & Stickers",
-  "desc": "Foam PVC Signs produced through our Easy Signs trade network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
+  "desc": "Foam PVC Signs produced through our trade production network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
   "seo": "Foam PVC Signs Sunshine Coast | Aura Print & Promo",
   "from": 182,
   "quote": true,
@@ -2522,7 +2129,7 @@
   ],
   "img": "https://www.easysigns.com.au/uploads/content/products/gallery/foam-pvc-signs.jpg",
   "specs": [
-   "Supplied by: Easy Signs",
+   "Produced in our trade network.",
    "Custom sizes and finishes available",
    "Print-ready PDF preferred, we check every file"
   ],
@@ -2544,7 +2151,7 @@
   "name": "Golf Score Cards",
   "cat": "print",
   "sub": "Cards & Stationery",
-  "desc": "Golf Score Cards produced through our LEP trade network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
+  "desc": "Golf Score Cards produced through our our trade network trade network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
   "seo": "Golf Score Cards Sunshine Coast | Aura Print & Promo",
   "from": 1527,
   "quote": true,
@@ -2554,7 +2161,7 @@
   "img": "assets/img/business-cards.jpg",
   "imgTodo": true,
   "specs": [
-   "Supplied by: LEP",
+   "Produced in our trade network.",
    "Custom sizes and finishes available",
    "Print-ready PDF preferred, we check every file"
   ],
@@ -2575,7 +2182,7 @@
   "name": "Ground Spikes & Sign Holders",
   "cat": "signage",
   "sub": "Signs & Stickers",
-  "desc": "Ground Spikes & Sign Holders produced through our Easy Signs trade network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
+  "desc": "Ground Spikes & Sign Holders produced through our trade production network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
   "seo": "Ground Spikes & Sign Holders Sunshine Coast | Aura Print & Promo",
   "from": 253,
   "quote": true,
@@ -2584,7 +2191,7 @@
   ],
   "img": "https://www.easysigns.com.au/uploads/content/products/gallery/ground-spikes-signholders.jpg",
   "specs": [
-   "Supplied by: Easy Signs",
+   "Produced in our trade network.",
    "Custom sizes and finishes available",
    "Print-ready PDF preferred, we check every file"
   ],
@@ -2606,7 +2213,7 @@
   "name": "Invitations",
   "cat": "print",
   "sub": "Marketing Material",
-  "desc": "Invitations produced through our Easy Signs trade network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
+  "desc": "Invitations produced through our trade production network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
   "seo": "Invitations Sunshine Coast | Aura Print & Promo",
   "from": 52,
   "quote": true,
@@ -2615,7 +2222,7 @@
   ],
   "img": "https://www.easysigns.com.au/uploads/content/products/gallery/invitations.jpg",
   "specs": [
-   "Supplied by: Easy Signs",
+   "Produced in our trade network.",
    "Custom sizes and finishes available",
    "Print-ready PDF preferred, we check every file"
   ],
@@ -2637,7 +2244,7 @@
   "name": "Large Format Stickers (SAV)",
   "cat": "signage",
   "sub": "Signs & Stickers",
-  "desc": "Large Format Stickers (SAV) produced through our Easy Signs trade network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
+  "desc": "Large Format Stickers (SAV) produced through our trade production network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
   "seo": "Large Format Stickers (SAV) Sunshine Coast | Aura Print & Promo",
   "from": 182,
   "quote": true,
@@ -2646,7 +2253,7 @@
   ],
   "img": "https://www.easysigns.com.au/uploads/content/products/gallery/large-format-stickers-sav.jpg",
   "specs": [
-   "Supplied by: Easy Signs",
+   "Produced in our trade network.",
    "Custom sizes and finishes available",
    "Print-ready PDF preferred, we check every file"
   ],
@@ -2668,7 +2275,7 @@
   "name": "Modular SEG Lightbox Display",
   "cat": "signage",
   "sub": "Events & Display",
-  "desc": "Modular SEG Lightbox Display produced through our Easy Signs trade network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
+  "desc": "Modular SEG Lightbox Display produced through our trade production network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
   "seo": "Modular SEG Lightbox Display Sunshine Coast | Aura Print & Promo",
   "from": 1322,
   "quote": true,
@@ -2677,7 +2284,7 @@
   ],
   "img": "https://www.easysigns.com.au/uploads/content/products/gallery/modular-seg-lightbox-display.jpg",
   "specs": [
-   "Supplied by: Easy Signs",
+   "Produced in our trade network.",
    "Custom sizes and finishes available",
    "Print-ready PDF preferred, we check every file"
   ],
@@ -2699,7 +2306,7 @@
   "name": "Novelty Cheques",
   "cat": "signage",
   "sub": "Events & Display",
-  "desc": "Novelty Cheques produced through our Easy Signs trade network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
+  "desc": "Novelty Cheques produced through our trade production network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
   "seo": "Novelty Cheques Sunshine Coast | Aura Print & Promo",
   "from": 131,
   "quote": true,
@@ -2708,7 +2315,7 @@
   ],
   "img": "https://www.easysigns.com.au/uploads/content/products/gallery/novelty-cheques.jpg",
   "specs": [
-   "Supplied by: Easy Signs",
+   "Produced in our trade network.",
    "Custom sizes and finishes available",
    "Print-ready PDF preferred, we check every file"
   ],
@@ -2730,7 +2337,7 @@
   "name": "One Way Window Films",
   "cat": "signage",
   "sub": "Signs & Stickers",
-  "desc": "One Way Window Films produced through our Easy Signs trade network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
+  "desc": "One Way Window Films produced through our trade production network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
   "seo": "One Way Window Films Sunshine Coast | Aura Print & Promo",
   "from": 182,
   "quote": true,
@@ -2739,7 +2346,7 @@
   ],
   "img": "https://www.easysigns.com.au/uploads/content/products/gallery/one-way-vision-window-graphics.jpg",
   "specs": [
-   "Supplied by: Easy Signs",
+   "Produced in our trade network.",
    "Custom sizes and finishes available",
    "Print-ready PDF preferred, we check every file"
   ],
@@ -2761,7 +2368,7 @@
   "name": "Outdoor Custom Stickers",
   "cat": "signage",
   "sub": "Signs & Stickers",
-  "desc": "Outdoor Custom Stickers produced through our Easy Signs trade network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
+  "desc": "Outdoor Custom Stickers produced through our trade production network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
   "seo": "Outdoor Custom Stickers Sunshine Coast | Aura Print & Promo",
   "from": 182,
   "quote": true,
@@ -2770,7 +2377,7 @@
   ],
   "img": "https://www.easysigns.com.au/uploads/content/products/gallery/outdoor-custom-stickers.jpg",
   "specs": [
-   "Supplied by: Easy Signs",
+   "Produced in our trade network.",
    "Custom sizes and finishes available",
    "Print-ready PDF preferred, we check every file"
   ],
@@ -2792,7 +2399,7 @@
   "name": "Parking Signs",
   "cat": "signage",
   "sub": "Signs & Stickers",
-  "desc": "Parking Signs produced through our Easy Signs trade network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
+  "desc": "Parking Signs produced through our trade production network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
   "seo": "Parking Signs Sunshine Coast | Aura Print & Promo",
   "from": 73,
   "quote": true,
@@ -2801,7 +2408,7 @@
   ],
   "img": "https://www.easysigns.com.au/uploads/content/products/gallery/parking-signs.jpg",
   "specs": [
-   "Supplied by: Easy Signs",
+   "Produced in our trade network.",
    "Custom sizes and finishes available",
    "Print-ready PDF preferred, we check every file"
   ],
@@ -2823,7 +2430,7 @@
   "name": "Plastic Election Signs",
   "cat": "signage",
   "sub": "Signs & Stickers",
-  "desc": "Plastic Election Signs produced through our Easy Signs trade network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
+  "desc": "Plastic Election Signs produced through our trade production network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
   "seo": "Plastic Election Signs Sunshine Coast | Aura Print & Promo",
   "from": 182,
   "quote": true,
@@ -2832,7 +2439,7 @@
   ],
   "img": "https://www.easysigns.com.au/uploads/content/products/gallery/plastic-election-signs.jpg",
   "specs": [
-   "Supplied by: Easy Signs",
+   "Produced in our trade network.",
    "Custom sizes and finishes available",
    "Print-ready PDF preferred, we check every file"
   ],
@@ -2854,7 +2461,7 @@
   "name": "Rally Signs",
   "cat": "signage",
   "sub": "Signs & Stickers",
-  "desc": "Rally Signs produced through our Easy Signs trade network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
+  "desc": "Rally Signs produced through our trade production network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
   "seo": "Rally Signs Sunshine Coast | Aura Print & Promo",
   "from": 182,
   "quote": true,
@@ -2863,7 +2470,7 @@
   ],
   "img": "https://www.easysigns.com.au/uploads/content/products/gallery/rally-signs.jpg",
   "specs": [
-   "Supplied by: Easy Signs",
+   "Produced in our trade network.",
    "Custom sizes and finishes available",
    "Print-ready PDF preferred, we check every file"
   ],
@@ -2885,7 +2492,7 @@
   "name": "Rectangle Flags",
   "cat": "signage",
   "sub": "Banners & Flags",
-  "desc": "Rectangle Flags produced through our Easy Signs trade network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
+  "desc": "Rectangle Flags produced through our trade production network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
   "seo": "Rectangle Flags Sunshine Coast | Aura Print & Promo",
   "from": 170,
   "quote": true,
@@ -2894,7 +2501,7 @@
   ],
   "img": "https://www.easysigns.com.au/uploads/content/products/gallery/rectangle-flags.jpg",
   "specs": [
-   "Supplied by: Easy Signs",
+   "Produced in our trade network.",
    "Custom sizes and finishes available",
    "Print-ready PDF preferred, we check every file"
   ],
@@ -2916,7 +2523,7 @@
   "name": "Reflective Signs",
   "cat": "signage",
   "sub": "Signs & Stickers",
-  "desc": "Reflective Signs produced through our Easy Signs trade network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
+  "desc": "Reflective Signs produced through our trade production network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
   "seo": "Reflective Signs Sunshine Coast | Aura Print & Promo",
   "from": 182,
   "quote": true,
@@ -2925,7 +2532,7 @@
   ],
   "img": "https://www.easysigns.com.au/uploads/content/products/gallery/reflective-signs.jpg",
   "specs": [
-   "Supplied by: Easy Signs",
+   "Produced in our trade network.",
    "Custom sizes and finishes available",
    "Print-ready PDF preferred, we check every file"
   ],
@@ -2947,7 +2554,7 @@
   "name": "Replacement Flags",
   "cat": "signage",
   "sub": "Banners & Flags",
-  "desc": "Replacement Flags produced through our Easy Signs trade network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
+  "desc": "Replacement Flags produced through our trade production network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
   "seo": "Replacement Flags Sunshine Coast | Aura Print & Promo",
   "from": 64,
   "quote": true,
@@ -2956,7 +2563,7 @@
   ],
   "img": "https://www.easysigns.com.au/uploads/content/products/gallery/replacement-flags.jpg",
   "specs": [
-   "Supplied by: Easy Signs",
+   "Produced in our trade network.",
    "Custom sizes and finishes available",
    "Print-ready PDF preferred, we check every file"
   ],
@@ -2978,7 +2585,7 @@
   "name": "Rigid Boards",
   "cat": "signage",
   "sub": "Signs & Stickers",
-  "desc": "Rigid Boards produced through our CMYKhub trade network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
+  "desc": "Rigid Boards produced through our our trade network trade network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
   "seo": "Rigid Boards Sunshine Coast | Aura Print & Promo",
   "from": 95,
   "quote": true,
@@ -2988,7 +2595,7 @@
   "img": "assets/img/corflute-signs.jpg",
   "imgTodo": true,
   "specs": [
-   "Supplied by: CMYKhub",
+   "Produced in our trade network.",
    "Custom sizes and finishes available",
    "Print-ready PDF preferred, we check every file"
   ],
@@ -3009,7 +2616,7 @@
   "name": "Roll Labels",
   "cat": "signage",
   "sub": "Signs & Stickers",
-  "desc": "Roll Labels produced through our CMYKhub trade network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
+  "desc": "Roll Labels produced through our our trade network trade network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
   "seo": "Roll Labels Sunshine Coast | Aura Print & Promo",
   "from": 181,
   "quote": true,
@@ -3019,7 +2626,7 @@
   "img": "assets/img/labels.jpg",
   "imgTodo": true,
   "specs": [
-   "Supplied by: CMYKhub",
+   "Produced in our trade network.",
    "Custom sizes and finishes available",
    "Print-ready PDF preferred, we check every file"
   ],
@@ -3040,7 +2647,7 @@
   "name": "Screenboard Signs",
   "cat": "signage",
   "sub": "Signs & Stickers",
-  "desc": "Screenboard Signs produced through our Easy Signs trade network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
+  "desc": "Screenboard Signs produced through our trade production network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
   "seo": "Screenboard Signs Sunshine Coast | Aura Print & Promo",
   "from": 131,
   "quote": true,
@@ -3049,7 +2656,7 @@
   ],
   "img": "https://www.easysigns.com.au/uploads/content/products/gallery/screenboard.jpg",
   "specs": [
-   "Supplied by: Easy Signs",
+   "Produced in our trade network.",
    "Custom sizes and finishes available",
    "Print-ready PDF preferred, we check every file"
   ],
@@ -3071,7 +2678,7 @@
   "name": "SEG Fabric",
   "cat": "signage",
   "sub": "Events & Display",
-  "desc": "SEG Fabric produced through our Easy Signs trade network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
+  "desc": "SEG Fabric produced through our trade production network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
   "seo": "SEG Fabric Sunshine Coast | Aura Print & Promo",
   "from": 131,
   "quote": true,
@@ -3080,7 +2687,7 @@
   ],
   "img": "https://www.easysigns.com.au/uploads/content/products/gallery/seg-fabric.jpg",
   "specs": [
-   "Supplied by: Easy Signs",
+   "Produced in our trade network.",
    "Custom sizes and finishes available",
    "Print-ready PDF preferred, we check every file"
   ],
@@ -3102,7 +2709,7 @@
   "name": "Selfie Frames",
   "cat": "signage",
   "sub": "Events & Display",
-  "desc": "Selfie Frames produced through our Easy Signs trade network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
+  "desc": "Selfie Frames produced through our trade production network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
   "seo": "Selfie Frames Sunshine Coast | Aura Print & Promo",
   "from": 131,
   "quote": true,
@@ -3111,7 +2718,7 @@
   ],
   "img": "https://www.easysigns.com.au/uploads/content/products/gallery/selfie-frames.jpg",
   "specs": [
-   "Supplied by: Easy Signs",
+   "Produced in our trade network.",
    "Custom sizes and finishes available",
    "Print-ready PDF preferred, we check every file"
   ],
@@ -3133,7 +2740,7 @@
   "name": "Stackable Cubes",
   "cat": "signage",
   "sub": "Events & Display",
-  "desc": "Stackable Cubes produced through our Easy Signs trade network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
+  "desc": "Stackable Cubes produced through our trade production network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
   "seo": "Stackable Cubes Sunshine Coast | Aura Print & Promo",
   "from": 131,
   "quote": true,
@@ -3142,7 +2749,7 @@
   ],
   "img": "https://www.easysigns.com.au/uploads/content/products/gallery/stackable-cubes.jpg",
   "specs": [
-   "Supplied by: Easy Signs",
+   "Produced in our trade network.",
    "Custom sizes and finishes available",
    "Print-ready PDF preferred, we check every file"
   ],
@@ -3164,7 +2771,7 @@
   "name": "Stationery Same Day",
   "cat": "print",
   "sub": "Cards & Stationery",
-  "desc": "Stationery Same Day produced through our LEP trade network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
+  "desc": "Stationery Same Day produced through our our trade network trade network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
   "seo": "Stationery Same Day Sunshine Coast | Aura Print & Promo",
   "from": 83,
   "quote": true,
@@ -3174,7 +2781,7 @@
   "img": "assets/img/brochures.jpg",
   "imgTodo": true,
   "specs": [
-   "Supplied by: LEP",
+   "Produced in our trade network.",
    "Custom sizes and finishes available",
    "Print-ready PDF preferred, we check every file"
   ],
@@ -3195,7 +2802,7 @@
   "name": "Vinyl Pole Banners",
   "cat": "signage",
   "sub": "Banners & Flags",
-  "desc": "Vinyl Pole Banners produced through our Easy Signs trade network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
+  "desc": "Vinyl Pole Banners produced through our trade production network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
   "seo": "Vinyl Pole Banners Sunshine Coast | Aura Print & Promo",
   "from": 175,
   "quote": true,
@@ -3204,7 +2811,7 @@
   ],
   "img": "https://www.easysigns.com.au/uploads/content/products/gallery/vinyl-pole-banner.jpg",
   "specs": [
-   "Supplied by: Easy Signs",
+   "Produced in our trade network.",
    "Custom sizes and finishes available",
    "Print-ready PDF preferred, we check every file"
   ],
@@ -3226,7 +2833,7 @@
   "name": "Vinyl Stickers",
   "cat": "signage",
   "sub": "Signs & Stickers",
-  "desc": "Vinyl Stickers produced through our CMYKhub trade network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
+  "desc": "Vinyl Stickers produced through our our trade network trade network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
   "seo": "Vinyl Stickers Sunshine Coast | Aura Print & Promo",
   "from": 102,
   "quote": true,
@@ -3236,7 +2843,7 @@
   "img": "assets/img/stickers.jpg",
   "imgTodo": true,
   "specs": [
-   "Supplied by: CMYKhub",
+   "Produced in our trade network.",
    "Custom sizes and finishes available",
    "Print-ready PDF preferred, we check every file"
   ],
@@ -3257,7 +2864,7 @@
   "name": "Wall Murals",
   "cat": "signage",
   "sub": "Events & Display",
-  "desc": "Wall Murals produced through our Easy Signs trade network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
+  "desc": "Wall Murals produced through our trade production network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
   "seo": "Wall Murals Sunshine Coast | Aura Print & Promo",
   "from": 182,
   "quote": true,
@@ -3266,7 +2873,7 @@
   ],
   "img": "https://www.easysigns.com.au/uploads/content/products/gallery/wall-murals.jpg",
   "specs": [
-   "Supplied by: Easy Signs",
+   "Produced in our trade network.",
    "Custom sizes and finishes available",
    "Print-ready PDF preferred, we check every file"
   ],
@@ -3288,7 +2895,7 @@
   "name": "Window Graphics",
   "cat": "signage",
   "sub": "Signs & Stickers",
-  "desc": "Window Graphics produced through our Easy Signs trade network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
+  "desc": "Window Graphics produced through our trade production network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
   "seo": "Window Graphics Sunshine Coast | Aura Print & Promo",
   "from": 131,
   "quote": true,
@@ -3297,7 +2904,7 @@
   ],
   "img": "https://www.easysigns.com.au/uploads/content/products/gallery/digitally-printed-window-graphics.jpg",
   "specs": [
-   "Supplied by: Easy Signs",
+   "Produced in our trade network.",
    "Custom sizes and finishes available",
    "Print-ready PDF preferred, we check every file"
   ],
@@ -3319,7 +2926,7 @@
   "name": "Wiro Magazines",
   "cat": "print",
   "sub": "Books & Booklets",
-  "desc": "Wiro Magazines produced through our LEP trade network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
+  "desc": "Wiro Magazines produced through our our trade network trade network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
   "seo": "Wiro Magazines Sunshine Coast | Aura Print & Promo",
   "from": 207,
   "quote": true,
@@ -3329,7 +2936,7 @@
   "img": "assets/img/brochures.jpg",
   "imgTodo": true,
   "specs": [
-   "Supplied by: LEP",
+   "Produced in our trade network.",
    "Custom sizes and finishes available",
    "Print-ready PDF preferred, we check every file"
   ],
@@ -3350,7 +2957,7 @@
   "name": "X Banners",
   "cat": "signage",
   "sub": "Banners & Flags",
-  "desc": "X Banners produced through our Easy Signs trade network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
+  "desc": "X Banners produced through our trade production network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
   "seo": "X Banners Sunshine Coast | Aura Print & Promo",
   "from": 57,
   "quote": true,
@@ -3359,7 +2966,7 @@
   ],
   "img": "https://www.easysigns.com.au/uploads/content/products/gallery/x-banner-stand.jpg",
   "specs": [
-   "Supplied by: Easy Signs",
+   "Produced in our trade network.",
    "Custom sizes and finishes available",
    "Print-ready PDF preferred, we check every file"
   ],

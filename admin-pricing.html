@@ -6,7 +6,7 @@
 <meta name="robots" content="noindex,nofollow">
 <title>Pricing Audit | Aura Print CRM</title>
 <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/aura.css">
+<link rel="stylesheet" href="assets/aura.css?v=20260710a">
 <style>
   body{background:#f6f3ee}
   .wrap2{max-width:1180px;margin:0 auto;padding:22px 16px}
@@ -28,10 +28,11 @@
   th{background:#faf7f2;font-size:10px;text-transform:uppercase;letter-spacing:.03em;color:#8a847d;position:sticky;top:0;cursor:pointer}
   tr:hover td{background:#fbf9f5}
   .sup{font-weight:800;font-size:10.5px;padding:1px 6px;border-radius:6px}
-  .s-LEP{background:#dbeafe;color:#1d4ed8}.s-CMYKHUB{background:#fce7f3;color:#be185d}
+  .s-a{background:#dbeafe;color:#1d4ed8}.s-b{background:#fce7f3;color:#be185d}.s-c{background:#dcfce7;color:#15803d}
   td.na{color:#d3ccc2}
   .err{color:#c0392b;font-size:13px;margin-top:10px}
 </style>
+<link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
 </head>
 <body>
 
@@ -48,28 +49,30 @@
 <div id="app" class="wrap2" style="display:none">
   <div class="head">
     <div><h1>Pricing Audit — Business Cards (full catalogue)</h1>
-      <div class="muted">Every LEP and CMYKhub option, all sizes. Costs ex GST. Toggle to see the sell price at 52% margin.</div></div>
+      <div class="muted">Full supplier cost catalogue (loads after sign-in). </div></div>
     <div><button id="signout" class="btn" style="padding:7px 12px;font-size:13px">Sign out</button></div>
   </div>
   <div class="controls">
-    <select id="fSup"><option value="">All suppliers</option><option>LEP</option><option>CMYKHUB</option></select>
+    <select id="fSup"><option value="">All suppliers</option></select>
     <select id="fSize"><option value="">All sizes</option></select>
     <select id="fSides"><option value="">1S &amp; 2S</option><option value="1S">Single</option><option value="2S">Double</option></select>
     <input id="fText" placeholder="filter stock / finish…" style="min-width:190px">
-    <span class="toggle"><button id="tCost" class="on">Cost</button><button id="tSell">Sell @52%</button></span>
+    <span class="toggle"><button id="tCost" class="on">Cost</button><button id="tSell">Sell</button></span>
     <span class="cnt" id="cnt"></span>
   </div>
   <div id="tableWrap"><p class="muted">Loading…</p></div>
-  <p class="muted" style="margin-top:12px">Sell = (cost + freight) ÷ 0.48 × 1.10 (52% margin, inc GST). Freight: LEP $9.90, CMYKhub $13.95. Blank = supplier doesn't offer that quantity.</p>
+  <p class="muted" style="margin-top:12px">Sell prices are computed from landed cost using the standard margin rule (details load after sign-in). </p>
 </div>
 
-<script src="assets/config.js?v=20260707a"></script>
+<script src="assets/config.js?v=20260710a"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://js.hcaptcha.com/1/api.js" async defer></script>
 <script>
 (function(){
   var CFG=window.AURA_CONFIG||{};
-  var FR={LEP:9.90,CMYKHUB:13.95}, MARGIN=0.52, GST=0.10;
+  /* Commercial constants (freight, margin) load from the staff-only
+     staff_config table AFTER sign-in - they never appear in page source. */
+  var FR=null, MARGIN=null, GST=0.10, SUPCLS={};
   var QK=['q100','q250','q500','q1000','q2500','q5000'], QL=['100','250','500','1000','2500','5000'];
   var loginEl=document.getElementById('login'), appEl=document.getElementById('app');
   if(!CFG.supabaseUrl){ loginEl.style.display='block'; document.getElementById('lErr').textContent='Database not configured.'; return; }
@@ -78,14 +81,23 @@
 
   function esc(s){return String(s==null?'':s).replace(/[&<>]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;'}[c];});}
   function money(c){ return '$'+(c/100).toFixed(2); }
-  function sell(costCents,sup){ var landed=costCents/100+(FR[sup]||9.90); return Math.round(landed/(1-MARGIN)*(1+GST)); }
+  function sell(costCents,sup){
+    if(!FR||MARGIN==null) return null;
+    var landed=costCents/100+(FR[sup]!=null?FR[sup]:0);
+    return Math.round(landed/(1-MARGIN)*(1+GST));
+  }
 
   async function load(){
+    var cfgQ=await sb.from('staff_config').select('value').eq('key','pricing').single();
+    if(!cfgQ.error&&cfgQ.data){ FR=cfgQ.data.value.freight||{}; MARGIN=cfgQ.data.value.margin; GST=cfgQ.data.value.gst||0.10; }
     var r=await sb.from('bc_catalogue').select('*');
     if(r.error){ document.getElementById('tableWrap').innerHTML='<div class="err">'+esc(r.error.message)+'</div>'; return; }
     data=r.data||[];
     var sizes=Array.from(new Set(data.map(function(x){return x.size;}))).sort();
     var sel=document.getElementById('fSize'); sizes.forEach(function(s){ var o=document.createElement('option'); o.textContent=s; sel.appendChild(o); });
+    var sups=Array.from(new Set(data.map(function(x){return x.supplier;}))).sort();
+    var supSel=document.getElementById('fSup');
+    sups.forEach(function(s,i){ SUPCLS[s]='s-'+'abc'[i%3]; var o=document.createElement('option'); o.textContent=s; supSel.appendChild(o); });
     render();
   }
 
@@ -115,9 +127,10 @@
       var cells=QK.map(function(k){
         var c=r[k];
         if(c==null) return '<td class="na">—</td>';
-        return '<td>'+(mode==='cost'?money(c):'$'+sell(c,r.supplier))+'</td>';
+        var s=sell(c,r.supplier);
+        return '<td>'+(mode==='cost'?money(c):(s==null?'—':'$'+s))+'</td>';
       }).join('');
-      return '<tr><td><span class="sup s-'+r.supplier+'">'+(r.supplier==='CMYKHUB'?'CMYK':'LEP')+'</span></td>'+
+      return '<tr><td><span class="sup '+(SUPCLS[r.supplier]||'s-a')+'">'+esc(String(r.supplier).slice(0,4))+'</span></td>'+
         '<td>'+esc(r.size)+'</td><td>'+esc(r.stock)+'</td><td>'+esc(r.finish)+'</td><td>'+esc(r.sides)+'</td>'+cells+'</tr>';
     }).join('');
     document.getElementById('tableWrap').innerHTML='<table><thead><tr>'+th+'</tr></thead><tbody>'+body+'</tbody></table>';
