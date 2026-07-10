@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en-AU">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex,nofollow">
+<title>Approve Your Proof | Aura Print &amp; Promo</title>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/aura.css?v=20260711a">
+<style>
+  body{background:#f6f3ee}
+  .wrap{max-width:860px;margin:0 auto;padding:28px 20px}
+  .brand{font-family:'Archivo Black',sans-serif;font-size:20px;margin-bottom:4px}
+  .brand span{color:#c026a3}
+  .muted{color:#8a847d;font-size:13.5px}
+  .card{background:#fff;border:1px solid #e8e2da;border-radius:16px;padding:26px;margin:18px 0}
+  .card h1{font-size:22px;margin:0 0 8px}
+  .card h2{font-size:17px;margin:0 0 10px}
+  label{display:block;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#666;margin-bottom:6px}
+  input[type=email],textarea{width:100%;padding:12px;border:2px solid #e8e2da;border-radius:10px;font-size:15px;font-family:inherit;box-sizing:border-box}
+  .btn-p{padding:12px 22px;border-radius:10px;font-weight:800;font-size:14.5px;border:none;cursor:pointer}
+  .btn-approve{background:#15803d;color:#fff}
+  .btn-decline{background:#fff;color:#b91c1c;border:2px solid #fca5a5}
+  .btn-magic{background:#c026a3;color:#fff;width:100%}
+  .err{color:#c0392b;font-size:13.5px;margin-top:10px}
+  .ok{color:#15803d;font-size:14px;font-weight:700}
+  .pill{display:inline-block;padding:3px 10px;border-radius:999px;font-size:11.5px;font-weight:700;background:#f0ece5;color:#6b6560}
+  .pill.p-approved{background:#dcfce7;color:#15803d}
+  .pill.p-declined{background:#fee2e2;color:#b91c1c}
+  .pdfbox{border:2px solid #e8e2da;border-radius:12px;overflow:hidden;margin:14px 0;background:#faf7f2}
+  .pdfbox iframe{width:100%;height:520px;border:none;display:block}
+  .bleed-note{display:flex;gap:14px;align-items:flex-start;background:#fdf2fa;border:1px solid #f5c9e8;border-radius:12px;padding:14px 16px;margin:14px 0;font-size:13.5px;color:#555}
+  .bleed-demo{flex:0 0 92px;height:64px;position:relative;background:#fff;border:2px dashed #e05fc0;border-radius:4px}
+  .bleed-demo::after{content:"";position:absolute;inset:8px;border:2px solid #1a1a1a;border-radius:2px}
+  .decide{display:flex;gap:12px;flex-wrap:wrap;margin-top:14px;align-items:center}
+  .declinebox{display:none;margin-top:12px}
+  .checklist{margin:10px 0 0;padding-left:18px;font-size:13.5px;color:#555}
+  .checklist li{margin:3px 0}
+  .itemhead{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+</style>
+<link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+</head>
+<body>
+<div class="wrap">
+  <div class="brand">AURA <span>PRINT</span> &amp; PROMO</div>
+  <div class="muted">Proof approval</div>
+
+  <!-- SIGN IN -->
+  <div id="signin" class="card" style="display:none;max-width:430px">
+    <h1>View your proof</h1>
+    <p class="muted">Enter the email address your order was placed with. We'll send you a secure one-click sign-in link — no password needed.</p>
+    <div style="margin:14px 0"><label>Email</label><input id="mEmail" type="email" placeholder="you@example.com" autocomplete="email"></div>
+    <div class="h-captcha" data-sitekey="a64203e6-71d8-4a74-ac74-70ea716c306a" style="margin-bottom:14px"></div>
+    <button id="mBtn" class="btn-p btn-magic">Email me a sign-in link</button>
+    <div id="mErr" class="err"></div>
+    <div id="mOk" class="ok" style="display:none;margin-top:12px">Link sent — check your inbox (and junk folder), then click the link on this device.</div>
+  </div>
+
+  <!-- PROOFS -->
+  <div id="proofs" style="display:none">
+    <div class="card">
+      <h1>Review &amp; approve your proof</h1>
+      <p class="muted" id="who"></p>
+      <div class="bleed-note">
+        <div class="bleed-demo" aria-hidden="true"></div>
+        <div><b>How to read your proof:</b> the solid black line is the <b>trim line</b> — your finished size.
+        The pink dashed edge is the <b>3&nbsp;mm bleed</b>, which is printed then trimmed away.
+        Anything important (text, logos) should sit inside the trim line; background colours and images should extend to the bleed edge.</div>
+      </div>
+      <ul class="checklist">
+        <li>Check all spelling, phone numbers and email addresses carefully.</li>
+        <li>Colours on screen are a guide only — printed colour can vary slightly.</li>
+        <li>Once you approve, the job goes to print exactly as shown.</li>
+      </ul>
+    </div>
+    <div id="list"></div>
+    <div class="card" style="text-align:center">
+      <div class="muted">Questions? Email <a href="mailto:admin@auraprint.com.au" style="color:#c026a3">admin@auraprint.com.au</a> — nothing prints until you approve.</div>
+      <div style="margin-top:10px"><button id="signout" class="btn-p" style="background:#efe9e1;color:#555;font-size:13px;padding:8px 16px">Sign out</button></div>
+    </div>
+  </div>
+</div>
+
+<script src="assets/config.js?v=20260711a"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://js.hcaptcha.com/1/api.js" async defer></script>
+<script>
+(function(){
+  var CFG = window.AURA_CONFIG || {};
+  var sb = supabase.createClient(CFG.supabaseUrl, CFG.supabaseKey);
+  var qOrder = new URLSearchParams(location.search).get('o') || '';
+
+  function esc(s){ return String(s==null?'':s).replace(/[&<>"]/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
+  function fmtDate(s){ var d=new Date(s); return d.toLocaleDateString('en-AU',{day:'2-digit',month:'short',year:'numeric'}); }
+  function show(id){ ['signin','proofs'].forEach(function(x){ document.getElementById(x).style.display = x===id?'':'none'; }); }
+
+  /* ---- magic link ---- */
+  document.getElementById('mBtn').addEventListener('click', async function(){
+    var email = document.getElementById('mEmail').value.trim();
+    var err = document.getElementById('mErr'); err.textContent='';
+    if (!email){ err.textContent='Enter your email address.'; return; }
+    var token = (window.hcaptcha && hcaptcha.getResponse()) || '';
+    if (!token){ err.textContent='Please tick the captcha box first.'; return; }
+    this.disabled = true; this.textContent = 'Sending…';
+    var res = await sb.auth.signInWithOtp({
+      email: email,
+      options: { captchaToken: token, emailRedirectTo: location.href }
+    });
+    this.disabled = false; this.textContent = 'Email me a sign-in link';
+    if (res.error){ err.textContent = res.error.message; if (window.hcaptcha) hcaptcha.reset(); return; }
+    document.getElementById('mOk').style.display = 'block';
+  });
+
+  document.getElementById('signout').addEventListener('click', async function(){
+    await sb.auth.signOut(); show('signin');
+  });
+
+  /* ---- load proofs ---- */
+  async function loadProofs(){
+    show('proofs');
+    var u = await sb.auth.getUser();
+    document.getElementById('who').textContent = 'Signed in as '+((u.data.user&&u.data.user.email)||'');
+    try { await sb.rpc('claim_my_orders'); } catch(e){}
+
+    var q = sb.from('orders')
+      .select('id,order_number,status,contact_name, order_items(id,item_no,description,qty,status, proofs(id,version,status,sent_at,decided_at,decision_comments,file_id))')
+      .order('created_at',{ascending:false});
+    if (qOrder) q = q.eq('order_number', qOrder);
+    var res = await q;
+    var list = document.getElementById('list');
+    if (res.error){ list.innerHTML = '<div class="card err">Could not load your orders: '+esc(res.error.message)+'</div>'; return; }
+    var orders = res.data || [];
+    if (!orders.length){
+      list.innerHTML = '<div class="card">No '+(qOrder?'order '+esc(qOrder):'orders')+' found for this email address. '+
+        'If you used a different email for your order, sign out and try that one, or contact us.</div>';
+      return;
+    }
+    var html = '';
+    var fileIds = [];
+    orders.forEach(function(o){
+      (o.order_items||[]).forEach(function(i){
+        var ps = (i.proofs||[]).slice().sort(function(a,b){return b.version-a.version;});
+        var p = ps[0];
+        if (!p) return;
+        fileIds.push(p.file_id);
+        html += '<div class="card" data-file="'+p.file_id+'">'+
+          '<div class="itemhead"><h2>'+esc(o.order_number)+' — '+esc(i.description)+'</h2>'+
+          '<span class="pill p-'+esc(p.status)+'">proof v'+p.version+' · '+esc(p.status)+'</span></div>'+
+          '<div class="muted">Quantity: '+i.qty+(p.sent_at?' · sent '+esc(fmtDate(p.sent_at)):'')+'</div>'+
+          '<div class="pdfbox" id="pdf-'+p.id+'"><div style="padding:40px;text-align:center" class="muted">Loading proof…</div></div>';
+        if (p.status==='sent'){
+          html += '<div class="decide">'+
+            '<button class="btn-p btn-approve" data-p="'+p.id+'">✓ Approve this proof</button>'+
+            '<button class="btn-p btn-decline" data-p="'+p.id+'">Request changes</button>'+
+            '<span class="err" id="derr-'+p.id+'"></span></div>'+
+            '<div class="declinebox" id="dbox-'+p.id+'">'+
+            '<label>What needs changing?</label>'+
+            '<textarea id="dtxt-'+p.id+'" rows="3" placeholder="e.g. Phone number should be 0400 000 000, and the logo looks too close to the edge"></textarea>'+
+            '<div style="margin-top:10px"><button class="btn-p btn-decline" data-send="'+p.id+'">Send change request</button></div></div>';
+        } else if (p.status==='approved'){
+          html += '<div class="ok" style="margin-top:8px">Approved'+(p.decided_at?' on '+esc(fmtDate(p.decided_at)):'')+' — thank you! Your invoice will follow by email.</div>';
+        } else if (p.status==='declined'){
+          html += '<div class="muted" style="margin-top:8px">You requested changes'+(p.decision_comments?': “'+esc(p.decision_comments)+'”':'')+'. A revised proof is on its way.</div>';
+        }
+        html += '</div>';
+      });
+    });
+    list.innerHTML = html || '<div class="card">No proofs are ready for review yet — we\'ll email you when one is.</div>';
+
+    /* load PDFs */
+    orders.forEach(function(o){ (o.order_items||[]).forEach(function(i){
+      var ps=(i.proofs||[]).slice().sort(function(a,b){return b.version-a.version;}); var p=ps[0]; if(!p) return;
+      loadPdf(p);
+    });});
+
+    /* decision buttons */
+    list.querySelectorAll('.btn-approve').forEach(function(b){
+      b.addEventListener('click', function(){
+        if (!confirm('Approve this proof for printing? Please make sure you have checked spelling and layout — approved jobs go straight to production.')) return;
+        decide(b.dataset.p, 'approved', null, b);
+      });
+    });
+    list.querySelectorAll('.btn-decline[data-p]').forEach(function(b){
+      b.addEventListener('click', function(){
+        var box = document.getElementById('dbox-'+b.dataset.p);
+        box.style.display = box.style.display==='block'?'none':'block';
+      });
+    });
+    list.querySelectorAll('[data-send]').forEach(function(b){
+      b.addEventListener('click', function(){
+        var txt = document.getElementById('dtxt-'+b.dataset.send).value.trim();
+        if (!txt){ document.getElementById('derr-'+b.dataset.send).textContent = 'Please tell us what needs changing.'; return; }
+        decide(b.dataset.send, 'declined', txt, b);
+      });
+    });
+  }
+
+  async function loadPdf(p){
+    var box = document.getElementById('pdf-'+p.id); if(!box) return;
+    var fr = await sb.from('order_files').select('storage_path,filename').eq('id', p.file_id).single();
+    if (fr.error){ box.innerHTML = '<div style="padding:30px" class="muted">Preview unavailable.</div>'; return; }
+    var dl = await sb.storage.from('artwork').download(fr.data.storage_path);
+    if (dl.error){ box.innerHTML = '<div style="padding:30px" class="muted">Preview unavailable: '+esc(dl.error.message)+'</div>'; return; }
+    var url = URL.createObjectURL(dl.data);
+    box.innerHTML = '<iframe src="'+url+'#toolbar=0" title="Proof PDF"></iframe>'+
+      '<div style="padding:8px 12px;text-align:right"><a href="'+url+'" download="'+esc(fr.data.filename||'proof.pdf')+'" style="color:#c026a3;font-weight:700;font-size:13px">Download PDF</a></div>';
+  }
+
+  async function decide(proofId, decision, comments, btn){
+    btn.disabled = true;
+    var res = await sb.rpc('decide_proof', { p_proof_id: proofId, p_decision: decision, p_comments: comments });
+    btn.disabled = false;
+    if (res.error){
+      var el = document.getElementById('derr-'+proofId);
+      if (el) el.textContent = res.error.message;
+      else alert(res.error.message);
+      return;
+    }
+    loadProofs();
+  }
+
+  /* magic-link redirects land with a session (detectSessionInUrl default true) */
+  sb.auth.onAuthStateChange(function(event, session){
+    if (event === 'SIGNED_IN' && session) loadProofs();
+  });
+  sb.auth.getSession().then(function(r){ if (r.data.session) loadProofs(); else show('signin'); });
+})();
+</script>
+</body>
+</html>

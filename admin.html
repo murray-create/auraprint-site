@@ -4,9 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="robots" content="noindex,nofollow">
-<title>Lead Inbox | Aura Print CRM</title>
+<title>Aura Print CRM</title>
 <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/aura.css?v=20260710a">
+<link rel="stylesheet" href="assets/aura.css?v=20260711a">
 <style>
   body{background:#f6f3ee}
   .admin-wrap{max-width:1200px;margin:0 auto;padding:28px 20px}
@@ -22,6 +22,9 @@
   .filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
   .chip{padding:7px 14px;border-radius:999px;font-weight:700;font-size:13px;border:2px solid #e0d9d0;background:#fff;cursor:pointer;color:#555}
   .chip.active{background:var(--ink,#1a1a1a);color:#fff;border-color:transparent}
+  .tabs{display:flex;gap:8px;margin-bottom:20px;border-bottom:2px solid #e8e2da;padding-bottom:0}
+  .tab{padding:10px 20px;font-weight:800;font-size:14px;border:none;background:none;cursor:pointer;color:#8a847d;border-bottom:3px solid transparent;margin-bottom:-2px}
+  .tab.active{color:#1a1a1a;border-bottom-color:#c026a3}
   table{width:100%;border-collapse:collapse;background:#fff;border-radius:14px;overflow:hidden;box-shadow:0 1px 0 #e8e2da}
   th,td{text-align:left;padding:12px 14px;font-size:13.5px;vertical-align:top;border-bottom:1px solid #f0ece5}
   th{background:#faf7f2;font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:#8a847d}
@@ -32,10 +35,33 @@
   .status-sel{padding:6px 8px;border-radius:8px;border:2px solid #e0d9d0;font-weight:700;font-size:12.5px;background:#fff}
   .s-new{color:#b45309}.s-contacted{color:#2563eb}.s-quoted{color:#7c3aed}.s-won{color:#15803d}.s-lost{color:#9ca3af}
   .pill{display:inline-block;padding:2px 8px;border-radius:999px;font-size:11px;font-weight:700;background:#f0ece5;color:#6b6560}
+  .pill.p-sent{background:#ede9fe;color:#7c3aed}.pill.p-approved{background:#dcfce7;color:#15803d}
+  .pill.p-declined,.pill.p-changes_requested{background:#fee2e2;color:#b91c1c}
+  .pill.p-proofing,.pill.p-proof_sent{background:#ede9fe;color:#7c3aed}
+  .pill.p-paid,.pill.p-invoiced{background:#dbeafe;color:#1d4ed8}
+  .pill.p-awaiting_artwork{background:#fef3c7;color:#b45309}
   .err{color:#c0392b;font-size:13.5px;margin-top:10px}
+  .ok{color:#15803d;font-size:13.5px;margin-top:10px}
   .saved{color:#15803d;font-size:11px;margin-left:6px;opacity:0;transition:opacity .2s}
   .saved.show{opacity:1}
   .empty{text-align:center;color:#8a847d;padding:40px}
+  .panel{background:#fff;border:1px solid #e8e2da;border-radius:14px;padding:22px;margin-bottom:18px}
+  .panel h2{font-size:17px;margin:0 0 14px}
+  .frow{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:12px}
+  .frow .f{flex:1;min-width:160px}
+  .frow label{display:block;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:#8a847d;margin-bottom:4px}
+  .frow input,.frow textarea{width:100%;padding:10px;border:2px solid #e8e2da;border-radius:9px;font-size:14px;font-family:inherit;box-sizing:border-box}
+  .btn-aura2{background:#c026a3;color:#fff}
+  .btn-ghost{background:#efe9e1;color:#555}
+  .odetail{background:#faf7f2;border-radius:12px;padding:16px;margin-top:4px}
+  .oitem{background:#fff;border:1px solid #e8e2da;border-radius:10px;padding:14px;margin-bottom:10px}
+  .oitem-head{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:8px}
+  .oitem-head b{font-size:14px}
+  .proofrow{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:8px;font-size:13px}
+  .proofrow input[type=file]{font-size:12.5px}
+  .events{font-size:12px;color:#8a847d;margin-top:10px;max-height:150px;overflow-y:auto}
+  .events div{padding:2px 0;border-bottom:1px dashed #eee6dd}
+  a.plink{color:#c026a3;font-weight:700;text-decoration:none}
 </style>
 <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
 </head>
@@ -56,28 +82,58 @@
 <div id="app" class="admin-wrap" style="display:none">
   <div class="admin-head">
     <div>
-      <h1>Lead Inbox</h1>
+      <h1 id="pageTitle">Aura CRM</h1>
       <div class="muted" id="count">Loading…</div>
     </div>
     <div>
       <button id="refreshBtn" class="chip">↻ Refresh</button>
-      <button id="signout" class="btn-sm" style="background:#efe9e1;color:#555">Sign out</button>
+      <button id="signout" class="btn-sm btn-ghost">Sign out</button>
     </div>
   </div>
 
-  <div class="filters" id="filters">
-    <button class="chip active" data-f="all">All</button>
-    <button class="chip" data-f="new">New</button>
-    <button class="chip" data-f="contacted">Contacted</button>
-    <button class="chip" data-f="quoted">Quoted</button>
-    <button class="chip" data-f="won">Won</button>
-    <button class="chip" data-f="lost">Lost</button>
+  <div class="tabs">
+    <button class="tab active" data-tab="leads">Lead Inbox</button>
+    <button class="tab" data-tab="orders">Orders &amp; Proofs</button>
   </div>
 
-  <div id="tableWrap"></div>
+  <!-- LEADS TAB -->
+  <div id="tab-leads">
+    <div class="filters" id="filters">
+      <button class="chip active" data-f="all">All</button>
+      <button class="chip" data-f="new">New</button>
+      <button class="chip" data-f="contacted">Contacted</button>
+      <button class="chip" data-f="quoted">Quoted</button>
+      <button class="chip" data-f="won">Won</button>
+      <button class="chip" data-f="lost">Lost</button>
+    </div>
+    <div id="tableWrap"></div>
+  </div>
+
+  <!-- ORDERS TAB -->
+  <div id="tab-orders" style="display:none">
+    <div class="panel" id="newOrderPanel">
+      <h2>New order</h2>
+      <div class="frow">
+        <div class="f"><label>Contact name *</label><input id="oName"></div>
+        <div class="f"><label>Email *</label><input id="oEmail" type="email"></div>
+        <div class="f"><label>Phone</label><input id="oPhone"></div>
+        <div class="f"><label>Company</label><input id="oCompany"></div>
+      </div>
+      <div class="frow">
+        <div class="f" style="flex:2"><label>Item description *</label><input id="oDesc" placeholder="e.g. Business Cards 450gsm Velvet, 90x55, 2 sides"></div>
+        <div class="f"><label>Product slug</label><input id="oSlug" placeholder="custom"></div>
+        <div class="f"><label>Qty *</label><input id="oQty" type="number" min="1" value="1"></div>
+        <div class="f"><label>Price inc GST ($) *</label><input id="oPrice" type="number" min="0" step="0.01"></div>
+      </div>
+      <div class="frow"><div class="f"><label>Order notes</label><input id="oNotes"></div></div>
+      <button id="oCreate" class="btn-sm btn-aura2">Create order</button>
+      <span id="oMsg" class="muted" style="margin-left:10px"></span>
+    </div>
+    <div id="ordersWrap"></div>
+  </div>
 </div>
 
-<script src="assets/config.js?v=20260710a"></script>
+<script src="assets/config.js?v=20260711a"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://js.hcaptcha.com/1/api.js" async defer></script>
 <script>
@@ -91,10 +147,12 @@
   }
   var sb = supabase.createClient(CFG.supabaseUrl, CFG.supabaseKey);
   var STATUSES = ['new','contacted','quoted','won','lost'];
-  var currentFilter = 'all', allLeads = [];
+  var currentFilter = 'all', allLeads = [], allOrders = [], openOrder = null;
+  var PROOF_BASE = location.origin + location.pathname.replace(/admin\.html$/,'') + 'proof.html';
 
   function esc(s){ return String(s==null?'':s).replace(/[&<>"]/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
   function fmtDate(s){ var d=new Date(s); return d.toLocaleDateString('en-AU',{day:'2-digit',month:'short'})+' '+d.toLocaleTimeString('en-AU',{hour:'2-digit',minute:'2-digit'}); }
+  function money(c){ return '$'+(c/100).toLocaleString('en-AU',{minimumFractionDigits:2,maximumFractionDigits:2}); }
 
   async function showApp(){
     loginEl.style.display='none'; appEl.style.display='block';
@@ -102,6 +160,22 @@
   }
   function showLogin(){ appEl.style.display='none'; loginEl.style.display='block'; }
 
+  /* ============ TABS ============ */
+  var activeTab = 'leads';
+  document.querySelectorAll('.tab').forEach(function(t){
+    t.addEventListener('click', function(){
+      activeTab = t.dataset.tab;
+      document.querySelectorAll('.tab').forEach(function(x){ x.classList.toggle('active', x===t); });
+      document.getElementById('tab-leads').style.display = activeTab==='leads'?'':'none';
+      document.getElementById('tab-orders').style.display = activeTab==='orders'?'':'none';
+      if (activeTab==='orders') loadOrders(); else loadLeads();
+    });
+  });
+  document.getElementById('refreshBtn').addEventListener('click', function(){
+    if (activeTab==='orders') loadOrders(); else loadLeads();
+  });
+
+  /* ============ LEADS (unchanged) ============ */
   async function loadLeads(){
     document.getElementById('count').textContent = 'Loading…';
     var res = await sb.from('leads').select('*').order('created_at',{ascending:false});
@@ -113,14 +187,12 @@
   function render(){
     var rows = allLeads.filter(function(l){ return currentFilter==='all' || l.status===currentFilter; });
     var newCount = allLeads.filter(function(l){return l.status==='new';}).length;
-    document.getElementById('count').textContent = allLeads.length+' total · '+newCount+' new';
+    document.getElementById('count').textContent = allLeads.length+' leads · '+newCount+' new';
     if (!rows.length){ document.getElementById('tableWrap').innerHTML = '<div class="empty">No leads'+(currentFilter==='all'?' yet.':' in this view.')+'</div>'; return; }
     var html = '<table><thead><tr>'+
       '<th>Received</th><th>Contact</th><th>Category</th><th>Qty</th><th>Job</th><th>Source</th><th>Status</th>'+
       '</tr></thead><tbody>';
     rows.forEach(function(l){
-      /* Only render customer-supplied links when they are plain http(s) -
-         anything else (javascript:, data:, etc) is shown as inert text. */
       var art = '';
       if (l.artwork_link) {
         art = /^https?:\/\//i.test(String(l.artwork_link).trim())
@@ -137,14 +209,30 @@
         '<td>'+esc(l.quantity||'—')+'</td>'+
         '<td><div class="job">'+esc(l.job_details||'—')+'</div>'+art+'</td>'+
         '<td><span class="pill">'+esc(l.source_form||'—')+'</span>'+(l.source_product_code?'<div class="muted">'+esc(l.source_product_code)+'</div>':'')+'</td>'+
-        '<td>'+statusSelect(l)+'<span class="saved" id="saved-'+l.id+'">saved</span></td>'+
-        '</tr>';
+        '<td>'+statusSelect(l)+'<span class="saved" id="saved-'+l.id+'">saved</span>'+
+          (l.status==='won' ? '<div style="margin-top:6px"><button class="btn-sm btn-ghost to-order" data-id="'+l.id+'">→ order</button></div>' : '')+
+        '</td></tr>';
     });
     html += '</tbody></table>';
     document.getElementById('tableWrap').innerHTML = html;
     document.querySelectorAll('.status-sel').forEach(function(sel){
       sel.addEventListener('change', function(){ updateStatus(sel.dataset.id, sel.value); });
     });
+    document.querySelectorAll('.to-order').forEach(function(b){
+      b.addEventListener('click', function(){ leadToOrder(b.dataset.id); });
+    });
+  }
+
+  function leadToOrder(id){
+    var l = allLeads.find(function(x){return x.id===id;}); if(!l) return;
+    document.querySelector('.tab[data-tab=orders]').click();
+    document.getElementById('oName').value = l.name||'';
+    document.getElementById('oEmail').value = l.email||'';
+    document.getElementById('oPhone').value = l.phone||'';
+    document.getElementById('oCompany').value = l.company||'';
+    document.getElementById('oDesc').value = (l.category?l.category+' — ':'')+(l.job_details||'');
+    if (l.quantity && /^\d+$/.test(String(l.quantity))) document.getElementById('oQty').value = l.quantity;
+    document.getElementById('newOrderPanel').scrollIntoView({behavior:'smooth'});
   }
 
   function statusSelect(l){
@@ -158,20 +246,201 @@
     if (res.error){ alert('Could not update: '+res.error.message); return; }
     var l = allLeads.find(function(x){return x.id===id;}); if (l) l.status=status;
     if (badge){ badge.classList.add('show'); setTimeout(function(){ badge.classList.remove('show'); }, 1200); }
-    // recolour + refresh counts
-    document.getElementById('count').textContent = allLeads.length+' total · '+allLeads.filter(function(x){return x.status==='new';}).length+' new';
+    document.getElementById('count').textContent = allLeads.length+' leads · '+allLeads.filter(function(x){return x.status==='new';}).length+' new';
+    if (status==='won') render();
   }
 
-  // filters
   document.getElementById('filters').addEventListener('click', function(e){
     var b = e.target.closest('.chip'); if(!b) return;
     currentFilter = b.dataset.f;
     document.querySelectorAll('#filters .chip').forEach(function(c){ c.classList.toggle('active', c===b); });
     render();
   });
-  document.getElementById('refreshBtn').addEventListener('click', loadLeads);
 
-  // auth
+  /* ============ ORDERS & PROOFS ============ */
+  async function loadOrders(){
+    document.getElementById('count').textContent = 'Loading…';
+    var res = await sb.from('orders')
+      .select('*, order_items(*, proofs(id,version,status,sent_at,decided_at,decision_comments,file_id))')
+      .order('created_at',{ascending:false});
+    if (res.error){ document.getElementById('ordersWrap').innerHTML = '<div class="empty">Could not load orders: '+esc(res.error.message)+'</div>'; return; }
+    allOrders = res.data || [];
+    document.getElementById('count').textContent = allOrders.length+' orders';
+    renderOrders();
+  }
+
+  function latestProof(item){
+    var ps = (item.proofs||[]).slice().sort(function(a,b){return b.version-a.version;});
+    return ps[0] || null;
+  }
+
+  function renderOrders(){
+    if (!allOrders.length){ document.getElementById('ordersWrap').innerHTML = '<div class="empty">No orders yet. Create one above, or convert a won lead.</div>'; return; }
+    var html = '<table><thead><tr><th>Order</th><th>Customer</th><th>Items</th><th>Status</th><th></th></tr></thead><tbody>';
+    allOrders.forEach(function(o){
+      var items = (o.order_items||[]).map(function(i){
+        var p = latestProof(i);
+        return '<div>'+esc(i.description)+' ×'+i.qty+' <span class="pill p-'+esc(i.status)+'">'+esc(i.status.replace(/_/g,' '))+'</span>'+
+          (p?' <span class="muted">proof v'+p.version+'</span>':'')+'</div>';
+      }).join('');
+      html += '<tr>'+
+        '<td><b>'+esc(o.order_number||'')+'</b><div class="muted">'+esc(fmtDate(o.created_at))+'</div></td>'+
+        '<td><div class="lead-name">'+esc(o.contact_name||'')+'</div><div class="lead-contact"><a href="mailto:'+esc(o.contact_email||'')+'">'+esc(o.contact_email||'')+'</a></div>'+(o.company?'<div class="muted">'+esc(o.company)+'</div>':'')+'</td>'+
+        '<td>'+items+'</td>'+
+        '<td><span class="pill p-'+esc(o.status)+'">'+esc(o.status.replace(/_/g,' '))+'</span></td>'+
+        '<td><button class="btn-sm btn-ghost o-open" data-id="'+o.id+'">'+(openOrder===o.id?'Close':'Manage')+'</button></td>'+
+        '</tr>';
+      if (openOrder===o.id){
+        html += '<tr><td colspan="5"><div class="odetail" id="odetail">'+orderDetail(o)+'</div></td></tr>';
+      }
+    });
+    html += '</tbody></table>';
+    document.getElementById('ordersWrap').innerHTML = html;
+    document.querySelectorAll('.o-open').forEach(function(b){
+      b.addEventListener('click', function(){ openOrder = (openOrder===b.dataset.id)?null:b.dataset.id; renderOrders(); if(openOrder) loadEvents(openOrder); });
+    });
+    bindDetail();
+  }
+
+  function orderDetail(o){
+    var proofLink = PROOF_BASE + '?o=' + encodeURIComponent(o.order_number||'');
+    var h = '';
+    (o.order_items||[]).forEach(function(i){
+      var p = latestProof(i);
+      h += '<div class="oitem" data-item="'+i.id+'">'+
+        '<div class="oitem-head"><b>#'+i.item_no+' '+esc(i.description)+'</b>'+
+        '<span>×'+i.qty+' · '+money(i.price_inc_cents)+' inc · <span class="pill p-'+esc(i.status)+'">'+esc(i.status.replace(/_/g,' '))+'</span></span></div>';
+      if (p){
+        h += '<div class="proofrow">Latest proof: v'+p.version+' <span class="pill p-'+esc(p.status)+'">'+esc(p.status)+'</span>'+
+          (p.sent_at?' <span class="muted">sent '+esc(fmtDate(p.sent_at))+'</span>':'')+
+          (p.decided_at?' <span class="muted">decided '+esc(fmtDate(p.decided_at))+'</span>':'')+
+          (p.decision_comments?'<div class="muted" style="width:100%">Customer: “'+esc(p.decision_comments)+'”</div>':'')+
+          '</div>';
+      }
+      h += '<div class="proofrow">'+
+        '<input type="file" accept="application/pdf" class="proof-file" data-item="'+i.id+'">'+
+        '<button class="btn-sm btn-aura2 proof-send" data-item="'+i.id+'" data-order="'+o.id+'">Upload &amp; send proof</button>'+
+        '<span class="muted proof-msg" data-item="'+i.id+'"></span>'+
+        '</div>';
+      h += '<div class="proofrow muted">The PDF you upload should include the trim line and 3&nbsp;mm bleed guides — that exact file is what the customer approves.</div>';
+      h += '</div>';
+    });
+    h += '<div class="proofrow" style="margin-top:12px">'+
+      '<b>Customer approval link:</b> <a class="plink" href="'+esc(proofLink)+'" target="_blank" rel="noopener">'+esc(proofLink)+'</a>'+
+      '<a class="btn-sm btn-ghost" href="'+mailtoHref(o, proofLink)+'">✉ Compose email</a>'+
+      '</div>';
+    h += '<div class="events" id="events-'+o.id+'">Loading history…</div>';
+    return h;
+  }
+
+  function mailtoHref(o, link){
+    var first = (o.contact_name||'').split(' ')[0] || 'there';
+    var num = o.order_number||'';
+    var subj = 'Please proof your order '+num+' — Aura Print & Promo';
+    var body =
+      'Hi '+first+',\n\n'+
+      'It\'s time to confirm that your artwork looks just how you want it so we can get it into production. Please read the following carefully to avoid any delays in processing your order.\n\n'+
+      'More than anything, we want you to be thrilled with the finished product, so please take this proofing seriously and check for spelling or any errors that may have crept in during the processing of your files. You will receive exactly what you approve here — if there is a typo, you will be the proud owner of printing with a typo, and no one wants that. We cannot be held liable for costs incurred to replace items due to insufficient checks of the artwork proof.\n\n'+
+      'On your proof, the solid line is the trim line (finished size) and the 3mm beyond it is bleed, which is trimmed away. Please check nothing important sits outside the trim line.\n\n'+
+      'Please make all approvals and change requests inside the proofing page — it notifies us instantly. There is no need to reply to this email.\n\n'+
+      'Proof your order '+num+' here:\n'+link+'\n\n'+
+      '(Sign in with this email address — we\'ll send you a secure one-click link, no password needed.)\n\n'+
+      'Nothing goes to print until you approve.\n\n'+
+      'Kind regards,\n'+
+      'Murray\n'+
+      'Aura Print & Promo\n'+
+      'e: admin@auraprint.com.au\n'+
+      'w: auraprint.com.au';
+    return 'mailto:'+encodeURIComponent(o.contact_email||'')+'?subject='+encodeURIComponent(subj)+'&body='+encodeURIComponent(body);
+  }
+
+  async function loadEvents(orderId){
+    var res = await sb.from('order_events').select('created_at,event,detail').eq('order_id',orderId).order('created_at',{ascending:false}).limit(30);
+    var el = document.getElementById('events-'+orderId);
+    if (!el) return;
+    if (res.error){ el.textContent = 'History unavailable: '+res.error.message; return; }
+    el.innerHTML = (res.data||[]).map(function(e){
+      return '<div>'+esc(fmtDate(e.created_at))+' — '+esc(e.event.replace(/_/g,' '))+'</div>';
+    }).join('') || 'No events yet.';
+  }
+
+  function bindDetail(){
+    document.querySelectorAll('.proof-send').forEach(function(b){
+      b.addEventListener('click', function(){ sendProof(b.dataset.order, b.dataset.item, b); });
+    });
+  }
+
+  async function sendProof(orderId, itemId, btn){
+    var msg = document.querySelector('.proof-msg[data-item="'+itemId+'"]');
+    var fileEl = document.querySelector('.proof-file[data-item="'+itemId+'"]');
+    var f = fileEl && fileEl.files && fileEl.files[0];
+    if (!f){ msg.textContent = 'Choose a PDF first.'; return; }
+    if (f.type !== 'application/pdf'){ msg.textContent = 'Proofs must be PDF.'; return; }
+    if (f.size > 50*1024*1024){ msg.textContent = 'Max 50 MB.'; return; }
+    btn.disabled = true; msg.textContent = 'Uploading…';
+    try {
+      var o = allOrders.find(function(x){return x.id===orderId;});
+      var item = (o.order_items||[]).find(function(x){return x.id===itemId;});
+      var nextV = ((latestProof(item)||{}).version||0)+1;
+      var path = 'orders/'+orderId+'/proof-item'+item.item_no+'-v'+nextV+'-'+Date.now()+'.pdf';
+      var up = await sb.storage.from('artwork').upload(path, f, {contentType:'application/pdf'});
+      if (up.error) throw up.error;
+      var u = await sb.auth.getUser();
+      var fr = await sb.from('order_files').insert({
+        order_id: orderId, order_item_id: itemId, kind:'proof',
+        filename: f.name, mime_type:'application/pdf', size_bytes: f.size,
+        storage_path: path, uploaded_by: u.data.user.id
+      }).select('id').single();
+      if (fr.error) throw fr.error;
+      msg.textContent = 'Sending…';
+      var pr = await sb.from('proofs').insert({ order_item_id: itemId, file_id: fr.data.id }).select('id,version').single();
+      if (pr.error) throw pr.error;
+      msg.textContent = 'Proof v'+pr.data.version+' sent ✓ — now email the customer their link.';
+      await loadOrders();
+    } catch(e){
+      msg.textContent = 'Failed: '+(e.message||e);
+    }
+    btn.disabled = false;
+  }
+
+  document.getElementById('oCreate').addEventListener('click', async function(){
+    var m = document.getElementById('oMsg');
+    var name = document.getElementById('oName').value.trim();
+    var email = document.getElementById('oEmail').value.trim();
+    var desc = document.getElementById('oDesc').value.trim();
+    var qty = parseInt(document.getElementById('oQty').value,10);
+    var price = Math.round(parseFloat(document.getElementById('oPrice').value||'0')*100);
+    if (!name || !email || !desc || !(qty>0) || !(price>=0) || isNaN(price)){ m.textContent='Fill in name, email, description, qty and price.'; return; }
+    this.disabled = true; m.textContent = 'Creating…';
+    try {
+      var or_ = await sb.from('orders').insert({
+        contact_name:name, contact_email:email,
+        contact_phone:document.getElementById('oPhone').value.trim()||null,
+        company:document.getElementById('oCompany').value.trim()||null,
+        notes:document.getElementById('oNotes').value.trim()||null
+      }).select('id,order_number').single();
+      if (or_.error) throw or_.error;
+      var it = await sb.from('order_items').insert({
+        order_id: or_.data.id, item_no:1, description:desc, qty:qty,
+        product_slug: (document.getElementById('oSlug').value.trim()||'custom'),
+        pricing_mode:'quoted', price_source:'staff_quote',
+        price_inc_cents:price,
+        status:'awaiting_artwork'
+      });
+      if (it.error) throw it.error;
+      /* orders always start as draft; move to submitted now items exist */
+      var st = await sb.from('orders').update({status:'submitted'}).eq('id', or_.data.id);
+      if (st.error) throw st.error;
+      m.textContent = 'Created '+or_.data.order_number+' ✓';
+      ['oName','oEmail','oPhone','oCompany','oDesc','oNotes','oPrice'].forEach(function(id){ document.getElementById(id).value=''; });
+      document.getElementById('oQty').value = 1;
+      openOrder = or_.data.id;
+      await loadOrders();
+    } catch(e){ m.textContent = 'Failed: '+(e.message||e); }
+    this.disabled = false;
+  });
+
+  /* ============ AUTH ============ */
   document.getElementById('lBtn').addEventListener('click', signIn);
   document.getElementById('lPass').addEventListener('keydown', function(e){ if(e.key==='Enter') signIn(); });
   async function signIn(){
@@ -188,7 +457,6 @@
   }
   document.getElementById('signout').addEventListener('click', async function(){ await sb.auth.signOut(); showLogin(); });
 
-  // resume session
   sb.auth.getSession().then(function(r){ if (r.data.session) showApp(); else showLogin(); });
 })();
 </script>
