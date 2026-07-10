@@ -261,7 +261,7 @@
   async function loadOrders(){
     document.getElementById('count').textContent = 'Loading…';
     var res = await sb.from('orders')
-      .select('*, order_items(*, proofs(id,version,status,sent_at,decided_at,decision_comments,approver_name,approval_token,file_id)), invoices(id,invoice_number,status,total_inc_cents,payment_link_url,qbo_invoice_id,paid_at), payments(id,amount_cents,status,provider,paid_at)')
+      .select('*, order_items(*, proofs(id,version,status,sent_at,decided_at,decision_comments,approver_name,approval_token,file_id)), invoices(id,invoice_number,status,total_inc_cents,payment_link_url,access_token,paid_at), payments(id,amount_cents,status,provider,paid_at)')
       .order('created_at',{ascending:false});
     if (res.error){ document.getElementById('ordersWrap').innerHTML = '<div class="empty">Could not load orders: '+esc(res.error.message)+'</div>'; return; }
     allOrders = res.data || [];
@@ -347,10 +347,13 @@
       h += '<div class="oitem" style="margin-top:12px">'+
         '<div class="oitem-head"><b>🧾 '+esc(v.invoice_number)+'</b>'+
         '<span>'+money(v.total_inc_cents)+' inc · <span class="pill p-'+esc(v.status)+'">'+esc(v.status)+'</span></span></div>';
+      var invUrl = PROOF_BASE.replace(/proof\.html$/,'invoice.html') + '?t=' + v.access_token;
+      h += '<div class="proofrow"><a class="plink" href="'+esc(invUrl)+'" target="_blank" rel="noopener">View tax invoice ↗</a> '+
+        '<button class="btn-sm btn-ghost copy-link" data-link="'+esc(invUrl)+'">Copy link</button></div>';
       if (v.payment_link_url){
         h += '<div class="proofrow"><a class="plink" href="'+esc(v.payment_link_url)+'" target="_blank" rel="noopener">Stripe payment link ↗</a> '+
           '<button class="btn-sm btn-ghost copy-link" data-link="'+esc(v.payment_link_url)+'">Copy</button> '+
-          '<a class="btn-sm btn-ghost" href="'+invoiceMailtoHref(o, v)+'">✉ Compose invoice email</a></div>';
+          '<a class="btn-sm btn-ghost" href="'+invoiceMailtoHref(o, v, invUrl)+'">✉ Compose invoice email</a></div>';
       } else if (v.status==='issued'){
         h += '<div class="proofrow">'+
           '<button class="btn-sm btn-aura2 make-link" data-inv="'+v.id+'">Create Stripe payment link</button>'+
@@ -445,16 +448,17 @@
     }
   }
 
-  function invoiceMailtoHref(o, v){
+  function invoiceMailtoHref(o, v, invUrl){
     var first = (o.contact_name||'').split(' ')[0] || 'there';
-    var subj = 'Invoice '+(v.invoice_number||'')+' — order '+(o.order_number||'')+' — Aura Print & Promo';
+    var subj = 'Tax invoice '+(v.invoice_number||'')+' — order '+(o.order_number||'')+' — Aura Print & Promo';
     var body =
       'Hi '+first+',\n\n'+
-      'Thanks for approving your proof — your order '+(o.order_number||'')+' is ready to go to production as soon as payment is received.\n\n'+
-      'Invoice '+(v.invoice_number||'')+': '+money(v.total_inc_cents)+' (includes GST)\n\n'+
-      'Pay securely by card here:\n'+(v.payment_link_url||'')+'\n\n'+
-      'Prefer bank transfer? Just reply and we\'ll send our account details.\n\n'+
-      'Production starts the moment payment lands.\n\n'+
+      'Thank you for completing our online approval process! Your order '+(o.order_number||'')+' is queued for production — please note full payment is required before production begins.\n\n'+
+      'View your tax invoice online ('+money(v.total_inc_cents)+' inc GST):\n'+invUrl+'\n\n'+
+      'To pay by credit or debit card, click the green ‘View & Pay Online’ button on the invoice — payment is processed securely by Stripe and your job is released automatically.\n\n'+
+      'EFT details are also on the invoice; please use your invoice number as the payment reference. Bank transfers can take up to 1 business day for us to receive — if your job is urgent, email your remittance advice to admin@auraprint.com.au and we\'ll release it early.\n\n'+
+      'Once your order is dispatched we\'ll email you with tracking details.\n\n'+
+      'We look forward to working with you again.\n\n'+
       'Kind regards,\n'+
       'Murray\n'+
       'Aura Print & Promo\n'+

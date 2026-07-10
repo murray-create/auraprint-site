@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en-AU">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex,nofollow">
+<title>Tax Invoice | Aura Print &amp; Promo</title>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+<style>
+  :root{ --ink:#1a1a1a; --pink:#c026a3; --line:#e8e2da; --mut:#6b6560; --pay:#15a34a; }
+  *{box-sizing:border-box}
+  body{margin:0;background:#efece6;font-family:Inter,system-ui,sans-serif;color:var(--ink);font-size:14px;line-height:1.45}
+  .page{max-width:820px;margin:24px auto;background:#fff;padding:48px 52px;box-shadow:0 2px 14px rgba(0,0,0,.08)}
+  .muted{color:var(--mut)}
+  .lbl{font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--mut);font-weight:600;margin-bottom:3px}
+  .topbar{display:flex;justify-content:space-between;align-items:flex-start;gap:20px}
+  h1{font-family:'Archivo Black',sans-serif;font-size:38px;margin:0 0 26px;letter-spacing:-.01em}
+  .brand{font-family:'Archivo Black',sans-serif;font-size:19px;text-align:right;line-height:1.1}
+  .brand span{color:var(--pink)}
+  .meta{display:flex;gap:44px;flex-wrap:wrap;margin-bottom:30px}
+  .meta .v{font-weight:700;font-size:15px}
+  .seller{text-align:right;font-size:13px;color:#444}
+  .billing{display:flex;gap:36px;flex-wrap:wrap;align-items:flex-start;border-top:1px solid var(--line);padding-top:24px;margin-bottom:30px}
+  .billing .col{flex:1;min-width:170px}
+  .balance{font-family:'Archivo Black',sans-serif;font-size:32px;margin:2px 0 10px}
+  .due{display:inline-block;background:#fdf0d5;border:1px solid #f3d9a4;border-radius:6px;padding:7px 12px;font-size:13px;margin-bottom:12px}
+  .paidflag{display:inline-block;background:#dcfce7;border:1px solid #a7e3bd;color:#15803d;border-radius:6px;padding:7px 12px;font-size:13px;font-weight:700;margin-bottom:12px}
+  .paybtn{display:inline-block;background:var(--pay);color:#fff;font-weight:800;font-size:15px;padding:13px 26px;border-radius:8px;text-decoration:none}
+  table{width:100%;border-collapse:collapse;margin:6px 0 0}
+  thead th{font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:#4c4670;text-align:right;padding:10px 8px;border-top:3px solid #4c4670;border-bottom:2px solid #4c4670}
+  thead th:first-child{text-align:left}
+  tbody td{padding:13px 8px;border-bottom:1px solid var(--line);vertical-align:top;text-align:right;font-size:13.5px}
+  tbody td:first-child{text-align:left;white-space:pre-line}
+  .totals td{border:none;padding:6px 8px;font-size:14px}
+  .totals tr:last-child td{font-weight:900;font-size:16px;border-top:3px solid #4c4670;padding-top:12px}
+  .pagebreak{page-break-before:always;margin-top:38px;border-top:1px solid var(--line);padding-top:26px}
+  .pm{margin-bottom:22px}
+  .pm h3{font-size:14px;margin:0 0 6px;text-decoration:underline}
+  .pm p{margin:3px 0;font-size:13.5px}
+  .footer{margin-top:34px;font-size:11.5px;color:var(--mut);border-top:1px solid var(--line);padding-top:12px}
+  .toolbar{max-width:820px;margin:14px auto 0;display:flex;gap:10px;justify-content:flex-end;padding:0 4px}
+  .toolbar button{padding:9px 18px;border-radius:8px;border:none;font-weight:700;cursor:pointer;background:var(--ink);color:#fff}
+  .err{max-width:820px;margin:60px auto;background:#fff;padding:40px;text-align:center;border-radius:12px}
+  @media print{
+    body{background:#fff}
+    .page{box-shadow:none;margin:0;max-width:none;padding:20px 30px}
+    .toolbar{display:none}
+  }
+</style>
+<link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+</head>
+<body>
+<div class="toolbar" id="toolbar" style="display:none"><button onclick="window.print()">🖨 Print / Save as PDF</button></div>
+<div id="doc"></div>
+
+<script src="assets/config.js?v=20260711b"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+(function(){
+  var CFG = window.AURA_CONFIG || {};
+  var BIZ = CFG.business || {};
+  var sb = supabase.createClient(CFG.supabaseUrl, CFG.supabaseKey);
+  var t = (new URLSearchParams(location.search).get('t')||'').trim();
+
+  function esc(s){ return String(s==null?'':s).replace(/[&<>"]/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
+  function money(c){ return '$' + (c/100).toLocaleString('en-AU',{minimumFractionDigits:2,maximumFractionDigits:2}); }
+  function fmtDate(s){ var d=new Date(s); return d.toLocaleDateString('en-AU',{day:'2-digit',month:'short',year:'numeric'}); }
+  function fail(msg){ document.getElementById('doc').innerHTML = '<div class="err"><h2>Invoice unavailable</h2><p class="muted">'+msg+'</p><p class="muted">Need help? Email admin@auraprint.com.au</p></div>'; }
+
+  if (!/^[0-9a-f-]{36}$/i.test(t)){ fail('This invoice link looks incomplete — please use the full link from your email.'); return; }
+
+  sb.rpc('get_invoice_by_token', { p_token: t }).then(function(res){
+    if (res.error){ fail(esc(res.error.message)); return; }
+    var v = res.data;
+    if (!v){ fail('We couldn\'t find an invoice for this link. Contact us and we\'ll sort it out.'); return; }
+    render(v);
+  });
+
+  function render(v){
+    var balance = v.total_inc_cents - v.amount_paid_cents;
+    var isPaid = balance <= 0;
+    var itemsHtml = (v.items||[]).map(function(i){
+      var unitEx = i.qty ? i.price_ex_cents / i.qty : i.price_ex_cents;
+      return '<tr><td>'+esc(i.description)+'</td>'+
+        '<td>'+i.qty+'</td>'+
+        '<td>'+money(unitEx)+'</td>'+
+        '<td>10.00%</td>'+
+        '<td>'+money(i.price_ex_cents)+'</td></tr>';
+    }).join('');
+
+    var ship = [v.ship_line1, v.ship_line2, [v.ship_suburb, v.ship_state, v.ship_postcode].filter(Boolean).join(' ')].filter(Boolean);
+
+    var h = '<div class="page">'+
+      '<div class="topbar"><h1>Tax Invoice</h1>'+
+      '<div><div class="brand">AURA <span>PRINT</span><br>&amp; PROMO</div></div></div>'+
+
+      '<div class="topbar" style="margin-bottom:26px">'+
+      '<div class="meta">'+
+        '<div><div class="lbl">Invoice number</div><div class="v">'+esc(v.invoice_number)+'</div>'+
+        '<div class="lbl" style="margin-top:14px">Invoice date</div><div class="v">'+esc(fmtDate(v.issued_at))+'</div></div>'+
+        '<div><div class="lbl">Order reference</div><div class="v">'+esc(v.order_number)+'</div></div>'+
+      '</div>'+
+      '<div class="seller"><b>'+esc(BIZ.name||'Aura Print')+'</b><br>'+
+        esc(BIZ.address1||'4/1 Packer Road')+'<br>'+esc(BIZ.address2||'Baringa QLD 4551')+'<br>'+
+        'Phone: '+esc(BIZ.phone||'0404 601 314')+'<br>'+
+        'Email: '+esc(BIZ.email||'admin@auraprint.com.au')+'<br>'+
+        'ABN: '+esc(BIZ.abn||'75 642 501 493')+'</div>'+
+      '</div>'+
+
+      '<div class="billing">'+
+      '<div class="col"><div class="lbl">Bill to</div>'+
+        '<b>'+esc(v.company||v.contact_name)+'</b><br>'+
+        (v.company?esc(v.contact_name)+'<br>':'')+
+        esc(v.contact_email)+(ship.length?'<br>'+ship.map(esc).join('<br>'):'')+'</div>'+
+      '<div class="col"><div class="lbl">Total amount</div><div>'+money(v.total_inc_cents)+'</div>'+
+        '<div class="lbl" style="margin-top:12px">Amount paid</div><div>'+money(v.amount_paid_cents)+'</div></div>'+
+      '<div class="col"><div class="lbl">Balance due</div><div class="balance">'+money(Math.max(balance,0))+'</div>'+
+        (isPaid
+          ? '<div class="paidflag">PAID '+(v.paid_at?'— '+esc(fmtDate(v.paid_at)):'')+'</div>'
+          : '<div class="due">Due on receipt — production starts on payment</div>'+
+            (v.payment_link_url?'<br><a class="paybtn" href="'+esc(v.payment_link_url)+'">View &amp; Pay Online</a>':''))+
+      '</div></div>'+
+
+      '<table><thead><tr><th>Description</th><th>Quantity</th><th>Unit price (ex)</th><th>GST</th><th>Amount (ex)</th></tr></thead>'+
+      '<tbody>'+itemsHtml+'</tbody></table>'+
+      '<table class="totals"><tr><td style="width:70%"></td><td><b>Subtotal</b></td><td style="text-align:right">'+money(v.subtotal_ex_cents)+'</td></tr>'+
+      '<tr><td></td><td><b>Total GST</b></td><td style="text-align:right">'+money(v.gst_cents)+'</td></tr>'+
+      '<tr><td></td><td>Total</td><td style="text-align:right">'+money(v.total_inc_cents)+'</td></tr></table>'+
+
+      '<div class="pagebreak">'+
+      '<div class="lbl" style="margin-bottom:14px">Payment details</div>'+
+      (isPaid ? '<p>This invoice has been paid in full — thank you! Your job is in the production queue.</p>' :
+      '<p>Please pay your balance now — <b>production starts the moment payment lands</b>.</p>'+
+      '<div class="pm"><h3>Payment method 1: Credit / debit card</h3>'+
+        '<p>Preferred method for instant payment — production is released automatically.</p>'+
+        (v.payment_link_url?'<p><a class="paybtn" href="'+esc(v.payment_link_url)+'" style="font-size:13.5px;padding:10px 20px">View &amp; Pay Online</a></p>':'<p class="muted">Card payment link coming in a follow-up email.</p>')+
+        '<p class="muted">Visa, Mastercard and American Express accepted. Payments are processed securely by Stripe.</p></div>'+
+      '<div class="pm"><h3>Payment method 2: Bank transfer (EFT)</h3>'+
+        '<p>EFT can take up to 1 business day to reach us.</p>'+
+        '<p>BSB: '+esc(BIZ.bsb||'—')+'<br>Account: '+esc(BIZ.acc||'—')+'<br>Account name: '+esc(BIZ.accName||'Murray Alexander Boyton t/a Aura Print')+'<br>Reference: <b>'+esc(v.invoice_number)+'</b></p>'+
+        '<p class="muted">Paying by EFT and need the job released today? Email your remittance advice to '+esc(BIZ.email||'admin@auraprint.com.au')+'.</p></div>'+
+      (BIZ.payid?'<div class="pm"><h3>Payment method 3: PayID</h3><p>PayID: '+esc(BIZ.payid)+'<br>Reference: <b>'+esc(v.invoice_number)+'</b></p></div>':''))+
+      '</div>'+
+
+      '<div class="footer">ABN: '+esc(BIZ.abn||'75 642 501 493')+' · '+esc(BIZ.name||'Aura Print')+' · '+esc(BIZ.address1||'4/1 Packer Road')+', '+esc(BIZ.address2||'Baringa QLD 4551')+' · Prices in AUD and include GST where shown. This document becomes a tax invoice for GST purposes.</div>'+
+      '</div>';
+
+    document.getElementById('doc').innerHTML = h;
+    document.getElementById('toolbar').style.display = 'flex';
+    document.title = 'Tax Invoice '+v.invoice_number+' | Aura Print & Promo';
+  }
+})();
+</script>
+</body>
+</html>
