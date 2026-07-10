@@ -37,15 +37,11 @@
       <h1 class="prod">STATIONERY SAME DAY</h1>
       <p style="color:#6b6560;margin-bottom:6px">Stationery Same Day produced through our our trade network trade network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.</p>
       
-      <div class="price-box" style="margin-top:24px">
-        <div><div class="from">From</div><div class="gst">guide price - we quote exactly to your spec</div></div>
-        <div class="amount grad-text">$83</div>
-      </div>
-      <div class="panel" style="margin-top:20px;background:var(--paper)">
-        <h3 style="font-size:17px;margin-bottom:8px">Priced per job - quotes back within the hour</h3>
-        <p style="font-size:14.5px;color:#555">Produced through our national trade production network. Tell us size, quantity and deadline and we'll price it fast (Mon-Fri 8:30-5).</p>
-      </div>
-      <div style="display:flex;gap:12px;margin-top:18px;flex-wrap:wrap"><a class="btn btn-aura" href="quote.html?product=stationery-same-day" style="flex:1;text-align:center">Get a fast quote →</a></div>
+      <div id="aura-config" data-product="stationery-same-day"
+           data-axes='[["size","Size",["Letterhead (A4)","With Comps Slip (DL)"]],["stock","Stock",["90 GSM Uncoated","100 GSM Uncoated"]]]'
+           data-default='{"size":"Letterhead (A4)","stock":"90 GSM Uncoated"}'
+           data-qty="250"></div>
+      
     </div>
   </div>
 </section>
@@ -80,6 +76,6 @@
 
 <script src="assets/config.js?v=20260710a"></script>
 <script src="assets/aura.js?v=20260710a"></script>
-
+<script src="assets/aura-pricing.js?v=20260710a"></script>
 </body>
 </html>

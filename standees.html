@@ -37,15 +37,11 @@
       <h1 class="prod">STANDEES &AMP; CUT OUTS</h1>
       <p style="color:#6b6560;margin-bottom:6px">Life-size (and larger) cardboard and corflute cut-outs with strut backs.</p>
       
-      <div class="price-box" style="margin-top:24px">
-        <div><div class="from">From</div><div class="gst">guide price - we quote exactly to your spec</div></div>
-        <div class="amount grad-text">$131</div>
-      </div>
-      <div class="panel" style="margin-top:20px;background:var(--paper)">
-        <h3 style="font-size:17px;margin-bottom:8px">Priced per job - quotes back within the hour</h3>
-        <p style="font-size:14.5px;color:#555">Produced through our national trade production network. Tell us size, quantity and deadline and we'll price it fast (Mon-Fri 8:30-5).</p>
-      </div>
-      <div style="display:flex;gap:12px;margin-top:18px;flex-wrap:wrap"><a class="btn btn-aura" href="quote.html?product=standees" style="flex:1;text-align:center">Get a fast quote →</a></div>
+      <div id="aura-config" data-product="standees"
+           data-axes='[["width","Width",["2000mm","1000mm","3000mm"]],["height","Height",["1000mm","2000mm"]],["material","Material",["Signflute™ 5mm Thickness","Cardboard 10mm Thickness"]],["printing","Printed sides",["Single Sided","Double Sided"]]]'
+           data-default='{"width":"2000mm","height":"1000mm","material":"Signflute™ 5mm Thickness","printing":"Single Sided"}'
+           data-qty="10"></div>
+      
     </div>
   </div>
 </section>
@@ -81,7 +77,7 @@
     <div class="grid">
       <a class="card" href="media-walls.html"><div class="thumb">🖼️</div>
   <div class="body"><h3>Media Walls</h3><p>Straight or curved backdrops for events, launches and step-and-repeats.</p>
-  <div class="cardfoot"><div class="from">from <em>$195</em></div><span class="cardtag">Get a quote →</span></div></div></a>
+  <div class="cardfoot"><div class="from">from <em>$174</em></div><span class="cardtag">Price online →</span></div></div></a>
       <a class="card" href="posters.html"><div class="thumb photo"><img src="https://www.easysigns.com.au/uploads/content/products/gallery/posters.jpg" alt="Posters" loading="lazy"></div>
   <div class="body"><h3>Posters</h3><p>Offset and wide format posters, A2 to billboard scale.</p>
   <div class="cardfoot"><div class="from">from <em>$117</em></div><span class="cardtag">Price online →</span></div></div></a>
@@ -94,6 +90,6 @@
 
 <script src="assets/config.js?v=20260710a"></script>
 <script src="assets/aura.js?v=20260710a"></script>
-
+<script src="assets/aura-pricing.js?v=20260710a"></script>
 </body>
 </html>

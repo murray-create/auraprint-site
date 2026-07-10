@@ -414,7 +414,35 @@
    "letterheads",
    "envelopes",
    "business-cards"
-  ]
+  ],
+  "live": {
+   "axes": [
+    [
+     "stock",
+     "Stock",
+     [
+      "100 GSM Uncoated",
+      "90 GSM Uncoated",
+      "120 GSM Uncoated",
+      "140 GSM Uncoated"
+     ]
+    ],
+    [
+     "sides",
+     "Printed sides",
+     [
+      "1S",
+      "2S"
+     ]
+    ]
+   ],
+   "default": {
+    "stock": "100 GSM Uncoated",
+    "sides": "1S"
+   },
+   "qty": 250
+  },
+  "from": 153
  },
  {
   "slug": "loyalty-cards",
@@ -443,7 +471,34 @@
    "flyers",
    "menus"
   ],
-  "img": "assets/img/loyalty-cards.jpg"
+  "img": "assets/img/loyalty-cards.jpg",
+  "live": {
+   "axes": [
+    [
+     "size",
+     "Size",
+     [
+      "A6",
+      "Postcard",
+      "A5"
+     ]
+    ],
+    [
+     "sides",
+     "Printed sides",
+     [
+      "1S",
+      "2S"
+     ]
+    ]
+   ],
+   "default": {
+    "size": "A6",
+    "sides": "1S"
+   },
+   "qty": 250
+  },
+  "from": 181
  },
  {
   "slug": "presentation-folders",
@@ -473,10 +528,49 @@
    "brochures"
   ],
   "img": "assets/img/presentation-folders.jpg",
-  "from": 206,
+  "from": 348,
   "suppliers": [
    "LEP"
-  ]
+  ],
+  "live": {
+   "axes": [
+    [
+     "size",
+     "Size",
+     [
+      "A5",
+      "A4"
+     ]
+    ],
+    [
+     "stock",
+     "Stock",
+     [
+      "300 GSM Gloss Art",
+      "300 GSM Matt Art",
+      "310 GSM Deluxe Artboard",
+      "350 GSM Gloss Art",
+      "350 GSM Matt Art",
+      "360 GSM Deluxe Artboard",
+      "300 GSM Uncoated"
+     ]
+    ],
+    [
+     "sides",
+     "Printed sides",
+     [
+      "1S",
+      "2S"
+     ]
+    ]
+   ],
+   "default": {
+    "size": "A5",
+    "stock": "300 GSM Gloss Art",
+    "sides": "1S"
+   },
+   "qty": 250
+  }
  },
  {
   "slug": "menus",
@@ -510,7 +604,47 @@
   "suppliers": [
    "Easy Signs"
   ],
-  "imgReal": true
+  "imgReal": true,
+  "live": {
+   "axes": [
+    [
+     "material",
+     "Material",
+     [
+      "200gsm Paper",
+      "250gsm Paper",
+      "310gsm Artboard",
+      "128gsm Gloss Paper",
+      "128gsm Matte Paper",
+      "150gsm Gloss Paper"
+     ]
+    ],
+    [
+     "lamination",
+     "Lamination",
+     [
+      "Gloss Both Sides Laminated",
+      "Matte Both Sides Laminated",
+      "Velvet Soft Touch Lamination Both Sides"
+     ]
+    ],
+    [
+     "finish",
+     "Finish",
+     [
+      "No Special Finish",
+      "Spot Gloss Front Side Only",
+      "Spot Gloss Both Sides"
+     ]
+    ]
+   ],
+   "default": {
+    "material": "200gsm Paper",
+    "lamination": "Gloss Both Sides Laminated",
+    "finish": "No Special Finish"
+   },
+   "qty": 10
+  }
  },
  {
   "slug": "greeting-cards",
@@ -540,11 +674,53 @@
    "business-cards"
   ],
   "img": "assets/img/greeting-cards.jpg",
-  "from": 57,
+  "from": 112,
   "suppliers": [
    "Easy Signs",
    "LEP"
-  ]
+  ],
+  "live": {
+   "axes": [
+    [
+     "size",
+     "Size",
+     [
+      "A5",
+      "Double DL"
+     ]
+    ],
+    [
+     "stock",
+     "Stock",
+     [
+      "90 GSM Uncoated",
+      "100 GSM Uncoated",
+      "115 GSM Gloss Art",
+      "115 GSM Matt Art",
+      "120 GSM Uncoated",
+      "130 GSM Gloss Art",
+      "130 GSM Matt Art",
+      "140 GSM Uncoated",
+      "150 GSM Gloss Art",
+      "150 GSM Matt Art"
+     ]
+    ],
+    [
+     "sides",
+     "Printed sides",
+     [
+      "1S",
+      "2S"
+     ]
+    ]
+   ],
+   "default": {
+    "size": "A5",
+    "stock": "90 GSM Uncoated",
+    "sides": "1S"
+   },
+   "qty": 250
+  }
  },
  {
   "slug": "booklets",
@@ -577,11 +753,46 @@
    "wiro-booklets",
    "brochures"
   ],
-  "from": 106,
+  "from": 376,
   "suppliers": [
    "CMYKhub",
    "Easy Signs"
-  ]
+  ],
+  "live": {
+   "axes": [
+    [
+     "group",
+     "Range",
+     [
+      "A5 Saddle Staple Self Cover",
+      "A5 Wire Bind Self Cover",
+      "A4 Saddle Staple Self Cover",
+      "A4 Wire Bind Self Cover"
+     ]
+    ],
+    [
+     "option",
+     "Option",
+     [
+      "Gloss 113gsm / 8pp",
+      "Gloss 113gsm / 16pp",
+      "Gloss 113gsm / 24pp",
+      "Gloss 113gsm / 32pp",
+      "Gloss 113gsm / 48pp",
+      "Gloss 150gsm / 8pp",
+      "Gloss 150gsm / 16pp",
+      "Gloss 150gsm / 24pp",
+      "Gloss 150gsm / 32pp",
+      "Gloss 150gsm / 48pp"
+     ]
+    ]
+   ],
+   "default": {
+    "group": "A5 Saddle Staple Self Cover",
+    "option": "Gloss 113gsm / 8pp"
+   },
+   "qty": 250
+  }
  },
  {
   "slug": "perfect-bound-books",
@@ -695,10 +906,53 @@
    "calendars",
    "pens"
   ],
-  "from": 255,
+  "from": 426,
   "suppliers": [
    "LEP"
-  ]
+  ],
+  "live": {
+   "axes": [
+    [
+     "size",
+     "Size",
+     [
+      "A5 Notepads",
+      "A6 Notepads",
+      "DL Notepads",
+      "A4 Notepads",
+      "A3 Deskpads",
+      "A2 Deskpads"
+     ]
+    ],
+    [
+     "stock",
+     "Stock",
+     [
+      "100 GSM Uncoated",
+      "150 GSM Gloss Art",
+      "170 GSM Gloss Art",
+      "150 GSM Matt Art",
+      "170 GSM Matt Art",
+      "90 GSM Uncoated",
+      "120 GSM Uncoated"
+     ]
+    ],
+    [
+     "sides",
+     "Printed sides",
+     [
+      "1S",
+      "2S"
+     ]
+    ]
+   ],
+   "default": {
+    "size": "A5 Notepads",
+    "stock": "100 GSM Uncoated",
+    "sides": "1S"
+   },
+   "qty": 250
+  }
  },
  {
   "slug": "calendars",
@@ -727,11 +981,49 @@
    "greeting-cards",
    "notepads"
   ],
-  "from": 64,
+  "from": 124,
   "suppliers": [
    "CMYKhub",
    "LEP"
-  ]
+  ],
+  "live": {
+   "axes": [
+    [
+     "_product",
+     "Style",
+     [
+      "DL calendar",
+      "Tent calendar"
+     ]
+    ],
+    [
+     "stock",
+     "Stock",
+     [
+      "300 GSM Gloss Art",
+      "350 GSM Gloss Art",
+      "300 GSM Matt Art",
+      "350 GSM Matt Art",
+      "250 GSM Gloss Art",
+      "250 GSM Matt Art"
+     ]
+    ],
+    [
+     "sides",
+     "Printed sides",
+     [
+      "1S",
+      "2S"
+     ]
+    ]
+   ],
+   "default": {
+    "_product": "DL calendar",
+    "stock": "300 GSM Gloss Art",
+    "sides": "1S"
+   },
+   "qty": 250
+  }
  },
  {
   "slug": "corflute-signs",
@@ -830,11 +1122,47 @@
    "pull-up-banners"
   ],
   "img": "assets/img/a-frames.jpg",
-  "from": 128,
+  "from": 91,
   "suppliers": [
    "CMYKhub",
    "Easy Signs"
-  ]
+  ],
+  "live": {
+   "axes": [
+    [
+     "size",
+     "Size",
+     [
+      "600x700",
+      "630x800",
+      "600x950",
+      "700x1100"
+     ]
+    ],
+    [
+     "type",
+     "Type",
+     [
+      "Flat base",
+      "With legs"
+     ]
+    ],
+    [
+     "handle",
+     "Handle",
+     [
+      "Carrying Handle",
+      "No Carrying Handle"
+     ]
+    ]
+   ],
+   "default": {
+    "size": "600x700",
+    "type": "Flat base",
+    "handle": "Carrying Handle"
+   },
+   "qty": 10
+  }
  },
  {
   "slug": "aluminium-signs",
@@ -863,10 +1191,35 @@
    "safety-signs",
    "a-frames"
   ],
-  "from": 182,
+  "from": 163,
   "suppliers": [
    "Easy Signs"
-  ]
+  ],
+  "live": {
+   "axes": [
+    [
+     "sides",
+     "Printed sides",
+     [
+      "Single Sided",
+      "Double Sided"
+     ]
+    ],
+    [
+     "lamination",
+     "Lamination",
+     [
+      "Gloss Lamination (4 - 5 Year)",
+      "Matte Lamination (4 - 5 Year)"
+     ]
+    ]
+   ],
+   "default": {
+    "sides": "Single Sided",
+    "lamination": "Gloss Lamination (4 - 5 Year)"
+   },
+   "qty": 10
+  }
  },
  {
   "slug": "safety-signs",
@@ -1016,10 +1369,39 @@
    "corflute-signs",
    "aluminium-signs"
   ],
-  "from": 182,
+  "from": 163,
   "suppliers": [
    "Easy Signs"
-  ]
+  ],
+  "live": {
+   "axes": [
+    [
+     "material",
+     "Material",
+     [
+      "White High-Quality Vinyl",
+      "Yellow Prismatic Reflective (Brilliant Grade Premium)",
+      "White Prismatic Reflective (Brilliant Grade Premium)",
+      "White Economy Reflective (Engineer Grade)",
+      "Yellow Economy Reflective (Engineer Grade)"
+     ]
+    ],
+    [
+     "lamination",
+     "Lamination",
+     [
+      "Gloss Lamination",
+      "Brilliant Grade Premium Reflective Lamination",
+      "Engineer Grade Reflective Lamination"
+     ]
+    ]
+   ],
+   "default": {
+    "material": "White High-Quality Vinyl",
+    "lamination": "Gloss Lamination"
+   },
+   "qty": 10
+  }
  },
  {
   "slug": "pull-up-banners",
@@ -1107,10 +1489,42 @@
    "outdoor-banners",
    "fence-mesh"
   ],
-  "from": 172,
+  "from": 153,
   "suppliers": [
    "Easy Signs"
-  ]
+  ],
+  "live": {
+   "axes": [
+    [
+     "base",
+     "Base",
+     [
+      "Ground Spike",
+      "Heavy Duty Ground Spike",
+      "Cross Base & Water Bag",
+      "Cross Base",
+      "Premium Cross Base & Water Bag",
+      "Premium Cross Base",
+      "Heavy Duty Square Base",
+      "20L Water Base"
+     ]
+    ],
+    [
+     "base_size",
+     "Base weight",
+     [
+      "Heavy Duty Square Base (5kg)",
+      "Heavy Duty Square Base (7kg)",
+      "Heavy Duty Square Base (10kg)"
+     ]
+    ]
+   ],
+   "default": {
+    "base": "Ground Spike",
+    "base_size": "Heavy Duty Square Base (5kg)"
+   },
+   "qty": 10
+  }
  },
  {
   "slug": "outdoor-banners",
@@ -1140,11 +1554,41 @@
    "corflute-signs"
   ],
   "img": "assets/img/outdoor-banners.jpg",
-  "from": 108,
+  "from": 130,
   "suppliers": [
    "CMYKhub",
    "Easy Signs"
-  ]
+  ],
+  "live": {
+   "axes": [
+    [
+     "size",
+     "Size",
+     [
+      "2000x1000",
+      "3000x1000",
+      "3000x1500",
+      "4000x1000"
+     ]
+    ],
+    [
+     "finishing",
+     "Finishing",
+     [
+      "Hemmed Edges, Ropes & Eyelets",
+      "Hemmed Edges & Ropes",
+      "Hemmed Edges & Eyelets",
+      "Hemmed Edges Only",
+      "Rod Pockets (75mm Lay flat)"
+     ]
+    ]
+   ],
+   "default": {
+    "size": "2000x1000",
+    "finishing": "Hemmed Edges, Ropes & Eyelets"
+   },
+   "qty": 10
+  }
  },
  {
   "slug": "fence-mesh",
@@ -1174,10 +1618,28 @@
    "safety-signs"
   ],
   "img": "assets/img/fence-mesh.jpg",
-  "from": 182,
+  "from": 163,
   "suppliers": [
    "Easy Signs"
-  ]
+  ],
+  "live": {
+   "axes": [
+    [
+     "size",
+     "Size",
+     [
+      "2400x1600",
+      "2400x1800",
+      "3000x1000",
+      "3000x1600"
+     ]
+    ]
+   ],
+   "default": {
+    "size": "2400x1600"
+   },
+   "qty": 10
+  }
  },
  {
   "slug": "media-walls",
@@ -1206,10 +1668,38 @@
    "marquees",
    "tablecloths"
   ],
-  "from": 195,
+  "from": 174,
   "suppliers": [
    "Easy Signs"
-  ]
+  ],
+  "live": {
+   "axes": [
+    [
+     "size",
+     "Size",
+     [
+      "2000x2000",
+      "2300x2300",
+      "3000x2400",
+      "3048x2438"
+     ]
+    ],
+    [
+     "frame",
+     "Frame",
+     [
+      "Include the Adjustable Frame & Carry Bag",
+      "No Frame - Replacement Banner Only",
+      "Frame only"
+     ]
+    ]
+   ],
+   "default": {
+    "size": "2000x2000",
+    "frame": "Include the Adjustable Frame & Carry Bag"
+   },
+   "qty": 10
+  }
  },
  {
   "slug": "marquees",
@@ -1271,10 +1761,54 @@
    "corflute-signs"
   ],
   "img": "assets/img/standees.jpg",
-  "from": 131,
+  "from": 117,
   "suppliers": [
    "Easy Signs"
-  ]
+  ],
+  "live": {
+   "axes": [
+    [
+     "width",
+     "Width",
+     [
+      "2000mm",
+      "1000mm",
+      "3000mm"
+     ]
+    ],
+    [
+     "height",
+     "Height",
+     [
+      "1000mm",
+      "2000mm"
+     ]
+    ],
+    [
+     "material",
+     "Material",
+     [
+      "Signflute™ 5mm Thickness",
+      "Cardboard 10mm Thickness"
+     ]
+    ],
+    [
+     "printing",
+     "Printed sides",
+     [
+      "Single Sided",
+      "Double Sided"
+     ]
+    ]
+   ],
+   "default": {
+    "width": "2000mm",
+    "height": "1000mm",
+    "material": "Signflute™ 5mm Thickness",
+    "printing": "Single Sided"
+   },
+   "qty": 10
+  }
  },
  {
   "slug": "tablecloths",
@@ -1303,10 +1837,45 @@
    "media-walls",
    "pull-up-banners"
   ],
-  "from": 2376,
+  "from": 164,
   "suppliers": [
    "Easy Signs"
-  ]
+  ],
+  "live": {
+   "axes": [
+    [
+     "size",
+     "Size",
+     [
+      "4 Foot",
+      "6 Foot",
+      "8 Foot"
+     ]
+    ],
+    [
+     "style",
+     "Style",
+     [
+      "Fitted",
+      "Loose"
+     ]
+    ],
+    [
+     "sides",
+     "Printed sides",
+     [
+      "Full (4 Sides)",
+      "Open Back (3 Sides)"
+     ]
+    ]
+   ],
+   "default": {
+    "size": "4 Foot",
+    "style": "Fitted",
+    "sides": "Full (4 Sides)"
+   },
+   "qty": 10
+  }
  },
  {
   "slug": "exhibition-displays",
@@ -1347,7 +1916,7 @@
   "sub": "Signs & Stickers",
   "desc": "Acoustic Panels produced through our trade production network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
   "seo": "Acoustic Panels Sunshine Coast | Aura Print & Promo",
-  "from": 182,
+  "from": 163,
   "quote": true,
   "suppliers": [
    "Easy Signs"
@@ -1369,7 +1938,45 @@
    ]
   ],
   "related": [],
-  "imgReal": true
+  "imgReal": true,
+  "live": {
+   "axes": [
+    [
+     "size",
+     "Size",
+     [
+      "350x350",
+      "600x300",
+      "600x600",
+      "900x600",
+      "1200x900"
+     ]
+    ],
+    [
+     "thickness",
+     "Thickness",
+     [
+      "12mm",
+      "24mm"
+     ]
+    ],
+    [
+     "printing",
+     "Printed sides",
+     [
+      "Single Sided",
+      "Double Sided",
+      "No Printing"
+     ]
+    ]
+   ],
+   "default": {
+    "size": "350x350",
+    "thickness": "12mm",
+    "printing": "Single Sided"
+   },
+   "qty": 10
+  }
  },
  {
   "slug": "acrylic-reception-signs",
@@ -1378,7 +1985,7 @@
   "sub": "Signs & Stickers",
   "desc": "Acrylic Reception Signs produced through our trade production network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
   "seo": "Acrylic Reception Signs Sunshine Coast | Aura Print & Promo",
-  "from": 364,
+  "from": 325,
   "quote": true,
   "suppliers": [
    "Easy Signs"
@@ -1400,7 +2007,33 @@
    ]
   ],
   "related": [],
-  "imgReal": true
+  "imgReal": true,
+  "live": {
+   "axes": [
+    [
+     "size",
+     "Size",
+     [
+      "400x400",
+      "900x500",
+      "1200x400"
+     ]
+    ],
+    [
+     "edge",
+     "Edge finish",
+     [
+      "Bevelled & Flame Polished",
+      "Straight Cut & Flame Polished"
+     ]
+    ]
+   ],
+   "default": {
+    "size": "400x400",
+    "edge": "Bevelled & Flame Polished"
+   },
+   "qty": 10
+  }
  },
  {
   "slug": "acrylic-signs",
@@ -1440,7 +2073,7 @@
   "sub": "Banners & Flags",
   "desc": "Arch Banners produced through our trade production network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
   "seo": "Arch Banners Sunshine Coast | Aura Print & Promo",
-  "from": 405,
+  "from": 362,
   "quote": true,
   "suppliers": [
    "Easy Signs"
@@ -1462,7 +2095,40 @@
    ]
   ],
   "related": [],
-  "imgReal": true
+  "imgReal": true,
+  "live": {
+   "axes": [
+    [
+     "size",
+     "Size",
+     [
+      "Small (3390x1860)",
+      "Large (3390x2180)"
+     ]
+    ],
+    [
+     "base",
+     "Base",
+     [
+      "Ground Spike",
+      "Heavy Duty Ground Spike",
+      "Cross Base & Water Bag",
+      "Cross Base",
+      "Premium Cross Base & Water Bag",
+      "Premium Cross Base",
+      "20L Water Base",
+      "Vertical Floor Bracket",
+      "Heavy Duty Square Base (5kg)",
+      "Heavy Duty Square Base (7kg)"
+     ]
+    ]
+   ],
+   "default": {
+    "size": "Small (3390x1860)",
+    "base": "Ground Spike"
+   },
+   "qty": 10
+  }
  },
  {
   "slug": "auction-paddles",
@@ -1471,7 +2137,7 @@
   "sub": "Events & Display",
   "desc": "Auction Paddles produced through our trade production network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
   "seo": "Auction Paddles Sunshine Coast | Aura Print & Promo",
-  "from": 131,
+  "from": 117,
   "quote": true,
   "suppliers": [
    "Easy Signs"
@@ -1493,7 +2159,52 @@
    ]
   ],
   "related": [],
-  "imgReal": true
+  "imgReal": true,
+  "live": {
+   "axes": [
+    [
+     "size",
+     "Size",
+     [
+      "Small (160x270)",
+      "Medium (200x330)",
+      "Large (260x400)"
+     ]
+    ],
+    [
+     "material",
+     "Material",
+     [
+      "Foam pvc",
+      "Screenboard"
+     ]
+    ],
+    [
+     "thickness",
+     "Thickness",
+     [
+      "5mm",
+      "3mm",
+      "2mm"
+     ]
+    ],
+    [
+     "printing",
+     "Printed sides",
+     [
+      "Single Sided",
+      "Double Sided"
+     ]
+    ]
+   ],
+   "default": {
+    "size": "Small (160x270)",
+    "material": "Foam pvc",
+    "thickness": "5mm",
+    "printing": "Single Sided"
+   },
+   "qty": 10
+  }
  },
  {
   "slug": "bollard-signs",
@@ -1502,7 +2213,7 @@
   "sub": "Signs & Stickers",
   "desc": "Bollard Signs produced through our trade production network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
   "seo": "Bollard Signs Sunshine Coast | Aura Print & Promo",
-  "from": 131,
+  "from": 117,
   "quote": true,
   "suppliers": [
    "Easy Signs"
@@ -1524,7 +2235,49 @@
    ]
   ],
   "related": [],
-  "imgReal": true
+  "imgReal": true,
+  "live": {
+   "axes": [
+    [
+     "size",
+     "Size",
+     [
+      "3 Sides (270x800)",
+      "3 Sides (270x1000)",
+      "3 Sides (270x1800)",
+      "3 Sides (300x1000)",
+      "3 Sides (300x1800)",
+      "4 Sides (155x1000)",
+      "4 Sides (155x1800)",
+      "4 Sides (175x1000)",
+      "4 Sides (175x1800)",
+      "3 Sides (270mm W X 800mm H)"
+     ]
+    ],
+    [
+     "material",
+     "Material",
+     [
+      "Signflute™",
+      "White Clay Coat Corrugated Cardboard"
+     ]
+    ],
+    [
+     "thickness",
+     "Thickness",
+     [
+      "3mm",
+      "1.6mm E Flute"
+     ]
+    ]
+   ],
+   "default": {
+    "size": "3 Sides (270x800)",
+    "material": "Signflute™",
+    "thickness": "3mm"
+   },
+   "qty": 10
+  }
  },
  {
   "slug": "bow-banners",
@@ -1533,7 +2286,7 @@
   "sub": "Banners & Flags",
   "desc": "Bow Banners produced through our trade production network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
   "seo": "Bow Banners Sunshine Coast | Aura Print & Promo",
-  "from": 161,
+  "from": 144,
   "quote": true,
   "suppliers": [
    "Easy Signs"
@@ -1555,7 +2308,39 @@
    ]
   ],
   "related": [],
-  "imgReal": true
+  "imgReal": true,
+  "live": {
+   "axes": [
+    [
+     "base",
+     "Base",
+     [
+      "Ground Spike",
+      "Heavy Duty Ground Spike",
+      "Cross Base & Water Bag",
+      "Cross Base",
+      "Premium Cross Base & Water Bag",
+      "Premium Cross Base",
+      "Heavy Duty Square Base",
+      "20L Water Base"
+     ]
+    ],
+    [
+     "base_size",
+     "Base weight",
+     [
+      "Heavy Duty Square Base (5kg)",
+      "Heavy Duty Square Base (7kg)",
+      "Heavy Duty Square Base (10kg)"
+     ]
+    ]
+   ],
+   "default": {
+    "base": "Ground Spike",
+    "base_size": "Heavy Duty Square Base (5kg)"
+   },
+   "qty": 10
+  }
  },
  {
   "slug": "bumper-stickers",
@@ -1564,7 +2349,7 @@
   "sub": "Signs & Stickers",
   "desc": "Bumper Stickers produced through our trade production network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
   "seo": "Bumper Stickers Sunshine Coast | Aura Print & Promo",
-  "from": 182,
+  "from": 163,
   "quote": true,
   "suppliers": [
    "Easy Signs"
@@ -1586,7 +2371,35 @@
    ]
   ],
   "related": [],
-  "imgReal": true
+  "imgReal": true,
+  "live": {
+   "axes": [
+    [
+     "size",
+     "Size",
+     [
+      "150x50",
+      "200x60",
+      "300x75",
+      "400x100"
+     ]
+    ],
+    [
+     "lamination",
+     "Lamination",
+     [
+      "No Lamination",
+      "Gloss Lamination",
+      "Matte Lamination"
+     ]
+    ]
+   ],
+   "default": {
+    "size": "150x50",
+    "lamination": "No Lamination"
+   },
+   "qty": 10
+  }
  },
  {
   "slug": "cardboard-signs",
@@ -1595,7 +2408,7 @@
   "sub": "Signs & Stickers",
   "desc": "Cardboard Signs produced through our trade production network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
   "seo": "Cardboard Signs Sunshine Coast | Aura Print & Promo",
-  "from": 182,
+  "from": 163,
   "quote": true,
   "suppliers": [
    "Easy Signs"
@@ -1617,7 +2430,43 @@
    ]
   ],
   "related": [],
-  "imgReal": true
+  "imgReal": true,
+  "live": {
+   "axes": [
+    [
+     "size",
+     "Size",
+     [
+      "420x297",
+      "594x841",
+      "841x594",
+      "841x1189"
+     ]
+    ],
+    [
+     "thickness",
+     "Thickness",
+     [
+      "3mm",
+      "5mm"
+     ]
+    ],
+    [
+     "printing",
+     "Printed sides",
+     [
+      "Single Sided",
+      "Double Sided"
+     ]
+    ]
+   ],
+   "default": {
+    "size": "420x297",
+    "thickness": "3mm",
+    "printing": "Single Sided"
+   },
+   "qty": 10
+  }
  },
  {
   "slug": "collapsible-seg-lightbox-display",
@@ -1626,7 +2475,7 @@
   "sub": "Events & Display",
   "desc": "Collapsible SEG Lightbox Display produced through our trade production network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
   "seo": "Collapsible SEG Lightbox Display Sunshine Coast | Aura Print & Promo",
-  "from": 148,
+  "from": 132,
   "quote": true,
   "suppliers": [
    "Easy Signs"
@@ -1648,7 +2497,45 @@
    ]
   ],
   "related": [],
-  "imgReal": true
+  "imgReal": true,
+  "live": {
+   "axes": [
+    [
+     "size",
+     "Size",
+     [
+      "850x2000",
+      "1000x2000",
+      "900x2000",
+      "1200x2000",
+      "1500x2000"
+     ]
+    ],
+    [
+     "option",
+     "Option",
+     [
+      "Collapsible Lightbox Display Kit",
+      "Replacement Frame",
+      "Replacement Fabric"
+     ]
+    ],
+    [
+     "printing",
+     "Printed sides",
+     [
+      "Single Sided",
+      "Double Sided"
+     ]
+    ]
+   ],
+   "default": {
+    "size": "850x2000",
+    "option": "Collapsible Lightbox Display Kit",
+    "printing": "Single Sided"
+   },
+   "qty": 10
+  }
  },
  {
   "slug": "construction-signs",
@@ -1657,7 +2544,7 @@
   "sub": "Signs & Stickers",
   "desc": "Construction Signs produced through our trade production network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
   "seo": "Construction Signs Sunshine Coast | Aura Print & Promo",
-  "from": 182,
+  "from": 163,
   "quote": true,
   "suppliers": [
    "Easy Signs"
@@ -1679,7 +2566,42 @@
    ]
   ],
   "related": [],
-  "imgReal": true
+  "imgReal": true,
+  "live": {
+   "axes": [
+    [
+     "size",
+     "Size",
+     [
+      "594x841",
+      "600x900",
+      "900x1200"
+     ]
+    ],
+    [
+     "thickness",
+     "Thickness",
+     [
+      "3mm",
+      "5mm"
+     ]
+    ],
+    [
+     "print",
+     "Printed sides",
+     [
+      "Single Sided",
+      "Double Sided"
+     ]
+    ]
+   ],
+   "default": {
+    "size": "594x841",
+    "thickness": "3mm",
+    "print": "Single Sided"
+   },
+   "qty": 10
+  }
  },
  {
   "slug": "crowd-control-barriers",
@@ -1688,7 +2610,7 @@
   "sub": "Events & Display",
   "desc": "Crowd Control Barriers produced through our trade production network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
   "seo": "Crowd Control Barriers Sunshine Coast | Aura Print & Promo",
-  "from": 104,
+  "from": 93,
   "quote": true,
   "suppliers": [
    "Easy Signs"
@@ -1710,7 +2632,43 @@
    ]
   ],
   "related": [],
-  "imgReal": true
+  "imgReal": true,
+  "live": {
+   "axes": [
+    [
+     "frame_size",
+     "Size",
+     [
+      "1000x900",
+      "1500x900",
+      "2000x900"
+     ]
+    ],
+    [
+     "component",
+     "What you need",
+     [
+      "Frame and Fabric",
+      "Frame only",
+      "Replacement Fabric Only"
+     ]
+    ],
+    [
+     "print",
+     "Printed sides",
+     [
+      "Single Sided",
+      "Double Sided"
+     ]
+    ]
+   ],
+   "default": {
+    "frame_size": "1000x900",
+    "component": "Frame and Fabric",
+    "print": "Single Sided"
+   },
+   "qty": 10
+  }
  },
  {
   "slug": "custom-flat-sheet",
@@ -1750,7 +2708,7 @@
   "sub": "Signs & Stickers",
   "desc": "Custom Label Rolls produced through our trade production network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
   "seo": "Custom Label Rolls Sunshine Coast | Aura Print & Promo",
-  "from": 218,
+  "from": 195,
   "quote": true,
   "suppliers": [
    "Easy Signs"
@@ -1772,7 +2730,12 @@
    ]
   ],
   "related": [],
-  "imgReal": true
+  "imgReal": true,
+  "live": {
+   "axes": [],
+   "default": {},
+   "qty": 10
+  }
  },
  {
   "slug": "custom-printed-coasters",
@@ -1781,7 +2744,7 @@
   "sub": "Cards & Stationery",
   "desc": "Custom Printed Coasters produced through our trade production network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
   "seo": "Custom Printed Coasters Sunshine Coast | Aura Print & Promo",
-  "from": 80,
+  "from": 70,
   "quote": true,
   "suppliers": [
    "Easy Signs"
@@ -1803,7 +2766,32 @@
    ]
   ],
   "related": [],
-  "imgReal": true
+  "imgReal": true,
+  "live": {
+   "axes": [
+    [
+     "size",
+     "Size",
+     [
+      "93mm Diameter",
+      "93x93"
+     ]
+    ],
+    [
+     "printing",
+     "Printed sides",
+     [
+      "Single Sided",
+      "Double Sided"
+     ]
+    ]
+   ],
+   "default": {
+    "size": "93mm Diameter",
+    "printing": "Single Sided"
+   },
+   "qty": 100
+  }
  },
  {
   "slug": "custom-printed-flat-mailing-boxes",
@@ -1812,7 +2800,7 @@
   "sub": "Marketing Material",
   "desc": "Custom Printed Flat Mailing Boxes produced through our trade production network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
   "seo": "Custom Printed Flat Mailing Boxes Sunshine Coast | Aura Print & Promo",
-  "from": 249,
+  "from": 39,
   "quote": true,
   "suppliers": [
    "Easy Signs"
@@ -1834,7 +2822,48 @@
    ]
   ],
   "related": [],
-  "imgReal": true
+  "imgReal": true,
+  "live": {
+   "axes": [
+    [
+     "size",
+     "Size",
+     [
+      "225mm W x 115mm D x 16mm H (DL Short)",
+      "225mm W x 115mm D x 26mm H (DL Tall)",
+      "225mm  W x 163mm D x 16mm H (A5 Short)",
+      "225mm  W x 163mm D x 26mm H (A5 Tall)",
+      "312mm W x 225mm D x 16mm H (A4 Short)",
+      "312mm W x 225mm D x 26mm H (A4 Tall)",
+      "434mm W x 312mm D x 16mm H (A3 Short)",
+      "434mm W x 312mm D x 26mm H (A3 Tall)"
+     ]
+    ],
+    [
+     "material",
+     "Material",
+     [
+      "White Clay Coat Corrugated Cardboard",
+      "Kraft Corrugated Cardboard"
+     ]
+    ],
+    [
+     "printing",
+     "Printed sides",
+     [
+      "Single Sided",
+      "Double Sided",
+      "No Printing"
+     ]
+    ]
+   ],
+   "default": {
+    "size": "225mm W x 115mm D x 16mm H (DL Short)",
+    "material": "White Clay Coat Corrugated Cardboard",
+    "printing": "Single Sided"
+   },
+   "qty": 10
+  }
  },
  {
   "slug": "custom-stickers",
@@ -1843,7 +2872,7 @@
   "sub": "Signs & Stickers",
   "desc": "Custom Stickers produced through our trade production network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
   "seo": "Custom Stickers Sunshine Coast | Aura Print & Promo",
-  "from": 182,
+  "from": 163,
   "quote": true,
   "suppliers": [
    "Easy Signs"
@@ -1865,7 +2894,47 @@
    ]
   ],
   "related": [],
-  "imgReal": true
+  "imgReal": true,
+  "live": {
+   "axes": [
+    [
+     "size",
+     "Size",
+     [
+      "50x50",
+      "80x80",
+      "100x100",
+      "150x50",
+      "150x150"
+     ]
+    ],
+    [
+     "material",
+     "Material",
+     [
+      "White Paper Permanent",
+      "White Paper Removable",
+      "White Synthetic Permanent (Currently Out of Stock - ETA 13/07/26)",
+      "White Synthetic Removable",
+      "Clear Synthetic Permanent"
+     ]
+    ],
+    [
+     "finishing",
+     "Finishing",
+     [
+      "Gloss lamination",
+      "Matte lamination"
+     ]
+    ]
+   ],
+   "default": {
+    "size": "50x50",
+    "material": "White Paper Permanent",
+    "finishing": "Gloss lamination"
+   },
+   "qty": 10
+  }
  },
  {
   "slug": "deck-chairs",
@@ -1874,7 +2943,7 @@
   "sub": "Events & Display",
   "desc": "Deck Chairs produced through our trade production network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
   "seo": "Deck Chairs Sunshine Coast | Aura Print & Promo",
-  "from": 131,
+  "from": 117,
   "quote": true,
   "suppliers": [
    "Easy Signs"
@@ -1896,7 +2965,33 @@
    ]
   ],
   "related": [],
-  "imgReal": true
+  "imgReal": true,
+  "live": {
+   "axes": [
+    [
+     "component",
+     "What you need",
+     [
+      "Chair & Insert",
+      "Chair Hardware Only",
+      "Chair insert only"
+     ]
+    ],
+    [
+     "printing",
+     "Printed sides",
+     [
+      "Single Sided",
+      "Double Sided"
+     ]
+    ]
+   ],
+   "default": {
+    "component": "Chair & Insert",
+    "printing": "Single Sided"
+   },
+   "qty": 10
+  }
  },
  {
   "slug": "director-chairs",
@@ -1905,7 +3000,7 @@
   "sub": "Events & Display",
   "desc": "Director Chairs produced through our trade production network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
   "seo": "Director Chairs Sunshine Coast | Aura Print & Promo",
-  "from": 65,
+  "from": 59,
   "quote": true,
   "suppliers": [
    "Easy Signs"
@@ -1927,7 +3022,33 @@
    ]
   ],
   "related": [],
-  "imgReal": true
+  "imgReal": true,
+  "live": {
+   "axes": [
+    [
+     "type",
+     "Type",
+     [
+      "Director Chair Kit",
+      "Replacement Fabric Only",
+      "Replacement Chair Hardware Only"
+     ]
+    ],
+    [
+     "printing",
+     "Printed sides",
+     [
+      "Single Sided",
+      "Double Sided"
+     ]
+    ]
+   ],
+   "default": {
+    "type": "Director Chair Kit",
+    "printing": "Single Sided"
+   },
+   "qty": 10
+  }
  },
  {
   "slug": "dtf-gang-sheets",
@@ -1936,7 +3057,7 @@
   "sub": "Marketing Material",
   "desc": "DTF Gang Sheets produced through our our trade network trade network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
   "seo": "DTF Gang Sheets Sunshine Coast | Aura Print & Promo",
-  "from": 57,
+  "from": 121,
   "quote": true,
   "suppliers": [
    "CMYKhub"
@@ -1958,7 +3079,12 @@
     "Yes, Australia-wide. We are Sunshine Coast based with national delivery."
    ]
   ],
-  "related": []
+  "related": [],
+  "live": {
+   "axes": [],
+   "default": {},
+   "qty": 4
+  }
  },
  {
   "slug": "dump-bins",
@@ -1998,7 +3124,7 @@
   "sub": "Signs & Stickers",
   "desc": "Electrostatic Stickers produced through our our trade network trade network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
   "seo": "Electrostatic Stickers Sunshine Coast | Aura Print & Promo",
-  "from": 105,
+  "from": 182,
   "quote": true,
   "suppliers": [
    "CMYKhub"
@@ -2020,7 +3146,35 @@
     "Yes, Australia-wide. We are Sunshine Coast based with national delivery."
    ]
   ],
-  "related": []
+  "related": [],
+  "live": {
+   "axes": [
+    [
+     "group",
+     "Option",
+     [
+      "Electrostatic Clear Sticker - CMYK",
+      "Electrostatic Clear Sticker - CMYK 2 Sided+Blockout",
+      "Electrostatic Clear Sticker - CMYK 2 Sided+White",
+      "Electrostatic Clear Sticker - CMYK+White Ink",
+      "Electrostatic Clear Sticker - Reverse Printed CMYK",
+      "Electrostatic Clear Sticker - Reverse Printed CMYK+White Ink",
+      "Electrostatic Sticker - CMYK",
+      "Hi-Tack Sticker - CMYK",
+      "Monomeric Sticker - CMYK",
+      "Polymeric Air Release Sticker - CMYK",
+      "Polymeric Clear Sticker - CMYK",
+      "Polymeric Clear Sticker - CMYK 2 Sided+Blockout",
+      "Polymeric Clear Sticker - CMYK 2 Sided+White",
+      "Polymeric Clear Sticker - CMYK+White Ink"
+     ]
+    ]
+   ],
+   "default": {
+    "group": "Electrostatic Clear Sticker - CMYK"
+   },
+   "qty": 2
+  }
  },
  {
   "slug": "end-sign-flags",
@@ -2029,7 +3183,7 @@
   "sub": "Banners & Flags",
   "desc": "End Sign Flags produced through our trade production network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
   "seo": "End Sign Flags Sunshine Coast | Aura Print & Promo",
-  "from": 26,
+  "from": 23,
   "quote": true,
   "suppliers": [
    "Easy Signs"
@@ -2051,7 +3205,33 @@
    ]
   ],
   "related": [],
-  "imgReal": true
+  "imgReal": true,
+  "live": {
+   "axes": [
+    [
+     "components",
+     "What you need",
+     [
+      "Fabric and Hardware",
+      "Replacement Hardware Only",
+      "Replacement Fabric Only"
+     ]
+    ],
+    [
+     "finishing",
+     "Finishing",
+     [
+      "Square Cut",
+      "Diamond Cut"
+     ]
+    ]
+   ],
+   "default": {
+    "components": "Fabric and Hardware",
+    "finishing": "Square Cut"
+   },
+   "qty": 10
+  }
  },
  {
   "slug": "fabric-display-cubes",
@@ -2060,7 +3240,7 @@
   "sub": "Events & Display",
   "desc": "Fabric Display Cubes produced through our trade production network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
   "seo": "Fabric Display Cubes Sunshine Coast | Aura Print & Promo",
-  "from": 120,
+  "from": 107,
   "quote": true,
   "suppliers": [
    "Easy Signs"
@@ -2082,7 +3262,35 @@
    ]
   ],
   "related": [],
-  "imgReal": true
+  "imgReal": true,
+  "live": {
+   "axes": [
+    [
+     "size",
+     "Size",
+     [
+      "510x510 x 510mm D",
+      "610x610 x 610mm D",
+      "765x765 x 765mm D",
+      "915x915 x 915mm D"
+     ]
+    ],
+    [
+     "components",
+     "What you need",
+     [
+      "Frame and fabric",
+      "Replacement Frame Only",
+      "Replacement Fabric Only"
+     ]
+    ]
+   ],
+   "default": {
+    "size": "510x510 x 510mm D",
+    "components": "Frame and fabric"
+   },
+   "qty": 10
+  }
  },
  {
   "slug": "floor-stickers",
@@ -2091,7 +3299,7 @@
   "sub": "Signs & Stickers",
   "desc": "Floor Stickers produced through our trade production network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
   "seo": "Floor Stickers Sunshine Coast | Aura Print & Promo",
-  "from": 182,
+  "from": 163,
   "quote": true,
   "suppliers": [
    "Easy Signs"
@@ -2113,7 +3321,35 @@
    ]
   ],
   "related": [],
-  "imgReal": true
+  "imgReal": true,
+  "live": {
+   "axes": [
+    [
+     "size",
+     "Size",
+     [
+      "150mm Diameter",
+      "300mm Diameter",
+      "400mm Diameter"
+     ]
+    ],
+    [
+     "material",
+     "Material",
+     [
+      "Avery Economy R9 Slip Rating (3 Months)",
+      "MyFloor Economy R9 Slip Rating (6 Months)",
+      "TrafficTex Outdoor Luxury R11 Slip Rating (6 Months)",
+      "Asphalt Art Nuevo Luxury R13 Slip Rating (9 Months)"
+     ]
+    ]
+   ],
+   "default": {
+    "size": "150mm Diameter",
+    "material": "Avery Economy R9 Slip Rating (3 Months)"
+   },
+   "qty": 10
+  }
  },
  {
   "slug": "foam-pvc-signs",
@@ -2122,7 +3358,7 @@
   "sub": "Signs & Stickers",
   "desc": "Foam PVC Signs produced through our trade production network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
   "seo": "Foam PVC Signs Sunshine Coast | Aura Print & Promo",
-  "from": 182,
+  "from": 163,
   "quote": true,
   "suppliers": [
    "Easy Signs"
@@ -2144,7 +3380,44 @@
    ]
   ],
   "related": [],
-  "imgReal": true
+  "imgReal": true,
+  "live": {
+   "axes": [
+    [
+     "size",
+     "Size",
+     [
+      "420x297",
+      "594x841",
+      "841x594",
+      "841x1189"
+     ]
+    ],
+    [
+     "thickness",
+     "Thickness",
+     [
+      "2mm",
+      "3mm",
+      "5mm"
+     ]
+    ],
+    [
+     "print",
+     "Printed sides",
+     [
+      "Single Sided",
+      "Double Sided"
+     ]
+    ]
+   ],
+   "default": {
+    "size": "420x297",
+    "thickness": "2mm",
+    "print": "Single Sided"
+   },
+   "qty": 10
+  }
  },
  {
   "slug": "golf-score-cards",
@@ -2184,7 +3457,7 @@
   "sub": "Signs & Stickers",
   "desc": "Ground Spikes & Sign Holders produced through our trade production network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
   "seo": "Ground Spikes & Sign Holders Sunshine Coast | Aura Print & Promo",
-  "from": 253,
+  "from": 226,
   "quote": true,
   "suppliers": [
    "Easy Signs"
@@ -2206,7 +3479,34 @@
    ]
   ],
   "related": [],
-  "imgReal": true
+  "imgReal": true,
+  "live": {
+   "axes": [
+    [
+     "size_group1",
+     "Size",
+     [
+      "600x450",
+      "600x400",
+      "500x400",
+      "450x300"
+     ]
+    ],
+    [
+     "print",
+     "Printed sides",
+     [
+      "Double Sided",
+      "Single Sided"
+     ]
+    ]
+   ],
+   "default": {
+    "size_group1": "600x450",
+    "print": "Double Sided"
+   },
+   "qty": 10
+  }
  },
  {
   "slug": "invitations",
@@ -2215,7 +3515,7 @@
   "sub": "Marketing Material",
   "desc": "Invitations produced through our trade production network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
   "seo": "Invitations Sunshine Coast | Aura Print & Promo",
-  "from": 52,
+  "from": 51,
   "quote": true,
   "suppliers": [
    "Easy Signs"
@@ -2237,7 +3537,47 @@
    ]
   ],
   "related": [],
-  "imgReal": true
+  "imgReal": true,
+  "live": {
+   "axes": [
+    [
+     "material",
+     "Material",
+     [
+      "250gsm Paper",
+      "310gsm Artboard"
+     ]
+    ],
+    [
+     "lamination",
+     "Lamination",
+     [
+      "No Lamination",
+      "Gloss Front Side Lamination",
+      "Gloss Both Sides Laminated",
+      "Matte Front Side Lamination",
+      "Matte Both Sides Laminated",
+      "Velvet Soft Touch Front Side Lamination",
+      "Velvet Soft Touch Both Side Lamination"
+     ]
+    ],
+    [
+     "finish",
+     "Finish",
+     [
+      "No Special Finish",
+      "Spot Gloss Front Side Only",
+      "Spot Gloss Both Sides"
+     ]
+    ]
+   ],
+   "default": {
+    "material": "250gsm Paper",
+    "lamination": "No Lamination",
+    "finish": "No Special Finish"
+   },
+   "qty": 10
+  }
  },
  {
   "slug": "large-format-stickers-sav",
@@ -2246,7 +3586,7 @@
   "sub": "Signs & Stickers",
   "desc": "Large Format Stickers (SAV) produced through our trade production network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
   "seo": "Large Format Stickers (SAV) Sunshine Coast | Aura Print & Promo",
-  "from": 182,
+  "from": 163,
   "quote": true,
   "suppliers": [
    "Easy Signs"
@@ -2268,7 +3608,38 @@
    ]
   ],
   "related": [],
-  "imgReal": true
+  "imgReal": true,
+  "live": {
+   "axes": [
+    [
+     "material",
+     "Material",
+     [
+      "Gloss White Economy (1 Year)",
+      "Matte White Premium (3 Years)"
+     ]
+    ],
+    [
+     "lamination_options",
+     "Lamination",
+     [
+      "None",
+      "Matte Lamination",
+      "Gloss Lamination",
+      "Ultra Clear Lamination",
+      "Anti-Graffiti Lamination",
+      "Gloss Avery Cast Lamination",
+      "Brilliant Grade Premium Reflective Laminate",
+      "Engineer Grade Reflective Laminate"
+     ]
+    ]
+   ],
+   "default": {
+    "material": "Gloss White Economy (1 Year)",
+    "lamination_options": "None"
+   },
+   "qty": 10
+  }
  },
  {
   "slug": "modular-seg-lightbox-display",
@@ -2277,7 +3648,7 @@
   "sub": "Events & Display",
   "desc": "Modular SEG Lightbox Display produced through our trade production network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
   "seo": "Modular SEG Lightbox Display Sunshine Coast | Aura Print & Promo",
-  "from": 1322,
+  "from": 1182,
   "quote": true,
   "suppliers": [
    "Easy Signs"
@@ -2299,7 +3670,23 @@
    ]
   ],
   "related": [],
-  "imgReal": true
+  "imgReal": true,
+  "live": {
+   "axes": [
+    [
+     "printing",
+     "Printed sides",
+     [
+      "Single Sided",
+      "Double Sided"
+     ]
+    ]
+   ],
+   "default": {
+    "printing": "Single Sided"
+   },
+   "qty": 10
+  }
  },
  {
   "slug": "novelty-cheques",
@@ -2308,7 +3695,7 @@
   "sub": "Events & Display",
   "desc": "Novelty Cheques produced through our trade production network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
   "seo": "Novelty Cheques Sunshine Coast | Aura Print & Promo",
-  "from": 131,
+  "from": 117,
   "quote": true,
   "suppliers": [
    "Easy Signs"
@@ -2330,7 +3717,32 @@
    ]
   ],
   "related": [],
-  "imgReal": true
+  "imgReal": true,
+  "live": {
+   "axes": [
+    [
+     "size",
+     "Size",
+     [
+      "Small (1000x450)",
+      "Large (1400x600)"
+     ]
+    ],
+    [
+     "lamination",
+     "Lamination",
+     [
+      "None",
+      "Whiteboard"
+     ]
+    ]
+   ],
+   "default": {
+    "size": "Small (1000x450)",
+    "lamination": "None"
+   },
+   "qty": 10
+  }
  },
  {
   "slug": "one-way-window-films",
@@ -2339,7 +3751,7 @@
   "sub": "Signs & Stickers",
   "desc": "One Way Window Films produced through our trade production network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
   "seo": "One Way Window Films Sunshine Coast | Aura Print & Promo",
-  "from": 182,
+  "from": 163,
   "quote": true,
   "suppliers": [
    "Easy Signs"
@@ -2361,7 +3773,32 @@
    ]
   ],
   "related": [],
-  "imgReal": true
+  "imgReal": true,
+  "live": {
+   "axes": [
+    [
+     "size",
+     "Size",
+     [
+      "1200x1200",
+      "1400x600"
+     ]
+    ],
+    [
+     "lamination",
+     "Lamination",
+     [
+      "None",
+      "Ultra Clear Laminate"
+     ]
+    ]
+   ],
+   "default": {
+    "size": "1200x1200",
+    "lamination": "None"
+   },
+   "qty": 10
+  }
  },
  {
   "slug": "outdoor-custom-stickers",
@@ -2370,7 +3807,7 @@
   "sub": "Signs & Stickers",
   "desc": "Outdoor Custom Stickers produced through our trade production network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
   "seo": "Outdoor Custom Stickers Sunshine Coast | Aura Print & Promo",
-  "from": 182,
+  "from": 163,
   "quote": true,
   "suppliers": [
    "Easy Signs"
@@ -2392,7 +3829,27 @@
    ]
   ],
   "related": [],
-  "imgReal": true
+  "imgReal": true,
+  "live": {
+   "axes": [
+    [
+     "lamination",
+     "Lamination",
+     [
+      "None",
+      "Gloss Lamination",
+      "Matte Lamination",
+      "Gloss Avery Cast  Lamination",
+      "Brilliant Grade Premium Reflective Lamination",
+      "Engineer Grade Reflective Lamination"
+     ]
+    ]
+   ],
+   "default": {
+    "lamination": "None"
+   },
+   "qty": 10
+  }
  },
  {
   "slug": "parking-signs",
@@ -2401,7 +3858,7 @@
   "sub": "Signs & Stickers",
   "desc": "Parking Signs produced through our trade production network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
   "seo": "Parking Signs Sunshine Coast | Aura Print & Promo",
-  "from": 73,
+  "from": 65,
   "quote": true,
   "suppliers": [
    "Easy Signs"
@@ -2423,7 +3880,45 @@
    ]
   ],
   "related": [],
-  "imgReal": true
+  "imgReal": true,
+  "live": {
+   "axes": [
+    [
+     "size",
+     "Size",
+     [
+      "Small (400x300)",
+      "Large (500x400)"
+     ]
+    ],
+    [
+     "material",
+     "Material",
+     [
+      "White High Quality Vinyl",
+      "Yellow Prismatic Reflective (Brilliant Grade Premium)",
+      "White Prismatic Reflective (Brilliant Grade Premium)",
+      "White Economy Reflective (Engineer Grade)",
+      "Yellow Economy Reflective (Engineer Grade"
+     ]
+    ],
+    [
+     "lamination",
+     "Lamination",
+     [
+      "Gloss Lamination",
+      "Brilliant Grade Premium Reflective Lamination",
+      "Engineer Grade Reflective Lamination"
+     ]
+    ]
+   ],
+   "default": {
+    "size": "Small (400x300)",
+    "material": "White High Quality Vinyl",
+    "lamination": "Gloss Lamination"
+   },
+   "qty": 10
+  }
  },
  {
   "slug": "plastic-election-signs",
@@ -2432,7 +3927,7 @@
   "sub": "Signs & Stickers",
   "desc": "Plastic Election Signs produced through our trade production network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
   "seo": "Plastic Election Signs Sunshine Coast | Aura Print & Promo",
-  "from": 182,
+  "from": 163,
   "quote": true,
   "suppliers": [
    "Easy Signs"
@@ -2454,7 +3949,33 @@
    ]
   ],
   "related": [],
-  "imgReal": true
+  "imgReal": true,
+  "live": {
+   "axes": [
+    [
+     "size",
+     "Size",
+     [
+      "600mm x 900mm",
+      "594mm x 841mm (A1)",
+      "2400mm x 1200mm"
+     ]
+    ],
+    [
+     "thickness",
+     "Thickness",
+     [
+      "3mm",
+      "5mm"
+     ]
+    ]
+   ],
+   "default": {
+    "size": "600mm x 900mm",
+    "thickness": "3mm"
+   },
+   "qty": 10
+  }
  },
  {
   "slug": "rally-signs",
@@ -2463,7 +3984,7 @@
   "sub": "Signs & Stickers",
   "desc": "Rally Signs produced through our trade production network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
   "seo": "Rally Signs Sunshine Coast | Aura Print & Promo",
-  "from": 182,
+  "from": 163,
   "quote": true,
   "suppliers": [
    "Easy Signs"
@@ -2485,7 +4006,44 @@
    ]
   ],
   "related": [],
-  "imgReal": true
+  "imgReal": true,
+  "live": {
+   "axes": [
+    [
+     "size",
+     "Size",
+     [
+      "500x300",
+      "600x350",
+      "600x450",
+      "900x600"
+     ]
+    ],
+    [
+     "material",
+     "Material",
+     [
+      "3mm signflute",
+      "5mm signflute",
+      "2mm screenboard"
+     ]
+    ],
+    [
+     "printing",
+     "Printed sides",
+     [
+      "Single Sided",
+      "Double Sided"
+     ]
+    ]
+   ],
+   "default": {
+    "size": "500x300",
+    "material": "3mm signflute",
+    "printing": "Single Sided"
+   },
+   "qty": 10
+  }
  },
  {
   "slug": "rectangle-flags",
@@ -2494,7 +4052,7 @@
   "sub": "Banners & Flags",
   "desc": "Rectangle Flags produced through our trade production network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
   "seo": "Rectangle Flags Sunshine Coast | Aura Print & Promo",
-  "from": 170,
+  "from": 152,
   "quote": true,
   "suppliers": [
    "Easy Signs"
@@ -2516,7 +4074,39 @@
    ]
   ],
   "related": [],
-  "imgReal": true
+  "imgReal": true,
+  "live": {
+   "axes": [
+    [
+     "base",
+     "Base",
+     [
+      "Ground Spike",
+      "Heavy Duty Ground Spike",
+      "Cross Base & Water Bag",
+      "Cross Base",
+      "Premium Cross Base & Water Bag",
+      "Premium Cross Base",
+      "Heavy Duty Square Base",
+      "20L Water Base"
+     ]
+    ],
+    [
+     "base_size",
+     "Base weight",
+     [
+      "Heavy Duty Square Base (5kg)",
+      "Heavy Duty Square Base (7kg)",
+      "Heavy Duty Square Base (10kg)"
+     ]
+    ]
+   ],
+   "default": {
+    "base": "Ground Spike",
+    "base_size": "Heavy Duty Square Base (5kg)"
+   },
+   "qty": 10
+  }
  },
  {
   "slug": "reflective-signs",
@@ -2556,7 +4146,7 @@
   "sub": "Banners & Flags",
   "desc": "Replacement Flags produced through our trade production network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
   "seo": "Replacement Flags Sunshine Coast | Aura Print & Promo",
-  "from": 64,
+  "from": 57,
   "quote": true,
   "suppliers": [
    "Easy Signs"
@@ -2578,7 +4168,40 @@
    ]
   ],
   "related": [],
-  "imgReal": true
+  "imgReal": true,
+  "live": {
+   "axes": [
+    [
+     "size",
+     "Size",
+     [
+      "Extra Small (1830mm H)",
+      "Small (2300mm H)",
+      "Medium (2700mm H)",
+      "Large (3700mm H)",
+      "Jumbo (4650mm H)",
+      "Extra Small (2000mm H)",
+      "Small (2400mm H)",
+      "Medium (3000mm H)",
+      "Large (4000mm H)",
+      "Jumbo (4950mm H)"
+     ]
+    ],
+    [
+     "sides",
+     "Printed sides",
+     [
+      "Single Sided Mirror Reverse",
+      "Double Sided"
+     ]
+    ]
+   ],
+   "default": {
+    "size": "Extra Small (1830mm H)",
+    "sides": "Single Sided Mirror Reverse"
+   },
+   "qty": 10
+  }
  },
  {
   "slug": "rigid-boards",
@@ -2587,7 +4210,7 @@
   "sub": "Signs & Stickers",
   "desc": "Rigid Boards produced through our our trade network trade network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
   "seo": "Rigid Boards Sunshine Coast | Aura Print & Promo",
-  "from": 95,
+  "from": 169,
   "quote": true,
   "suppliers": [
    "CMYKhub"
@@ -2609,7 +4232,35 @@
     "Yes, Australia-wide. We are Sunshine Coast based with national delivery."
    ]
   ],
-  "related": []
+  "related": [],
+  "live": {
+   "axes": [
+    [
+     "group",
+     "Option",
+     [
+      "Artboard - 400gsm CMYK 1 side",
+      "Artboard - 400gsm CMYK 2 sides",
+      "Beer Matt Board - CMYK",
+      "Corrugated Board - B-Flute CMYK",
+      "Corrugated Board - E-Flute CMYK",
+      "Polypropylene - 0.8mm CMYK 1 side",
+      "Polypropylene - 0.8mm CMYK 2 sides",
+      "Polypropylene - 1.4mm CMYK 1 side",
+      "Polypropylene - 1.4mm CMYK 2 sides",
+      "Screen Board - 1mm CMYK 1 side",
+      "Screen Board - 1mm CMYK 2 sides",
+      "Screen Board - 2mm CMYK 1 side",
+      "Screen Board - 2mm CMYK 2 sides",
+      "TEKbond ACM - CMYK Gloss Laminate"
+     ]
+    ]
+   ],
+   "default": {
+    "group": "Artboard - 400gsm CMYK 1 side"
+   },
+   "qty": 2
+  }
  },
  {
   "slug": "roll-labels",
@@ -2618,7 +4269,7 @@
   "sub": "Signs & Stickers",
   "desc": "Roll Labels produced through our our trade network trade network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
   "seo": "Roll Labels Sunshine Coast | Aura Print & Promo",
-  "from": 181,
+  "from": 291,
   "quote": true,
   "suppliers": [
    "CMYKhub"
@@ -2640,7 +4291,48 @@
     "Yes, Australia-wide. We are Sunshine Coast based with national delivery."
    ]
   ],
-  "related": []
+  "related": [],
+  "live": {
+   "axes": [
+    [
+     "group",
+     "Range",
+     [
+      "Silver Synthetic Foil Permanent Roll Label printed CMYK + White + Gloss Laminate",
+      "White Cast Gloss Paper Permanent Roll Label printed CMYK + Gloss Varnish",
+      "White Synthetic Gloss Permanent Roll Label printed CMYK + Matt Laminate",
+      "White Cast Gloss Paper Permanent Roll Label printed CMYK + Gloss Laminate",
+      "White Cast Gloss Paper Permanent Roll Label printed CMYK + Matt Laminate",
+      "White Synthetic Gloss Permanent Roll Label printed CMYK + Matt Varnish",
+      "Clear Synthetic Gloss Permanent Roll Label printed CMYK + White + Gloss Varnish",
+      "Silver Synthetic Foil Permanent Roll Label printed CMYK + White + Gloss Varnish",
+      "Silver Synthetic Foil Permanent Roll Label printed CMYK + White + Matt Laminate",
+      "White Cast Gloss Paper Permanent Roll Label printed CMYK + Matt Varnish"
+     ]
+    ],
+    [
+     "option",
+     "Option",
+     [
+      "Laser-Cut to 100x100mm",
+      "Laser-Cut to 120x120mm",
+      "Laser-Cut to 148x148mm",
+      "Laser-Cut to 30x100mm",
+      "Laser-Cut to 30x30mm",
+      "Laser-Cut to 50x100mm",
+      "Laser-Cut to 50x150mm",
+      "Laser-Cut to 50x200mm",
+      "Laser-Cut to 50x50mm",
+      "Laser-Cut to 75x150mm"
+     ]
+    ]
+   ],
+   "default": {
+    "group": "Silver Synthetic Foil Permanent Roll Label printed CMYK + White + Gloss Laminate",
+    "option": "Laser-Cut to 100x100mm"
+   },
+   "qty": 3000
+  }
  },
  {
   "slug": "screenboard-signs",
@@ -2649,7 +4341,7 @@
   "sub": "Signs & Stickers",
   "desc": "Screenboard Signs produced through our trade production network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
   "seo": "Screenboard Signs Sunshine Coast | Aura Print & Promo",
-  "from": 131,
+  "from": 117,
   "quote": true,
   "suppliers": [
    "Easy Signs"
@@ -2671,7 +4363,35 @@
    ]
   ],
   "related": [],
-  "imgReal": true
+  "imgReal": true,
+  "live": {
+   "axes": [
+    [
+     "size",
+     "Size",
+     [
+      "210x297",
+      "420x297",
+      "594x420",
+      "420x594",
+      "841x594"
+     ]
+    ],
+    [
+     "print",
+     "Printed sides",
+     [
+      "Single Sided",
+      "Double Sided"
+     ]
+    ]
+   ],
+   "default": {
+    "size": "210x297",
+    "print": "Single Sided"
+   },
+   "qty": 10
+  }
  },
  {
   "slug": "seg-fabric",
@@ -2680,7 +4400,7 @@
   "sub": "Events & Display",
   "desc": "SEG Fabric produced through our trade production network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
   "seo": "SEG Fabric Sunshine Coast | Aura Print & Promo",
-  "from": 131,
+  "from": 117,
   "quote": true,
   "suppliers": [
    "Easy Signs"
@@ -2702,7 +4422,34 @@
    ]
   ],
   "related": [],
-  "imgReal": true
+  "imgReal": true,
+  "live": {
+   "axes": [
+    [
+     "size",
+     "Size",
+     [
+      "600x900",
+      "900x1200",
+      "1200x1200",
+      "2000x1500"
+     ]
+    ],
+    [
+     "type",
+     "Type",
+     [
+      "Frontlit",
+      "Backlit"
+     ]
+    ]
+   ],
+   "default": {
+    "size": "600x900",
+    "type": "Frontlit"
+   },
+   "qty": 10
+  }
  },
  {
   "slug": "selfie-frames",
@@ -2711,7 +4458,7 @@
   "sub": "Events & Display",
   "desc": "Selfie Frames produced through our trade production network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
   "seo": "Selfie Frames Sunshine Coast | Aura Print & Promo",
-  "from": 131,
+  "from": 117,
   "quote": true,
   "suppliers": [
    "Easy Signs"
@@ -2733,7 +4480,23 @@
    ]
   ],
   "related": [],
-  "imgReal": true
+  "imgReal": true,
+  "live": {
+   "axes": [
+    [
+     "size",
+     "Size",
+     [
+      "Small (600x900)",
+      "Large (850x1200)"
+     ]
+    ]
+   ],
+   "default": {
+    "size": "Small (600x900)"
+   },
+   "qty": 10
+  }
  },
  {
   "slug": "stackable-cubes",
@@ -2742,7 +4505,7 @@
   "sub": "Events & Display",
   "desc": "Stackable Cubes produced through our trade production network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
   "seo": "Stackable Cubes Sunshine Coast | Aura Print & Promo",
-  "from": 131,
+  "from": 117,
   "quote": true,
   "suppliers": [
    "Easy Signs"
@@ -2764,7 +4527,52 @@
    ]
   ],
   "related": [],
-  "imgReal": true
+  "imgReal": true,
+  "live": {
+   "axes": [
+    [
+     "size",
+     "Size",
+     [
+      "Small (300x300)",
+      "Medium (400x400)",
+      "Large (500x500)",
+      "Jumbo (580x580)"
+     ]
+    ],
+    [
+     "material",
+     "Material",
+     [
+      "Signflute™",
+      "White Clay Coat Corrugated Cardboard"
+     ]
+    ],
+    [
+     "thickness",
+     "Thickness",
+     [
+      "3mm",
+      "1.6mm E Flute"
+     ]
+    ],
+    [
+     "lid",
+     "Lid",
+     [
+      "No",
+      "Yes"
+     ]
+    ]
+   ],
+   "default": {
+    "size": "Small (300x300)",
+    "material": "Signflute™",
+    "thickness": "3mm",
+    "lid": "No"
+   },
+   "qty": 10
+  }
  },
  {
   "slug": "stationery-same-day",
@@ -2773,7 +4581,7 @@
   "sub": "Cards & Stationery",
   "desc": "Stationery Same Day produced through our our trade network trade network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
   "seo": "Stationery Same Day Sunshine Coast | Aura Print & Promo",
-  "from": 83,
+  "from": 179,
   "quote": true,
   "suppliers": [
    "LEP"
@@ -2795,7 +4603,32 @@
     "Yes, Australia-wide. We are Sunshine Coast based with national delivery."
    ]
   ],
-  "related": []
+  "related": [],
+  "live": {
+   "axes": [
+    [
+     "size",
+     "Size",
+     [
+      "Letterhead (A4)",
+      "With Comps Slip (DL)"
+     ]
+    ],
+    [
+     "stock",
+     "Stock",
+     [
+      "90 GSM Uncoated",
+      "100 GSM Uncoated"
+     ]
+    ]
+   ],
+   "default": {
+    "size": "Letterhead (A4)",
+    "stock": "90 GSM Uncoated"
+   },
+   "qty": 250
+  }
  },
  {
   "slug": "vinyl-pole-banners",
@@ -2804,7 +4637,7 @@
   "sub": "Banners & Flags",
   "desc": "Vinyl Pole Banners produced through our trade production network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
   "seo": "Vinyl Pole Banners Sunshine Coast | Aura Print & Promo",
-  "from": 175,
+  "from": 156,
   "quote": true,
   "suppliers": [
    "Easy Signs"
@@ -2826,7 +4659,48 @@
    ]
   ],
   "related": [],
-  "imgReal": true
+  "imgReal": true,
+  "live": {
+   "axes": [
+    [
+     "width",
+     "Width",
+     [
+      "457mm",
+      "610mm",
+      "762mm"
+     ]
+    ],
+    [
+     "height",
+     "Height",
+     [
+      "600mm",
+      "900mm",
+      "1200mm",
+      "1500mm",
+      "1800mm",
+      "2100mm",
+      "2400mm"
+     ]
+    ],
+    [
+     "components",
+     "What you need",
+     [
+      "Hardware and Banner",
+      "Banner",
+      "Hardware only"
+     ]
+    ]
+   ],
+   "default": {
+    "width": "457mm",
+    "height": "600mm",
+    "components": "Hardware and Banner"
+   },
+   "qty": 10
+  }
  },
  {
   "slug": "vinyl-stickers",
@@ -2835,7 +4709,7 @@
   "sub": "Signs & Stickers",
   "desc": "Vinyl Stickers produced through our our trade network trade network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
   "seo": "Vinyl Stickers Sunshine Coast | Aura Print & Promo",
-  "from": 102,
+  "from": 178,
   "quote": true,
   "suppliers": [
    "CMYKhub"
@@ -2857,7 +4731,35 @@
     "Yes, Australia-wide. We are Sunshine Coast based with national delivery."
    ]
   ],
-  "related": []
+  "related": [],
+  "live": {
+   "axes": [
+    [
+     "group",
+     "Option",
+     [
+      "Hi-Tack Vinyl White - CMYK",
+      "Indoor Floor Display - CMYK",
+      "Indoor Floor Display - Hi-Tack CMYK",
+      "Monomeric Vinyl Clear - CMYK",
+      "Monomeric Vinyl Clear - Reverse Printed CMYK+White Ink",
+      "Monomeric Vinyl White - CMYK",
+      "One Way Window - Perforated CMYK",
+      "Polymeric Air Release Vinyl White - CMYK",
+      "Polymeric Vinyl Clear - CMYK",
+      "Polymeric Vinyl Clear - CMYK 2 Sided+Blockout",
+      "Polymeric Vinyl Clear - CMYK 2 Sided+White",
+      "Polymeric Vinyl Clear - CMYK+White Ink",
+      "Polymeric Vinyl Clear - Reverse Printed CMYK",
+      "Polymeric Vinyl Clear - Reverse Printed CMYK+White Ink"
+     ]
+    ]
+   ],
+   "default": {
+    "group": "Hi-Tack Vinyl White - CMYK"
+   },
+   "qty": 2
+  }
  },
  {
   "slug": "wall-murals",
@@ -2897,7 +4799,7 @@
   "sub": "Signs & Stickers",
   "desc": "Window Graphics produced through our trade production network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
   "seo": "Window Graphics Sunshine Coast | Aura Print & Promo",
-  "from": 131,
+  "from": 117,
   "quote": true,
   "suppliers": [
    "Easy Signs"
@@ -2919,7 +4821,12 @@
    ]
   ],
   "related": [],
-  "imgReal": true
+  "imgReal": true,
+  "live": {
+   "axes": [],
+   "default": {},
+   "qty": 10
+  }
  },
  {
   "slug": "wiro-magazines",
@@ -2928,7 +4835,7 @@
   "sub": "Books & Booklets",
   "desc": "Wiro Magazines produced through our our trade network trade network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
   "seo": "Wiro Magazines Sunshine Coast | Aura Print & Promo",
-  "from": 207,
+  "from": 350,
   "quote": true,
   "suppliers": [
    "LEP"
@@ -2950,7 +4857,32 @@
     "Yes, Australia-wide. We are Sunshine Coast based with national delivery."
    ]
   ],
-  "related": []
+  "related": [],
+  "live": {
+   "axes": [
+    [
+     "size",
+     "Size",
+     [
+      "A4",
+      "A5"
+     ]
+    ],
+    [
+     "stock",
+     "Stock",
+     [
+      "90 GSM Uncoated",
+      "100 GSM Uncoated"
+     ]
+    ]
+   ],
+   "default": {
+    "size": "A4",
+    "stock": "90 GSM Uncoated"
+   },
+   "qty": 100
+  }
  },
  {
   "slug": "x-banners",
@@ -2959,7 +4891,7 @@
   "sub": "Banners & Flags",
   "desc": "X Banners produced through our trade production network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
   "seo": "X Banners Sunshine Coast | Aura Print & Promo",
-  "from": 57,
+  "from": 51,
   "quote": true,
   "suppliers": [
    "Easy Signs"
@@ -2981,6 +4913,22 @@
    ]
   ],
   "related": [],
-  "imgReal": true
+  "imgReal": true,
+  "live": {
+   "axes": [
+    [
+     "option",
+     "Option",
+     [
+      "X Banner with Full Colour Banner, Stand & Carry Pouch",
+      "Replacement Full Colour Banner Only"
+     ]
+    ]
+   ],
+   "default": {
+    "option": "X Banner with Full Colour Banner, Stand & Carry Pouch"
+   },
+   "qty": 10
+  }
  }
 ]
