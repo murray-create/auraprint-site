@@ -261,11 +261,12 @@
   async function loadOrders(){
     document.getElementById('count').textContent = 'Loading…';
     var res = await sb.from('orders')
-      .select('*, order_items(*, proofs(id,version,status,sent_at,decided_at,decision_comments,approver_name,approval_token,file_id))')
+      .select('*, order_items(*, proofs(id,version,status,sent_at,decided_at,decision_comments,approver_name,approval_token,file_id)), invoices(id,invoice_number,status,total_inc_cents,payment_link_url,qbo_invoice_id,paid_at), payments(id,amount_cents,status,provider,paid_at)')
       .order('created_at',{ascending:false});
     if (res.error){ document.getElementById('ordersWrap').innerHTML = '<div class="empty">Could not load orders: '+esc(res.error.message)+'</div>'; return; }
     allOrders = res.data || [];
-    document.getElementById('count').textContent = allOrders.length+' orders';
+    var unsynced = allOrders.filter(function(o){ return (o.invoices||[]).some(function(v){ return !v.qbo_invoice_id && v.status==='issued'; }); }).length;
+    document.getElementById('count').textContent = allOrders.length+' orders'+(unsynced?' · '+unsynced+' awaiting QuickBooks invoice':'');
     renderOrders();
   }
 
@@ -337,6 +338,34 @@
         '<span class="muted">Opens in your mail program with the one-click link'+(tokenLinks.length>1?'s':'')+' prefilled.</span>'+
         '</div>';
     }
+
+    /* invoices & payments */
+    (o.invoices||[]).forEach(function(v){
+      var paidCents = (o.payments||[]).filter(function(pm){return pm.status==='succeeded';})
+        .reduce(function(s,pm){return s+pm.amount_cents;},0);
+      var owing = v.total_inc_cents - paidCents;
+      h += '<div class="oitem" style="margin-top:12px">'+
+        '<div class="oitem-head"><b>🧾 '+esc(v.invoice_number)+'</b>'+
+        '<span>'+money(v.total_inc_cents)+' inc · <span class="pill p-'+esc(v.status)+'">'+esc(v.status)+'</span></span></div>';
+      if (v.qbo_invoice_id){
+        h += '<div class="proofrow muted">In QuickBooks (#'+esc(v.qbo_invoice_id)+')'+
+          (v.payment_link_url?' · <a class="plink" href="'+esc(v.payment_link_url)+'" target="_blank" rel="noopener">payment link ↗</a> <button class="btn-sm btn-ghost copy-link" data-link="'+esc(v.payment_link_url)+'">Copy</button>':'')+'</div>';
+      } else {
+        h += '<div class="proofrow muted">⏳ Not yet in QuickBooks — run "process pending invoices" in your next Claude session (or ask me to schedule it).</div>';
+      }
+      if (paidCents>0) h += '<div class="proofrow muted">Paid so far: '+money(paidCents)+(owing>0?' · owing '+money(owing):'')+'</div>';
+      if (owing>0 && v.status!=='void'){
+        h += '<div class="proofrow">'+
+          '<select class="status-sel pay-provider" data-inv="'+v.id+'"><option value="bank">bank transfer</option><option value="manual">manual/other</option><option value="stripe">card (stripe)</option></select>'+
+          '<input type="text" class="pay-amount" data-inv="'+v.id+'" value="'+(owing/100).toFixed(2)+'" style="width:100px;padding:6px 8px;border:2px solid #e0d9d0;border-radius:8px">'+
+          '<button class="btn-sm btn-aura2 pay-record" data-inv="'+v.id+'" data-order="'+o.id+'">Record payment</button>'+
+          '<span class="muted pay-msg" data-inv="'+v.id+'"></span></div>';
+      } else if (owing<=0){
+        h += '<div class="proofrow ok">✓ Fully paid'+(v.paid_at?' '+esc(fmtDate(v.paid_at)):'')+'</div>';
+      }
+      h += '</div>';
+    });
+
     h += '<div class="events" id="events-'+o.id+'">Loading history…</div>';
     return h;
   }
@@ -386,6 +415,26 @@
         });
       });
     });
+    document.querySelectorAll('.pay-record').forEach(function(b){
+      b.addEventListener('click', function(){ recordPayment(b.dataset.order, b.dataset.inv, b); });
+    });
+  }
+
+  async function recordPayment(orderId, invoiceId, btn){
+    var msg = document.querySelector('.pay-msg[data-inv="'+invoiceId+'"]');
+    var provider = document.querySelector('.pay-provider[data-inv="'+invoiceId+'"]').value;
+    var amount = Math.round(parseFloat(document.querySelector('.pay-amount[data-inv="'+invoiceId+'"]').value||'0')*100);
+    if (!(amount>0)){ msg.textContent = 'Enter a valid amount.'; return; }
+    if (!confirm('Record a '+provider+' payment of $'+(amount/100).toFixed(2)+' against this invoice?')) return;
+    btn.disabled = true; msg.textContent = 'Recording…';
+    var res = await sb.from('payments').insert({
+      invoice_id: invoiceId, order_id: orderId, amount_cents: amount,
+      provider: provider, status: 'succeeded', paid_at: new Date().toISOString()
+    });
+    btn.disabled = false;
+    if (res.error){ msg.textContent = 'Failed: '+res.error.message; return; }
+    msg.textContent = 'Recorded ✓';
+    await loadOrders();
   }
 
   async function sendProof(orderId, itemId, btn){
