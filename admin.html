@@ -265,8 +265,8 @@
       .order('created_at',{ascending:false});
     if (res.error){ document.getElementById('ordersWrap').innerHTML = '<div class="empty">Could not load orders: '+esc(res.error.message)+'</div>'; return; }
     allOrders = res.data || [];
-    var unsynced = allOrders.filter(function(o){ return (o.invoices||[]).some(function(v){ return !v.qbo_invoice_id && v.status==='issued'; }); }).length;
-    document.getElementById('count').textContent = allOrders.length+' orders'+(unsynced?' · '+unsynced+' awaiting QuickBooks invoice':'');
+    var nolink = allOrders.filter(function(o){ return (o.invoices||[]).some(function(v){ return !v.payment_link_url && v.status==='issued'; }); }).length;
+    document.getElementById('count').textContent = allOrders.length+' orders'+(nolink?' · '+nolink+' awaiting payment link':'');
     renderOrders();
   }
 
@@ -347,11 +347,14 @@
       h += '<div class="oitem" style="margin-top:12px">'+
         '<div class="oitem-head"><b>🧾 '+esc(v.invoice_number)+'</b>'+
         '<span>'+money(v.total_inc_cents)+' inc · <span class="pill p-'+esc(v.status)+'">'+esc(v.status)+'</span></span></div>';
-      if (v.qbo_invoice_id){
-        h += '<div class="proofrow muted">In QuickBooks (#'+esc(v.qbo_invoice_id)+')'+
-          (v.payment_link_url?' · <a class="plink" href="'+esc(v.payment_link_url)+'" target="_blank" rel="noopener">payment link ↗</a> <button class="btn-sm btn-ghost copy-link" data-link="'+esc(v.payment_link_url)+'">Copy</button>':'')+'</div>';
-      } else {
-        h += '<div class="proofrow muted">⏳ Not yet in QuickBooks — run "process pending invoices" in your next Claude session (or ask me to schedule it).</div>';
+      if (v.payment_link_url){
+        h += '<div class="proofrow"><a class="plink" href="'+esc(v.payment_link_url)+'" target="_blank" rel="noopener">Stripe payment link ↗</a> '+
+          '<button class="btn-sm btn-ghost copy-link" data-link="'+esc(v.payment_link_url)+'">Copy</button> '+
+          '<a class="btn-sm btn-ghost" href="'+invoiceMailtoHref(o, v)+'">✉ Compose invoice email</a></div>';
+      } else if (v.status==='issued'){
+        h += '<div class="proofrow">'+
+          '<button class="btn-sm btn-aura2 make-link" data-inv="'+v.id+'">Create Stripe payment link</button>'+
+          '<span class="muted link-msg" data-inv="'+v.id+'"></span></div>';
       }
       if (paidCents>0) h += '<div class="proofrow muted">Paid so far: '+money(paidCents)+(owing>0?' · owing '+money(owing):'')+'</div>';
       if (owing>0 && v.status!=='void'){
@@ -418,6 +421,46 @@
     document.querySelectorAll('.pay-record').forEach(function(b){
       b.addEventListener('click', function(){ recordPayment(b.dataset.order, b.dataset.inv, b); });
     });
+    document.querySelectorAll('.make-link').forEach(function(b){
+      b.addEventListener('click', function(){ createPaymentLink(b.dataset.inv, b); });
+    });
+  }
+
+  async function createPaymentLink(invoiceId, btn){
+    var msg = document.querySelector('.link-msg[data-inv="'+invoiceId+'"]');
+    btn.disabled = true; msg.textContent = 'Creating…';
+    try {
+      var s = await sb.auth.getSession();
+      var r = await fetch(CFG.supabaseUrl+'/functions/v1/stripe-payment-link', {
+        method:'POST',
+        headers:{ 'Content-Type':'application/json', 'Authorization':'Bearer '+s.data.session.access_token },
+        body: JSON.stringify({ invoice_id: invoiceId })
+      });
+      var j = await r.json();
+      if (!r.ok || !j.url){ msg.textContent = 'Failed: '+(j.error||('HTTP '+r.status)); btn.disabled=false; return; }
+      msg.textContent = 'Link created ✓';
+      await loadOrders();
+    } catch(e){
+      msg.textContent = 'Failed: '+(e.message||e); btn.disabled = false;
+    }
+  }
+
+  function invoiceMailtoHref(o, v){
+    var first = (o.contact_name||'').split(' ')[0] || 'there';
+    var subj = 'Invoice '+(v.invoice_number||'')+' — order '+(o.order_number||'')+' — Aura Print & Promo';
+    var body =
+      'Hi '+first+',\n\n'+
+      'Thanks for approving your proof — your order '+(o.order_number||'')+' is ready to go to production as soon as payment is received.\n\n'+
+      'Invoice '+(v.invoice_number||'')+': '+money(v.total_inc_cents)+' (includes GST)\n\n'+
+      'Pay securely by card here:\n'+(v.payment_link_url||'')+'\n\n'+
+      'Prefer bank transfer? Just reply and we\'ll send our account details.\n\n'+
+      'Production starts the moment payment lands.\n\n'+
+      'Kind regards,\n'+
+      'Murray\n'+
+      'Aura Print & Promo\n'+
+      'e: admin@auraprint.com.au\n'+
+      'w: auraprint.com.au';
+    return 'mailto:'+encodeURIComponent(o.contact_email||'')+'?subject='+encodeURIComponent(subj)+'&body='+encodeURIComponent(body);
   }
 
   async function recordPayment(orderId, invoiceId, btn){
