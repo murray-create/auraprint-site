@@ -4,7 +4,7 @@
   "name": "Business Cards",
   "cat": "print",
   "sub": "Cards & Stationery",
-  "icon": "🪪",
+  "icon": "\ud83e\udeaa",
   "badge": "Most popular",
   "desc": "90x55mm. From everyday 350gsm to thick NV Velvet with Spot UV and metallic foil.",
   "seo": "Business Cards Sunshine Coast - Instant Online Pricing",
@@ -51,7 +51,7 @@
   "name": "NV Velvet Business Cards",
   "cat": "print",
   "sub": "Cards & Stationery",
-  "icon": "✨",
+  "icon": "\u2728",
   "desc": "Soft-touch velvet laminate over 450gsm artboard. The card people remember.",
   "seo": "NV Velvet Business Cards Australia",
   "from": 123,
@@ -86,17 +86,17 @@
    "tier": "premium",
    "stock": "Velvet Soft-Touch"
   },
-  "liveNote": "Want <b>Spot UV</b> or <b>metallic foil</b> over the velvet? <a href=\"quote.html?product=nv-velvet-business-cards&spec=NV%20Velvet%20%2B%20Spot%20UV%20or%20foil\">Ask for a fast quote →</a>"
+  "liveNote": "Want <b>Spot UV</b> or <b>metallic foil</b> over the velvet? <a href=\"quote.html?product=nv-velvet-business-cards&spec=NV%20Velvet%20%2B%20Spot%20UV%20or%20foil\">Ask for a fast quote \u2192</a>"
  },
  {
   "slug": "flyers",
   "name": "Flyers",
   "cat": "print",
   "sub": "Marketing Material",
-  "icon": "📄",
+  "icon": "\ud83d\udcc4",
   "desc": "DL to A3 on stocks from 130gsm to 350gsm. Letterbox-ready and event-proof.",
   "seo": "Flyer Printing Sunshine Coast",
-  "from": 117,
+  "from": 85,
   "portal": true,
   "template": "flyers",
   "specs": [
@@ -171,10 +171,10 @@
   "name": "Brochures",
   "cat": "print",
   "sub": "Marketing Material",
-  "icon": "📖",
+  "icon": "\ud83d\udcd6",
   "desc": "Half fold, tri fold, Z fold and gate fold on premium stocks.",
   "seo": "Brochure Printing Sunshine Coast",
-  "from": 271,
+  "from": 198,
   "portal": true,
   "template": "brochures",
   "specs": [
@@ -237,10 +237,10 @@
   "name": "Postcards",
   "cat": "print",
   "sub": "Marketing Material",
-  "icon": "💌",
+  "icon": "\ud83d\udc8c",
   "desc": "Direct mail that stands out. A6 to A5 on thick stocks.",
   "seo": "Postcard Printing Australia",
-  "from": 158,
+  "from": 115,
   "portal": true,
   "template": "postcards",
   "quote": false,
@@ -309,10 +309,10 @@
   "name": "Letterheads",
   "cat": "print",
   "sub": "Cards & Stationery",
-  "icon": "✉️",
+  "icon": "\u2709\ufe0f",
   "desc": "Offset quality on premium uncoated and laser-safe stocks.",
   "seo": "Letterhead Printing Australia",
-  "from": 263,
+  "from": 192,
   "portal": true,
   "template": "letterheads",
   "specs": [
@@ -365,7 +365,7 @@
   "name": "Envelopes",
   "cat": "print",
   "sub": "Cards & Stationery",
-  "icon": "📮",
+  "icon": "\ud83d\udcee",
   "desc": "Printed DL to C4, plain face or window, any volume.",
   "seo": "Printed Envelopes Australia",
   "portal": true,
@@ -393,7 +393,7 @@
   "name": "With Compliments Slips",
   "cat": "print",
   "sub": "Cards & Stationery",
-  "icon": "📝",
+  "icon": "\ud83d\udcdd",
   "desc": "The finishing touch for your stationery suite. DL size to match your letterhead.",
   "seo": "With Compliments Slips Printing",
   "portal": true,
@@ -442,14 +442,14 @@
    },
    "qty": 250
   },
-  "from": 153
+  "from": 112
  },
  {
   "slug": "loyalty-cards",
   "name": "Loyalty Cards",
   "cat": "print",
   "sub": "Cards & Stationery",
-  "icon": "💳",
+  "icon": "\ud83d\udcb3",
   "desc": "Keep customers coming back. Business card size with stamp grids or numbering.",
   "seo": "Loyalty Card Printing",
   "portal": true,
@@ -498,14 +498,14 @@
    },
    "qty": 250
   },
-  "from": 181
+  "from": 132
  },
  {
   "slug": "presentation-folders",
   "name": "Presentation Folders",
   "cat": "print",
   "sub": "Marketing Material",
-  "icon": "🗂️",
+  "icon": "\ud83d\uddc2\ufe0f",
   "desc": "Gloss, matt or velvet with business card slits and capacity spines.",
   "seo": "Presentation Folder Printing Australia",
   "portal": true,
@@ -528,7 +528,7 @@
    "brochures"
   ],
   "img": "assets/img/presentation-folders.jpg",
-  "from": 348,
+  "from": 254,
   "suppliers": [
    "LEP"
   ],
@@ -577,7 +577,7 @@
   "name": "Menus",
   "cat": "print",
   "sub": "Marketing Material",
-  "icon": "🍽️",
+  "icon": "\ud83c\udf7d\ufe0f",
   "desc": "Flat, folded or laminated for table service. Spill-proof options for venues.",
   "seo": "Menu Printing Sunshine Coast",
   "portal": true,
@@ -651,7 +651,7 @@
   "name": "Greeting Cards",
   "cat": "print",
   "sub": "Marketing Material",
-  "icon": "🎉",
+  "icon": "\ud83c\udf89",
   "desc": "Folded cards for retail, events and corporate Christmas lists.",
   "seo": "Greeting Card Printing Australia",
   "portal": true,
@@ -674,7 +674,7 @@
    "business-cards"
   ],
   "img": "assets/img/greeting-cards.jpg",
-  "from": 112,
+  "from": 82,
   "suppliers": [
    "Easy Signs",
    "LEP"
@@ -727,7 +727,7 @@
   "name": "Saddle Stitched Booklets",
   "cat": "print",
   "sub": "Books & Booklets",
-  "icon": "📚",
+  "icon": "\ud83d\udcda",
   "desc": "8-64 pages, self cover or plus cover. Catalogues, programs and magazines.",
   "seo": "Booklet Printing Australia",
   "portal": true,
@@ -753,7 +753,7 @@
    "wiro-booklets",
    "brochures"
   ],
-  "from": 376,
+  "from": 275,
   "suppliers": [
    "CMYKhub",
    "Easy Signs"
@@ -799,7 +799,7 @@
   "name": "Perfect Bound Books",
   "cat": "print",
   "sub": "Books & Booklets",
-  "icon": "📕",
+  "icon": "\ud83d\udcd5",
   "desc": "Square spine, bookshop finish. Annual reports, look books and manuals.",
   "seo": "Perfect Bound Book Printing Australia",
   "portal": true,
@@ -827,7 +827,7 @@
   "name": "Wiro Bound Booklets",
   "cat": "print",
   "sub": "Books & Booklets",
-  "icon": "🌀",
+  "icon": "\ud83c\udf00",
   "desc": "Lay-flat manuals, workbooks and calendars with metal wire binding.",
   "seo": "Wiro Bound Booklet Printing",
   "portal": true,
@@ -856,7 +856,7 @@
   "name": "Invoice Books (NCR)",
   "cat": "print",
   "sub": "Books & Booklets",
-  "icon": "🧾",
+  "icon": "\ud83e\uddfe",
   "desc": "Carbonless duplicate and triplicate books, numbered and perforated.",
   "seo": "NCR Invoice Book Printing Australia",
   "portal": true,
@@ -884,7 +884,7 @@
   "name": "Notepads",
   "cat": "print",
   "sub": "Books & Booklets",
-  "icon": "📒",
+  "icon": "\ud83d\udcd2",
   "desc": "Branded pads, glued head, 25-100 sheets. Desk real estate for your brand.",
   "seo": "Notepad Printing Australia",
   "portal": true,
@@ -906,7 +906,7 @@
    "calendars",
    "pens"
   ],
-  "from": 426,
+  "from": 311,
   "suppliers": [
    "LEP"
   ],
@@ -959,7 +959,7 @@
   "name": "Calendars",
   "cat": "print",
   "sub": "Books & Booklets",
-  "icon": "📅",
+  "icon": "\ud83d\udcc5",
   "desc": "Wall and desk calendars, wiro bound. Twelve months of brand visibility.",
   "seo": "Calendar Printing Australia",
   "portal": true,
@@ -981,7 +981,7 @@
    "greeting-cards",
    "notepads"
   ],
-  "from": 124,
+  "from": 90,
   "suppliers": [
    "CMYKhub",
    "LEP"
@@ -1030,10 +1030,10 @@
   "name": "Corflute Signs",
   "cat": "signage",
   "sub": "Signs & Stickers",
-  "icon": "🪧",
+  "icon": "\ud83e\udea7",
   "desc": "Real estate, builders and event boards on 3mm or 5mm corflute, any size.",
   "seo": "Corflute Signs Sunshine Coast",
-  "from": 163,
+  "from": 122,
   "portal": false,
   "template": "corflute-easysigns",
   "specs": [
@@ -1099,7 +1099,7 @@
   "name": "A-Frames",
   "cat": "signage",
   "sub": "Signs & Stickers",
-  "icon": "🅰️",
+  "icon": "\ud83c\udd70\ufe0f",
   "desc": "Metal A-frames with replaceable corflute or ACM inserts. Footpath workhorses.",
   "seo": "A-Frame Signs Australia",
   "portal": false,
@@ -1169,7 +1169,7 @@
   "name": "Aluminium Composite Signs",
   "cat": "signage",
   "sub": "Signs & Stickers",
-  "icon": "🔩",
+  "icon": "\ud83d\udd29",
   "desc": "Premium rigid ACM signage that stays flat and lasts years outdoors.",
   "seo": "Aluminium Composite Signs Australia",
   "portal": false,
@@ -1226,7 +1226,7 @@
   "name": "Safety Signs",
   "cat": "signage",
   "sub": "Signs & Stickers",
-  "icon": "⚠️",
+  "icon": "\u26a0\ufe0f",
   "desc": "Compliant site and workplace signage to AS 1319, stock or custom.",
   "seo": "Safety Signs Australia",
   "portal": false,
@@ -1254,10 +1254,10 @@
   "name": "Posters",
   "cat": "signage",
   "sub": "Signs & Stickers",
-  "icon": "🖼️",
+  "icon": "\ud83d\uddbc\ufe0f",
   "desc": "Offset and wide format posters, A2 to billboard scale.",
   "seo": "Poster Printing Sunshine Coast",
-  "from": 117,
+  "from": 102,
   "portal": true,
   "template": "posters",
   "specs": [
@@ -1300,17 +1300,17 @@
      [
       "200gsm Poster Paper",
       "150gsm Gloss",
-      "170gsm Gloss",
-      "170gsm Matt",
-      "250gsm Gloss"
+      "170gsm Silk/Matt",
+      "250gsm Gloss",
+      "250gsm Silk/Matt"
      ]
     ]
    ],
    "default": {
     "size": "A2",
-    "stock": "200gsm Poster Paper"
+    "stock": "250gsm Gloss"
    },
-   "qty": 10
+   "qty": 50
   }
  },
  {
@@ -1318,7 +1318,7 @@
   "name": "Stickers & Labels",
   "cat": "signage",
   "sub": "Signs & Stickers",
-  "icon": "🏷️",
+  "icon": "\ud83c\udff7\ufe0f",
   "desc": "Die-cut shapes, rolls and sheets. Indoor, outdoor and machine-apply.",
   "seo": "Sticker Printing Australia",
   "portal": true,
@@ -1347,7 +1347,7 @@
   "name": "Vehicle Magnets",
   "cat": "signage",
   "sub": "Signs & Stickers",
-  "icon": "🧲",
+  "icon": "\ud83e\uddf2",
   "desc": "Turn the ute into a billboard. Heavy-duty magnetic material, rounded corners.",
   "seo": "Vehicle Magnet Printing Australia",
   "portal": false,
@@ -1408,7 +1408,7 @@
   "name": "Pull Up Banners",
   "cat": "signage",
   "sub": "Banners & Flags",
-  "icon": "🚩",
+  "icon": "\ud83d\udea9",
   "badge": "Best seller",
   "desc": "Economy to premium bases with vivid print. Includes padded carry bag.",
   "seo": "Pull Up Banners Sunshine Coast",
@@ -1467,7 +1467,7 @@
   "name": "Teardrop Flags",
   "cat": "signage",
   "sub": "Banners & Flags",
-  "icon": "🎏",
+  "icon": "\ud83c\udf8f",
   "desc": "Single or double sided knitted polyester with spike, cross or water bases.",
   "seo": "Teardrop Flags Australia",
   "portal": false,
@@ -1531,7 +1531,7 @@
   "name": "Outdoor Vinyl Banners",
   "cat": "signage",
   "sub": "Banners & Flags",
-  "icon": "🌬️",
+  "icon": "\ud83c\udf2c\ufe0f",
   "desc": "Hemmed and eyeletted heavy-duty vinyl, any size, built for weather.",
   "seo": "Vinyl Banner Printing Australia",
   "portal": false,
@@ -1595,7 +1595,7 @@
   "name": "Fence Mesh Banners",
   "cat": "signage",
   "sub": "Banners & Flags",
-  "icon": "🕸️",
+  "icon": "\ud83d\udd78\ufe0f",
   "desc": "Construction site wraps that let wind through. Builders' favourite billboard.",
   "seo": "Fence Mesh Printing Australia",
   "portal": false,
@@ -1646,7 +1646,7 @@
   "name": "Media Walls",
   "cat": "signage",
   "sub": "Events & Display",
-  "icon": "🖼️",
+  "icon": "\ud83d\uddbc\ufe0f",
   "desc": "Straight or curved backdrops for events, launches and step-and-repeats.",
   "seo": "Media Walls Australia",
   "portal": false,
@@ -1706,7 +1706,7 @@
   "name": "Marquees",
   "cat": "signage",
   "sub": "Events & Display",
-  "icon": "⛺",
+  "icon": "\u26fa",
   "desc": "Printed canopies, walls and flags for markets and events. 2.4m to 6m.",
   "seo": "Printed Marquees Australia",
   "portal": false,
@@ -1738,7 +1738,7 @@
   "name": "Standees & Cut Outs",
   "cat": "signage",
   "sub": "Events & Display",
-  "icon": "🧍",
+  "icon": "\ud83e\uddcd",
   "desc": "Life-size (and larger) cardboard and corflute cut-outs with strut backs.",
   "seo": "Standee Printing Australia",
   "portal": false,
@@ -1788,7 +1788,7 @@
      "material",
      "Material",
      [
-      "Signflute™ 5mm Thickness",
+      "Signflute\u2122 5mm Thickness",
       "Cardboard 10mm Thickness"
      ]
     ],
@@ -1804,7 +1804,7 @@
    "default": {
     "width": "2000mm",
     "height": "1000mm",
-    "material": "Signflute™ 5mm Thickness",
+    "material": "Signflute\u2122 5mm Thickness",
     "printing": "Single Sided"
    },
    "qty": 10
@@ -1815,7 +1815,7 @@
   "name": "Printed Tablecloths",
   "cat": "signage",
   "sub": "Events & Display",
-  "icon": "🪑",
+  "icon": "\ud83e\ude91",
   "desc": "Fitted or throw-style, full colour dye-sublimation. Machine washable.",
   "seo": "Printed Tablecloths Australia",
   "portal": false,
@@ -1882,7 +1882,7 @@
   "name": "Exhibition Displays",
   "cat": "signage",
   "sub": "Events & Display",
-  "icon": "🎪",
+  "icon": "\ud83c\udfaa",
   "desc": "Complete expo kits: walls, counters, lighting and shipping cases.",
   "seo": "Exhibition Display Systems Australia",
   "portal": false,
@@ -2258,7 +2258,7 @@
      "material",
      "Material",
      [
-      "Signflute™",
+      "Signflute\u2122",
       "White Clay Coat Corrugated Cardboard"
      ]
     ],
@@ -2273,7 +2273,7 @@
    ],
    "default": {
     "size": "3 Sides (270x800)",
-    "material": "Signflute™",
+    "material": "Signflute\u2122",
     "thickness": "3mm"
    },
    "qty": 10
@@ -3057,7 +3057,7 @@
   "sub": "Marketing Material",
   "desc": "DTF Gang Sheets produced through our our trade network trade network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
   "seo": "DTF Gang Sheets Sunshine Coast | Aura Print & Promo",
-  "from": 121,
+  "from": 89,
   "quote": true,
   "suppliers": [
    "CMYKhub"
@@ -3124,7 +3124,7 @@
   "sub": "Signs & Stickers",
   "desc": "Electrostatic Stickers produced through our our trade network trade network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
   "seo": "Electrostatic Stickers Sunshine Coast | Aura Print & Promo",
-  "from": 182,
+  "from": 133,
   "quote": true,
   "suppliers": [
    "CMYKhub"
@@ -4210,7 +4210,7 @@
   "sub": "Signs & Stickers",
   "desc": "Rigid Boards produced through our our trade network trade network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
   "seo": "Rigid Boards Sunshine Coast | Aura Print & Promo",
-  "from": 169,
+  "from": 123,
   "quote": true,
   "suppliers": [
    "CMYKhub"
@@ -4269,7 +4269,7 @@
   "sub": "Signs & Stickers",
   "desc": "Roll Labels produced through our our trade network trade network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
   "seo": "Roll Labels Sunshine Coast | Aura Print & Promo",
-  "from": 291,
+  "from": 212,
   "quote": true,
   "suppliers": [
    "CMYKhub"
@@ -4544,7 +4544,7 @@
      "material",
      "Material",
      [
-      "Signflute™",
+      "Signflute\u2122",
       "White Clay Coat Corrugated Cardboard"
      ]
     ],
@@ -4567,7 +4567,7 @@
    ],
    "default": {
     "size": "Small (300x300)",
-    "material": "Signflute™",
+    "material": "Signflute\u2122",
     "thickness": "3mm",
     "lid": "No"
    },
@@ -4581,7 +4581,7 @@
   "sub": "Cards & Stationery",
   "desc": "Stationery Same Day produced through our our trade network trade network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
   "seo": "Stationery Same Day Sunshine Coast | Aura Print & Promo",
-  "from": 179,
+  "from": 130,
   "quote": true,
   "suppliers": [
    "LEP"
@@ -4709,7 +4709,7 @@
   "sub": "Signs & Stickers",
   "desc": "Vinyl Stickers produced through our our trade network trade network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
   "seo": "Vinyl Stickers Sunshine Coast | Aura Print & Promo",
-  "from": 178,
+  "from": 130,
   "quote": true,
   "suppliers": [
    "CMYKhub"
@@ -4835,7 +4835,7 @@
   "sub": "Books & Booklets",
   "desc": "Wiro Magazines produced through our our trade network trade network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
   "seo": "Wiro Magazines Sunshine Coast | Aura Print & Promo",
-  "from": 350,
+  "from": 256,
   "quote": true,
   "suppliers": [
    "LEP"
