@@ -187,6 +187,14 @@
     sb.rpc('decide_quote', { p_token: t, p_decision: decision, p_name: name, p_comments: comments||null })
       .then(function(res){
         if (res.error){ msg.className = 'msg err'; msg.textContent = res.error.message; btn.disabled = false; return; }
+        /* let Aura staff know straight away (fire and forget) */
+        try {
+          fetch(CFG.supabaseUrl+'/functions/v1/quote-notify', {
+            method:'POST',
+            headers:{ 'Content-Type':'application/json' },
+            body: JSON.stringify({ token: t })
+          }).catch(function(){});
+        } catch(e){}
         msg.className = 'msg ok';
         msg.textContent = decision==='accepted'
           ? 'Thank you — quote accepted! We\'ll email your tax invoice shortly.'
