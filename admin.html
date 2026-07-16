@@ -50,6 +50,15 @@
   .qline .q-qty{width:70px}
   .qline .q-price{width:110px}
   .qline .q-del{background:#fee2e2;color:#b91c1c;border:none;border-radius:8px;padding:8px 10px;font-weight:800;cursor:pointer}
+  .emodal{position:fixed;inset:0;background:rgba(26,26,26,.55);z-index:60;display:none}
+  .emodal.open{display:block}
+  .emodal .box{max-width:680px;margin:4vh auto;background:#fff;border-radius:16px;padding:26px;max-height:90vh;overflow:auto;box-shadow:0 10px 40px rgba(0,0,0,.25)}
+  .emodal h2{font-size:18px;margin:0 0 4px}
+  .emodal .meta{font-size:13px;color:#8a847d;margin-bottom:14px}
+  .emodal label{display:block;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:#8a847d;margin:12px 0 4px}
+  .emodal input,.emodal textarea{width:100%;padding:10px;border:2px solid #e8e2da;border-radius:9px;font-size:14px;font-family:inherit;box-sizing:border-box}
+  .emodal textarea{min-height:280px;line-height:1.5}
+  .emodal .btns{display:flex;gap:10px;align-items:center;margin-top:16px}
   .err{color:#c0392b;font-size:13.5px;margin-top:10px}
   .ok{color:#15803d;font-size:13.5px;margin-top:10px}
   .saved{color:#15803d;font-size:11px;margin-left:6px;opacity:0;transition:opacity .2s}
@@ -169,6 +178,21 @@
   </div>
 </div>
 
+<!-- EMAIL PREVIEW MODAL -->
+<div class="emodal" id="emailModal">
+  <div class="box">
+    <h2>Preview email</h2>
+    <div class="meta">To: <b id="emTo"></b> · Cc: admin@auraprint.com.au<br>Edit anything below before it goes out.</div>
+    <label>Subject</label><input id="emSubject">
+    <label>Message</label><textarea id="emBody"></textarea>
+    <div class="btns">
+      <button class="btn-sm btn-aura2" id="emSend">📨 Send now</button>
+      <button class="btn-sm btn-ghost" id="emCancel">Cancel</button>
+      <span class="muted" id="emMsg"></span>
+    </div>
+  </div>
+</div>
+
 <script src="assets/config.js?v=20260711a"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://js.hcaptcha.com/1/api.js" async defer></script>
@@ -190,6 +214,7 @@
   var QUOTE_BASE = PROOF_BASE.replace(/proof\.html$/,'myquote.html');
 
   function esc(s){ return String(s==null?'':s).replace(/[&<>"]/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
+  function mailto(to, c){ return 'mailto:'+encodeURIComponent(to||'')+'?cc=admin%40auraprint.com.au&subject='+encodeURIComponent(c.subject)+'&body='+encodeURIComponent(c.body); }
   function fmtDate(s){ var d=new Date(s); return d.toLocaleDateString('en-AU',{day:'2-digit',month:'short'})+' '+d.toLocaleTimeString('en-AU',{hour:'2-digit',minute:'2-digit'}); }
   function money(c){ return '$'+(c/100).toLocaleString('en-AU',{minimumFractionDigits:2,maximumFractionDigits:2}); }
 
@@ -432,6 +457,7 @@
       b.addEventListener('click', function(){ openQuote = (openQuote===b.dataset.id)?null:b.dataset.id; renderQuotes(); });
     });
     bindQuoteDetail();
+    if (openQuote) loadQuoteEmails(openQuote);
   }
 
   function quoteDetail(q){
@@ -502,6 +528,7 @@
         '<span class="muted">'+(q.converted_at?esc(fmtDate(q.converted_at)):'')+'</span></div>'+
         '<div class="proofrow">Order <b>'+esc(on)+'</b> with tax invoice issued — manage it in the Orders &amp; Proofs tab.</div></div>';
     }
+    h += '<div class="events" id="qemails-'+q.id+'">Loading email history…</div>';
     return h;
   }
 
@@ -576,31 +603,24 @@
       'w: auraprint.com.au';
     return { subject: subj, body: body };
   }
-  function quoteMailtoHref(q, link){
-    var c = quoteEmailContent(q, link);
-    return 'mailto:'+encodeURIComponent(q.contact_email||'')+'?subject='+encodeURIComponent(c.subject)+'&body='+encodeURIComponent(c.body);
+  function quoteMailtoHref(q, link){ return mailto(q.contact_email, quoteEmailContent(q, link)); }
+
+  function sendQuoteEmail(quoteId, btn){
+    var q = allQuotes.find(function(x){return x.id===quoteId;}); if(!q) return;
+    var c = quoteEmailContent(q, QUOTE_BASE + '?t=' + q.access_token);
+    showEmailModal(q.contact_email, c, { kind:'quote', quote_id: q.id }, async function(){
+      await markQuoteSent(quoteId, true);
+    });
   }
 
-  async function sendQuoteEmail(quoteId, btn){
-    var q = allQuotes.find(function(x){return x.id===quoteId;}); if(!q) return;
-    var msg = document.querySelector('.q-send-msg[data-id="'+quoteId+'"]');
-    var c = quoteEmailContent(q, QUOTE_BASE + '?t=' + q.access_token);
-    if (!confirm('Send this quote to '+(q.contact_email||'')+' now?\n\nSubject: '+c.subject)) return;
-    btn.disabled = true; if (msg) msg.textContent = 'Sending…';
-    try {
-      var s = await sb.auth.getSession();
-      var r = await fetch(CFG.supabaseUrl+'/functions/v1/send-email', {
-        method:'POST',
-        headers:{ 'Content-Type':'application/json', 'Authorization':'Bearer '+s.data.session.access_token },
-        body: JSON.stringify({ to: q.contact_email, subject: c.subject, text: c.body })
-      });
-      var j = await r.json();
-      if (!r.ok || !j.ok){ if (msg) msg.textContent = (j.error||('HTTP '+r.status)); btn.disabled=false; return; }
-      await markQuoteSent(quoteId, true);
-      if (msg) msg.textContent = 'Sent ✓';
-    } catch(e){
-      if (msg) msg.textContent = 'Failed: '+(e.message||e); btn.disabled = false;
-    }
+  async function loadQuoteEmails(quoteId){
+    var el = document.getElementById('qemails-'+quoteId); if(!el) return;
+    var res = await sb.from('email_log').select('created_at,recipient,subject,kind')
+      .eq('quote_id',quoteId).order('created_at',{ascending:false}).limit(20);
+    if (res.error){ el.textContent = 'Email history unavailable: '+res.error.message; return; }
+    el.innerHTML = '<div style="font-weight:700;color:#555;padding:2px 0">📧 Emails sent</div>' + ((res.data||[]).map(function(e){
+      return '<div>'+esc(fmtDate(e.created_at))+' — '+esc(e.kind||'email')+' to '+esc(e.recipient)+' — “'+esc(e.subject)+'”</div>';
+    }).join('') || '<div>None sent from the CRM yet. (“Compose” emails go via your mail app and are cc\'d to admin@ instead.)</div>');
   }
 
   async function markQuoteSent(quoteId, skipReloadMsg){
@@ -692,7 +712,7 @@
       b.addEventListener('click', function(){ openOrder = (openOrder===b.dataset.id)?null:b.dataset.id; renderOrders(); if(openOrder) loadEvents(openOrder); });
     });
     bindDetail();
-    if (openOrder) loadEvents(openOrder);
+    if (openOrder){ loadEvents(openOrder); loadOrderEmails(openOrder); }
   }
 
   function getTokenLinks(o){
@@ -797,6 +817,7 @@
     }
     h += '</div>';
 
+    h += '<div class="events" id="oemails-'+o.id+'" style="margin-top:10px">Loading email history…</div>';
     h += '<div class="events" id="events-'+o.id+'">Loading history…</div>';
     return h;
   }
@@ -819,10 +840,7 @@
       'w: auraprint.com.au';
     return { subject: subj, body: body };
   }
-  function dispatchMailtoHref(o){
-    var c = dispatchEmailContent(o);
-    return 'mailto:'+encodeURIComponent(o.contact_email||'')+'?subject='+encodeURIComponent(c.subject)+'&body='+encodeURIComponent(c.body);
-  }
+  function dispatchMailtoHref(o){ return mailto(o.contact_email, dispatchEmailContent(o)); }
 
   async function markDispatched(orderId, btn){
     var g = function(cls){ return (document.querySelector('.'+cls+'[data-order="'+orderId+'"]')||{}).value||''; };
@@ -865,10 +883,7 @@
       'w: auraprint.com.au';
     return { subject: subj, body: body };
   }
-  function mailtoHref(o, tokenLinks){
-    var c = proofEmailContent(o, tokenLinks);
-    return 'mailto:'+encodeURIComponent(o.contact_email||'')+'?subject='+encodeURIComponent(c.subject)+'&body='+encodeURIComponent(c.body);
-  }
+  function mailtoHref(o, tokenLinks){ return mailto(o.contact_email, proofEmailContent(o, tokenLinks)); }
 
   async function loadEvents(orderId){
     var res = await sb.from('order_events').select('created_at,event,detail').eq('order_id',orderId).order('created_at',{ascending:false}).limit(30);
@@ -905,34 +920,70 @@
     });
   }
 
-  async function sendCrmEmail(kind, orderId, invoiceId, btn){
+  /* ============ EMAIL PREVIEW MODAL ============ */
+  var EM = { to:null, meta:null, onSent:null };
+  var emEl = document.getElementById('emailModal');
+  function showEmailModal(to, content, meta, onSent){
+    EM.to = to; EM.meta = meta || {}; EM.onSent = onSent || null;
+    document.getElementById('emTo').textContent = to || '';
+    document.getElementById('emSubject').value = content.subject || '';
+    document.getElementById('emBody').value = content.body || '';
+    document.getElementById('emMsg').textContent = '';
+    document.getElementById('emSend').disabled = false;
+    emEl.classList.add('open');
+  }
+  document.getElementById('emCancel').addEventListener('click', function(){ emEl.classList.remove('open'); });
+  emEl.addEventListener('click', function(e){ if (e.target===emEl) emEl.classList.remove('open'); });
+  document.getElementById('emSend').addEventListener('click', async function(){
+    var btn = this, msg = document.getElementById('emMsg');
+    var subject = document.getElementById('emSubject').value.trim();
+    var body = document.getElementById('emBody').value;
+    if (!subject || !body.trim()){ msg.textContent = 'Subject and message are required.'; return; }
+    btn.disabled = true; msg.textContent = 'Sending…';
+    try {
+      var s = await sb.auth.getSession();
+      var payload = { to: EM.to, subject: subject, text: body };
+      ['order_id','quote_id','invoice_id','kind'].forEach(function(k){ if (EM.meta[k]) payload[k] = EM.meta[k]; });
+      var r = await fetch(CFG.supabaseUrl+'/functions/v1/send-email', {
+        method:'POST',
+        headers:{ 'Content-Type':'application/json', 'Authorization':'Bearer '+s.data.session.access_token },
+        body: JSON.stringify(payload)
+      });
+      var j = await r.json();
+      if (!r.ok || !j.ok){ msg.textContent = (j.error||('HTTP '+r.status)); btn.disabled = false; return; }
+      emEl.classList.remove('open');
+      if (EM.onSent) EM.onSent();
+    } catch(e){
+      msg.textContent = 'Failed: '+(e.message||e); btn.disabled = false;
+    }
+  });
+
+  function sendCrmEmail(kind, orderId, invoiceId, btn){
     var o = allOrders.find(function(x){return x.id===orderId;}); if(!o) return;
     var msg = document.querySelector('.send-msg[data-order="'+orderId+'"][data-kind="'+kind+'"]');
-    var c;
+    var c, meta = { kind: kind, order_id: o.id };
     if (kind==='proof'){ c = proofEmailContent(o, getTokenLinks(o)); }
     else if (kind==='dispatch'){ c = dispatchEmailContent(o); }
     else if (kind==='invoice'){
       var v = (o.invoices||[]).find(function(x){return x.id===invoiceId;}); if(!v) return;
       var invUrl = PROOF_BASE.replace(/proof\.html$/,'invoice.html') + '?t=' + v.access_token;
       c = invoiceEmailContent(o, v, invUrl);
+      meta.invoice_id = invoiceId;
     } else return;
-    if (!confirm('Send this email to '+(o.contact_email||'')+' now?\n\nSubject: '+c.subject)) return;
-    btn.disabled = true; if (msg) msg.textContent = 'Sending…';
-    try {
-      var s = await sb.auth.getSession();
-      var r = await fetch(CFG.supabaseUrl+'/functions/v1/send-email', {
-        method:'POST',
-        headers:{ 'Content-Type':'application/json', 'Authorization':'Bearer '+s.data.session.access_token },
-        body: JSON.stringify({ to: o.contact_email, subject: c.subject, text: c.body, order_id: o.id })
-      });
-      var j = await r.json();
-      if (!r.ok || !j.ok){ if (msg) msg.textContent = (j.error||('HTTP '+r.status)); btn.disabled=false; return; }
+    showEmailModal(o.contact_email, c, meta, function(){
       if (msg) msg.textContent = 'Sent ✓';
-      btn.disabled = false;
-    } catch(e){
-      if (msg) msg.textContent = 'Failed: '+(e.message||e);
-      btn.disabled = false;
-    }
+      loadOrderEmails(o.id);
+    });
+  }
+
+  async function loadOrderEmails(orderId){
+    var el = document.getElementById('oemails-'+orderId); if(!el) return;
+    var res = await sb.from('email_log').select('created_at,recipient,subject,kind')
+      .eq('order_id',orderId).order('created_at',{ascending:false}).limit(20);
+    if (res.error){ el.textContent = 'Email history unavailable: '+res.error.message; return; }
+    el.innerHTML = '<div style="font-weight:700;color:#555;padding:2px 0">📧 Emails sent</div>' + ((res.data||[]).map(function(e){
+      return '<div>'+esc(fmtDate(e.created_at))+' — '+esc(e.kind||'email')+' to '+esc(e.recipient)+' — “'+esc(e.subject)+'”</div>';
+    }).join('') || '<div>None sent from the CRM yet. (“Compose” emails go via your mail app and are cc\'d to admin@ instead.)</div>');
   }
 
   async function createPaymentLink(invoiceId, btn){
@@ -972,10 +1023,7 @@
       'w: auraprint.com.au';
     return { subject: subj, body: body };
   }
-  function invoiceMailtoHref(o, v, invUrl){
-    var c = invoiceEmailContent(o, v, invUrl);
-    return 'mailto:'+encodeURIComponent(o.contact_email||'')+'?subject='+encodeURIComponent(c.subject)+'&body='+encodeURIComponent(c.body);
-  }
+  function invoiceMailtoHref(o, v, invUrl){ return mailto(o.contact_email, invoiceEmailContent(o, v, invUrl)); }
 
   async function recordPayment(orderId, invoiceId, btn){
     var msg = document.querySelector('.pay-msg[data-inv="'+invoiceId+'"]');
