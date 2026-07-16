@@ -40,6 +40,16 @@
   .pill.p-proofing,.pill.p-proof_sent{background:#ede9fe;color:#7c3aed}
   .pill.p-paid,.pill.p-invoiced{background:#dbeafe;color:#1d4ed8}
   .pill.p-awaiting_artwork{background:#fef3c7;color:#b45309}
+  .pill.p-draft{background:#f0ece5;color:#6b6560}
+  .pill.p-accepted{background:#dcfce7;color:#15803d}
+  .pill.p-converted{background:#dbeafe;color:#1d4ed8}
+  .pill.p-expired{background:#fef3c7;color:#b45309}
+  .qline{display:flex;gap:8px;align-items:center;margin-bottom:8px;flex-wrap:wrap}
+  .qline input{padding:8px;border:2px solid #e8e2da;border-radius:8px;font-size:13.5px;font-family:inherit}
+  .qline .q-desc{flex:3;min-width:220px}
+  .qline .q-qty{width:70px}
+  .qline .q-price{width:110px}
+  .qline .q-del{background:#fee2e2;color:#b91c1c;border:none;border-radius:8px;padding:8px 10px;font-weight:800;cursor:pointer}
   .err{color:#c0392b;font-size:13.5px;margin-top:10px}
   .ok{color:#15803d;font-size:13.5px;margin-top:10px}
   .saved{color:#15803d;font-size:11px;margin-left:6px;opacity:0;transition:opacity .2s}
@@ -93,6 +103,7 @@
 
   <div class="tabs">
     <button class="tab active" data-tab="leads">Lead Inbox</button>
+    <button class="tab" data-tab="quotes">Quotes</button>
     <button class="tab" data-tab="orders">Orders &amp; Proofs</button>
   </div>
 
@@ -107,6 +118,29 @@
       <button class="chip" data-f="lost">Lost</button>
     </div>
     <div id="tableWrap"></div>
+  </div>
+
+  <!-- QUOTES TAB -->
+  <div id="tab-quotes" style="display:none">
+    <div class="panel" id="newQuotePanel">
+      <h2>New quote</h2>
+      <div class="frow">
+        <div class="f"><label>Contact name *</label><input id="qName"></div>
+        <div class="f"><label>Email *</label><input id="qEmail" type="email"></div>
+        <div class="f"><label>Phone</label><input id="qPhone"></div>
+        <div class="f"><label>Company</label><input id="qCompany"></div>
+      </div>
+      <div style="margin-bottom:6px"><label style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:#8a847d">Line items *</label></div>
+      <div id="qLines"></div>
+      <button id="qAddLine" class="btn-sm btn-ghost" style="margin-bottom:12px">+ Add line</button>
+      <div class="frow">
+        <div class="f" style="flex:3"><label>Notes shown on quote</label><input id="qNotes" placeholder="e.g. Price includes delivery to Baringa. Turnaround 5–7 business days after proof approval."></div>
+        <div class="f"><label>Valid until</label><input id="qValid" type="date"></div>
+      </div>
+      <button id="qCreate" class="btn-sm btn-aura2">Create quote</button>
+      <span id="qMsg" class="muted" style="margin-left:10px"></span>
+    </div>
+    <div id="quotesWrap"></div>
   </div>
 
   <!-- ORDERS TAB -->
@@ -148,7 +182,9 @@
   var sb = supabase.createClient(CFG.supabaseUrl, CFG.supabaseKey);
   var STATUSES = ['new','contacted','quoted','won','lost'];
   var currentFilter = 'all', allLeads = [], allOrders = [], openOrder = null;
+  var allQuotes = [], openQuote = null, quoteLeadId = null;
   var PROOF_BASE = location.origin + location.pathname.replace(/admin\.html$/,'') + 'proof.html';
+  var QUOTE_BASE = PROOF_BASE.replace(/proof\.html$/,'myquote.html');
 
   function esc(s){ return String(s==null?'':s).replace(/[&<>"]/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
   function fmtDate(s){ var d=new Date(s); return d.toLocaleDateString('en-AU',{day:'2-digit',month:'short'})+' '+d.toLocaleTimeString('en-AU',{hour:'2-digit',minute:'2-digit'}); }
@@ -166,13 +202,14 @@
     t.addEventListener('click', function(){
       activeTab = t.dataset.tab;
       document.querySelectorAll('.tab').forEach(function(x){ x.classList.toggle('active', x===t); });
-      document.getElementById('tab-leads').style.display = activeTab==='leads'?'':'none';
-      document.getElementById('tab-orders').style.display = activeTab==='orders'?'':'none';
-      if (activeTab==='orders') loadOrders(); else loadLeads();
+      ['leads','quotes','orders'].forEach(function(k){
+        document.getElementById('tab-'+k).style.display = activeTab===k?'':'none';
+      });
+      if (activeTab==='orders') loadOrders(); else if (activeTab==='quotes') loadQuotes(); else loadLeads();
     });
   });
   document.getElementById('refreshBtn').addEventListener('click', function(){
-    if (activeTab==='orders') loadOrders(); else loadLeads();
+    if (activeTab==='orders') loadOrders(); else if (activeTab==='quotes') loadQuotes(); else loadLeads();
   });
 
   /* ============ LEADS (unchanged) ============ */
@@ -210,7 +247,10 @@
         '<td><div class="job">'+esc(l.job_details||'—')+'</div>'+art+'</td>'+
         '<td><span class="pill">'+esc(l.source_form||'—')+'</span>'+(l.source_product_code?'<div class="muted">'+esc(l.source_product_code)+'</div>':'')+'</td>'+
         '<td>'+statusSelect(l)+'<span class="saved" id="saved-'+l.id+'">saved</span>'+
-          (l.status==='won' ? '<div style="margin-top:6px"><button class="btn-sm btn-ghost to-order" data-id="'+l.id+'">→ order</button></div>' : '')+
+          '<div style="margin-top:6px;display:flex;gap:6px;flex-wrap:wrap">'+
+          (l.status!=='lost' && l.status!=='won' ? '<button class="btn-sm btn-ghost to-quote" data-id="'+l.id+'">→ quote</button>' : '')+
+          (l.status==='won' ? '<button class="btn-sm btn-ghost to-order" data-id="'+l.id+'">→ order</button>' : '')+
+          '</div>'+
         '</td></tr>';
     });
     html += '</tbody></table>';
@@ -221,6 +261,24 @@
     document.querySelectorAll('.to-order').forEach(function(b){
       b.addEventListener('click', function(){ leadToOrder(b.dataset.id); });
     });
+    document.querySelectorAll('.to-quote').forEach(function(b){
+      b.addEventListener('click', function(){ leadToQuote(b.dataset.id); });
+    });
+  }
+
+  function leadToQuote(id){
+    var l = allLeads.find(function(x){return x.id===id;}); if(!l) return;
+    quoteLeadId = l.id;
+    document.querySelector('.tab[data-tab=quotes]').click();
+    document.getElementById('qName').value = l.name||'';
+    document.getElementById('qEmail').value = l.email||'';
+    document.getElementById('qPhone').value = l.phone||'';
+    document.getElementById('qCompany').value = l.company||'';
+    document.getElementById('qLines').innerHTML = '';
+    var qty = (l.quantity && /^\d+$/.test(String(l.quantity))) ? parseInt(l.quantity,10) : 1;
+    addQuoteLine((l.category?l.category+' — ':'')+(l.job_details||''), qty, '');
+    document.getElementById('qMsg').textContent = 'Prefilled from lead: '+(l.name||'')+' — this quote will link back to the lead.';
+    document.getElementById('newQuotePanel').scrollIntoView({behavior:'smooth'});
   }
 
   function leadToOrder(id){
@@ -256,6 +314,336 @@
     document.querySelectorAll('#filters .chip').forEach(function(c){ c.classList.toggle('active', c===b); });
     render();
   });
+
+  /* ============ QUOTES ============ */
+  function todayPlus(days){
+    var d = new Date(); d.setDate(d.getDate()+days);
+    return d.toISOString().slice(0,10);
+  }
+  function addQuoteLine(desc, qty, price){
+    var row = document.createElement('div');
+    row.className = 'qline';
+    row.innerHTML =
+      '<input class="q-desc" placeholder="Description e.g. Business Cards 450gsm Velvet, 90x55, 2 sides" value="'+esc(desc||'')+'">'+
+      '<input class="q-qty" type="number" min="1" value="'+(qty||1)+'" title="Qty">'+
+      '<input class="q-price" type="number" min="0" step="0.01" placeholder="$ inc GST" value="'+(price===''||price==null?'':price)+'" title="Line total inc GST">'+
+      '<button class="q-del" title="Remove line">×</button>';
+    row.querySelector('.q-del').addEventListener('click', function(){ row.remove(); });
+    document.getElementById('qLines').appendChild(row);
+  }
+  function readQuoteLines(container){
+    var lines = [];
+    container.querySelectorAll('.qline').forEach(function(r){
+      var desc = r.querySelector('.q-desc').value.trim();
+      var qty = parseInt(r.querySelector('.q-qty').value,10);
+      var price = Math.round(parseFloat(r.querySelector('.q-price').value||'0')*100);
+      if (desc || price>0) lines.push({description:desc, qty:qty, price_inc_cents:price});
+    });
+    return lines;
+  }
+  document.getElementById('qAddLine').addEventListener('click', function(){ addQuoteLine('',1,''); });
+
+  document.getElementById('qCreate').addEventListener('click', async function(){
+    var m = document.getElementById('qMsg');
+    var name = document.getElementById('qName').value.trim();
+    var email = document.getElementById('qEmail').value.trim();
+    var lines = readQuoteLines(document.getElementById('qLines'));
+    if (!name || !email){ m.textContent = 'Fill in the contact name and email.'; return; }
+    if (!lines.length){ m.textContent = 'Add at least one line item.'; return; }
+    for (var i=0;i<lines.length;i++){
+      if (!lines[i].description || !(lines[i].qty>0) || !(lines[i].price_inc_cents>=0) || isNaN(lines[i].price_inc_cents)){
+        m.textContent = 'Line '+(i+1)+': needs a description, qty and price.'; return;
+      }
+    }
+    this.disabled = true; m.textContent = 'Creating…';
+    try {
+      var q = await sb.from('quotes').insert({
+        contact_name:name, contact_email:email,
+        contact_phone:document.getElementById('qPhone').value.trim()||null,
+        company:document.getElementById('qCompany').value.trim()||null,
+        customer_notes:document.getElementById('qNotes').value.trim()||null,
+        valid_until:document.getElementById('qValid').value||todayPlus(30),
+        lead_id: quoteLeadId
+      }).select('id,quote_number').single();
+      if (q.error) throw q.error;
+      var items = lines.map(function(l,ix){ return {quote_id:q.data.id, item_no:ix+1, description:l.description, qty:l.qty, price_inc_cents:l.price_inc_cents}; });
+      var it = await sb.from('quote_items').insert(items);
+      if (it.error) throw it.error;
+      if (quoteLeadId){
+        await sb.from('leads').update({status:'quoted'}).eq('id', quoteLeadId);
+        var ld = allLeads.find(function(x){return x.id===quoteLeadId;}); if (ld) ld.status='quoted';
+      }
+      m.textContent = 'Created '+q.data.quote_number+' ✓ — now review and send it below.';
+      ['qName','qEmail','qPhone','qCompany','qNotes','qValid'].forEach(function(id){ document.getElementById(id).value=''; });
+      document.getElementById('qLines').innerHTML = ''; addQuoteLine('',1,'');
+      quoteLeadId = null;
+      openQuote = q.data.id;
+      await loadQuotes();
+    } catch(e){ m.textContent = 'Failed: '+(e.message||e); }
+    this.disabled = false;
+  });
+
+  function quoteExpired(q){ return q.valid_until < new Date().toISOString().slice(0,10) && (q.status==='draft'||q.status==='sent'); }
+  function quoteTotal(q){ return (q.quote_items||[]).reduce(function(s,i){return s+i.price_inc_cents;},0); }
+  function quoteStatusPill(q){
+    if (quoteExpired(q)) return '<span class="pill p-expired">expired</span>';
+    return '<span class="pill p-'+esc(q.status)+'">'+esc(q.status)+'</span>';
+  }
+
+  async function loadQuotes(){
+    document.getElementById('count').textContent = 'Loading…';
+    if (!document.getElementById('qLines').children.length) addQuoteLine('',1,'');
+    if (!document.getElementById('qValid').value) document.getElementById('qValid').value = todayPlus(30);
+    var res = await sb.from('quotes')
+      .select('*, quote_items(*), converted_order:orders!converted_order_id(order_number)')
+      .order('created_at',{ascending:false});
+    if (res.error){ document.getElementById('quotesWrap').innerHTML = '<div class="empty">Could not load quotes: '+esc(res.error.message)+'</div>'; return; }
+    allQuotes = res.data || [];
+    allQuotes.forEach(function(q){ (q.quote_items||[]).sort(function(a,b){return a.item_no-b.item_no;}); });
+    var waiting = allQuotes.filter(function(q){ return q.status==='sent' && !quoteExpired(q); }).length;
+    document.getElementById('count').textContent = allQuotes.length+' quotes'+(waiting?' · '+waiting+' awaiting reply':'');
+    renderQuotes();
+  }
+
+  function renderQuotes(){
+    if (!allQuotes.length){ document.getElementById('quotesWrap').innerHTML = '<div class="empty">No quotes yet. Create one above, or use “→ quote” on a lead.</div>'; return; }
+    var html = '<table><thead><tr><th>Quote</th><th>Customer</th><th>Items</th><th>Total inc</th><th>Valid until</th><th>Status</th><th></th></tr></thead><tbody>';
+    allQuotes.forEach(function(q){
+      var items = (q.quote_items||[]).map(function(i){ return '<div>'+esc(i.description)+' ×'+i.qty+'</div>'; }).join('');
+      html += '<tr>'+
+        '<td><b>'+esc(q.quote_number||'')+'</b><div class="muted">'+esc(fmtDate(q.created_at))+'</div></td>'+
+        '<td><div class="lead-name">'+esc(q.contact_name||'')+'</div><div class="lead-contact"><a href="mailto:'+esc(q.contact_email||'')+'">'+esc(q.contact_email||'')+'</a></div>'+(q.company?'<div class="muted">'+esc(q.company)+'</div>':'')+'</td>'+
+        '<td>'+items+'</td>'+
+        '<td><b>'+money(quoteTotal(q))+'</b></td>'+
+        '<td>'+esc(new Date(q.valid_until+'T00:00:00').toLocaleDateString('en-AU',{day:'2-digit',month:'short',year:'numeric'}))+'</td>'+
+        '<td>'+quoteStatusPill(q)+'</td>'+
+        '<td><button class="btn-sm btn-ghost q-open" data-id="'+q.id+'">'+(openQuote===q.id?'Close':'Manage')+'</button></td>'+
+        '</tr>';
+      if (openQuote===q.id){
+        html += '<tr><td colspan="7"><div class="odetail">'+quoteDetail(q)+'</div></td></tr>';
+      }
+    });
+    html += '</tbody></table>';
+    document.getElementById('quotesWrap').innerHTML = html;
+    document.querySelectorAll('.q-open').forEach(function(b){
+      b.addEventListener('click', function(){ openQuote = (openQuote===b.dataset.id)?null:b.dataset.id; renderQuotes(); });
+    });
+    bindQuoteDetail();
+  }
+
+  function quoteDetail(q){
+    var h = '', link = QUOTE_BASE + '?t=' + q.access_token;
+    var editable = q.status==='draft';
+    if (editable){
+      h += '<div class="oitem"><div class="oitem-head"><b>✏️ Edit quote (draft)</b><span class="muted">Changes save when you press “Save changes”.</span></div>';
+      h += '<div id="editLines-'+q.id+'">';
+      (q.quote_items||[]).forEach(function(i){
+        h += '<div class="qline">'+
+          '<input class="q-desc" value="'+esc(i.description)+'">'+
+          '<input class="q-qty" type="number" min="1" value="'+i.qty+'">'+
+          '<input class="q-price" type="number" min="0" step="0.01" value="'+(i.price_inc_cents/100).toFixed(2)+'">'+
+          '<button class="q-del">×</button></div>';
+      });
+      h += '</div>'+
+        '<div class="proofrow"><button class="btn-sm btn-ghost q-edit-add" data-id="'+q.id+'">+ Add line</button></div>'+
+        '<div class="frow" style="margin-top:10px">'+
+        '<div class="f" style="flex:3"><label>Notes shown on quote</label><input class="q-edit-notes" data-id="'+q.id+'" value="'+esc(q.customer_notes||'')+'"></div>'+
+        '<div class="f"><label>Valid until</label><input class="q-edit-valid" data-id="'+q.id+'" type="date" value="'+esc(q.valid_until)+'"></div>'+
+        '</div>'+
+        '<div class="proofrow"><button class="btn-sm btn-aura2 q-save" data-id="'+q.id+'">Save changes</button>'+
+        '<span class="muted q-save-msg" data-id="'+q.id+'"></span></div>';
+      h += '</div>';
+    }
+
+    /* link + send */
+    h += '<div class="oitem" style="margin-top:12px"><div class="oitem-head"><b>🔗 Customer quote link</b>'+quoteStatusPill(q)+'</div>'+
+      '<div class="proofrow"><a class="plink" href="'+esc(link)+'" target="_blank" rel="noopener">open quote page ↗</a> '+
+      '<button class="btn-sm btn-ghost copy-link" data-link="'+esc(link)+'">Copy link</button></div>';
+    if (q.status==='draft' || q.status==='sent'){
+      h += '<div class="proofrow">'+
+        '<button class="btn-sm btn-aura2 q-send" data-id="'+q.id+'">📨 '+(q.status==='sent'?'Resend quote email':'Send quote email')+'</button>'+
+        '<a class="btn-sm btn-ghost" href="'+quoteMailtoHref(q, link)+'">✉ Compose instead</a>'+
+        (q.status==='draft'?'<button class="btn-sm btn-ghost q-mark-sent" data-id="'+q.id+'">Mark as sent (sent it myself)</button>':'')+
+        '<span class="muted q-send-msg" data-id="'+q.id+'"></span></div>';
+      h += '<div class="proofrow muted">The link needs no sign-in — the customer types their name and accepts or declines online. Safe to forward.</div>';
+      if (q.sent_at) h += '<div class="proofrow muted">Sent '+esc(fmtDate(q.sent_at))+'</div>';
+    }
+    h += '</div>';
+
+    /* decision / conversion */
+    if (q.status==='accepted'){
+      h += '<div class="oitem" style="margin-top:12px"><div class="oitem-head"><b>✅ Accepted</b>'+
+        '<span class="muted">'+(q.decided_at?esc(fmtDate(q.decided_at)):'')+(q.accepted_by_name?' by '+esc(q.accepted_by_name):'')+'</span></div>'+
+        (q.decision_comments?'<div class="proofrow muted">“'+esc(q.decision_comments)+'”</div>':'')+
+        '<div class="proofrow"><button class="btn-sm btn-aura2 q-convert" data-id="'+q.id+'">→ Convert to invoice</button>'+
+        '<span class="muted q-convert-msg" data-id="'+q.id+'"></span></div>'+
+        '<div class="proofrow muted">Creates the order with these line items and issues the tax invoice immediately. Proofing still happens before production.</div></div>';
+    }
+    if (q.status==='sent'){
+      h += '<div class="oitem" style="margin-top:12px"><div class="oitem-head"><b>Staff actions</b></div>'+
+        '<div class="proofrow">'+
+        '<button class="btn-sm btn-ghost q-accept-manual" data-id="'+q.id+'">Mark accepted (phone/email)</button>'+
+        '<button class="btn-sm btn-aura2 q-convert" data-id="'+q.id+'">→ Convert to invoice</button>'+
+        '<button class="btn-sm btn-ghost q-redraft" data-id="'+q.id+'">Back to draft to edit</button>'+
+        '<span class="muted q-convert-msg" data-id="'+q.id+'"></span></div></div>';
+    }
+    if (q.status==='declined'){
+      h += '<div class="oitem" style="margin-top:12px"><div class="oitem-head"><b>❌ Declined</b>'+
+        '<span class="muted">'+(q.decided_at?esc(fmtDate(q.decided_at)):'')+(q.accepted_by_name?' by '+esc(q.accepted_by_name):'')+'</span></div>'+
+        (q.decision_comments?'<div class="proofrow muted">“'+esc(q.decision_comments)+'”</div>':'')+
+        '<div class="proofrow"><button class="btn-sm btn-ghost q-redraft" data-id="'+q.id+'">Revise — back to draft</button></div></div>';
+    }
+    if (q.status==='converted'){
+      var on = (q.converted_order && q.converted_order.order_number) || '';
+      h += '<div class="oitem" style="margin-top:12px"><div class="oitem-head"><b>🧾 Converted</b>'+
+        '<span class="muted">'+(q.converted_at?esc(fmtDate(q.converted_at)):'')+'</span></div>'+
+        '<div class="proofrow">Order <b>'+esc(on)+'</b> with tax invoice issued — manage it in the Orders &amp; Proofs tab.</div></div>';
+    }
+    return h;
+  }
+
+  function bindQuoteDetail(){
+    document.querySelectorAll('.copy-link').forEach(function(b){
+      b.addEventListener('click', function(){
+        navigator.clipboard.writeText(b.dataset.link).then(function(){
+          b.textContent = 'Copied ✓'; setTimeout(function(){ b.textContent='Copy link'; }, 1500);
+        });
+      });
+    });
+    document.querySelectorAll('.q-edit-add').forEach(function(b){
+      b.addEventListener('click', function(){
+        var wrap = document.getElementById('editLines-'+b.dataset.id);
+        var row = document.createElement('div');
+        row.className = 'qline';
+        row.innerHTML = '<input class="q-desc" placeholder="Description"><input class="q-qty" type="number" min="1" value="1"><input class="q-price" type="number" min="0" step="0.01" placeholder="$ inc GST"><button class="q-del">×</button>';
+        row.querySelector('.q-del').addEventListener('click', function(){ row.remove(); });
+        wrap.appendChild(row);
+      });
+    });
+    document.querySelectorAll('#quotesWrap .q-del').forEach(function(b){
+      b.addEventListener('click', function(){ b.closest('.qline').remove(); });
+    });
+    document.querySelectorAll('.q-save').forEach(function(b){ b.addEventListener('click', function(){ saveQuoteEdits(b.dataset.id, b); }); });
+    document.querySelectorAll('.q-send').forEach(function(b){ b.addEventListener('click', function(){ sendQuoteEmail(b.dataset.id, b); }); });
+    document.querySelectorAll('.q-mark-sent').forEach(function(b){ b.addEventListener('click', function(){ markQuoteSent(b.dataset.id); }); });
+    document.querySelectorAll('.q-accept-manual').forEach(function(b){ b.addEventListener('click', function(){ markQuoteAccepted(b.dataset.id); }); });
+    document.querySelectorAll('.q-redraft').forEach(function(b){ b.addEventListener('click', function(){ revertQuoteToDraft(b.dataset.id); }); });
+    document.querySelectorAll('.q-convert').forEach(function(b){ b.addEventListener('click', function(){ convertQuote(b.dataset.id, b); }); });
+  }
+
+  async function saveQuoteEdits(quoteId, btn){
+    var msg = document.querySelector('.q-save-msg[data-id="'+quoteId+'"]');
+    var lines = readQuoteLines(document.getElementById('editLines-'+quoteId));
+    if (!lines.length){ msg.textContent = 'A quote needs at least one line item.'; return; }
+    for (var i=0;i<lines.length;i++){
+      if (!lines[i].description || !(lines[i].qty>0) || !(lines[i].price_inc_cents>=0) || isNaN(lines[i].price_inc_cents)){
+        msg.textContent = 'Line '+(i+1)+': needs a description, qty and price.'; return;
+      }
+    }
+    btn.disabled = true; msg.textContent = 'Saving…';
+    try {
+      var up = await sb.from('quotes').update({
+        customer_notes: document.querySelector('.q-edit-notes[data-id="'+quoteId+'"]').value.trim()||null,
+        valid_until: document.querySelector('.q-edit-valid[data-id="'+quoteId+'"]').value
+      }).eq('id', quoteId);
+      if (up.error) throw up.error;
+      var del = await sb.from('quote_items').delete().eq('quote_id', quoteId);
+      if (del.error) throw del.error;
+      var items = lines.map(function(l,ix){ return {quote_id:quoteId, item_no:ix+1, description:l.description, qty:l.qty, price_inc_cents:l.price_inc_cents}; });
+      var ins = await sb.from('quote_items').insert(items);
+      if (ins.error) throw ins.error;
+      await loadQuotes();
+    } catch(e){ msg.textContent = 'Failed: '+(e.message||e); btn.disabled = false; }
+  }
+
+  function quoteEmailContent(q, link){
+    var first = (q.contact_name||'').split(' ')[0] || 'there';
+    var validStr = new Date(q.valid_until+'T00:00:00').toLocaleDateString('en-AU',{day:'2-digit',month:'long',year:'numeric'});
+    var subj = 'Your quote '+(q.quote_number||'')+' — Aura Print & Promo';
+    var body =
+      'Hi '+first+',\n\n'+
+      'Thanks for your enquiry — your quote is ready.\n\n'+
+      'View quote '+(q.quote_number||'')+' online ('+money(quoteTotal(q))+' inc GST):\n'+link+'\n\n'+
+      'If you\'re happy with everything, just click the green Accept button on the quote page and type your name — no sign-in needed, and you can forward this email to a colleague if someone else gives the go-ahead. Once accepted we\'ll send your tax invoice, and production starts as soon as payment lands and you\'ve approved your artwork proof.\n\n'+
+      'This quote is valid until '+validStr+'. If anything needs adjusting — quantity, stock, finishing — just reply to this email and we\'ll update it for you.\n\n'+
+      'Kind regards,\n'+
+      'Murray\n'+
+      'Aura Print & Promo\n'+
+      'e: admin@auraprint.com.au\n'+
+      'w: auraprint.com.au';
+    return { subject: subj, body: body };
+  }
+  function quoteMailtoHref(q, link){
+    var c = quoteEmailContent(q, link);
+    return 'mailto:'+encodeURIComponent(q.contact_email||'')+'?subject='+encodeURIComponent(c.subject)+'&body='+encodeURIComponent(c.body);
+  }
+
+  async function sendQuoteEmail(quoteId, btn){
+    var q = allQuotes.find(function(x){return x.id===quoteId;}); if(!q) return;
+    var msg = document.querySelector('.q-send-msg[data-id="'+quoteId+'"]');
+    var c = quoteEmailContent(q, QUOTE_BASE + '?t=' + q.access_token);
+    if (!confirm('Send this quote to '+(q.contact_email||'')+' now?\n\nSubject: '+c.subject)) return;
+    btn.disabled = true; if (msg) msg.textContent = 'Sending…';
+    try {
+      var s = await sb.auth.getSession();
+      var r = await fetch(CFG.supabaseUrl+'/functions/v1/send-email', {
+        method:'POST',
+        headers:{ 'Content-Type':'application/json', 'Authorization':'Bearer '+s.data.session.access_token },
+        body: JSON.stringify({ to: q.contact_email, subject: c.subject, text: c.body })
+      });
+      var j = await r.json();
+      if (!r.ok || !j.ok){ if (msg) msg.textContent = (j.error||('HTTP '+r.status)); btn.disabled=false; return; }
+      await markQuoteSent(quoteId, true);
+      if (msg) msg.textContent = 'Sent ✓';
+    } catch(e){
+      if (msg) msg.textContent = 'Failed: '+(e.message||e); btn.disabled = false;
+    }
+  }
+
+  async function markQuoteSent(quoteId, skipReloadMsg){
+    var q = allQuotes.find(function(x){return x.id===quoteId;}); if(!q) return;
+    var patch = { sent_at: new Date().toISOString() };
+    if (q.status==='draft') patch.status = 'sent';
+    var res = await sb.from('quotes').update(patch).eq('id', quoteId);
+    if (res.error){ alert('Could not mark as sent: '+res.error.message); return; }
+    if (q.lead_id){ await sb.from('leads').update({status:'quoted'}).eq('id', q.lead_id).neq('status','won'); }
+    await loadQuotes();
+  }
+
+  async function markQuoteAccepted(quoteId){
+    var name = prompt('Who accepted the quote (name), and how? e.g. "Jane Smith — by phone"');
+    if (!name || !name.trim()) return;
+    var res = await sb.from('quotes').update({
+      status:'accepted', decided_at:new Date().toISOString(),
+      accepted_by_name:name.trim(), decision_comments:'Recorded by staff'
+    }).eq('id', quoteId).eq('status','sent');
+    if (res.error){ alert('Failed: '+res.error.message); return; }
+    await loadQuotes();
+  }
+
+  async function revertQuoteToDraft(quoteId){
+    if (!confirm('Move this quote back to draft so you can edit it? The customer link keeps working once you re-send.')) return;
+    var res = await sb.from('quotes').update({
+      status:'draft', decided_at:null, accepted_by_name:null, decision_comments:null
+    }).eq('id', quoteId);
+    if (res.error){ alert('Failed: '+res.error.message); return; }
+    await loadQuotes();
+  }
+
+  async function convertQuote(quoteId, btn){
+    var q = allQuotes.find(function(x){return x.id===quoteId;}); if(!q) return;
+    var msg = document.querySelector('.q-convert-msg[data-id="'+quoteId+'"]');
+    if (!confirm('Convert '+q.quote_number+' ('+money(quoteTotal(q))+' inc) into an order and tax invoice now?')) return;
+    btn.disabled = true; if (msg) msg.textContent = 'Converting…';
+    var res = await sb.rpc('convert_quote_to_order', { p_quote_id: quoteId });
+    if (res.error){ if (msg) msg.textContent = 'Failed: '+res.error.message; btn.disabled = false; return; }
+    var d = res.data || {};
+    if (msg) msg.textContent = 'Created '+(d.order_number||'')+' + '+(d.invoice_number||'')+' ✓';
+    await loadQuotes();
+    /* jump straight to the new order so the invoice can be sent */
+    openOrder = d.order_id || null;
+    document.querySelector('.tab[data-tab=orders]').click();
+  }
 
   /* ============ ORDERS & PROOFS ============ */
   async function loadOrders(){
@@ -301,6 +689,7 @@
       b.addEventListener('click', function(){ openOrder = (openOrder===b.dataset.id)?null:b.dataset.id; renderOrders(); if(openOrder) loadEvents(openOrder); });
     });
     bindDetail();
+    if (openOrder) loadEvents(openOrder);
   }
 
   function getTokenLinks(o){
