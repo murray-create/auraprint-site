@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en-AU">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex,nofollow">
+<title>Reset password | Aura Print CRM</title>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+<style>
+  body{margin:0;background:#f6f3ee;font-family:Inter,system-ui,sans-serif;color:#1a1a1a;font-size:14px;line-height:1.45}
+  .card{max-width:380px;margin:8vh auto;background:#fff;border:1px solid #e8e2da;border-radius:16px;padding:30px}
+  h1{font-size:22px;margin:0 0 6px}
+  .muted{color:#8a847d;font-size:13px}
+  .field{margin:14px 0}
+  label{display:block;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#666;margin-bottom:6px}
+  input{width:100%;padding:12px;border:2px solid #e8e2da;border-radius:10px;font-size:15px;box-sizing:border-box;font-family:inherit}
+  button{width:100%;padding:13px;border:none;border-radius:10px;background:#c026a3;color:#fff;font-weight:800;font-size:15px;cursor:pointer;margin-top:6px}
+  button:disabled{opacity:.6;cursor:default}
+  .err{color:#c0392b;font-size:13.5px;margin-top:10px}
+  .ok{color:#15803d;font-size:13.5px;margin-top:10px}
+  a{color:#c026a3;font-weight:700;text-decoration:none}
+</style>
+<link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+</head>
+<body>
+<div class="card">
+  <h1>Choose a new password</h1>
+  <p class="muted" id="intro">Checking your reset link…</p>
+  <div id="form" style="display:none">
+    <div class="field"><label>New password</label><input id="p1" type="password" autocomplete="new-password" placeholder="At least 8 characters"></div>
+    <div class="field"><label>Confirm new password</label><input id="p2" type="password" autocomplete="new-password"></div>
+    <button id="saveBtn">Set new password</button>
+  </div>
+  <div id="err" class="err"></div>
+  <div id="ok" class="ok"></div>
+  <p class="muted" style="margin-top:18px"><a href="admin.html">← Back to CRM sign-in</a></p>
+</div>
+
+<script src="assets/config.js?v=20260716a"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+(function(){
+  var CFG = window.AURA_CONFIG || {};
+  var sb = supabase.createClient(CFG.supabaseUrl, CFG.supabaseKey);
+  var intro = document.getElementById('intro'), form = document.getElementById('form');
+  var err = document.getElementById('err'), ok = document.getElementById('ok');
+  var ready = false;
+
+  function enable(){
+    if (ready) return; ready = true;
+    intro.textContent = 'Enter a new password for your CRM sign-in.';
+    form.style.display = 'block';
+  }
+  function invalid(){
+    if (ready) return;
+    intro.textContent = 'This reset link is invalid or has expired. Go back to the sign-in page and click “Forgot password?” to get a fresh one.';
+  }
+
+  /* The recovery link signs you in automatically; wait for the session. */
+  sb.auth.onAuthStateChange(function(event, session){
+    if (event === 'PASSWORD_RECOVERY' || session) enable();
+  });
+  setTimeout(function(){
+    sb.auth.getSession().then(function(r){ if (r.data.session) enable(); else invalid(); });
+  }, 1500);
+
+  document.getElementById('saveBtn').addEventListener('click', async function(){
+    err.textContent=''; ok.textContent='';
+    var p1 = document.getElementById('p1').value, p2 = document.getElementById('p2').value;
+    if (p1.length < 8){ err.textContent = 'Use at least 8 characters.'; return; }
+    if (p1 !== p2){ err.textContent = 'Passwords don\'t match.'; return; }
+    this.disabled = true; ok.textContent = 'Saving…';
+    var res = await sb.auth.updateUser({ password: p1 });
+    this.disabled = false;
+    if (res.error){ ok.textContent=''; err.textContent = res.error.message; return; }
+    ok.textContent = 'Password updated ✓ — you\'re signed in. Head back to the CRM.';
+    setTimeout(function(){ location.href = 'admin.html'; }, 1800);
+  });
+})();
+</script>
+</body>
+</html>
