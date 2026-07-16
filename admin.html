@@ -185,7 +185,8 @@
   var STATUSES = ['new','contacted','quoted','won','lost'];
   var currentFilter = 'all', allLeads = [], allOrders = [], openOrder = null;
   var allQuotes = [], openQuote = null, quoteLeadId = null;
-  var PROOF_BASE = location.origin + location.pathname.replace(/admin\.html$/,'') + 'proof.html';
+  /* works whether the CRM was opened as /admin.html or the extensionless /admin */
+  var PROOF_BASE = location.origin + location.pathname.replace(/admin(\.html)?$/,'') + 'proof.html';
   var QUOTE_BASE = PROOF_BASE.replace(/proof\.html$/,'myquote.html');
 
   function esc(s){ return String(s==null?'':s).replace(/[&<>"]/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
@@ -1090,7 +1091,7 @@
     if (!token){ err.textContent = 'Please tick the captcha box first.'; return; }
     ok.textContent = 'Sending reset email…';
     var res = await sb.auth.resetPasswordForEmail(email, {
-      redirectTo: location.origin + location.pathname.replace(/admin\.html$/,'') + 'admin-reset.html',
+      redirectTo: location.origin + location.pathname.replace(/admin(\.html)?$/,'') + 'admin-reset.html',
       captchaToken: token
     });
     if (window.hcaptcha) hcaptcha.reset();
