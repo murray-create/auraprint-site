@@ -296,6 +296,11 @@ function wireDrawer(){
     drawer.hidden = !open; backdrop.hidden = !open;
     burger.setAttribute('aria-expanded', open ? 'true' : 'false');
     document.body.classList.toggle('drawer-open', open);
+    /* Tawk's iframe sits above everything, so hide the chat while the menu is open */
+    try{
+      var T = window.Tawk_API;
+      if (T && typeof T.hideWidget === 'function'){ if (open) T.hideWidget(); else T.showWidget(); }
+    }catch(e){}
     if (open) { var f = drawer.querySelector('a,button'); if (f) f.focus(); } else { burger.focus(); }
   }
   burger.addEventListener('click', function(){ setOpen(drawer.hidden); });
@@ -349,6 +354,10 @@ document.addEventListener('DOMContentLoaded', function(){
   const cfg = window.AURA_CONFIG || {};
   if (cfg.tawkId) {
     window.Tawk_API = window.Tawk_API || {}; window.Tawk_LoadStart = new Date();
+    /* If Tawk finishes loading while the menu is already open, hide it straight away */
+    window.Tawk_API.onLoad = function(){
+      if (document.body.classList.contains('drawer-open')) window.Tawk_API.hideWidget();
+    };
     const s = document.createElement('script');
     s.async = true; s.src = 'https://embed.tawk.to/' + cfg.tawkId; s.charset = 'UTF-8';
     s.setAttribute('crossorigin', '*');

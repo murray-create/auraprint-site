@@ -203,6 +203,8 @@ h1.prod{font-size:clamp(28px,3.4vw,42px);margin-bottom:10px}
 .drawer-foot{padding:18px 22px;border-top:1px solid #eee6dc}
 .drawer-phone{display:block;text-align:center;margin-top:12px;font-weight:700;color:var(--ink);text-decoration:none}
 body.drawer-open{overflow:hidden}
+/* Demo chat bot (used when Tawk isn't configured) also stays out of the open drawer's way */
+body.drawer-open #aura-chat-btn,body.drawer-open #aura-chat{display:none !important}
 /* With 7 top-level items the full nav needs ~1150px; below that, switch to the
    burger + drawer so links never wrap or crowd the logo. */
 @media(max-width:1149px){
