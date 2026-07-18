@@ -212,3 +212,9 @@ body.drawer-open{overflow:hidden}
   .drawer,.drawer-backdrop{display:none !important}
 }
 .input-error{border-color:#c0392b !important;box-shadow:0 0 0 3px rgba(192,57,43,.12)}
+
+/* Mobile drawer: the hidden attribute must always win. Without these rules,
+   .drawer{display:flex} overrides the browser's built-in [hidden]{display:none},
+   so the menu gets stuck open on phones and the X appears to do nothing. */
+.drawer[hidden]{display:none !important}
+.drawer-backdrop[hidden]{display:none !important}
