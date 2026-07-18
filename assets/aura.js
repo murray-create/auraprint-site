@@ -296,10 +296,14 @@ function wireDrawer(){
     drawer.hidden = !open; backdrop.hidden = !open;
     burger.setAttribute('aria-expanded', open ? 'true' : 'false');
     document.body.classList.toggle('drawer-open', open);
-    /* Tawk's iframe sits above everything, so hide the chat while the menu is open */
+    /* Tawk's iframe sits above everything, so hide the chat while the menu is open.
+       An open chat window ignores hideWidget, so minimise it first. */
     try{
       var T = window.Tawk_API;
-      if (T && typeof T.hideWidget === 'function'){ if (open) T.hideWidget(); else T.showWidget(); }
+      if (T && typeof T.hideWidget === 'function'){
+        if (open){ if (typeof T.minimize === 'function') T.minimize(); T.hideWidget(); }
+        else T.showWidget();
+      }
     }catch(e){}
     if (open) { var f = drawer.querySelector('a,button'); if (f) f.focus(); } else { burger.focus(); }
   }
