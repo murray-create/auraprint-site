@@ -169,7 +169,6 @@ h1.prod{font-size:clamp(28px,3.4vw,42px);margin-bottom:10px}
 .split{display:grid;grid-template-columns:1fr 1fr;gap:50px}
 
 @media(max-width:900px){
-  .navlinks{display:none}
   footer .cols{grid-template-columns:1fr 1fr}
   .split{grid-template-columns:1fr !important}
   .config{grid-template-columns:1fr}
@@ -204,11 +203,14 @@ h1.prod{font-size:clamp(28px,3.4vw,42px);margin-bottom:10px}
 .drawer-foot{padding:18px 22px;border-top:1px solid #eee6dc}
 .drawer-phone{display:block;text-align:center;margin-top:12px;font-weight:700;color:var(--ink);text-decoration:none}
 body.drawer-open{overflow:hidden}
-@media(max-width:900px){
+/* With 7 top-level items the full nav needs ~1150px; below that, switch to the
+   burger + drawer so links never wrap or crowd the logo. */
+@media(max-width:1149px){
+  .navlinks{display:none}
   .nav-burger{display:block}
   .nav-cta{display:none}
 }
-@media(min-width:901px){
+@media(min-width:1150px){
   .drawer,.drawer-backdrop{display:none !important}
 }
 .input-error{border-color:#c0392b !important;box-shadow:0 0 0 3px rgba(192,57,43,.12)}

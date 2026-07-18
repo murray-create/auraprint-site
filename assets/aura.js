@@ -28,9 +28,15 @@ const HEADER = `
       </div>
       <div><a href="signage.html">Signage &amp; Display ▾</a>
         <div class="mega">
-          <div><h4>Signs</h4><ul><li><a href="corflute-signs.html">Corflute Signs</a></li><li><a href="a-frames.html">A-Frames</a></li><li><a href="posters.html">Posters</a></li><li><a href="stickers.html">Stickers &amp; Labels</a></li><li><a href="vehicle-magnets.html">Magnets</a></li></ul></div>
+          <div><h4>Signs</h4><ul><li><a href="corflute-signs.html">Corflute Signs</a></li><li><a href="a-frames.html">A-Frames</a></li><li><a href="posters.html">Posters</a></li><li><a href="safety-signs.html">Safety Signs</a></li><li><a href="vehicle-magnets.html">Magnets</a></li></ul></div>
           <div><h4>Banners &amp; Flags</h4><ul><li><a href="pull-up-banners.html">Pull Up Banners</a></li><li><a href="outdoor-banners.html">Outdoor Banners</a></li><li><a href="teardrop-flags.html">Teardrop Flags</a></li><li><a href="fence-mesh.html">Fence Mesh</a></li></ul></div>
           <div><h4>Events &amp; Display</h4><ul><li><a href="exhibition-displays.html">Exhibition Displays</a></li><li><a href="media-walls.html">Media Walls</a></li><li><a href="marquees.html">Marquees</a></li><li><a href="tablecloths.html">Printed Tablecloths</a></li></ul></div>
+        </div>
+      </div>
+      <div><a href="stickers.html">Stickers &amp; Labels ▾</a>
+        <div class="mega">
+          <div><h4>Stickers</h4><ul><li><a href="stickers.html">Kiss-Cut Roll Stickers</a></li><li><a href="custom-stickers.html">Custom Stickers</a></li><li><a href="vinyl-stickers.html">Vinyl Stickers</a></li><li><a href="bumper-stickers.html">Bumper Stickers</a></li><li><a href="outdoor-custom-stickers.html">Outdoor Stickers</a></li><li><a href="floor-stickers.html">Floor Stickers</a></li></ul></div>
+          <div><h4>Labels &amp; Speciality</h4><ul><li><a href="roll-labels.html">Roll Labels</a></li><li><a href="custom-label-rolls.html">Custom Label Rolls</a></li><li><a href="large-format-stickers-sav.html">Large Format (SAV)</a></li><li><a href="electrostatic-stickers.html">Electrostatic Stickers</a></li></ul></div>
         </div>
       </div>
       <div><a href="promo.html">Promo &amp; Apparel ▾</a>
@@ -76,9 +82,21 @@ const HEADER = `
         <li><a href="corflute-signs.html">Corflute Signs</a></li>
         <li><a href="pull-up-banners.html">Pull Up Banners</a></li>
         <li><a href="a-frames.html">A-Frames</a></li>
-        <li><a href="stickers.html">Stickers &amp; Labels</a></li>
         <li><a href="teardrop-flags.html">Teardrop Flags</a></li>
         <li><a href="outdoor-banners.html">Outdoor Banners</a></li>
+      </ul>
+    </div>
+    <div class="drawer-group">
+      <button class="drawer-toggle" aria-expanded="false">Stickers &amp; Labels <span>▾</span></button>
+      <ul class="drawer-sub" hidden>
+        <li><a href="stickers.html"><b>Kiss-cut stickers - price online →</b></a></li>
+        <li><a href="custom-stickers.html">Custom Stickers</a></li>
+        <li><a href="vinyl-stickers.html">Vinyl Stickers</a></li>
+        <li><a href="bumper-stickers.html">Bumper Stickers</a></li>
+        <li><a href="outdoor-custom-stickers.html">Outdoor Stickers</a></li>
+        <li><a href="floor-stickers.html">Floor Stickers</a></li>
+        <li><a href="roll-labels.html">Roll Labels</a></li>
+        <li><a href="custom-label-rolls.html">Custom Label Rolls</a></li>
       </ul>
     </div>
     <div class="drawer-group">
