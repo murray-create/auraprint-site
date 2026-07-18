@@ -23,6 +23,13 @@
           data-qty="1"></div>
      <script src="assets/aura-pricing.js"></script>
 
+   STYLE MODE (one page, several supplier products, each with its own axes):
+     <div id="aura-config" data-product="a-frames"
+          data-styles='[{"name":"Signflute A-Frame","axes":[["size","Size",[...]],...],"default":{...}}, ...]'
+          data-qty="1"></div>
+   Rows in product_prices carry a "style" key in options; picking a style
+   swaps the option axes below it and re-keys the price grid.
+
    Quantity buttons adapt to whatever breaks exist for the selected combo. */
 (function () {
   var CFG = window.AURA_CONFIG || {};
@@ -30,6 +37,7 @@
   if (!host) return;
 
   var SLUG = host.getAttribute('data-product');
+  var STYLES = JSON.parse(host.getAttribute('data-styles') || 'null');     // [{name, axes, default}]
   var AXES = JSON.parse(host.getAttribute('data-axes') || '[]');           // [key, label, [values]]
   var DEF  = JSON.parse(host.getAttribute('data-default') || '{}');
   var startQty = parseInt(host.getAttribute('data-qty'), 10) || 0;
@@ -37,11 +45,39 @@
   var GRID = null;        // key -> { qty: {cents, source} }
   var loadFailed = false;
 
-  function comboKey(sel) {
-    return AXES.map(function (a) { return sel[a[0]]; }).join('|');
+  function styleDef(name) {
+    for (var i = 0; STYLES && i < STYLES.length; i++) if (STYLES[i].name === name) return STYLES[i];
+    return null;
   }
+  function currentStyle() {
+    var b = host.querySelector('.opts[data-group="style"] .on');
+    return b ? b.dataset.val : (STYLES ? STYLES[0].name : null);
+  }
+  function axesFor(styleName) {
+    if (!STYLES) return AXES;
+    var d = styleDef(styleName);
+    return d ? d.axes : [];
+  }
+  function keyForOptions(opts) {
+    if (STYLES) {
+      var d = styleDef(opts.style);
+      if (!d) return null;
+      return opts.style + '|' + d.axes.map(function (a) { return opts[a[0]]; }).join('|');
+    }
+    return AXES.map(function (a) { return opts[a[0]]; }).join('|');
+  }
+  function comboKey(sel) { return keyForOptions(sel); }
   function currentSel() {
     var sel = {};
+    if (STYLES) {
+      sel.style = currentStyle();
+      var d = styleDef(sel.style) || { axes: [], default: {} };
+      d.axes.forEach(function (a) {
+        var b = host.querySelector('.opts[data-group="' + a[0] + '"] .on');
+        sel[a[0]] = b ? b.dataset.val : d.default[a[0]];
+      });
+      return sel;
+    }
     AXES.forEach(function (a) {
       var b = host.querySelector('.opts[data-group="' + a[0] + '"] .on');
       sel[a[0]] = b ? b.dataset.val : DEF[a[0]];
@@ -63,9 +99,12 @@
   }
 
   host.innerHTML =
-    AXES.map(function (a) {
-      return '<div class="optlabel">' + a[1] + '</div>' + optBtns(a[0], a[2], DEF[a[0]]);
-    }).join('') +
+    (STYLES
+      ? '<div class="optlabel">Style</div>' + optBtns('style', STYLES.map(function (s) { return s.name; }), STYLES[0].name) +
+        '<div id="subAxes"></div>'
+      : AXES.map(function (a) {
+          return '<div class="optlabel">' + a[1] + '</div>' + optBtns(a[0], a[2], DEF[a[0]]);
+        }).join('')) +
     '<div class="optlabel">Quantity</div><div class="opts" data-group="qty" id="qtyGroup"></div>' +
     '<div class="price-box" style="margin-top:28px">' +
       '<div><div class="from">Your price</div><div class="gst" id="gstLabel">inc. GST &amp; delivery</div></div>' +
@@ -81,6 +120,16 @@
   var priceEl = host.querySelector('#price'), noteEl = host.querySelector('#priceNote'),
       gstEl = host.querySelector('#gstLabel'), cta = host.querySelector('#orderCta'),
       qtyGroup = host.querySelector('#qtyGroup');
+
+  /* Style mode: (re)draw the selected style's own option axes. */
+  function renderSubAxes(styleName) {
+    if (!STYLES) return;
+    var d = styleDef(styleName);
+    host.querySelector('#subAxes').innerHTML = (d ? d.axes : []).map(function (a) {
+      return '<div class="optlabel">' + a[1] + '</div>' + optBtns(a[0], a[2], d.default[a[0]]);
+    }).join('');
+  }
+  renderSubAxes(STYLES && STYLES[0].name);
 
   /* Count-up is decoration only: true value is written immediately when the
      tab is hidden and re-asserted on a timer (background-tab rAF throttle). */
@@ -100,7 +149,10 @@
   }
 
   function specText(sel, qty) {
-    return AXES.map(function (a) { return a[1] + ': ' + sel[a[0]]; }).join(', ') + ', Qty: ' + qty;
+    var parts = [];
+    if (STYLES) parts.push('Style: ' + sel.style);
+    axesFor(sel.style).forEach(function (a) { parts.push(a[1] + ': ' + sel[a[0]]); });
+    return parts.join(', ') + ', Qty: ' + qty;
   }
   function quoteHref(sel, qty, price) {
     var u = 'quote.html?product=' + SLUG + '&qty=' + qty +
@@ -150,6 +202,7 @@
     var g = btn.closest('.opts');
     g.querySelectorAll('.opt').forEach(function (o) { o.classList.remove('on'); });
     btn.classList.add('on');
+    if (STYLES && g.getAttribute('data-group') === 'style') renderSubAxes(btn.dataset.val);
     calc();
   });
 
@@ -163,7 +216,8 @@
       .then(function (rows) {
         var map = {};
         rows.forEach(function (r) {
-          var key = AXES.map(function (a) { return r.options[a[0]]; }).join('|');
+          var key = keyForOptions(r.options);
+          if (key === null) return;   // row for a style this page doesn't know
           (map[key] = map[key] || {})[r.qty] = { cents: r.price_cents, source: r.source };
         });
         GRID = map; calc();

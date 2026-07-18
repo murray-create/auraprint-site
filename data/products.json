@@ -4,7 +4,7 @@
   "name": "Business Cards",
   "cat": "print",
   "sub": "Cards & Stationery",
-  "icon": "\ud83e\udeaa",
+  "icon": "🪪",
   "badge": "Most popular",
   "desc": "90x55mm. From everyday 350gsm to thick NV Velvet with Spot UV and metallic foil.",
   "seo": "Business Cards Sunshine Coast - Instant Online Pricing",
@@ -51,7 +51,7 @@
   "name": "NV Velvet Business Cards",
   "cat": "print",
   "sub": "Cards & Stationery",
-  "icon": "\u2728",
+  "icon": "✨",
   "desc": "Soft-touch velvet laminate over 450gsm artboard. The card people remember.",
   "seo": "NV Velvet Business Cards Australia",
   "from": 123,
@@ -86,14 +86,14 @@
    "tier": "premium",
    "stock": "Velvet Soft-Touch"
   },
-  "liveNote": "Want <b>Spot UV</b> or <b>metallic foil</b> over the velvet? <a href=\"quote.html?product=nv-velvet-business-cards&spec=NV%20Velvet%20%2B%20Spot%20UV%20or%20foil\">Ask for a fast quote \u2192</a>"
+  "liveNote": "Want <b>Spot UV</b> or <b>metallic foil</b> over the velvet? <a href=\"quote.html?product=nv-velvet-business-cards&spec=NV%20Velvet%20%2B%20Spot%20UV%20or%20foil\">Ask for a fast quote →</a>"
  },
  {
   "slug": "flyers",
   "name": "Flyers",
   "cat": "print",
   "sub": "Marketing Material",
-  "icon": "\ud83d\udcc4",
+  "icon": "📄",
   "desc": "DL to A3 on stocks from 130gsm to 350gsm. Letterbox-ready and event-proof.",
   "seo": "Flyer Printing Sunshine Coast",
   "from": 85,
@@ -171,7 +171,7 @@
   "name": "Brochures",
   "cat": "print",
   "sub": "Marketing Material",
-  "icon": "\ud83d\udcd6",
+  "icon": "📖",
   "desc": "Half fold, tri fold, Z fold and gate fold on premium stocks.",
   "seo": "Brochure Printing Sunshine Coast",
   "from": 198,
@@ -237,7 +237,7 @@
   "name": "Postcards",
   "cat": "print",
   "sub": "Marketing Material",
-  "icon": "\ud83d\udc8c",
+  "icon": "💌",
   "desc": "Direct mail that stands out. A6 to A5 on thick stocks.",
   "seo": "Postcard Printing Australia",
   "from": 115,
@@ -309,7 +309,7 @@
   "name": "Letterheads",
   "cat": "print",
   "sub": "Cards & Stationery",
-  "icon": "\u2709\ufe0f",
+  "icon": "✉️",
   "desc": "Offset quality on premium uncoated and laser-safe stocks.",
   "seo": "Letterhead Printing Australia",
   "from": 192,
@@ -365,7 +365,7 @@
   "name": "Envelopes",
   "cat": "print",
   "sub": "Cards & Stationery",
-  "icon": "\ud83d\udcee",
+  "icon": "📮",
   "desc": "Printed DL to C4, plain face or window, any volume.",
   "seo": "Printed Envelopes Australia",
   "portal": true,
@@ -393,7 +393,7 @@
   "name": "With Compliments Slips",
   "cat": "print",
   "sub": "Cards & Stationery",
-  "icon": "\ud83d\udcdd",
+  "icon": "📝",
   "desc": "The finishing touch for your stationery suite. DL size to match your letterhead.",
   "seo": "With Compliments Slips Printing",
   "portal": true,
@@ -449,7 +449,7 @@
   "name": "Loyalty Cards",
   "cat": "print",
   "sub": "Cards & Stationery",
-  "icon": "\ud83d\udcb3",
+  "icon": "💳",
   "desc": "Keep customers coming back. Business card size with stamp grids or numbering.",
   "seo": "Loyalty Card Printing",
   "portal": true,
@@ -505,7 +505,7 @@
   "name": "Presentation Folders",
   "cat": "print",
   "sub": "Marketing Material",
-  "icon": "\ud83d\uddc2\ufe0f",
+  "icon": "🗂️",
   "desc": "Gloss, matt or velvet with business card slits and capacity spines.",
   "seo": "Presentation Folder Printing Australia",
   "portal": true,
@@ -577,7 +577,7 @@
   "name": "Menus",
   "cat": "print",
   "sub": "Marketing Material",
-  "icon": "\ud83c\udf7d\ufe0f",
+  "icon": "🍽️",
   "desc": "Flat, folded or laminated for table service. Spill-proof options for venues.",
   "seo": "Menu Printing Sunshine Coast",
   "portal": true,
@@ -651,7 +651,7 @@
   "name": "Greeting Cards",
   "cat": "print",
   "sub": "Marketing Material",
-  "icon": "\ud83c\udf89",
+  "icon": "🎉",
   "desc": "Folded cards for retail, events and corporate Christmas lists.",
   "seo": "Greeting Card Printing Australia",
   "portal": true,
@@ -727,7 +727,7 @@
   "name": "Saddle Stitched Booklets",
   "cat": "print",
   "sub": "Books & Booklets",
-  "icon": "\ud83d\udcda",
+  "icon": "📚",
   "desc": "8-64 pages, self cover or plus cover. Catalogues, programs and magazines.",
   "seo": "Booklet Printing Australia",
   "portal": true,
@@ -799,7 +799,7 @@
   "name": "Perfect Bound Books",
   "cat": "print",
   "sub": "Books & Booklets",
-  "icon": "\ud83d\udcd5",
+  "icon": "📕",
   "desc": "Square spine, bookshop finish. Annual reports, look books and manuals.",
   "seo": "Perfect Bound Book Printing Australia",
   "portal": true,
@@ -827,7 +827,7 @@
   "name": "Wiro Bound Booklets",
   "cat": "print",
   "sub": "Books & Booklets",
-  "icon": "\ud83c\udf00",
+  "icon": "🌀",
   "desc": "Lay-flat manuals, workbooks and calendars with metal wire binding.",
   "seo": "Wiro Bound Booklet Printing",
   "portal": true,
@@ -856,7 +856,7 @@
   "name": "Invoice Books (NCR)",
   "cat": "print",
   "sub": "Books & Booklets",
-  "icon": "\ud83e\uddfe",
+  "icon": "🧾",
   "desc": "Carbonless duplicate and triplicate books, numbered and perforated.",
   "seo": "NCR Invoice Book Printing Australia",
   "portal": true,
@@ -884,7 +884,7 @@
   "name": "Notepads",
   "cat": "print",
   "sub": "Books & Booklets",
-  "icon": "\ud83d\udcd2",
+  "icon": "📒",
   "desc": "Branded pads, glued head, 25-100 sheets. Desk real estate for your brand.",
   "seo": "Notepad Printing Australia",
   "portal": true,
@@ -959,7 +959,7 @@
   "name": "Calendars",
   "cat": "print",
   "sub": "Books & Booklets",
-  "icon": "\ud83d\udcc5",
+  "icon": "📅",
   "desc": "Wall and desk calendars, wiro bound. Twelve months of brand visibility.",
   "seo": "Calendar Printing Australia",
   "portal": true,
@@ -1030,7 +1030,7 @@
   "name": "Corflute Signs",
   "cat": "signage",
   "sub": "Signs & Stickers",
-  "icon": "\ud83e\udea7",
+  "icon": "🪧",
   "desc": "Real estate, builders and event boards on 3mm or 5mm corflute, any size.",
   "seo": "Corflute Signs Sunshine Coast",
   "from": 122,
@@ -1099,21 +1099,29 @@
   "name": "A-Frames",
   "cat": "signage",
   "sub": "Signs & Stickers",
-  "icon": "\ud83c\udd70\ufe0f",
-  "desc": "Metal A-frames with replaceable corflute or ACM inserts. Footpath workhorses.",
+  "icon": "🅰️",
+  "desc": "Ten A-frame styles priced live: Signflute, sandwich boards, Endurosign, real estate frames, chalkboards, Monsoon and expandable SEG displays.",
   "seo": "A-Frame Signs Australia",
   "portal": false,
-  "quote": true,
   "template": "a-frames-easysigns",
   "specs": [
-   "Standard 900x600 insert",
-   "Metal frame + 5mm inserts",
-   "Double sided as standard"
+   "Print-ready PDF, 10mm bleed",
+   "CMYK, 150dpi at full size",
+   "Double-sided print on most styles",
+   "Replacement inserts, stickers and banners available"
   ],
   "faqs": [
    [
-    "Can I replace just the inserts?",
-    "Yes - keep the frame, swap the message. Inserts are a fraction of the full price."
+    "Can I replace just the inserts or stickers?",
+    "Yes - keep the frame, swap the message. Pick the inserts-only or stickers-only option in the configurator; it is a fraction of the full price."
+   ],
+   [
+    "Which style should I choose?",
+    "Signflute frames are the budget all-rounder. Endurosign and Evarite suit real estate. Chalkboards suit cafes, and Monsoon frames are built for wind. Not sure? Ask us for a quick recommendation."
+   ],
+   [
+    "Are they weatherproof?",
+    "All frames are made for outdoor footpath use. UV inks resist fading in Queensland sun; bring lightweight styles in overnight in high wind."
    ]
   ],
   "related": [
@@ -1122,46 +1130,275 @@
    "pull-up-banners"
   ],
   "img": "assets/img/a-frames.jpg",
-  "from": 91,
+  "from": 95,
   "suppliers": [
    "CMYKhub",
    "Easy Signs"
   ],
   "live": {
-   "axes": [
-    [
-     "size",
-     "Size",
-     [
-      "600x700",
-      "630x800",
-      "600x950",
-      "700x1100"
-     ]
-    ],
-    [
-     "type",
-     "Type",
-     [
-      "Flat base",
-      "With legs"
-     ]
-    ],
-    [
-     "handle",
-     "Handle",
-     [
-      "Carrying Handle",
-      "No Carrying Handle"
-     ]
-    ]
+   "styles": [
+    {
+     "name": "Signflute A-Frame",
+     "axes": [
+      [
+       "size",
+       "Size",
+       [
+        "600x700mm",
+        "630x800mm",
+        "600x950mm",
+        "700x1100mm"
+       ]
+      ],
+      [
+       "type",
+       "Base",
+       [
+        "Flat base",
+        "With legs"
+       ]
+      ],
+      [
+       "handle",
+       "Handle",
+       [
+        "Carrying handle",
+        "No handle"
+       ]
+      ]
+     ],
+     "default": {
+      "size": "600x700mm",
+      "type": "Flat base",
+      "handle": "Carrying handle"
+     }
+    },
+    {
+     "name": "Insertable Sandwich Board",
+     "axes": [
+      [
+       "package",
+       "Package",
+       [
+        "Frame + 2 printed inserts",
+        "Frame only",
+        "2 printed inserts only"
+       ]
+      ],
+      [
+       "size",
+       "Size",
+       [
+        "600x900mm",
+        "900x1200mm"
+       ]
+      ]
+     ],
+     "default": {
+      "package": "Frame + 2 printed inserts",
+      "size": "600x900mm"
+     }
+    },
+    {
+     "name": "Metal A-Frame, Laminated Print",
+     "axes": [
+      [
+       "size",
+       "Size",
+       [
+        "600x900mm",
+        "900x1200mm"
+       ]
+      ]
+     ],
+     "default": {
+      "size": "600x900mm"
+     }
+    },
+    {
+     "name": "A-Frame Chalkboard",
+     "axes": [
+      [
+       "print",
+       "Print style",
+       [
+        "Logo top + chalkboard",
+        "Full print + chalk area",
+        "Full chalkboard"
+       ]
+      ]
+     ],
+     "default": {
+      "print": "Logo top + chalkboard"
+     }
+    },
+    {
+     "name": "Snap A-Frame (A1)",
+     "axes": [
+      [
+       "package",
+       "Package",
+       [
+        "Frame + 2 printed posters",
+        "Frame only"
+       ]
+      ]
+     ],
+     "default": {
+      "package": "Frame + 2 printed posters"
+     }
+    },
+    {
+     "name": "Endurosign A-Frame",
+     "axes": [
+      [
+       "package",
+       "Package",
+       [
+        "Frame + stickers both sides",
+        "Frame only",
+        "Printed stickers only"
+       ]
+      ],
+      [
+       "colour",
+       "Frame colour",
+       [
+        "Black",
+        "White"
+       ]
+      ]
+     ],
+     "default": {
+      "package": "Frame + stickers both sides",
+      "colour": "Black"
+     }
+    },
+    {
+     "name": "Evarite Real Estate A-Frame",
+     "axes": [
+      [
+       "option",
+       "Option",
+       [
+        "Black frame + stickers",
+        "White frame + stickers",
+        "Yellow frame + stickers",
+        "Replacement stickers only"
+       ]
+      ]
+     ],
+     "default": {
+      "option": "Black frame + stickers"
+     }
+    },
+    {
+     "name": "Real Estate A-Frame (insertable)",
+     "axes": [
+      [
+       "package",
+       "Package",
+       [
+        "Frame + 2 printed inserts",
+        "Frame only",
+        "2 printed inserts only"
+       ]
+      ],
+      [
+       "colour",
+       "Frame colour",
+       [
+        "Black",
+        "White",
+        "Red"
+       ]
+      ]
+     ],
+     "default": {
+      "package": "Frame + 2 printed inserts",
+      "colour": "Black"
+     }
+    },
+    {
+     "name": "Monsoon A-Frame",
+     "axes": [
+      [
+       "kit",
+       "Kit",
+       [
+        "Frame + banner",
+        "Replacement banner only",
+        "Frame only"
+       ]
+      ],
+      [
+       "size",
+       "Size",
+       [
+        "Small 704x924mm",
+        "Large 1954x924mm"
+       ]
+      ],
+      [
+       "material",
+       "Banner",
+       [
+        "Vinyl blockout",
+        "Vinyl mesh"
+       ]
+      ],
+      [
+       "printing",
+       "Print",
+       [
+        "Single sided",
+        "Double sided"
+       ]
+      ]
+     ],
+     "default": {
+      "kit": "Frame + banner",
+      "size": "Small 704x924mm",
+      "material": "Vinyl blockout",
+      "printing": "Single sided"
+     }
+    },
+    {
+     "name": "Expandable SEG A-Frame",
+     "axes": [
+      [
+       "package",
+       "Package",
+       [
+        "Kit: frame + 2 fabric inserts",
+        "Fabric inserts only",
+        "Frame only"
+       ]
+      ],
+      [
+       "size",
+       "Width",
+       [
+        "559mm (1 frame)",
+        "1118mm (2 frames)",
+        "1676mm (3 frames)",
+        "2235mm (4 frames)",
+        "2794mm (5 frames)",
+        "3353mm (6 frames)",
+        "3912mm (7 frames)",
+        "4470mm (8 frames)",
+        "5029mm (9 frames)",
+        "5588mm (10 frames)"
+       ]
+      ]
+     ],
+     "default": {
+      "package": "Kit: frame + 2 fabric inserts",
+      "size": "559mm (1 frame)"
+     }
+    }
    ],
-   "default": {
-    "size": "600x700",
-    "type": "Flat base",
-    "handle": "Carrying Handle"
-   },
-   "qty": 10
+   "qty": 1
   }
  },
  {
@@ -1169,7 +1406,7 @@
   "name": "Aluminium Composite Signs",
   "cat": "signage",
   "sub": "Signs & Stickers",
-  "icon": "\ud83d\udd29",
+  "icon": "🔩",
   "desc": "Premium rigid ACM signage that stays flat and lasts years outdoors.",
   "seo": "Aluminium Composite Signs Australia",
   "portal": false,
@@ -1226,7 +1463,7 @@
   "name": "Safety Signs",
   "cat": "signage",
   "sub": "Signs & Stickers",
-  "icon": "\u26a0\ufe0f",
+  "icon": "⚠️",
   "desc": "Compliant site and workplace signage to AS 1319, stock or custom.",
   "seo": "Safety Signs Australia",
   "portal": false,
@@ -1254,7 +1491,7 @@
   "name": "Posters",
   "cat": "signage",
   "sub": "Signs & Stickers",
-  "icon": "\ud83d\uddbc\ufe0f",
+  "icon": "🖼️",
   "desc": "Offset and wide format posters, A2 to billboard scale.",
   "seo": "Poster Printing Sunshine Coast",
   "from": 102,
@@ -1318,7 +1555,7 @@
   "name": "Stickers & Labels",
   "cat": "signage",
   "sub": "Signs & Stickers",
-  "icon": "\ud83c\udff7\ufe0f",
+  "icon": "🏷️",
   "desc": "Die-cut shapes, rolls and sheets. Indoor, outdoor and machine-apply.",
   "seo": "Sticker Printing Australia",
   "portal": true,
@@ -1347,7 +1584,7 @@
   "name": "Vehicle Magnets",
   "cat": "signage",
   "sub": "Signs & Stickers",
-  "icon": "\ud83e\uddf2",
+  "icon": "🧲",
   "desc": "Turn the ute into a billboard. Heavy-duty magnetic material, rounded corners.",
   "seo": "Vehicle Magnet Printing Australia",
   "portal": false,
@@ -1408,7 +1645,7 @@
   "name": "Pull Up Banners",
   "cat": "signage",
   "sub": "Banners & Flags",
-  "icon": "\ud83d\udea9",
+  "icon": "🚩",
   "badge": "Best seller",
   "desc": "Economy to premium bases with vivid print. Includes padded carry bag.",
   "seo": "Pull Up Banners Sunshine Coast",
@@ -1467,7 +1704,7 @@
   "name": "Teardrop Flags",
   "cat": "signage",
   "sub": "Banners & Flags",
-  "icon": "\ud83c\udf8f",
+  "icon": "🎏",
   "desc": "Single or double sided knitted polyester with spike, cross or water bases.",
   "seo": "Teardrop Flags Australia",
   "portal": false,
@@ -1531,7 +1768,7 @@
   "name": "Outdoor Vinyl Banners",
   "cat": "signage",
   "sub": "Banners & Flags",
-  "icon": "\ud83c\udf2c\ufe0f",
+  "icon": "🌬️",
   "desc": "Hemmed and eyeletted heavy-duty vinyl, any size, built for weather.",
   "seo": "Vinyl Banner Printing Australia",
   "portal": false,
@@ -1595,7 +1832,7 @@
   "name": "Fence Mesh Banners",
   "cat": "signage",
   "sub": "Banners & Flags",
-  "icon": "\ud83d\udd78\ufe0f",
+  "icon": "🕸️",
   "desc": "Construction site wraps that let wind through. Builders' favourite billboard.",
   "seo": "Fence Mesh Printing Australia",
   "portal": false,
@@ -1646,7 +1883,7 @@
   "name": "Media Walls",
   "cat": "signage",
   "sub": "Events & Display",
-  "icon": "\ud83d\uddbc\ufe0f",
+  "icon": "🖼️",
   "desc": "Straight or curved backdrops for events, launches and step-and-repeats.",
   "seo": "Media Walls Australia",
   "portal": false,
@@ -1706,7 +1943,7 @@
   "name": "Marquees",
   "cat": "signage",
   "sub": "Events & Display",
-  "icon": "\u26fa",
+  "icon": "⛺",
   "desc": "Printed canopies, walls and flags for markets and events. 2.4m to 6m.",
   "seo": "Printed Marquees Australia",
   "portal": false,
@@ -1738,7 +1975,7 @@
   "name": "Standees & Cut Outs",
   "cat": "signage",
   "sub": "Events & Display",
-  "icon": "\ud83e\uddcd",
+  "icon": "🧍",
   "desc": "Life-size (and larger) cardboard and corflute cut-outs with strut backs.",
   "seo": "Standee Printing Australia",
   "portal": false,
@@ -1788,7 +2025,7 @@
      "material",
      "Material",
      [
-      "Signflute\u2122 5mm Thickness",
+      "Signflute™ 5mm Thickness",
       "Cardboard 10mm Thickness"
      ]
     ],
@@ -1804,7 +2041,7 @@
    "default": {
     "width": "2000mm",
     "height": "1000mm",
-    "material": "Signflute\u2122 5mm Thickness",
+    "material": "Signflute™ 5mm Thickness",
     "printing": "Single Sided"
    },
    "qty": 10
@@ -1815,7 +2052,7 @@
   "name": "Printed Tablecloths",
   "cat": "signage",
   "sub": "Events & Display",
-  "icon": "\ud83e\ude91",
+  "icon": "🪑",
   "desc": "Fitted or throw-style, full colour dye-sublimation. Machine washable.",
   "seo": "Printed Tablecloths Australia",
   "portal": false,
@@ -1882,7 +2119,7 @@
   "name": "Exhibition Displays",
   "cat": "signage",
   "sub": "Events & Display",
-  "icon": "\ud83c\udfaa",
+  "icon": "🎪",
   "desc": "Complete expo kits: walls, counters, lighting and shipping cases.",
   "seo": "Exhibition Display Systems Australia",
   "portal": false,
@@ -2258,7 +2495,7 @@
      "material",
      "Material",
      [
-      "Signflute\u2122",
+      "Signflute™",
       "White Clay Coat Corrugated Cardboard"
      ]
     ],
@@ -2273,7 +2510,7 @@
    ],
    "default": {
     "size": "3 Sides (270x800)",
-    "material": "Signflute\u2122",
+    "material": "Signflute™",
     "thickness": "3mm"
    },
    "qty": 10
@@ -4544,7 +4781,7 @@
      "material",
      "Material",
      [
-      "Signflute\u2122",
+      "Signflute™",
       "White Clay Coat Corrugated Cardboard"
      ]
     ],
@@ -4567,7 +4804,7 @@
    ],
    "default": {
     "size": "Small (300x300)",
-    "material": "Signflute\u2122",
+    "material": "Signflute™",
     "thickness": "3mm",
     "lid": "No"
    },
