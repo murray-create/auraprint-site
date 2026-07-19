@@ -41,6 +41,7 @@
   var AXES = JSON.parse(host.getAttribute('data-axes') || '[]');           // [key, label, [values]]
   var DEF  = JSON.parse(host.getAttribute('data-default') || '{}');
   var startQty = parseInt(host.getAttribute('data-qty'), 10) || 0;
+  var LINKS = JSON.parse(host.getAttribute('data-quote-links') || '[]');   // [{label, note}] escape hatches -> quote.html
 
   var GRID = null;        // key -> { qty: {cents, source} }
   var loadFailed = false;
@@ -115,6 +116,11 @@
     '<div style="display:flex;gap:12px;margin-top:18px;flex-wrap:wrap">' +
       '<a class="btn btn-aura" id="orderCta" href="quote.html?product=' + SLUG + '" style="flex:1;text-align:center;min-width:220px">Get a quote &amp; upload artwork →</a>' +
     '</div>' +
+    (LINKS.length ? '<div id="quoteLinks" style="display:flex;gap:18px;margin-top:12px;flex-wrap:wrap">' +
+      LINKS.map(function (l, i) {
+        return '<a class="qlink" data-i="' + i + '" href="quote.html?product=' + SLUG + '" ' +
+               'style="font-size:13.5px;font-weight:600;color:#7a4bd6;text-decoration:underline;text-underline-offset:3px">' + l.label + '</a>';
+      }).join('') + '</div>' : '') +
     '<p style="font-size:12.5px;color:#6f6961;margin-top:12px">Prices are read live from our current supplier rates and include GST and standard delivery Australia-wide.</p>';
 
   var priceEl = host.querySelector('#price'), noteEl = host.querySelector('#priceNote'),
@@ -160,10 +166,21 @@
     if (price) u += '&price=' + price.toFixed(2);
     return u;
   }
+  /* Escape hatches (custom size / volume runs) always carry the current spec. */
+  function updateQuoteLinks(sel, qty) {
+    LINKS.forEach(function (l, i) {
+      var a = host.querySelector('.qlink[data-i="' + i + '"]');
+      if (!a) return;
+      a.href = 'quote.html?product=' + SLUG + '&qty=' + qty +
+               '&spec=' + encodeURIComponent((l.note ? l.note + ' — ' : '') + specText(sel, qty));
+    });
+  }
+
   function showPoa(sel, qty, message) {
     priceEl.dataset.v = 0; priceEl.textContent = 'POA'; gstEl.textContent = '';
     noteEl.innerHTML = message + ' <a href="' + quoteHref(sel, qty) + '">Get a fast quote →</a>';
     cta.href = quoteHref(sel, qty);
+    updateQuoteLinks(sel, qty);
   }
 
   /* Quantity buttons follow the breaks available for the selected combo. */
@@ -195,6 +212,7 @@
       ? '<span style="color:#2f7d4f;font-weight:700">✓ Confirmed price.</span> This is what you pay.'
       : '<b>Indicative price.</b> We confirm it on your proof, before you pay.';
     cta.href = quoteHref(sel, qty, dollars);
+    updateQuoteLinks(sel, qty);
   }
 
   host.addEventListener('click', function (e) {
