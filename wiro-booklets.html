@@ -37,12 +37,12 @@
       <h1 class="prod">WIRO BOUND BOOKLETS</h1>
       <p style="color:#6b6560;margin-bottom:6px">Lay-flat manuals, workbooks and calendars with metal wire binding.</p>
       
-      
-      <div class="panel" style="margin-top:20px;background:var(--paper)">
-        <h3 style="font-size:17px;margin-bottom:8px">Priced per job - quotes back within the hour</h3>
-        <p style="font-size:14.5px;color:#555">Produced through our national trade production network. Tell us size, quantity and deadline and we'll price it fast (Mon-Fri 8:30-5).</p>
-      </div>
-      <div style="display:flex;gap:12px;margin-top:18px;flex-wrap:wrap"><a class="btn btn-aura" href="quote.html?product=wiro-booklets" style="flex:1;text-align:center">Get a fast quote →</a></div>
+      <div id="aura-config" data-product="wiro-booklets"
+           data-axes='[["size","Size",["A4","A5"]],["paper","Inside pages",["Gloss 113gsm","Gloss 150gsm"]],["pages","Page count",["8pp","16pp","24pp","32pp","48pp","64pp","100pp"]],["cover","Cover",["Self cover","Printed cover (350gsm artboard)"]]]'
+           data-default='{"size":"A4","paper":"Gloss 150gsm","pages":"24pp","cover":"Self cover"}'
+           data-quote-links='[{"label":"Different stock, size or binding? Get a fast quote →","note":"Custom booklet spec"},{"label":"More than 500 copies? Get a volume quote →","note":"Volume enquiry (500+)"}]'
+           data-qty="100"></div>
+      <p style="font-size:13px;color:#6f6961;margin-top:14px">Wire (wiro) bound booklets that open flat - white wire as standard, black available on quote.</p>
     </div>
   </div>
 </section>
@@ -91,6 +91,6 @@
 
 <script src="assets/config.js?v=20260719b"></script>
 <script src="assets/aura.js?v=20260719b"></script>
-
+<script src="assets/aura-pricing.js?v=20260719b"></script>
 </body>
 </html>
