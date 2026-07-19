@@ -820,67 +820,7 @@
    "booklets",
    "wiro-booklets",
    "presentation-folders"
-  ],
-  "live": {
-   "axes": [
-    [
-     "size",
-     "Size",
-     [
-      "A4",
-      "A5"
-     ]
-    ],
-    [
-     "paper",
-     "Inside pages",
-     [
-      "Gloss 113gsm",
-      "Gloss 150gsm",
-      "Uncoated 100gsm"
-     ]
-    ],
-    [
-     "pages",
-     "Page count",
-     [
-      "32pp",
-      "48pp",
-      "64pp",
-      "100pp",
-      "148pp",
-      "200pp"
-     ]
-    ],
-    [
-     "cover",
-     "Cover",
-     [
-      "Self cover",
-      "Printed cover (350gsm artboard)"
-     ]
-    ]
-   ],
-   "default": {
-    "size": "A4",
-    "paper": "Gloss 150gsm",
-    "pages": "64pp",
-    "cover": "Printed cover (350gsm artboard)"
-   },
-   "qty": 100,
-   "links": [
-    {
-     "label": "Different stock, size or binding? Get a fast quote \u2192",
-     "note": "Custom booklet spec"
-    },
-    {
-     "label": "More than 500 copies? Get a volume quote \u2192",
-     "note": "Volume enquiry (500+)"
-    }
-   ]
-  },
-  "liveNote": "Offset printed and perfect bound with a square, glued spine. Page counts are total pages including cover.",
-  "from": 1572
+  ]
  },
  {
   "slug": "wiro-booklets",
@@ -909,67 +849,7 @@
    "calendars",
    "notepads"
   ],
-  "img": "assets/img/wiro-booklets.jpg",
-  "live": {
-   "axes": [
-    [
-     "size",
-     "Size",
-     [
-      "A4",
-      "A5"
-     ]
-    ],
-    [
-     "paper",
-     "Inside pages",
-     [
-      "Gloss 113gsm",
-      "Gloss 150gsm"
-     ]
-    ],
-    [
-     "pages",
-     "Page count",
-     [
-      "8pp",
-      "16pp",
-      "24pp",
-      "32pp",
-      "48pp",
-      "64pp",
-      "100pp"
-     ]
-    ],
-    [
-     "cover",
-     "Cover",
-     [
-      "Self cover",
-      "Printed cover (350gsm artboard)"
-     ]
-    ]
-   ],
-   "default": {
-    "size": "A4",
-    "paper": "Gloss 150gsm",
-    "pages": "24pp",
-    "cover": "Self cover"
-   },
-   "qty": 100,
-   "links": [
-    {
-     "label": "Different stock, size or binding? Get a fast quote \u2192",
-     "note": "Custom booklet spec"
-    },
-    {
-     "label": "More than 500 copies? Get a volume quote \u2192",
-     "note": "Volume enquiry (500+)"
-    }
-   ]
-  },
-  "liveNote": "Wire (wiro) bound booklets that open flat - white wire as standard, black available on quote.",
-  "from": 942
+  "img": "assets/img/wiro-booklets.jpg"
  },
  {
   "slug": "invoice-books",
@@ -1548,7 +1428,7 @@
    "safety-signs",
    "a-frames"
   ],
-  "from": 163,
+  "from": 180,
   "suppliers": [
    "Easy Signs"
   ],
@@ -1598,7 +1478,8 @@
     }
    ]
   },
-  "liveNote": "3mm ACM panel, printed and laminated. Drilled holes, standoffs and custom shapes priced on your quote."
+  "liveNote": "3mm ACM panel, printed and laminated. Drilled holes, standoffs and custom shapes priced on your quote.",
+  "img": "assets/img/aluminium-signs.jpg"
  },
  {
   "slug": "safety-signs",
@@ -5488,7 +5369,7 @@
   "sub": "Books & Booklets",
   "desc": "Wiro Magazines produced through our our trade network trade network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
   "seo": "Wiro Magazines Sunshine Coast | Aura Print & Promo",
-  "from": 170,
+  "from": 256,
   "quote": true,
   "suppliers": [
    "LEP"
@@ -5523,45 +5404,19 @@
     ],
     [
      "stock",
-     "Paper",
+     "Stock",
      [
       "90 GSM Uncoated",
       "100 GSM Uncoated"
-     ]
-    ],
-    [
-     "pages",
-     "Page count",
-     [
-      "8pp",
-      "12pp",
-      "16pp",
-      "20pp",
-      "24pp",
-      "32pp",
-      "40pp",
-      "48pp"
      ]
     ]
    ],
    "default": {
     "size": "A4",
-    "stock": "100 GSM Uncoated",
-    "pages": "16pp"
+    "stock": "90 GSM Uncoated"
    },
-   "qty": 100,
-   "links": [
-    {
-     "label": "Different stock, size or binding? Get a fast quote \u2192",
-     "note": "Custom booklet spec"
-    },
-    {
-     "label": "More than 200 copies? Get a volume quote \u2192",
-     "note": "Volume enquiry (200+)"
-    }
-   ]
-  },
-  "liveNote": "Uncoated wiro-bound magazines and manuals, short runs from 25 copies."
+   "qty": 100
+  }
  },
  {
   "slug": "x-banners",
