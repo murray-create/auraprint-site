@@ -123,14 +123,14 @@ const FOOTER = `
         <div class="newsletter"><input type="email" id="nl-email" placeholder="Your email address" aria-label="Email address for newsletter"><button class="btn btn-aura" id="nl-join" style="padding:12px 22px">Join</button></div>
         <p id="nl-status" style="font-size:13px;min-height:18px;margin-top:8px"></p>
       </div>
-      <div><h4>Products</h4><ul><li><a href="business-cards.html">Business Cards</a></li><li><a href="flyers.html">Flyers</a></li><li><a href="corflute-signs.html">Corflute Signs</a></li><li><a href="pull-up-banners.html">Pull Up Banners</a></li><li><a href="signage.html">Stickers</a></li><li><a href="promo.html">Promo Products</a></li><li><a href="promo.html">Workwear</a></li></ul></div>
+      <div><h4>Products</h4><ul><li><a href="business-cards.html">Business Cards</a></li><li><a href="flyers.html">Flyers</a></li><li><a href="corflute-signs.html">Corflute Signs</a></li><li><a href="pull-up-banners.html">Pull Up Banners</a></li><li><a href="stickers.html">Stickers</a></li><li><a href="promo.html">Promo Products</a></li><li><a href="same-day-printing.html">Same Day Printing</a></li><li><a href="real-estate-print-signage.html">Real Estate Signs</a></li></ul></div>
       <div><h4>Company</h4><ul><li><a href="about.html">About</a></li><li><a href="blog.html">Blog</a></li><li><a href="art-setup.html">Artwork Setup Guide</a></li><li><a href="trade-terms.html">Terms of Trade</a></li><li><a href="privacy-policy.html">Privacy Policy</a></li><li><a href="refund-policy.html">Refunds &amp; Reprints</a></li></ul></div>
       <div><h4>Contact</h4><ul>
         <li>4/1 Packer Road, Baringa QLD 4551</li>
         <li><a href="tel:1300291277">1300 291 277</a></li>
         <li><a class="email-link" data-u="admin" data-d="auraprint.com.au"></a></li>
         <li>Mon-Fri 8:30am - 5pm</li>
-        <li style="margin-top:10px"><b style="color:#fff">Need it fast? Ask about express options.</b></li>
+        <li style="margin-top:10px"><b style="color:#fff">Need it fast? <a href="same-day-printing.html" style="color:#fff;text-decoration:underline">Same day printing →</a></b></li>
       </ul></div>
     </div>
     <div class="legal">
@@ -273,6 +273,7 @@ function wireForms(){
         var stored  = rs[0].status === 'fulfilled' && (db.ok || db.skipped);
         var emailed = rs[1].status === 'fulfilled' && rs[1].value === true;
         if (stored || emailed){
+          track('generate_lead', { form: form.getAttribute('data-subject') || 'enquiry', page: location.pathname });
           form.querySelectorAll('input,textarea,select').forEach(function(el){ if(el.type!=='hidden' && el.type!=='checkbox') el.value=''; });
           status.style.color = '#1a8a4a';
           status.innerHTML = '✓ Thanks! Your request is in — we’ll be in touch within the hour (Mon–Fri 8:30–5).';
@@ -284,6 +285,28 @@ function wireForms(){
         }
       });
     });
+  });
+}
+
+/* GA4 analytics: loads only when AURA_CONFIG.ga4Id is set (e.g. "G-XXXXXXXXXX").
+   Events: tel_click, generate_lead (forms), newsletter_signup, chat_open. */
+function track(name, params){
+  try { if (window.gtag && (window.AURA_CONFIG||{}).ga4Id) window.gtag('event', name, params || {}); } catch(e){}
+}
+function wireAnalytics(){
+  var CFG = (window.AURA_CONFIG || {});
+  if (!CFG.ga4Id) return;
+  var s = document.createElement('script');
+  s.async = true; s.src = 'https://www.googletagmanager.com/gtag/js?id=' + CFG.ga4Id;
+  document.head.appendChild(s);
+  window.dataLayer = window.dataLayer || [];
+  window.gtag = function(){ window.dataLayer.push(arguments); };
+  window.gtag('js', new Date());
+  window.gtag('config', CFG.ga4Id);
+  /* tel: clicks are the call-conversion proxy for local SEO reporting */
+  document.addEventListener('click', function(e){
+    var a = e.target && e.target.closest ? e.target.closest('a[href^="tel:"]') : null;
+    if (a) track('tel_click', { link_url: a.getAttribute('href'), page: location.pathname });
   });
 }
 
@@ -337,6 +360,7 @@ function wireNewsletter(){
       job_details: 'Newsletter signup (footer)', user_agent: navigator.userAgent
     }).then(function(r){
       if (r.ok || r.skipped){
+        track('newsletter_signup', { page: location.pathname });
         input.value = ''; status.style.color = '#8fd3a8'; status.textContent = '✓ You’re on the list.';
         btn.textContent = '✓';
       } else {
@@ -351,6 +375,7 @@ function wireNewsletter(){
 
 document.addEventListener('DOMContentLoaded', function(){
   document.body.insertAdjacentHTML('afterbegin', HEADER);
+  wireAnalytics();
   wireForms();
   wireDrawer();
 

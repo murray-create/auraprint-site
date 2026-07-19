@@ -4,7 +4,7 @@
   "name": "Business Cards",
   "cat": "print",
   "sub": "Cards & Stationery",
-  "icon": "\ud83e\udeaa",
+  "icon": "🪪",
   "badge": "Most popular",
   "desc": "90x55mm. From everyday 350gsm to thick NV Velvet with Spot UV and metallic foil.",
   "seo": "Business Cards Sunshine Coast - Instant Online Pricing",
@@ -51,7 +51,7 @@
   "name": "NV Velvet Business Cards",
   "cat": "print",
   "sub": "Cards & Stationery",
-  "icon": "\u2728",
+  "icon": "✨",
   "desc": "Soft-touch velvet laminate over 450gsm artboard. The card people remember.",
   "seo": "NV Velvet Business Cards Australia",
   "from": 123,
@@ -86,14 +86,14 @@
    "tier": "premium",
    "stock": "Velvet Soft-Touch"
   },
-  "liveNote": "Want <b>Spot UV</b> or <b>metallic foil</b> over the velvet? <a href=\"quote.html?product=nv-velvet-business-cards&spec=NV%20Velvet%20%2B%20Spot%20UV%20or%20foil\">Ask for a fast quote \u2192</a>"
+  "liveNote": "Want <b>Spot UV</b> or <b>metallic foil</b> over the velvet? <a href=\"quote.html?product=nv-velvet-business-cards&spec=NV%20Velvet%20%2B%20Spot%20UV%20or%20foil\">Ask for a fast quote →</a>"
  },
  {
   "slug": "flyers",
   "name": "Flyers",
   "cat": "print",
   "sub": "Marketing Material",
-  "icon": "\ud83d\udcc4",
+  "icon": "📄",
   "desc": "DL to A3 on stocks from 130gsm to 350gsm. Letterbox-ready and event-proof.",
   "seo": "Flyer Printing Sunshine Coast",
   "from": 85,
@@ -171,7 +171,7 @@
   "name": "Brochures",
   "cat": "print",
   "sub": "Marketing Material",
-  "icon": "\ud83d\udcd6",
+  "icon": "📖",
   "desc": "Half fold, tri fold, Z fold and gate fold on premium stocks.",
   "seo": "Brochure Printing Sunshine Coast",
   "from": 198,
@@ -237,7 +237,7 @@
   "name": "Postcards",
   "cat": "print",
   "sub": "Marketing Material",
-  "icon": "\ud83d\udc8c",
+  "icon": "💌",
   "desc": "Direct mail that stands out. A6 to A5 on thick stocks.",
   "seo": "Postcard Printing Australia",
   "from": 115,
@@ -309,7 +309,7 @@
   "name": "Letterheads",
   "cat": "print",
   "sub": "Cards & Stationery",
-  "icon": "\u2709\ufe0f",
+  "icon": "✉️",
   "desc": "Offset quality on premium uncoated and laser-safe stocks.",
   "seo": "Letterhead Printing Australia",
   "from": 192,
@@ -365,7 +365,7 @@
   "name": "Envelopes",
   "cat": "print",
   "sub": "Cards & Stationery",
-  "icon": "\ud83d\udcee",
+  "icon": "📮",
   "desc": "Printed DL to C4, plain face or window, any volume.",
   "seo": "Printed Envelopes Australia",
   "portal": true,
@@ -393,7 +393,7 @@
   "name": "With Compliments Slips",
   "cat": "print",
   "sub": "Cards & Stationery",
-  "icon": "\ud83d\udcdd",
+  "icon": "📝",
   "desc": "The finishing touch for your stationery suite. DL size to match your letterhead.",
   "seo": "With Compliments Slips Printing",
   "portal": true,
@@ -449,7 +449,7 @@
   "name": "Loyalty Cards",
   "cat": "print",
   "sub": "Cards & Stationery",
-  "icon": "\ud83d\udcb3",
+  "icon": "💳",
   "desc": "Keep customers coming back. Business card size with stamp grids or numbering.",
   "seo": "Loyalty Card Printing",
   "portal": true,
@@ -505,7 +505,7 @@
   "name": "Presentation Folders",
   "cat": "print",
   "sub": "Marketing Material",
-  "icon": "\ud83d\uddc2\ufe0f",
+  "icon": "🗂️",
   "desc": "Gloss, matt or velvet with business card slits and capacity spines.",
   "seo": "Presentation Folder Printing Australia",
   "portal": true,
@@ -577,7 +577,7 @@
   "name": "Menus",
   "cat": "print",
   "sub": "Marketing Material",
-  "icon": "\ud83c\udf7d\ufe0f",
+  "icon": "🍽️",
   "desc": "Flat, folded or laminated for table service. Spill-proof options for venues.",
   "seo": "Menu Printing Sunshine Coast",
   "portal": true,
@@ -651,7 +651,7 @@
   "name": "Greeting Cards",
   "cat": "print",
   "sub": "Marketing Material",
-  "icon": "\ud83c\udf89",
+  "icon": "🎉",
   "desc": "Folded cards for retail, events and corporate Christmas lists.",
   "seo": "Greeting Card Printing Australia",
   "portal": true,
@@ -727,7 +727,7 @@
   "name": "Saddle Stitched Booklets",
   "cat": "print",
   "sub": "Books & Booklets",
-  "icon": "\ud83d\udcda",
+  "icon": "📚",
   "desc": "8-64 pages, self cover or plus cover. Catalogues, programs and magazines.",
   "seo": "Booklet Printing Australia",
   "portal": true,
@@ -799,7 +799,7 @@
   "name": "Perfect Bound Books",
   "cat": "print",
   "sub": "Books & Booklets",
-  "icon": "\ud83d\udcd5",
+  "icon": "📕",
   "desc": "Square spine, bookshop finish. Annual reports, look books and manuals.",
   "seo": "Perfect Bound Book Printing Australia",
   "portal": true,
@@ -820,14 +820,74 @@
    "booklets",
    "wiro-booklets",
    "presentation-folders"
-  ]
+  ],
+  "live": {
+   "axes": [
+    [
+     "size",
+     "Size",
+     [
+      "A4",
+      "A5"
+     ]
+    ],
+    [
+     "paper",
+     "Inside pages",
+     [
+      "Gloss 113gsm",
+      "Gloss 150gsm",
+      "Uncoated 100gsm"
+     ]
+    ],
+    [
+     "pages",
+     "Page count",
+     [
+      "32pp",
+      "48pp",
+      "64pp",
+      "100pp",
+      "148pp",
+      "200pp"
+     ]
+    ],
+    [
+     "cover",
+     "Cover",
+     [
+      "Self cover",
+      "Printed cover (350gsm artboard)"
+     ]
+    ]
+   ],
+   "default": {
+    "size": "A4",
+    "paper": "Gloss 150gsm",
+    "pages": "64pp",
+    "cover": "Printed cover (350gsm artboard)"
+   },
+   "qty": 100,
+   "links": [
+    {
+     "label": "Different stock, size or binding? Get a fast quote →",
+     "note": "Custom booklet spec"
+    },
+    {
+     "label": "More than 500 copies? Get a volume quote →",
+     "note": "Volume enquiry (500+)"
+    }
+   ]
+  },
+  "liveNote": "Offset printed and perfect bound with a square, glued spine. Page counts are total pages including cover.",
+  "from": 1572
  },
  {
   "slug": "wiro-booklets",
   "name": "Wiro Bound Booklets",
   "cat": "print",
   "sub": "Books & Booklets",
-  "icon": "\ud83c\udf00",
+  "icon": "🌀",
   "desc": "Lay-flat manuals, workbooks and calendars with metal wire binding.",
   "seo": "Wiro Bound Booklet Printing",
   "portal": true,
@@ -849,14 +909,74 @@
    "calendars",
    "notepads"
   ],
-  "img": "assets/img/wiro-booklets.jpg"
+  "img": "assets/img/wiro-booklets.jpg",
+  "live": {
+   "axes": [
+    [
+     "size",
+     "Size",
+     [
+      "A4",
+      "A5"
+     ]
+    ],
+    [
+     "paper",
+     "Inside pages",
+     [
+      "Gloss 113gsm",
+      "Gloss 150gsm"
+     ]
+    ],
+    [
+     "pages",
+     "Page count",
+     [
+      "8pp",
+      "16pp",
+      "24pp",
+      "32pp",
+      "48pp",
+      "64pp",
+      "100pp"
+     ]
+    ],
+    [
+     "cover",
+     "Cover",
+     [
+      "Self cover",
+      "Printed cover (350gsm artboard)"
+     ]
+    ]
+   ],
+   "default": {
+    "size": "A4",
+    "paper": "Gloss 150gsm",
+    "pages": "24pp",
+    "cover": "Self cover"
+   },
+   "qty": 100,
+   "links": [
+    {
+     "label": "Different stock, size or binding? Get a fast quote →",
+     "note": "Custom booklet spec"
+    },
+    {
+     "label": "More than 500 copies? Get a volume quote →",
+     "note": "Volume enquiry (500+)"
+    }
+   ]
+  },
+  "liveNote": "Wire (wiro) bound booklets that open flat - white wire as standard, black available on quote.",
+  "from": 942
  },
  {
   "slug": "invoice-books",
   "name": "Invoice Books (NCR)",
   "cat": "print",
   "sub": "Books & Booklets",
-  "icon": "\ud83e\uddfe",
+  "icon": "🧾",
   "desc": "Carbonless duplicate and triplicate books, numbered and perforated.",
   "seo": "NCR Invoice Book Printing Australia",
   "portal": true,
@@ -884,7 +1004,7 @@
   "name": "Notepads",
   "cat": "print",
   "sub": "Books & Booklets",
-  "icon": "\ud83d\udcd2",
+  "icon": "📒",
   "desc": "Branded pads, glued head, 25-100 sheets. Desk real estate for your brand.",
   "seo": "Notepad Printing Australia",
   "portal": true,
@@ -959,7 +1079,7 @@
   "name": "Calendars",
   "cat": "print",
   "sub": "Books & Booklets",
-  "icon": "\ud83d\udcc5",
+  "icon": "📅",
   "desc": "Wall and desk calendars, wiro bound. Twelve months of brand visibility.",
   "seo": "Calendar Printing Australia",
   "portal": true,
@@ -1030,7 +1150,7 @@
   "name": "Corflute Signs",
   "cat": "signage",
   "sub": "Signs & Stickers",
-  "icon": "\ud83e\udea7",
+  "icon": "🪧",
   "desc": "Real estate, builders and event boards on 3mm or 5mm corflute, any size.",
   "seo": "Corflute Signs Sunshine Coast",
   "from": 122,
@@ -1099,7 +1219,7 @@
   "name": "A-Frames",
   "cat": "signage",
   "sub": "Signs & Stickers",
-  "icon": "\ud83c\udd70\ufe0f",
+  "icon": "🅰️",
   "desc": "Ten A-frame styles priced live: Signflute, sandwich boards, Endurosign, real estate frames, chalkboards, Monsoon and expandable SEG displays.",
   "seo": "A-Frame Signs Australia",
   "portal": false,
@@ -1406,7 +1526,7 @@
   "name": "Aluminium Composite Signs",
   "cat": "signage",
   "sub": "Signs & Stickers",
-  "icon": "\ud83d\udd29",
+  "icon": "🔩",
   "desc": "Premium rigid ACM signage that stays flat and lasts years outdoors.",
   "seo": "Aluminium Composite Signs Australia",
   "portal": false,
@@ -1428,7 +1548,7 @@
    "safety-signs",
    "a-frames"
   ],
-  "from": 180,
+  "from": 163,
   "suppliers": [
    "Easy Signs"
   ],
@@ -1469,24 +1589,23 @@
    "qty": 1,
    "links": [
     {
-     "label": "Need a custom size? Get a fast quote \u2192",
+     "label": "Need a custom size? Get a fast quote →",
      "note": "Custom size enquiry"
     },
     {
-     "label": "More than 5? Get a volume quote \u2192",
+     "label": "More than 5? Get a volume quote →",
      "note": "Volume enquiry (more than 5)"
     }
    ]
   },
-  "liveNote": "3mm ACM panel, printed and laminated. Drilled holes, standoffs and custom shapes priced on your quote.",
-  "img": "assets/img/aluminium-signs.jpg"
+  "liveNote": "3mm ACM panel, printed and laminated. Drilled holes, standoffs and custom shapes priced on your quote."
  },
  {
   "slug": "safety-signs",
   "name": "Safety Signs",
   "cat": "signage",
   "sub": "Signs & Stickers",
-  "icon": "\u26a0\ufe0f",
+  "icon": "⚠️",
   "desc": "Compliant site and workplace signage to AS 1319, stock or custom.",
   "seo": "Safety Signs Australia",
   "portal": false,
@@ -1514,7 +1633,7 @@
   "name": "Posters",
   "cat": "signage",
   "sub": "Signs & Stickers",
-  "icon": "\ud83d\uddbc\ufe0f",
+  "icon": "🖼️",
   "desc": "Offset and wide format posters, A2 to billboard scale.",
   "seo": "Poster Printing Sunshine Coast",
   "from": 102,
@@ -1578,7 +1697,7 @@
   "name": "Stickers & Labels",
   "cat": "signage",
   "sub": "Signs & Stickers",
-  "icon": "\ud83c\udff7\ufe0f",
+  "icon": "🏷️",
   "desc": "Kiss-cut roll stickers priced live: circles, squares and rectangles in 42 sizes, paper, vinyl and clear stocks. Die-cut shapes and sheet stickers by quote.",
   "seo": "Sticker Printing Australia",
   "portal": true,
@@ -1744,7 +1863,7 @@
   "name": "Vehicle Magnets",
   "cat": "signage",
   "sub": "Signs & Stickers",
-  "icon": "\ud83e\uddf2",
+  "icon": "🧲",
   "desc": "Turn the ute into a billboard. Heavy-duty magnetic material, rounded corners.",
   "seo": "Vehicle Magnet Printing Australia",
   "portal": false,
@@ -1791,11 +1910,11 @@
    "qty": 2,
    "links": [
     {
-     "label": "Need a custom size? Get a fast quote \u2192",
+     "label": "Need a custom size? Get a fast quote →",
      "note": "Custom size enquiry"
     },
     {
-     "label": "More than 5? Get a volume quote \u2192",
+     "label": "More than 5? Get a volume quote →",
      "note": "Volume enquiry (more than 5)"
     }
    ]
@@ -1807,7 +1926,7 @@
   "name": "Pull Up Banners",
   "cat": "signage",
   "sub": "Banners & Flags",
-  "icon": "\ud83d\udea9",
+  "icon": "🚩",
   "badge": "Best seller",
   "desc": "Economy to premium bases with vivid print. Includes padded carry bag.",
   "seo": "Pull Up Banners Sunshine Coast",
@@ -1866,7 +1985,7 @@
   "name": "Teardrop Flags",
   "cat": "signage",
   "sub": "Banners & Flags",
-  "icon": "\ud83c\udf8f",
+  "icon": "🎏",
   "desc": "Single or double sided knitted polyester with spike, cross or water bases.",
   "seo": "Teardrop Flags Australia",
   "portal": false,
@@ -1930,7 +2049,7 @@
   "name": "Outdoor Vinyl Banners",
   "cat": "signage",
   "sub": "Banners & Flags",
-  "icon": "\ud83c\udf2c\ufe0f",
+  "icon": "🌬️",
   "desc": "Hemmed and eyeletted heavy-duty vinyl, any size, built for weather.",
   "seo": "Vinyl Banner Printing Australia",
   "portal": false,
@@ -1994,7 +2113,7 @@
   "name": "Fence Mesh Banners",
   "cat": "signage",
   "sub": "Banners & Flags",
-  "icon": "\ud83d\udd78\ufe0f",
+  "icon": "🕸️",
   "desc": "Construction site wraps that let wind through. Builders' favourite billboard.",
   "seo": "Fence Mesh Printing Australia",
   "portal": false,
@@ -2045,7 +2164,7 @@
   "name": "Media Walls",
   "cat": "signage",
   "sub": "Events & Display",
-  "icon": "\ud83d\uddbc\ufe0f",
+  "icon": "🖼️",
   "desc": "Straight or curved backdrops for events, launches and step-and-repeats.",
   "seo": "Media Walls Australia",
   "portal": false,
@@ -2105,7 +2224,7 @@
   "name": "Marquees",
   "cat": "signage",
   "sub": "Events & Display",
-  "icon": "\u26fa",
+  "icon": "⛺",
   "desc": "Printed canopies, walls and flags for markets and events. 2.4m to 6m.",
   "seo": "Printed Marquees Australia",
   "portal": false,
@@ -2137,7 +2256,7 @@
   "name": "Standees & Cut Outs",
   "cat": "signage",
   "sub": "Events & Display",
-  "icon": "\ud83e\uddcd",
+  "icon": "🧍",
   "desc": "Life-size (and larger) cardboard and corflute cut-outs with strut backs.",
   "seo": "Standee Printing Australia",
   "portal": false,
@@ -2187,7 +2306,7 @@
      "material",
      "Material",
      [
-      "Signflute\u2122 5mm Thickness",
+      "Signflute™ 5mm Thickness",
       "Cardboard 10mm Thickness"
      ]
     ],
@@ -2203,7 +2322,7 @@
    "default": {
     "width": "2000mm",
     "height": "1000mm",
-    "material": "Signflute\u2122 5mm Thickness",
+    "material": "Signflute™ 5mm Thickness",
     "printing": "Single Sided"
    },
    "qty": 10
@@ -2214,7 +2333,7 @@
   "name": "Printed Tablecloths",
   "cat": "signage",
   "sub": "Events & Display",
-  "icon": "\ud83e\ude91",
+  "icon": "🪑",
   "desc": "Fitted or throw-style, full colour dye-sublimation. Machine washable.",
   "seo": "Printed Tablecloths Australia",
   "portal": false,
@@ -2281,7 +2400,7 @@
   "name": "Exhibition Displays",
   "cat": "signage",
   "sub": "Events & Display",
-  "icon": "\ud83c\udfaa",
+  "icon": "🎪",
   "desc": "Complete expo kits: walls, counters, lighting and shipping cases.",
   "seo": "Exhibition Display Systems Australia",
   "portal": false,
@@ -2377,7 +2496,7 @@
    "qty": 1,
    "links": [
     {
-     "label": "More than 5? Get a volume quote \u2192",
+     "label": "More than 5? Get a volume quote →",
      "note": "Volume enquiry (more than 5)"
     }
    ]
@@ -2440,7 +2559,7 @@
    "qty": 1,
    "links": [
     {
-     "label": "More than 5? Get a volume quote \u2192",
+     "label": "More than 5? Get a volume quote →",
      "note": "Volume enquiry (more than 5)"
     }
    ]
@@ -2669,7 +2788,7 @@
      "material",
      "Material",
      [
-      "Signflute\u2122",
+      "Signflute™",
       "White Clay Coat Corrugated Cardboard"
      ]
     ],
@@ -2684,13 +2803,13 @@
    ],
    "default": {
     "size": "3 Sides (270x800)",
-    "material": "Signflute\u2122",
+    "material": "Signflute™",
     "thickness": "3mm"
    },
    "qty": 1,
    "links": [
     {
-     "label": "More than 5? Get a volume quote \u2192",
+     "label": "More than 5? Get a volume quote →",
      "note": "Volume enquiry (more than 5)"
     }
    ]
@@ -2885,7 +3004,7 @@
    "qty": 1,
    "links": [
     {
-     "label": "More than 5? Get a volume quote \u2192",
+     "label": "More than 5? Get a volume quote →",
      "note": "Volume enquiry (more than 5)"
     }
    ]
@@ -3026,7 +3145,7 @@
    "qty": 1,
    "links": [
     {
-     "label": "More than 5? Get a volume quote \u2192",
+     "label": "More than 5? Get a volume quote →",
      "note": "Volume enquiry (more than 5)"
     }
    ]
@@ -3848,7 +3967,7 @@
    "qty": 1,
    "links": [
     {
-     "label": "More than 5? Get a volume quote \u2192",
+     "label": "More than 5? Get a volume quote →",
      "note": "Volume enquiry (more than 5)"
     }
    ]
@@ -4083,11 +4202,11 @@
    "qty": 1,
    "links": [
     {
-     "label": "Need a custom size? Get a fast quote \u2192",
+     "label": "Need a custom size? Get a fast quote →",
      "note": "Custom size enquiry"
     },
     {
-     "label": "Bigger run? Get a volume quote \u2192",
+     "label": "Bigger run? Get a volume quote →",
      "note": "Volume enquiry"
     }
    ]
@@ -4196,7 +4315,7 @@
    "qty": 1,
    "links": [
     {
-     "label": "More than 5? Get a volume quote \u2192",
+     "label": "More than 5? Get a volume quote →",
      "note": "Volume enquiry (more than 5)"
     }
    ]
@@ -4317,11 +4436,11 @@
    "qty": 100,
    "links": [
     {
-     "label": "Need a custom size? Get a fast quote \u2192",
+     "label": "Need a custom size? Get a fast quote →",
      "note": "Custom size enquiry"
     },
     {
-     "label": "Bigger run? Get a volume quote \u2192",
+     "label": "Bigger run? Get a volume quote →",
      "note": "Volume enquiry"
     }
    ]
@@ -4397,7 +4516,7 @@
    "qty": 1,
    "links": [
     {
-     "label": "More than 5? Get a volume quote \u2192",
+     "label": "More than 5? Get a volume quote →",
      "note": "Volume enquiry (more than 5)"
     }
    ]
@@ -4528,7 +4647,7 @@
    "qty": 1,
    "links": [
     {
-     "label": "More than 5? Get a volume quote \u2192",
+     "label": "More than 5? Get a volume quote →",
      "note": "Volume enquiry (more than 5)"
     }
    ]
@@ -4882,7 +5001,7 @@
    "qty": 1,
    "links": [
     {
-     "label": "More than 5? Get a volume quote \u2192",
+     "label": "More than 5? Get a volume quote →",
      "note": "Volume enquiry (more than 5)"
     }
    ]
@@ -4993,7 +5112,7 @@
    "qty": 1,
    "links": [
     {
-     "label": "More than 5? Get a volume quote \u2192",
+     "label": "More than 5? Get a volume quote →",
      "note": "Volume enquiry (more than 5)"
     }
    ]
@@ -5045,7 +5164,7 @@
      "material",
      "Material",
      [
-      "Signflute\u2122",
+      "Signflute™",
       "White Clay Coat Corrugated Cardboard"
      ]
     ],
@@ -5068,7 +5187,7 @@
    ],
    "default": {
     "size": "Small (300x300)",
-    "material": "Signflute\u2122",
+    "material": "Signflute™",
     "thickness": "3mm",
     "lid": "No"
    },
@@ -5080,8 +5199,8 @@
   "name": "Stationery Same Day",
   "cat": "print",
   "sub": "Cards & Stationery",
-  "desc": "Stationery Same Day produced through our our trade network trade network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
-  "seo": "Stationery Same Day Sunshine Coast | Aura Print & Promo",
+  "desc": "Letterheads, with-comps and business stationery printed same day on selected specs. Genuine fast turnaround, Australia-wide delivery.",
+  "seo": "Same Day Stationery Printing Sunshine Coast",
   "from": 130,
   "quote": true,
   "suppliers": [
@@ -5352,11 +5471,11 @@
    "qty": 1,
    "links": [
     {
-     "label": "Need a custom size? Get a fast quote \u2192",
+     "label": "Need a custom size? Get a fast quote →",
      "note": "Custom size enquiry"
     },
     {
-     "label": "More than 10? Get a volume quote \u2192",
+     "label": "More than 10? Get a volume quote →",
      "note": "Volume enquiry (more than 10)"
     }
    ]
@@ -5369,7 +5488,7 @@
   "sub": "Books & Booklets",
   "desc": "Wiro Magazines produced through our our trade network trade network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
   "seo": "Wiro Magazines Sunshine Coast | Aura Print & Promo",
-  "from": 256,
+  "from": 170,
   "quote": true,
   "suppliers": [
    "LEP"
@@ -5404,19 +5523,45 @@
     ],
     [
      "stock",
-     "Stock",
+     "Paper",
      [
       "90 GSM Uncoated",
       "100 GSM Uncoated"
+     ]
+    ],
+    [
+     "pages",
+     "Page count",
+     [
+      "8pp",
+      "12pp",
+      "16pp",
+      "20pp",
+      "24pp",
+      "32pp",
+      "40pp",
+      "48pp"
      ]
     ]
    ],
    "default": {
     "size": "A4",
-    "stock": "90 GSM Uncoated"
+    "stock": "100 GSM Uncoated",
+    "pages": "16pp"
    },
-   "qty": 100
-  }
+   "qty": 100,
+   "links": [
+    {
+     "label": "Different stock, size or binding? Get a fast quote →",
+     "note": "Custom booklet spec"
+    },
+    {
+     "label": "More than 200 copies? Get a volume quote →",
+     "note": "Volume enquiry (200+)"
+    }
+   ]
+  },
+  "liveNote": "Uncoated wiro-bound magazines and manuals, short runs from 25 copies."
  },
  {
   "slug": "x-banners",

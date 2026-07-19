@@ -5,6 +5,12 @@ window.AURA_CONFIG = {
      widget code after 'embed.tawk.to/'). Leave empty to use the built-in demo bot. */
   tawkId: "6a47acded339301d469eebb0/1jsjvmhi0",
 
+  /* Google Analytics 4: create a GA4 property at analytics.google.com,
+     add a Web data stream for auraprint.com.au, and paste the
+     "G-XXXXXXXXXX" Measurement ID here. Leave empty to disable.
+     Events wired: page views, tel_click, generate_lead, newsletter_signup. */
+  ga4Id: "",
+
   /* LEP Print Portal white-label URL */
   portalUrl: "https://printportal.cloud/wl/159459",
 
