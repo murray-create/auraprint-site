@@ -100,6 +100,28 @@
   .arch-badge{background:#f0ece5;color:#6b6560;padding:2px 8px;border-radius:999px;font-size:11px;font-weight:700;margin-left:6px}
   .cimport{background:#faf7f2;border:1px dashed #d8cfc2;border-radius:12px;padding:14px;margin-top:12px}
   .cimport table{font-size:12.5px;margin-top:8px}
+  /* Pipeline board */
+  .board-head{display:flex;gap:10px;align-items:center;margin-bottom:12px;flex-wrap:wrap}
+  .board{display:flex;gap:12px;overflow-x:auto;padding-bottom:14px;align-items:flex-start}
+  .col{flex:0 0 232px;background:#efeae2;border-radius:12px;padding:10px 10px 6px}
+  .col.arch{background:#e9e4dc}
+  .col.drop{outline:2px dashed #c026a3;outline-offset:-2px;background:#f6eef4}
+  .col h3{font-size:11.5px;text-transform:uppercase;letter-spacing:.05em;margin:2px 2px 10px;color:#6b6560;display:flex;justify-content:space-between;align-items:center}
+  .col h3 .cnt{background:#fff;border-radius:999px;padding:1px 8px;font-size:11px;color:#6b6560}
+  .pcard{background:#fff;border:1px solid #e5ddd2;border-radius:10px;padding:9px 10px;margin-bottom:8px;cursor:grab;box-shadow:0 1px 0 #e8e2da}
+  .pcard:active{cursor:grabbing}
+  .pcard.dragging{opacity:.45}
+  .pcard .ctype{font-size:9.5px;text-transform:uppercase;letter-spacing:.04em;color:#a89e91;font-weight:800}
+  .pcard .cno{font-weight:800;font-size:13px;color:#1a1a1a}
+  .pcard .cnm{font-size:12.5px;color:#333;margin-top:1px}
+  .pcard .cco{font-size:11.5px;color:#8a847d}
+  .pcard .camt{font-size:12px;font-weight:800;margin-top:4px;color:#1a1a1a}
+  .pcard .cfoot{display:flex;justify-content:space-between;align-items:center;margin-top:6px}
+  .pcard .copen{background:#efe9e1;color:#555;border:none;border-radius:7px;padding:3px 8px;font-weight:700;font-size:11px;cursor:pointer}
+  .pcard .crestore{background:#dcfce7;color:#15803d;border:none;border-radius:7px;padding:3px 8px;font-weight:700;font-size:11px;cursor:pointer}
+  .pcard .cage{font-size:10.5px;color:#a89e91}
+  .pipe-toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%);background:#1a1a1a;color:#fff;padding:11px 18px;border-radius:10px;font-size:13.5px;max-width:520px;box-shadow:0 8px 30px rgba(0,0,0,.3);opacity:0;pointer-events:none;transition:opacity .2s;z-index:80}
+  .pipe-toast.show{opacity:1}
 </style>
 <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
 </head>
@@ -132,14 +154,21 @@
   </div>
 
   <div class="tabs">
-    <button class="tab active" data-tab="leads">Lead Inbox</button>
+    <button class="tab active" data-tab="pipeline">Pipeline</button>
+    <button class="tab" data-tab="leads">Lead Inbox</button>
     <button class="tab" data-tab="quotes">Quotes</button>
     <button class="tab" data-tab="orders">Orders &amp; Proofs</button>
     <button class="tab" data-tab="contacts">Contacts</button>
   </div>
 
+  <!-- PIPELINE TAB -->
+  <div id="tab-pipeline">
+    <div class="board-head"><span class="muted">Drag a card to move a job forward. Cards also move on their own when a customer approves a proof or pays. Production needs the job paid and approved first.</span></div>
+    <div id="boardWrap"></div>
+  </div>
+
   <!-- LEADS TAB -->
-  <div id="tab-leads">
+  <div id="tab-leads" style="display:none">
     <div class="filters" id="filters">
       <button class="chip active" data-f="all">All</button>
       <button class="chip" data-f="new">New</button>
@@ -275,24 +304,24 @@
 
   async function showApp(){
     loginEl.style.display='none'; appEl.style.display='block';
-    await loadLeads();
+    await loadPipeline();
   }
   function showLogin(){ appEl.style.display='none'; loginEl.style.display='block'; }
 
   /* ============ TABS ============ */
-  var activeTab = 'leads';
+  var activeTab = 'pipeline';
   document.querySelectorAll('.tab').forEach(function(t){
     t.addEventListener('click', function(){
       activeTab = t.dataset.tab;
       document.querySelectorAll('.tab').forEach(function(x){ x.classList.toggle('active', x===t); });
-      ['leads','quotes','orders','contacts'].forEach(function(k){
+      ['pipeline','leads','quotes','orders','contacts'].forEach(function(k){
         document.getElementById('tab-'+k).style.display = activeTab===k?'':'none';
       });
-      if (activeTab==='orders') loadOrders(); else if (activeTab==='quotes') loadQuotes(); else if (activeTab==='contacts') loadContacts(); else loadLeads();
+      if (activeTab==='orders') loadOrders(); else if (activeTab==='quotes') loadQuotes(); else if (activeTab==='contacts') loadContacts(); else if (activeTab==='pipeline') loadPipeline(); else loadLeads();
     });
   });
   document.getElementById('refreshBtn').addEventListener('click', function(){
-    if (activeTab==='orders') loadOrders(); else if (activeTab==='quotes') loadQuotes(); else if (activeTab==='contacts') loadContacts(); else loadLeads();
+    if (activeTab==='orders') loadOrders(); else if (activeTab==='quotes') loadQuotes(); else if (activeTab==='contacts') loadContacts(); else if (activeTab==='pipeline') loadPipeline(); else loadLeads();
   });
 
   /* ============ LEADS (unchanged) ============ */
@@ -1171,6 +1200,232 @@
     this.disabled = false;
   });
 
+
+
+  /* ============ PIPELINE BOARD ============ */
+  var pipeCards = [], pipeDrag = null;
+  var STAGES = [
+    {k:'enquiry', t:'New Enquiry'},
+    {k:'quote', t:'Quote'},
+    {k:'proofing', t:'Proofing'},
+    {k:'awaiting_payment', t:'Awaiting Payment'},
+    {k:'paid', t:'Paid'},
+    {k:'production', t:'Production'},
+    {k:'dispatched', t:'Dispatched'},
+    {k:'complete', t:'Complete'},
+    {k:'archived', t:'Archived / Lost'}
+  ];
+
+  function pipeToast(msg){
+    var t=document.getElementById('pipeToast'); if(!t) return;
+    t.textContent=msg; t.classList.add('show');
+    if(t._h) clearTimeout(t._h); t._h=setTimeout(function(){ t.classList.remove('show'); }, 4600);
+  }
+
+  async function loadPipeline(){
+    document.getElementById('count').textContent = 'Loading…';
+    var r = await Promise.all([
+      sb.from('leads').select('id,name,email,company,status,created_at,category,job_details,quantity'),
+      sb.from('quotes').select('id,quote_number,contact_name,contact_email,company,status,created_at,access_token,converted_order_id,lead_id,quote_items(price_inc_cents)'),
+      sb.from('orders').select('id,order_number,contact_name,contact_email,company,status,archived,archive_reason,created_at,lead_id,order_items(price_inc_cents,status),invoices(total_inc_cents,status),payments(amount_cents,status)')
+    ]);
+    var bad = r.filter(function(x){return x.error;})[0];
+    if (bad){ document.getElementById('boardWrap').innerHTML='<div class="empty">Could not load pipeline: '+esc(bad.error.message)+'</div>'; document.getElementById('count').textContent='Pipeline'; return; }
+    pipeCards = buildJobs(r[0].data||[], r[1].data||[], r[2].data||[]);
+    var active = pipeCards.filter(function(c){return c.stage!=='archived';}).length;
+    document.getElementById('count').textContent = active+' active job'+(active===1?'':'s');
+    renderBoard();
+  }
+
+  function deriveOrderStage(o){
+    var items=o.order_items||[];
+    var allApproved = items.length>0 && items.every(function(i){ return ['approved','in_production','dispatched'].indexOf(i.status)>=0; });
+    switch(o.status){
+      case 'shipped': return 'dispatched';
+      case 'completed': return 'complete';
+      case 'in_production': return 'production';
+      case 'paid': return 'paid';
+      case 'invoiced': return allApproved?'awaiting_payment':'proofing';
+      case 'draft': case 'submitted': return 'proofing';
+      default: return 'proofing';
+    }
+  }
+  function orderAllApproved(o){
+    var items=o.order_items||[];
+    return items.length>0 && items.every(function(i){ return ['approved','in_production','dispatched'].indexOf(i.status)>=0; });
+  }
+
+  function buildJobs(leads, quotes, orders){
+    var cards=[];
+    orders.forEach(function(o){
+      var val=(o.order_items||[]).reduce(function(s,i){return s+i.price_inc_cents;},0);
+      var stage=(o.archived||o.status==='cancelled')?'archived':deriveOrderStage(o);
+      cards.push({type:'order', id:o.id, no:o.order_number, name:o.contact_name, company:o.company, amount:val, stage:stage, status:o.status, archived:!!o.archived, when:o.created_at, o:o});
+    });
+    quotes.forEach(function(q){
+      if(q.status==='converted') return;
+      var val=(q.quote_items||[]).reduce(function(s,i){return s+i.price_inc_cents;},0);
+      var stage=(q.status==='void'||q.status==='declined')?'archived':'quote';
+      cards.push({type:'quote', id:q.id, no:q.quote_number, name:q.contact_name, company:q.company, amount:val, stage:stage, status:q.status, when:q.created_at, q:q});
+    });
+    leads.forEach(function(l){
+      var stage;
+      if(l.status==='lost') stage='archived';
+      else if(l.status==='new'||l.status==='contacted') stage='enquiry';
+      else return;
+      cards.push({type:'lead', id:l.id, no:'Enquiry', name:l.name, company:l.company, amount:0, stage:stage, status:l.status, when:l.created_at, text:(l.category||l.job_details||''), l:l});
+    });
+    return cards;
+  }
+
+  function ageStr(s){
+    if(!s) return '';
+    var days=Math.floor((Date.now()-new Date(s).getTime())/86400000);
+    if(days<=0) return 'today';
+    if(days===1) return '1 day';
+    if(days<30) return days+' days';
+    return Math.floor(days/30)+'mo';
+  }
+
+  function renderBoard(){
+    var byStage={}; STAGES.forEach(function(st){ byStage[st.k]=[]; });
+    pipeCards.forEach(function(c){ (byStage[c.stage]||byStage.proofing).push(c); });
+    var html='<div class="board">';
+    STAGES.forEach(function(st){
+      var list=byStage[st.k]||[];
+      html+='<div class="col'+(st.k==='archived'?' arch':'')+'" data-stage="'+st.k+'"><h3>'+esc(st.t)+'<span class="cnt">'+list.length+'</span></h3>';
+      list.forEach(function(c){
+        html+='<div class="pcard" draggable="true" data-type="'+c.type+'" data-id="'+esc(c.id)+'">'+
+          '<div class="ctype">'+c.type+'</div>'+
+          '<div class="cno">'+esc(c.no||'')+'</div>'+
+          '<div class="cnm">'+esc(c.name||'(no name)')+'</div>'+
+          (c.company?'<div class="cco">'+esc(c.company)+'</div>':'')+
+          (c.amount>0?'<div class="camt">'+money(c.amount)+'</div>':(c.text?'<div class="cco">'+esc(String(c.text).slice(0,60))+'</div>':''))+
+          '<div class="cfoot">'+
+            (c.stage==='archived'?'<button class="crestore" data-type="'+c.type+'" data-id="'+esc(c.id)+'">Restore</button>':'<button class="copen" data-type="'+c.type+'" data-id="'+esc(c.id)+'">open ↗</button>')+
+            '<span class="cage">'+esc(ageStr(c.when))+'</span>'+
+          '</div>'+
+        '</div>';
+      });
+      html+='</div>';
+    });
+    html+='</div><div id="pipeToast" class="pipe-toast"></div>';
+    document.getElementById('boardWrap').innerHTML=html;
+    bindBoard();
+  }
+
+  function bindBoard(){
+    document.querySelectorAll('#boardWrap .pcard').forEach(function(el){
+      el.addEventListener('dragstart', function(e){ pipeDrag={type:el.dataset.type,id:el.dataset.id}; el.classList.add('dragging'); if(e.dataTransfer){e.dataTransfer.effectAllowed='move';} });
+      el.addEventListener('dragend', function(){ el.classList.remove('dragging'); pipeDrag=null; });
+    });
+    document.querySelectorAll('#boardWrap .col').forEach(function(col){
+      col.addEventListener('dragover', function(e){ e.preventDefault(); col.classList.add('drop'); if(e.dataTransfer){e.dataTransfer.dropEffect='move';} });
+      col.addEventListener('dragleave', function(){ col.classList.remove('drop'); });
+      col.addEventListener('drop', function(e){ e.preventDefault(); col.classList.remove('drop'); if(pipeDrag){ handleMove(pipeDrag.type, pipeDrag.id, col.dataset.stage); } });
+    });
+    document.querySelectorAll('#boardWrap .copen').forEach(function(b){ b.addEventListener('click', function(e){ e.stopPropagation(); openPipeCard(b.dataset.type, b.dataset.id); }); });
+    document.querySelectorAll('#boardWrap .crestore').forEach(function(b){ b.addEventListener('click', function(e){ e.stopPropagation(); restorePipeCard(b.dataset.type, b.dataset.id); }); });
+  }
+
+  function findCard(type,id){ return pipeCards.filter(function(c){return c.type===type&&String(c.id)===String(id);})[0]; }
+
+  function openPipeCard(type,id){
+    if(type==='order'){ openOrder=id; document.querySelector('.tab[data-tab=orders]').click(); }
+    else if(type==='quote'){ openQuote=id; document.querySelector('.tab[data-tab=quotes]').click(); }
+    else { document.querySelector('.tab[data-tab=leads]').click(); }
+  }
+
+  async function handleMove(type,id,target){
+    var c=findCard(type,id); if(!c) return;
+    if(c.stage===target) return;
+
+    if(target==='archived'){ return archivePipeCard(c); }
+
+    if(type==='lead'){
+      if(target==='quote'){ leadToQuote(id); return; }
+      pipeToast('Turn this enquiry into a quote first — drag it to the Quote column.'); return;
+    }
+
+    if(type==='quote'){
+      if(target==='quote') return;
+      // any forward move from a quote means convert to an order + invoice
+      if(['sent','accepted'].indexOf(c.status)<0){ pipeToast('Send or accept quote '+c.no+' first, then it can convert to an order.'); return; }
+      if(!confirm('Convert '+c.no+' ('+money(c.amount)+') into an order and tax invoice now?')) return;
+      var res=await sb.rpc('convert_quote_to_order',{p_quote_id:id});
+      if(res.error){ pipeToast('Convert failed: '+res.error.message); return; }
+      pipeToast('Converted '+c.no+' — order created. It will proof, then invoice.');
+      await loadPipeline(); return;
+    }
+
+    // ORDER moves
+    var o=c.o;
+    if(target==='production'){
+      if(o.status==='paid' && orderAllApproved(o)){
+        if(!confirm('Move order '+c.no+' into production? Do this once the job is placed with your supplier.')) return;
+        await setOrderStatus(id,'in_production','Order '+c.no+' is now in production.');
+      } else {
+        pipeToast('Blocked: '+c.no+' must be fully paid and its proof approved before production.');
+      }
+      return;
+    }
+    if(target==='dispatched'){
+      if(['paid','in_production'].indexOf(o.status)>=0){
+        openOrder=id; document.querySelector('.tab[data-tab=orders]').click();
+        pipeToast('Enter the carrier and tracking number in the Dispatch panel to mark '+c.no+' dispatched.');
+      } else { pipeToast('Finish payment and production before dispatch.'); }
+      return;
+    }
+    if(target==='complete'){
+      if(['shipped','in_production','paid'].indexOf(o.status)>=0){
+        if(!confirm('Mark order '+c.no+' complete?')) return;
+        await setOrderStatus(id,'completed','Order '+c.no+' marked complete.');
+      } else { pipeToast('This order is not far enough along to complete.'); }
+      return;
+    }
+    if(target==='paid'){
+      openOrder=id; document.querySelector('.tab[data-tab=orders]').click();
+      pipeToast('Record the payment on order '+c.no+' to mark it paid.');
+      return;
+    }
+    pipeToast('That step happens on its own as '+c.no+' progresses — no need to drag it there.');
+  }
+
+  async function setOrderStatus(id,status,okMsg){
+    var res=await sb.from('orders').update({status:status}).eq('id',id);
+    if(res.error){ pipeToast('Failed: '+res.error.message); return; }
+    if(okMsg) pipeToast(okMsg);
+    await loadPipeline();
+  }
+
+  async function archivePipeCard(c){
+    var reason=null;
+    if(c.type==='order'){
+      reason=prompt('Archive order '+c.no+'? The customer stays in your database. Optional note (e.g. cancelled, refunded):','')||null;
+      if(reason===null && !confirm('Archive order '+c.no+'?')) return;
+      var r=await sb.from('orders').update({archived:true, archive_reason:reason}).eq('id',c.id);
+      if(r.error){ pipeToast('Failed: '+r.error.message); return; }
+    } else if(c.type==='quote'){
+      if(!confirm('Mark quote '+c.no+' as lost? It moves to Archived and the customer is kept.')) return;
+      var r2=await sb.from('quotes').update({status:'void'}).eq('id',c.id);
+      if(r2.error){ pipeToast('Failed: '+r2.error.message); return; }
+    } else {
+      if(!confirm('Mark this enquiry as lost? The contact is kept for future campaigns.')) return;
+      var r3=await sb.from('leads').update({status:'lost'}).eq('id',c.id);
+      if(r3.error){ pipeToast('Failed: '+r3.error.message); return; }
+    }
+    pipeToast('Moved to Archived / Lost.');
+    await loadPipeline();
+  }
+
+  async function restorePipeCard(type,id){
+    var c=findCard(type,id); if(!c) return;
+    if(type==='order'){ var r=await sb.from('orders').update({archived:false, archive_reason:null}).eq('id',id); if(r.error){pipeToast('Failed: '+r.error.message);return;} }
+    else if(type==='quote'){ var r2=await sb.from('quotes').update({status:'draft', decided_at:null, accepted_by_name:null, decision_comments:null}).eq('id',id); if(r2.error){pipeToast('Failed: '+r2.error.message);return;} }
+    else { var r3=await sb.from('leads').update({status:'new'}).eq('id',id); if(r3.error){pipeToast('Failed: '+r3.error.message);return;} }
+    pipeToast('Restored.');
+    await loadPipeline();
+  }
 
   /* ============ CONTACTS ============ */
   var allContacts = [], contactDir = [], openContact = null, contactSearch = '', csvRecs = [];
