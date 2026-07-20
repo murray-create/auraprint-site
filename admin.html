@@ -81,6 +81,25 @@
   .events{font-size:12px;color:#8a847d;margin-top:10px;max-height:150px;overflow-y:auto}
   .events div{padding:2px 0;border-bottom:1px dashed #eee6dd}
   a.plink{color:#c026a3;font-weight:700;text-decoration:none}
+  /* Contacts */
+  .csearch{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:14px}
+  .csearch input[type=text]{flex:1;min-width:220px;padding:11px 14px;border:2px solid #e8e2da;border-radius:10px;font-size:15px}
+  .cstats{display:flex;gap:12px;flex-wrap:wrap;margin:6px 0 16px}
+  .cstat{background:#fff;border:1px solid #e8e2da;border-radius:12px;padding:12px 16px;min-width:118px}
+  .cstat .n{font-size:20px;font-weight:900;color:#1a1a1a;line-height:1.1}
+  .cstat .l{font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:#8a847d;font-weight:700;margin-top:3px}
+  .cf-row{display:flex;gap:8px;align-items:center;margin-bottom:8px}
+  .cf-row input{padding:8px;border:2px solid #e8e2da;border-radius:8px;font-size:13.5px;font-family:inherit}
+  .cf-row .cf-k{width:180px}.cf-row .cf-v{flex:1;min-width:150px}
+  .cf-del{background:#fee2e2;color:#b91c1c;border:none;border-radius:8px;padding:8px 10px;font-weight:800;cursor:pointer}
+  .hist{margin-top:6px}
+  .hist .hrow{display:flex;justify-content:space-between;gap:10px;align-items:flex-start;padding:9px 0;border-bottom:1px dashed #eee6dd;font-size:13.5px}
+  .hist .hrow:last-child{border-bottom:none}
+  .htag{display:inline-block;padding:2px 8px;border-radius:999px;font-size:11px;font-weight:700;margin-right:6px}
+  .htag.lead{background:#fef3c7;color:#b45309}.htag.quote{background:#ede9fe;color:#7c3aed}.htag.order{background:#dbeafe;color:#1d4ed8}
+  .arch-badge{background:#f0ece5;color:#6b6560;padding:2px 8px;border-radius:999px;font-size:11px;font-weight:700;margin-left:6px}
+  .cimport{background:#faf7f2;border:1px dashed #d8cfc2;border-radius:12px;padding:14px;margin-top:12px}
+  .cimport table{font-size:12.5px;margin-top:8px}
 </style>
 <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
 </head>
@@ -116,6 +135,7 @@
     <button class="tab active" data-tab="leads">Lead Inbox</button>
     <button class="tab" data-tab="quotes">Quotes</button>
     <button class="tab" data-tab="orders">Orders &amp; Proofs</button>
+    <button class="tab" data-tab="contacts">Contacts</button>
   </div>
 
   <!-- LEADS TAB -->
@@ -176,6 +196,41 @@
     </div>
     <div id="ordersWrap"></div>
   </div>
+
+  <!-- CONTACTS TAB -->
+  <div id="tab-contacts" style="display:none">
+    <div class="csearch">
+      <input id="cSearch" type="text" placeholder="Search name, email, company or phone…">
+      <label class="muted" style="display:flex;align-items:center;gap:6px"><input type="checkbox" id="cShowArchived"> show archived</label>
+      <button id="cAddBtn" class="btn-sm btn-aura2">+ New contact</button>
+      <button id="cImportBtn" class="btn-sm btn-ghost">⭱ Import CSV</button>
+    </div>
+
+    <div id="cAddPanel" class="panel" style="display:none">
+      <h2>New contact</h2>
+      <div class="frow">
+        <div class="f"><label>Name</label><input id="ncName"></div>
+        <div class="f"><label>Email *</label><input id="ncEmail" type="email"></div>
+        <div class="f"><label>Phone</label><input id="ncPhone"></div>
+        <div class="f"><label>Company</label><input id="ncCompany"></div>
+      </div>
+      <div class="frow"><div class="f" style="flex:3"><label>Notes</label><input id="ncNotes"></div></div>
+      <button id="ncCreate" class="btn-sm btn-aura2">Save contact</button>
+      <button id="ncCancel" class="btn-sm btn-ghost">Cancel</button>
+      <span id="ncMsg" class="muted" style="margin-left:10px"></span>
+    </div>
+
+    <div id="cImportPanel" class="panel" style="display:none">
+      <h2>Import contacts from CSV</h2>
+      <p class="muted" style="margin-top:0">Include a header row. Recognised columns: name, email, company, phone, notes. Email is required; rows whose email already matches an existing contact are skipped.</p>
+      <input type="file" id="cCsvFile" accept=".csv,text/csv">
+      <button id="cCsvPreview" class="btn-sm btn-ghost">Preview</button>
+      <button id="cCsvCancel" class="btn-sm btn-ghost">Cancel</button>
+      <div id="cCsvOut"></div>
+    </div>
+
+    <div id="contactsWrap"></div>
+  </div>
 </div>
 
 <!-- EMAIL PREVIEW MODAL -->
@@ -230,14 +285,14 @@
     t.addEventListener('click', function(){
       activeTab = t.dataset.tab;
       document.querySelectorAll('.tab').forEach(function(x){ x.classList.toggle('active', x===t); });
-      ['leads','quotes','orders'].forEach(function(k){
+      ['leads','quotes','orders','contacts'].forEach(function(k){
         document.getElementById('tab-'+k).style.display = activeTab===k?'':'none';
       });
-      if (activeTab==='orders') loadOrders(); else if (activeTab==='quotes') loadQuotes(); else loadLeads();
+      if (activeTab==='orders') loadOrders(); else if (activeTab==='quotes') loadQuotes(); else if (activeTab==='contacts') loadContacts(); else loadLeads();
     });
   });
   document.getElementById('refreshBtn').addEventListener('click', function(){
-    if (activeTab==='orders') loadOrders(); else if (activeTab==='quotes') loadQuotes(); else loadLeads();
+    if (activeTab==='orders') loadOrders(); else if (activeTab==='quotes') loadQuotes(); else if (activeTab==='contacts') loadContacts(); else loadLeads();
   });
 
   /* ============ LEADS (unchanged) ============ */
@@ -528,6 +583,9 @@
         '<span class="muted">'+(q.converted_at?esc(fmtDate(q.converted_at)):'')+'</span></div>'+
         '<div class="proofrow">Order <b>'+esc(on)+'</b> with tax invoice issued — manage it in the Orders &amp; Proofs tab.</div></div>';
     }
+    if (q.status!=='converted'){
+      h += '<div class="proofrow" style="margin-top:10px"><button class="btn-sm btn-ghost q-delete" data-id="'+q.id+'" data-num="'+esc(q.quote_number||'')+'" data-status="'+esc(q.status)+'">🗑 Delete quote</button></div>';
+    }
     h += '<div class="events" id="qemails-'+q.id+'">Loading email history…</div>';
     return h;
   }
@@ -559,6 +617,7 @@
     document.querySelectorAll('.q-accept-manual').forEach(function(b){ b.addEventListener('click', function(){ markQuoteAccepted(b.dataset.id); }); });
     document.querySelectorAll('.q-redraft').forEach(function(b){ b.addEventListener('click', function(){ revertQuoteToDraft(b.dataset.id); }); });
     document.querySelectorAll('.q-convert').forEach(function(b){ b.addEventListener('click', function(){ convertQuote(b.dataset.id, b); }); });
+    document.querySelectorAll('#quotesWrap .q-delete').forEach(function(b){ b.addEventListener('click', function(){ deleteQuote(b.dataset.id, b.dataset.num, b.dataset.status, function(){ loadQuotes(); }); }); });
   }
 
   async function saveQuoteEdits(quoteId, btn){
@@ -1111,6 +1170,329 @@
     } catch(e){ m.textContent = 'Failed: '+(e.message||e); }
     this.disabled = false;
   });
+
+
+  /* ============ CONTACTS ============ */
+  var allContacts = [], contactDir = [], openContact = null, contactSearch = '', csvRecs = [];
+
+  function normEmail(e){ return String(e==null?'':e).trim().toLowerCase(); }
+  function shortDate(s){ if(!s) return ''; var d=new Date(s); return d.toLocaleDateString('en-AU',{day:'2-digit',month:'short',year:'2-digit'}); }
+  function cstat(n,l){ return '<div class="cstat"><div class="n">'+n+'</div><div class="l">'+l+'</div></div>'; }
+  function cfRow(k,v){ return '<div class="cf-row"><input class="cf-k" placeholder="Field" value="'+esc(k)+'"><input class="cf-v" placeholder="Value" value="'+esc(v==null?'':v)+'"><button type="button" class="cf-del">×</button></div>'; }
+
+  async function loadContacts(){
+    document.getElementById('count').textContent = 'Loading…';
+    var results = await Promise.all([
+      sb.from('contacts').select('*'),
+      sb.from('leads').select('id,name,email,company,phone,status,created_at,category,job_details'),
+      sb.from('quotes').select('id,quote_number,contact_name,contact_email,company,contact_phone,status,created_at,valid_until,access_token,converted_order_id,quote_items(price_inc_cents,qty,description,item_no)'),
+      sb.from('orders').select('id,order_number,contact_name,contact_email,company,contact_phone,status,archived,created_at,order_items(description,qty,price_inc_cents,status,item_no),invoices(total_inc_cents,status),payments(amount_cents,status,paid_at)')
+    ]);
+    var bad = results.filter(function(r){ return r.error; })[0];
+    if (bad){ document.getElementById('contactsWrap').innerHTML = '<div class="empty">Could not load contacts: '+esc(bad.error.message)+'</div>'; document.getElementById('count').textContent='Contacts'; return; }
+    allContacts = results[0].data || [];
+    contactDir = buildDirectory(allContacts, results[1].data||[], results[2].data||[], results[3].data||[]);
+    document.getElementById('count').textContent = contactDir.filter(function(c){return !c.archived;}).length+' contacts';
+    renderContacts();
+  }
+
+  function buildDirectory(contacts, leads, quotes, orders){
+    var map = {};
+    function rec(ek){
+      if (!map[ek]) map[ek] = { email_key:ek, email:ek, contact:null, name:'', company:'', phone:'',
+        leads:[], quotes:[], orders:[], total_spent:0, spent_12m:0, outstanding:0,
+        order_count:0, paid_orders:0, avg_order:0, last_order_at:null, first_seen:null, last_activity:null,
+        archived:false, marketing_consent:true };
+      return map[ek];
+    }
+    function seen(r, when){
+      if (!when) return;
+      var t = new Date(when).getTime();
+      if (!r.first_seen || t < new Date(r.first_seen).getTime()) r.first_seen = when;
+      if (!r.last_activity || t > new Date(r.last_activity).getTime()) r.last_activity = when;
+    }
+    var yearAgo = Date.now() - 365*24*3600*1000;
+
+    contacts.forEach(function(c){ var ek=c.email_key||normEmail(c.email); if(!ek) return; var r=rec(ek);
+      r.contact=c; if(c.email) r.email=c.email;
+      if(c.name) r.name=c.name; if(c.company) r.company=c.company; if(c.phone) r.phone=c.phone;
+      r.archived=!!c.archived; r.marketing_consent=c.marketing_consent!==false; seen(r,c.created_at); });
+
+    leads.forEach(function(l){ var ek=normEmail(l.email); if(!ek||ek.indexOf('@')<0) return; var r=rec(ek); if(l.email) r.email=l.email;
+      if(!r.name&&l.name) r.name=l.name; if(!r.company&&l.company) r.company=l.company; if(!r.phone&&l.phone) r.phone=l.phone;
+      r.leads.push(l); seen(r,l.created_at); });
+
+    quotes.forEach(function(q){ var ek=normEmail(q.contact_email); if(!ek||ek.indexOf('@')<0) return; var r=rec(ek); if(q.contact_email) r.email=q.contact_email;
+      if(!r.name&&q.contact_name) r.name=q.contact_name; if(!r.company&&q.company) r.company=q.company; if(!r.phone&&q.contact_phone) r.phone=q.contact_phone;
+      r.quotes.push(q); seen(r,q.created_at); });
+
+    orders.forEach(function(o){ var ek=normEmail(o.contact_email); if(!ek||ek.indexOf('@')<0) return; var r=rec(ek); if(o.contact_email) r.email=o.contact_email;
+      if(!r.name&&o.contact_name) r.name=o.contact_name; if(!r.company&&o.company) r.company=o.company; if(!r.phone&&o.contact_phone) r.phone=o.contact_phone;
+      r.orders.push(o); r.order_count++; seen(r,o.created_at);
+      if(!r.last_order_at || new Date(o.created_at) > new Date(r.last_order_at)) r.last_order_at=o.created_at;
+      var paid=(o.payments||[]).filter(function(p){return p.status==='succeeded';});
+      var paidSum=paid.reduce(function(s,p){return s+p.amount_cents;},0);
+      r.total_spent+=paidSum;
+      paid.forEach(function(p){ if(p.paid_at && new Date(p.paid_at).getTime()>=yearAgo) r.spent_12m+=p.amount_cents; });
+      if(paidSum>0) r.paid_orders++;
+      var invSum=(o.invoices||[]).filter(function(v){return v.status!=='void';}).reduce(function(s,v){return s+v.total_inc_cents;},0);
+      var owe=invSum-paidSum; if(owe>0) r.outstanding+=owe;
+    });
+
+    var arr = Object.keys(map).map(function(k){ var r=map[k];
+      r.avg_order = r.paid_orders ? Math.round(r.total_spent/r.paid_orders) : 0;
+      if(!r.name) r.name='(no name)';
+      return r; });
+    arr.sort(function(a,b){ return (b.total_spent-a.total_spent) || (new Date(b.last_activity||0)-new Date(a.last_activity||0)); });
+    return arr;
+  }
+
+  function renderContacts(){
+    var q=contactSearch.trim().toLowerCase();
+    var showArch=document.getElementById('cShowArchived').checked;
+    var rows=contactDir.filter(function(c){ if(!showArch&&c.archived) return false; if(!q) return true;
+      return (c.name+' '+c.email+' '+(c.company||'')+' '+(c.phone||'')).toLowerCase().indexOf(q)>=0; });
+    var rev12=contactDir.reduce(function(s,c){return s+c.spent_12m;},0);
+    var revAll=contactDir.reduce(function(s,c){return s+c.total_spent;},0);
+    var outAll=contactDir.reduce(function(s,c){return s+c.outstanding;},0);
+    var stats='<div class="cstats">'+cstat(contactDir.filter(function(c){return !c.archived;}).length,'Contacts')+
+      cstat(money(rev12),'Revenue 12 mo')+cstat(money(revAll),'Lifetime revenue')+cstat(outAll>0?money(outAll):'—','Outstanding')+'</div>';
+    if(!rows.length){ document.getElementById('contactsWrap').innerHTML=stats+'<div class="empty">'+(q?'No contacts match “'+esc(contactSearch)+'”.':'No contacts yet. Add one, import a CSV, or they will appear here automatically as enquiries and orders come in.')+'</div>'; return; }
+    var html=stats+'<table><thead><tr><th>Customer</th><th>Contact</th><th>Orders</th><th>12-mo spend</th><th>Lifetime</th><th>Last order</th><th></th></tr></thead><tbody>';
+    rows.forEach(function(c){
+      html+='<tr>'+
+        '<td><div class="lead-name">'+esc(c.name)+(c.archived?'<span class="arch-badge">archived</span>':'')+'</div>'+(c.company?'<div class="muted">'+esc(c.company)+'</div>':'')+'</td>'+
+        '<td><div class="lead-contact"><a href="mailto:'+esc(c.email)+'">'+esc(c.email)+'</a></div>'+(c.phone?'<div class="muted">'+esc(c.phone)+'</div>':'')+'</td>'+
+        '<td>'+c.order_count+'</td>'+
+        '<td><b>'+money(c.spent_12m)+'</b></td>'+
+        '<td>'+money(c.total_spent)+'</td>'+
+        '<td>'+(c.last_order_at?esc(shortDate(c.last_order_at)):'—')+'</td>'+
+        '<td><button class="btn-sm btn-ghost c-open" data-ek="'+esc(c.email_key)+'">'+(openContact===c.email_key?'Close':'Open')+'</button></td>'+
+        '</tr>';
+      if(openContact===c.email_key){ html+='<tr><td colspan="7"><div class="odetail">'+contactDetail(c)+'</div></td></tr>'; }
+    });
+    html+='</tbody></table>';
+    document.getElementById('contactsWrap').innerHTML=html;
+    bindContacts();
+  }
+
+  function contactDetail(rec){
+    var c=rec.contact||{};
+    var cf=(c.custom_fields && typeof c.custom_fields==='object') ? c.custom_fields : {};
+    var h='';
+    h+='<div class="cstats">'+
+      cstat(money(rec.total_spent),'Lifetime spend')+
+      cstat(money(rec.spent_12m),'Last 12 months')+
+      cstat(rec.order_count,'Orders')+
+      cstat(rec.avg_order?money(rec.avg_order):'—','Avg order')+
+      cstat(rec.outstanding>0?money(rec.outstanding):'—','Outstanding')+
+      cstat(rec.last_order_at?shortDate(rec.last_order_at):'—','Last order')+
+      '</div>';
+    h+='<div class="oitem"><div class="oitem-head"><b>Contact details</b>'+(rec.archived?'<span class="arch-badge">archived</span>':'')+'</div>'+
+      '<div class="frow">'+
+      '<div class="f"><label>Name</label><input class="cd-name" value="'+esc(rec.name==='(no name)'?'':rec.name)+'"></div>'+
+      '<div class="f"><label>Email</label><input class="cd-email" value="'+esc(rec.email)+'" readonly title="Email is the contact key and cannot be changed here"></div>'+
+      '<div class="f"><label>Phone</label><input class="cd-phone" value="'+esc(rec.phone||'')+'"></div>'+
+      '<div class="f"><label>Company</label><input class="cd-company" value="'+esc(rec.company||'')+'"></div>'+
+      '</div>'+
+      '<div class="frow"><div class="f" style="flex:3"><label>Notes about this customer</label><textarea class="cd-notes" style="min-height:70px">'+esc(c.notes||'')+'</textarea></div></div>'+
+      '<label style="display:block;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:#8a847d;margin-bottom:6px">Custom fields</label>'+
+      '<div class="cd-fields">'+Object.keys(cf).map(function(k){return cfRow(k,cf[k]);}).join('')+'</div>'+
+      '<button type="button" class="btn-sm btn-ghost cd-addfield">+ Field</button>'+
+      '<div class="proofrow" style="margin-top:10px"><label class="muted" style="display:flex;align-items:center;gap:6px"><input type="checkbox" class="cd-consent" '+(rec.marketing_consent?'checked':'')+'> Include in email marketing</label></div>'+
+      '<div class="proofrow" style="margin-top:8px">'+
+      '<button class="btn-sm btn-aura2 cd-save" data-ek="'+esc(rec.email_key)+'">Save details</button>'+
+      '<button class="btn-sm btn-ghost cd-quote" data-ek="'+esc(rec.email_key)+'">+ Add quote</button>'+
+      '<button class="btn-sm btn-ghost cd-archive" data-ek="'+esc(rec.email_key)+'">'+(rec.archived?'Unarchive':'Archive')+'</button>'+
+      '<span class="muted cd-msg" data-ek="'+esc(rec.email_key)+'"></span>'+
+      '</div></div>';
+    h+='<div class="oitem" style="margin-top:12px"><div class="oitem-head"><b>History</b><span class="muted">'+rec.leads.length+' enquiries · '+rec.quotes.length+' quotes · '+rec.orders.length+' orders</span></div>';
+    var events=[];
+    rec.leads.forEach(function(l){ events.push({t:l.created_at, html:'<span class="htag lead">enquiry</span>'+esc((l.category?l.category+' — ':'')+(l.job_details||'Enquiry')).slice(0,120)+' <span class="pill p-'+esc(l.status)+'">'+esc(l.status)+'</span>'}); });
+    rec.quotes.forEach(function(qq){ var tot=(qq.quote_items||[]).reduce(function(s,i){return s+i.price_inc_cents;},0);
+      var link=QUOTE_BASE+'?t='+qq.access_token;
+      var del=qq.status!=='converted'?' <button class="btn-sm btn-ghost hist-delq" data-id="'+qq.id+'" data-num="'+esc(qq.quote_number||'')+'" data-status="'+esc(qq.status)+'">🗑</button>':'';
+      events.push({t:qq.created_at, html:'<span class="htag quote">quote</span><b>'+esc(qq.quote_number||'')+'</b> '+money(tot)+' <span class="pill p-'+esc(qq.status)+'">'+esc(qq.status)+'</span> <a class="plink" href="'+esc(link)+'" target="_blank" rel="noopener">open ↗</a>'+del}); });
+    rec.orders.forEach(function(o){ var paid=(o.payments||[]).filter(function(p){return p.status==='succeeded';}).reduce(function(s,p){return s+p.amount_cents;},0);
+      events.push({t:o.created_at, html:'<span class="htag order">order</span><b>'+esc(o.order_number||'')+'</b> '+money(paid)+' paid <span class="pill p-'+esc(o.status)+'">'+esc(String(o.status).replace(/_/g,' '))+'</span>'+(o.archived?'<span class="arch-badge">archived</span>':'')+' <button class="btn-sm btn-ghost hist-openo" data-id="'+o.id+'">manage</button>'}); });
+    events.sort(function(a,b){return new Date(b.t)-new Date(a.t);});
+    h+='<div class="hist">'+(events.length?events.map(function(e){return '<div class="hrow"><div>'+e.html+'</div><div class="muted" style="white-space:nowrap">'+esc(shortDate(e.t))+'</div></div>';}).join(''):'<div class="muted">No activity yet.</div>')+'</div>';
+    h+='</div>';
+    return h;
+  }
+
+  function bindContacts(){
+    document.querySelectorAll('.c-open').forEach(function(b){ b.addEventListener('click', function(){ openContact = openContact===b.dataset.ek?null:b.dataset.ek; renderContacts(); }); });
+    document.querySelectorAll('.cd-addfield').forEach(function(b){ b.addEventListener('click', function(){
+      var wrap=b.previousElementSibling; var tmp=document.createElement('div'); tmp.innerHTML=cfRow('',''); var row=tmp.firstChild;
+      row.querySelector('.cf-del').addEventListener('click', function(){ row.remove(); }); wrap.appendChild(row); }); });
+    document.querySelectorAll('.cf-del').forEach(function(b){ b.addEventListener('click', function(){ var r=b.closest('.cf-row'); if(r) r.remove(); }); });
+    document.querySelectorAll('.cd-save').forEach(function(b){ b.addEventListener('click', function(){ saveContactDetail(b.dataset.ek, b); }); });
+    document.querySelectorAll('.cd-quote').forEach(function(b){ b.addEventListener('click', function(){ contactAddQuote(b.dataset.ek); }); });
+    document.querySelectorAll('.cd-archive').forEach(function(b){ b.addEventListener('click', function(){ archiveContact(b.dataset.ek, b); }); });
+    document.querySelectorAll('.hist-openo').forEach(function(b){ b.addEventListener('click', function(){ openOrder=b.dataset.id; document.querySelector('.tab[data-tab=orders]').click(); }); });
+    document.querySelectorAll('.hist-delq').forEach(function(b){ b.addEventListener('click', function(){ deleteQuote(b.dataset.id, b.dataset.num, b.dataset.status, function(){ loadContacts(); }); }); });
+  }
+
+  async function ensureContact(rec){
+    if (rec.contact && rec.contact.id) return rec.contact;
+    var ins = await sb.from('contacts').insert({ email: rec.email, name: rec.name==='(no name)'?null:rec.name, company: rec.company||null, phone: rec.phone||null }).select('*').single();
+    if (ins.error){
+      var sel = await sb.from('contacts').select('*').eq('email_key', rec.email_key).maybeSingle();
+      if (sel.data){ rec.contact=sel.data; return sel.data; }
+      throw ins.error;
+    }
+    rec.contact = ins.data; return ins.data;
+  }
+
+  async function saveContactDetail(ek, btn){
+    var rec=contactDir.filter(function(c){return c.email_key===ek;})[0]; if(!rec) return;
+    var root=btn.closest('.oitem');
+    var msg=document.querySelector('.cd-msg[data-ek="'+ek+'"]');
+    var cf={};
+    root.querySelectorAll('.cf-row').forEach(function(r){ var k=r.querySelector('.cf-k').value.trim(); var v=r.querySelector('.cf-v').value.trim(); if(k) cf[k]=v; });
+    btn.disabled=true; if(msg) msg.textContent='Saving…';
+    try{
+      var contact=await ensureContact(rec);
+      var patch={ name:root.querySelector('.cd-name').value.trim()||null, company:root.querySelector('.cd-company').value.trim()||null, phone:root.querySelector('.cd-phone').value.trim()||null, notes:root.querySelector('.cd-notes').value.trim()||null, custom_fields:cf, marketing_consent:root.querySelector('.cd-consent').checked };
+      var up=await sb.from('contacts').update(patch).eq('id',contact.id);
+      if(up.error) throw up.error;
+      if(msg) msg.textContent='Saved ✓';
+      await loadContacts();
+    }catch(e){ if(msg) msg.textContent='Failed: '+(e.message||e); btn.disabled=false; }
+  }
+
+  async function archiveContact(ek, btn){
+    var rec=contactDir.filter(function(c){return c.email_key===ek;})[0]; if(!rec) return;
+    var msg=document.querySelector('.cd-msg[data-ek="'+ek+'"]');
+    var makeArch=!rec.archived, reason=null;
+    if(makeArch){ reason=prompt('Archive '+(rec.name||rec.email)+'? They stay in your database for future email campaigns. Optional note (e.g. why the job was lost):','')||null; }
+    btn.disabled=true; if(msg) msg.textContent=makeArch?'Archiving…':'Restoring…';
+    try{ var contact=await ensureContact(rec);
+      var up=await sb.from('contacts').update({archived:makeArch, archive_reason:makeArch?reason:null}).eq('id',contact.id);
+      if(up.error) throw up.error;
+      await loadContacts();
+    }catch(e){ if(msg) msg.textContent='Failed: '+(e.message||e); btn.disabled=false; }
+  }
+
+  function contactAddQuote(ek){
+    var rec=contactDir.filter(function(c){return c.email_key===ek;})[0]; if(!rec) return;
+    quoteLeadId=null;
+    document.querySelector('.tab[data-tab=quotes]').click();
+    document.getElementById('qName').value=rec.name==='(no name)'?'':rec.name;
+    document.getElementById('qEmail').value=rec.email;
+    document.getElementById('qPhone').value=rec.phone||'';
+    document.getElementById('qCompany').value=rec.company||'';
+    document.getElementById('qLines').innerHTML=''; addQuoteLine('',1,'');
+    document.getElementById('qMsg').textContent='New quote for '+(rec.name&&rec.name!=='(no name)'?rec.name:rec.email)+'. Add the products and specs, then Create quote.';
+    document.getElementById('newQuotePanel').scrollIntoView({behavior:'smooth'});
+  }
+
+  async function deleteQuote(quoteId, quoteNumber, status, after){
+    if(status==='converted'){ alert('Quote '+quoteNumber+' was converted to an order, so it cannot be deleted. Archive the order instead.'); return; }
+    if(!confirm('Delete quote '+quoteNumber+'? This permanently removes the quote and its line items.')) return;
+    var d1=await sb.from('quote_items').delete().eq('quote_id',quoteId);
+    if(d1.error){ alert('Failed: '+d1.error.message); return; }
+    var d2=await sb.from('quotes').delete().eq('id',quoteId);
+    if(d2.error){ alert('Failed: '+d2.error.message); return; }
+    if(after) after();
+  }
+
+  async function createContact(){
+    var m=document.getElementById('ncMsg');
+    var email=document.getElementById('ncEmail').value.trim();
+    var name=document.getElementById('ncName').value.trim();
+    if(!email||email.indexOf('@')<1){ m.textContent='Enter a valid email.'; return; }
+    m.textContent='Saving…';
+    var ins=await sb.from('contacts').insert({ email:email, name:name||null, company:document.getElementById('ncCompany').value.trim()||null, phone:document.getElementById('ncPhone').value.trim()||null, notes:document.getElementById('ncNotes').value.trim()||null }).select('*').single();
+    if(ins.error){ m.textContent = /duplicate|unique/i.test(ins.error.message)?'A contact with that email already exists.':('Failed: '+ins.error.message); return; }
+    ['ncName','ncEmail','ncPhone','ncCompany','ncNotes'].forEach(function(id){document.getElementById(id).value='';});
+    m.textContent='';
+    document.getElementById('cAddPanel').style.display='none';
+    await loadContacts();
+  }
+
+  function parseCSV(text){
+    var rows=[], row=[], cur='', i=0, inq=false;
+    text=String(text).replace(/\r\n/g,'\n').replace(/\r/g,'\n');
+    while(i<text.length){
+      var ch=text[i];
+      if(inq){ if(ch==='"'){ if(text[i+1]==='"'){cur+='"';i+=2;continue;} inq=false;i++;continue; } cur+=ch;i++;continue; }
+      if(ch==='"'){inq=true;i++;continue;}
+      if(ch===','){row.push(cur);cur='';i++;continue;}
+      if(ch==='\n'){row.push(cur);rows.push(row);row=[];cur='';i++;continue;}
+      cur+=ch;i++;
+    }
+    if(cur!==''||row.length){ row.push(cur); rows.push(row); }
+    return rows.filter(function(r){ return r.some(function(c){return String(c).trim()!=='';}); });
+  }
+  function mapHeaders(hs){
+    var idx={};
+    hs.forEach(function(h,i){ var k=String(h).trim().toLowerCase();
+      if(idx.email==null && /e-?mail/.test(k)) idx.email=i;
+      else if(idx.name==null && /name/.test(k)) idx.name=i;
+      else if(idx.company==null && /(company|business|organisation|organization)/.test(k)) idx.company=i;
+      else if(idx.phone==null && /(phone|mobile|tel)/.test(k)) idx.phone=i;
+      else if(idx.notes==null && /note/.test(k)) idx.notes=i;
+    });
+    return idx;
+  }
+  function previewCsv(){
+    var f=document.getElementById('cCsvFile').files[0];
+    var out=document.getElementById('cCsvOut');
+    if(!f){ out.innerHTML='<div class="err">Choose a CSV file first.</div>'; return; }
+    var reader=new FileReader();
+    reader.onload=function(){
+      var rows=parseCSV(reader.result);
+      if(rows.length<2){ out.innerHTML='<div class="err">No data rows found (need a header row plus at least one row).</div>'; return; }
+      var idx=mapHeaders(rows[0]);
+      if(idx.email==null){ out.innerHTML='<div class="err">Could not find an email column in the header row.</div>'; return; }
+      csvRecs=rows.slice(1).map(function(r){ return {
+        email:(r[idx.email]||'').trim(),
+        name:idx.name!=null?(r[idx.name]||'').trim():'',
+        company:idx.company!=null?(r[idx.company]||'').trim():'',
+        phone:idx.phone!=null?(r[idx.phone]||'').trim():'',
+        notes:idx.notes!=null?(r[idx.notes]||'').trim():''
+      }; }).filter(function(r){ return r.email.indexOf('@')>0; });
+      var existing={}; allContacts.forEach(function(c){existing[c.email_key]=true;});
+      var seenm={}, newN=0, dup=0;
+      csvRecs.forEach(function(r){ var ek=normEmail(r.email); if(existing[ek]||seenm[ek]){dup++;} else {seenm[ek]=true;newN++;} });
+      var prev=csvRecs.slice(0,15).map(function(r){ return '<tr><td>'+esc(r.name)+'</td><td>'+esc(r.email)+'</td><td>'+esc(r.company)+'</td><td>'+esc(r.phone)+'</td></tr>'; }).join('');
+      out.innerHTML='<div class="cimport"><div style="margin-bottom:6px"><b>'+csvRecs.length+'</b> rows read · <b>'+newN+'</b> new · '+dup+' already exist (skipped)</div>'+
+        '<table><thead><tr><th>Name</th><th>Email</th><th>Company</th><th>Phone</th></tr></thead><tbody>'+prev+'</tbody></table>'+
+        (csvRecs.length>15?'<div class="muted" style="margin-top:6px">Showing first 15…</div>':'')+
+        '<div style="margin-top:10px"><button id="cCsvCommit" class="btn-sm btn-aura2">Import '+newN+' new contacts</button> <span id="cCsvMsg" class="muted"></span></div></div>';
+      var commit=document.getElementById('cCsvCommit');
+      if(newN===0){ commit.disabled=true; }
+      commit.addEventListener('click', async function(){
+        this.disabled=true; document.getElementById('cCsvMsg').textContent='Importing…';
+        try{ var res=await importCsvCommit(csvRecs);
+          document.getElementById('cCsvMsg').textContent='Imported '+res.inserted+' ✓';
+          document.getElementById('cImportPanel').style.display='none'; out.innerHTML=''; document.getElementById('cCsvFile').value='';
+          await loadContacts();
+        }catch(e){ document.getElementById('cCsvMsg').textContent='Failed: '+(e.message||e); this.disabled=false; }
+      });
+    };
+    reader.readAsText(f);
+  }
+  async function importCsvCommit(recs){
+    var existing={}; allContacts.forEach(function(c){existing[c.email_key]=true;});
+    var seenm={}, toInsert=[];
+    recs.forEach(function(r){ var ek=normEmail(r.email); if(!ek||ek.indexOf('@')<1) return; if(existing[ek]||seenm[ek]) return; seenm[ek]=true;
+      toInsert.push({ email:r.email.trim(), name:r.name||null, company:r.company||null, phone:r.phone||null, notes:r.notes||null, source:'csv' }); });
+    if(!toInsert.length) return {inserted:0};
+    for(var i=0;i<toInsert.length;i+=200){ var ins=await sb.from('contacts').insert(toInsert.slice(i,i+200)); if(ins.error) throw ins.error; }
+    return {inserted:toInsert.length};
+  }
+
+  document.getElementById('cSearch').addEventListener('input', function(){ contactSearch=this.value; renderContacts(); });
+  document.getElementById('cShowArchived').addEventListener('change', renderContacts);
+  document.getElementById('cAddBtn').addEventListener('click', function(){ var p=document.getElementById('cAddPanel'); p.style.display=p.style.display==='none'?'':'none'; document.getElementById('cImportPanel').style.display='none'; });
+  document.getElementById('ncCancel').addEventListener('click', function(){ document.getElementById('cAddPanel').style.display='none'; });
+  document.getElementById('ncCreate').addEventListener('click', createContact);
+  document.getElementById('cImportBtn').addEventListener('click', function(){ var p=document.getElementById('cImportPanel'); p.style.display=p.style.display==='none'?'':'none'; document.getElementById('cAddPanel').style.display='none'; });
+  document.getElementById('cCsvCancel').addEventListener('click', function(){ document.getElementById('cImportPanel').style.display='none'; document.getElementById('cCsvOut').innerHTML=''; });
+  document.getElementById('cCsvPreview').addEventListener('click', previewCsv);
 
   /* ============ AUTH ============ */
   document.getElementById('lBtn').addEventListener('click', signIn);
