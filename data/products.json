@@ -578,20 +578,20 @@
   "cat": "print",
   "sub": "Marketing Material",
   "icon": "🍽️",
-  "desc": "Flat menus printed on stocks from 150gsm paper to laminated 350gsm board. Wipe-clean options built for table service.",
+  "desc": "Flat, folded or laminated for table service. Spill-proof options for venues.",
   "seo": "Menu Printing Sunshine Coast",
   "portal": true,
   "quote": true,
   "template": "menus",
   "specs": [
-   "DL, A5, A4 and A3 flat menus",
-   "Gloss or matt laminate both sides for wipe-clean durability",
-   "Folded and scored menus quoted fast"
+   "DL, A4, A3 folded",
+   "Celloglaze or full lamination for wipe-clean",
+   "Round corners available"
   ],
   "faqs": [
    [
     "What survives a busy venue?",
-    "350gsm artboard with matt laminate both sides - wipeable, sturdy and won't fray at the edges."
+    "350gsm with matt laminate both sides and round corners - wipeable and won't fray."
    ]
   ],
   "related": [
@@ -600,66 +600,50 @@
    "loyalty-cards"
   ],
   "img": "assets/img/menus.jpg",
-  "from": 97,
+  "from": 46,
   "suppliers": [
-   "CMYKhub"
+   "Easy Signs"
   ],
   "imgReal": true,
   "live": {
    "axes": [
     [
-     "size",
-     "Size",
+     "material",
+     "Material",
      [
-      "A4",
-      "A5",
-      "A3",
-      "DL"
+      "200gsm Paper",
+      "250gsm Paper",
+      "310gsm Artboard",
+      "128gsm Gloss Paper",
+      "128gsm Matte Paper",
+      "150gsm Gloss Paper"
      ]
     ],
     [
-     "stock",
-     "Stock & finish",
+     "lamination",
+     "Lamination",
      [
-      "150gsm Gloss",
-      "170gsm Matt",
-      "250gsm Gloss",
-      "250gsm Matt",
-      "350gsm Artboard",
-      "250gsm Gloss + Gloss Laminate",
-      "250gsm Gloss + Matt Laminate",
-      "250gsm Matt + Gloss Laminate",
-      "250gsm Matt + Matt Laminate",
-      "350gsm Artboard + Gloss Laminate",
-      "350gsm Artboard + Matt Laminate"
+      "Gloss Both Sides Laminated",
+      "Matte Both Sides Laminated",
+      "Velvet Soft Touch Lamination Both Sides"
      ]
     ],
     [
-     "sides",
-     "Printed sides",
+     "finish",
+     "Finish",
      [
-      "Single",
-      "Double"
+      "No Special Finish",
+      "Spot Gloss Front Side Only",
+      "Spot Gloss Both Sides"
      ]
     ]
    ],
    "default": {
-    "size": "A4",
-    "stock": "350gsm Artboard + Matt Laminate",
-    "sides": "Double"
+    "material": "200gsm Paper",
+    "lamination": "Gloss Both Sides Laminated",
+    "finish": "No Special Finish"
    },
-   "qty": 25,
-   "links": [
-    {
-     "label": "Folded or scored menus? Get a fast quote →",
-     "note": "Folded menu enquiry"
-    },
-    {
-     "label": "More than 500? Get a volume quote →",
-     "note": "Volume enquiry (500+)"
-    }
-   ],
-   "note": "Laminated stocks are wipe-clean - the go-to for table menus. Need folding or scoring? Use the quote link and we price it for you."
+   "qty": 10
   }
  },
  {
@@ -5215,8 +5199,8 @@
   "name": "Stationery Same Day",
   "cat": "print",
   "sub": "Cards & Stationery",
-  "desc": "Stationery Same Day produced through our our trade network trade network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
-  "seo": "Stationery Same Day Sunshine Coast | Aura Print & Promo",
+  "desc": "Letterheads, with-comps and business stationery printed same day on selected specs. Genuine fast turnaround, Australia-wide delivery.",
+  "seo": "Same Day Stationery Printing Sunshine Coast",
   "from": 130,
   "quote": true,
   "suppliers": [
