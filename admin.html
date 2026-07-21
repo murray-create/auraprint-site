@@ -1248,7 +1248,7 @@
     var r = await Promise.all([
       sb.from('leads').select('id,name,email,company,status,created_at,category,job_details,quantity'),
       sb.from('quotes').select('id,quote_number,contact_name,contact_email,company,status,created_at,access_token,converted_order_id,lead_id,quote_items(price_inc_cents)'),
-      sb.from('orders').select('id,order_number,contact_name,contact_email,company,status,archived,archive_reason,created_at,lead_id,order_items(price_inc_cents,status,proofs(status,first_viewed_at)),invoices(total_inc_cents,status,first_viewed_at),payments(amount_cents,status,provider)')
+      sb.from('orders').select('id,order_number,contact_name,contact_email,company,status,archived,archive_reason,created_at,dispatched_at,lead_id,order_items(price_inc_cents,status,proofs(status,first_viewed_at)),invoices(total_inc_cents,status,first_viewed_at),payments(amount_cents,status,provider)')
     ]);
     var bad = r.filter(function(x){return x.error;})[0];
     if (bad){ document.getElementById('boardWrap').innerHTML='<div class="empty">Could not load pipeline: '+esc(bad.error.message)+'</div>'; document.getElementById('count').textContent='Pipeline'; return; }
@@ -1258,18 +1258,23 @@
     renderBoard();
   }
 
+  function orderCustomerPaid(o){
+    var invs=(o.invoices||[]).filter(function(v){return v.status!=='void';});
+    if(invs.some(function(v){return v.status==='paid';})) return true;
+    var invTotal=invs.reduce(function(s,v){return s+(v.total_inc_cents||0);},0);
+    var paid=(o.payments||[]).filter(function(p){return p.status==='succeeded';}).reduce(function(s,p){return s+p.amount_cents;},0);
+    if(invTotal>0 && paid>=invTotal) return true;
+    return ['paid','in_production','shipped','completed'].indexOf(o.status)>=0;
+  }
   function deriveOrderStage(o){
-    var items=o.order_items||[];
-    var allApproved = items.length>0 && items.every(function(i){ return ['approved','in_production','dispatched'].indexOf(i.status)>=0; });
-    switch(o.status){
-      case 'shipped': return 'dispatched';
-      case 'completed': return 'complete';
-      case 'in_production': return 'production';
-      case 'paid': return 'paid';
-      case 'invoiced': return allApproved?'awaiting_payment':'proofing';
-      case 'draft': case 'submitted': return 'proofing';
-      default: return 'proofing';
-    }
+    if(o.status==='cancelled') return 'archived';
+    if(o.status==='completed') return 'complete';
+    if(!!o.dispatched_at || o.status==='shipped') return 'dispatched';
+    if(o.status==='in_production') return 'production';
+    if(orderCustomerPaid(o)) return 'paid';
+    var invIssued=(o.invoices||[]).some(function(v){return v.status && v.status!=='void';});
+    if(orderAllApproved(o) && invIssued) return 'awaiting_payment';
+    return 'proofing';
   }
   function orderAllApproved(o){
     var items=o.order_items||[];
@@ -1496,7 +1501,7 @@
 
     var items=o.order_items||[];
     var proofOk=items.length>0&&items.every(function(i){return ['approved','in_production','dispatched'].indexOf(i.status)>=0;});
-    var custPaid=['paid','in_production','shipped','completed'].indexOf(o.status)>=0;
+    var custPaid=orderCustomerPaid(o);
     var disp=!!o.dispatched_at;
     var suppPaid=bills.length>0&&bills.every(function(b){return b.status==='paid';});
     var done=o.status==='completed';
