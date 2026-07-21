@@ -765,8 +765,9 @@
   /* ============ ORDERS & PROOFS ============ */
   async function loadOrders(){
     document.getElementById('count').textContent = 'Loading…';
+    if(!supLoaded){ var _s=await sb.from('suppliers').select('code,name,active'); SUPPLIERS=(_s.data||[]).filter(function(x){return x.active!==false;}); supLoaded=true; }
     var res = await sb.from('orders')
-      .select('*, order_items(*, proofs(id,version,status,sent_at,decided_at,decision_comments,approver_name,approval_token,file_id,first_viewed_at,last_viewed_at,view_count)), invoices(id,invoice_number,status,total_inc_cents,payment_link_url,access_token,paid_at,first_viewed_at,last_viewed_at,view_count), payments(id,amount_cents,status,provider,paid_at)')
+      .select('*, order_items(*, proofs(id,version,status,sent_at,decided_at,decision_comments,approver_name,approval_token,file_id,first_viewed_at,last_viewed_at,view_count)), invoices(id,invoice_number,status,total_inc_cents,payment_link_url,access_token,paid_at,first_viewed_at,last_viewed_at,view_count), payments(id,amount_cents,status,provider,paid_at), supplier_bills(*, invoice_file:order_files!invoice_file_id(id,storage_path,filename))')
       .order('created_at',{ascending:false});
     if (res.error){ document.getElementById('ordersWrap').innerHTML = '<div class="empty">Could not load orders: '+esc(res.error.message)+'</div>'; return; }
     allOrders = res.data || [];
@@ -915,6 +916,7 @@
     }
     h += '</div>';
 
+    h += supplierPanel(o);
     h += '<div class="events" id="oemails-'+o.id+'" style="margin-top:10px">Loading email history…</div>';
     h += '<div class="events" id="events-'+o.id+'">Loading history…</div>';
     return h;
@@ -1016,6 +1018,11 @@
     document.querySelectorAll('.send-mail').forEach(function(b){
       b.addEventListener('click', function(){ sendCrmEmail(b.dataset.kind, b.dataset.order, b.dataset.inv, b); });
     });
+    document.querySelectorAll('.bill-add').forEach(function(b){ b.addEventListener('click', function(){ addSupplierBill(b.dataset.order, b); }); });
+    document.querySelectorAll('.bill-pay').forEach(function(b){ b.addEventListener('click', function(){ markBillPaid(b.dataset.id); }); });
+    document.querySelectorAll('.bill-del').forEach(function(b){ b.addEventListener('click', function(){ deleteBill(b.dataset.id); }); });
+    document.querySelectorAll('.openbill').forEach(function(b){ b.addEventListener('click', function(e){ e.preventDefault(); openBill(b.dataset.path); }); });
+    document.querySelectorAll('.job-complete').forEach(function(b){ b.addEventListener('click', function(){ markOrderComplete(b.dataset.order, b); }); });
   }
 
   /* ============ EMAIL PREVIEW MODAL ============ */
@@ -1445,6 +1452,141 @@
     await loadPipeline();
   }
 
+  /* ============ SUPPLIER BILLS (payables) ============ */
+  var SUPPLIERS=[], supLoaded=false, dirBills=[], payablesView=false;
+
+  function reloadActive(){ if(activeTab==='contacts') return loadContacts(); if(activeTab==='pipeline') return loadPipeline(); return loadOrders(); }
+
+  function supplierPanel(o){
+    var bills=o.supplier_bills||[];
+    var custTotal=(o.order_items||[]).reduce(function(s,i){return s+i.price_inc_cents;},0);
+    var costTotal=bills.reduce(function(s,b){return s+b.cost_inc_cents;},0);
+    var profit=custTotal-costTotal, marginPct=custTotal>0?Math.round(profit/custTotal*100):0;
+    var h='<div class="oitem" style="margin-top:12px"><div class="oitem-head"><b>🏭 Supplier &amp; cost</b>'+
+      (costTotal>0?'<span class="muted">cost '+money(costTotal)+' · profit '+money(profit)+' ('+marginPct+'%)</span>':'')+'</div>';
+    bills.forEach(function(b){
+      var f=b.invoice_file;
+      var ref = b.supplier_ref ? (f?'<a class="plink openbill" data-path="'+esc(f.storage_path)+'" href="#">'+esc(b.supplier_ref)+' ↗</a>':esc(b.supplier_ref)) : (f?'<a class="plink openbill" data-path="'+esc(f.storage_path)+'" href="#">invoice ↗</a>':'');
+      h+='<div class="proofrow" style="justify-content:space-between;align-items:flex-start">'+
+        '<div>'+esc(b.supplier_name||b.supplier_code||'Supplier')+
+          (ref?' · <b>'+ref+'</b>':'')+
+          (b.invoice_number?' · inv '+esc(b.invoice_number):'')+
+          ' · '+money(b.cost_inc_cents)+' inc'+
+          ' <span class="pill p-'+(b.status==='paid'?'approved':'awaiting_artwork')+'">'+esc(b.status)+'</span>'+
+          (b.status==='paid'&&b.paid_at?' <span class="muted">paid '+esc(fmtDate(b.paid_at))+(b.paid_method?' ('+esc(b.paid_method)+')':'')+'</span>':'')+'</div>'+
+        '<div style="white-space:nowrap">'+(b.status!=='paid'?'<button class="btn-sm btn-aura2 bill-pay" data-id="'+b.id+'">Mark paid</button> ':'')+
+          '<button class="btn-sm btn-ghost bill-del" data-id="'+b.id+'" title="Remove">×</button></div>'+
+        '</div>';
+    });
+    var sopts='<option value="">Supplier…</option>'+(SUPPLIERS||[]).map(function(x){return '<option value="'+esc(x.code)+'">'+esc(x.name)+'</option>';}).join('')+'<option value="__other">Other…</option>';
+    h+='<div class="proofrow" style="flex-wrap:wrap;gap:6px;margin-top:8px">'+
+      '<select class="status-sel bill-supp" data-order="'+o.id+'">'+sopts+'</select>'+
+      '<input type="text" class="bill-ref" data-order="'+o.id+'" placeholder="Their order #" style="width:120px;padding:6px 8px;border:2px solid #e0d9d0;border-radius:8px">'+
+      '<input type="text" class="bill-inv" data-order="'+o.id+'" placeholder="Invoice #" style="width:110px;padding:6px 8px;border:2px solid #e0d9d0;border-radius:8px">'+
+      '<input type="number" class="bill-cost" data-order="'+o.id+'" placeholder="$ inc GST" step="0.01" min="0" style="width:100px;padding:6px 8px;border:2px solid #e0d9d0;border-radius:8px">'+
+      '<input type="file" accept="application/pdf" class="bill-file" data-order="'+o.id+'" style="font-size:12px">'+
+      '<button class="btn-sm btn-aura2 bill-add" data-order="'+o.id+'">Add cost</button>'+
+      '<span class="muted bill-msg" data-order="'+o.id+'"></span></div>'+
+      '<div class="proofrow muted">Record what your supplier charges you, their order number and invoice, and attach their PDF. Click the order number to open it later.</div>';
+    h+='</div>';
+
+    var items=o.order_items||[];
+    var proofOk=items.length>0&&items.every(function(i){return ['approved','in_production','dispatched'].indexOf(i.status)>=0;});
+    var custPaid=['paid','in_production','shipped','completed'].indexOf(o.status)>=0;
+    var disp=!!o.dispatched_at;
+    var suppPaid=bills.length>0&&bills.every(function(b){return b.status==='paid';});
+    var done=o.status==='completed';
+    function tick(ok,label){ return '<div style="font-size:13px;padding:1px 0">'+(ok?'✅':'⬜')+' '+label+'</div>'; }
+    h+='<div class="oitem" style="margin-top:10px;background:#faf7f2"><div class="oitem-head"><b>✔️ Job completion</b>'+(done?'<span class="pill p-approved">completed</span>':'')+'</div>'+
+      tick(proofOk,'Proof approved')+tick(custPaid,'Customer paid')+tick(disp,'Dispatched')+tick(suppPaid,'Supplier paid')+
+      '<div class="proofrow" style="margin-top:8px">'+
+      (done?'<span class="muted">This job is complete — the full circle is closed.</span>':
+        ((proofOk&&custPaid&&disp&&suppPaid)?'<button class="btn-sm btn-aura2 job-complete" data-order="'+o.id+'">Mark job complete</button>':'<span class="muted">Complete unlocks once all four are ticked.</span>'))+
+      '<span class="muted job-msg" data-order="'+o.id+'"></span></div></div>';
+    return h;
+  }
+
+  async function addSupplierBill(orderId, btn){
+    var g=function(cls){ return document.querySelector('.'+cls+'[data-order="'+orderId+'"]')||{}; };
+    var msg=g('bill-msg'); msg.textContent='';
+    var supp=(g('bill-supp').value)||'', name=null, code=null;
+    if(supp==='__other'){ name=prompt('Supplier name:',''); if(!name) return; }
+    else if(supp){ code=supp; var sx=(SUPPLIERS||[]).filter(function(x){return x.code===supp;})[0]; name=sx?sx.name:supp; }
+    var ref=(g('bill-ref').value||'').trim();
+    var invno=(g('bill-inv').value||'').trim();
+    var cost=Math.round(parseFloat(g('bill-cost').value||'0')*100);
+    if(!(cost>0) && !ref && !invno){ msg.textContent='Enter at least a cost, order number or invoice number.'; return; }
+    var fileEl=g('bill-file'); var f=fileEl.files&&fileEl.files[0];
+    if(btn) btn.disabled=true; msg.textContent='Saving…';
+    try{
+      var fileId=null;
+      if(f){
+        if(f.type!=='application/pdf'){ msg.textContent='Invoice must be a PDF.'; if(btn) btn.disabled=false; return; }
+        if(f.size>50*1024*1024){ msg.textContent='Max 50 MB.'; if(btn) btn.disabled=false; return; }
+        var path='orders/'+orderId+'/supplier-invoice-'+Date.now()+'.pdf';
+        var up=await sb.storage.from('artwork').upload(path,f,{contentType:'application/pdf'});
+        if(up.error) throw up.error;
+        var u=await sb.auth.getUser();
+        var fr=await sb.from('order_files').insert({order_id:orderId, kind:'supplier_invoice', filename:f.name, mime_type:'application/pdf', size_bytes:f.size, storage_path:path, uploaded_by:u.data.user.id}).select('id').single();
+        if(fr.error) throw fr.error; fileId=fr.data.id;
+      }
+      var ins=await sb.from('supplier_bills').insert({order_id:orderId, supplier_code:code, supplier_name:name, supplier_ref:ref||null, invoice_number:invno||null, cost_inc_cents:cost||0, invoice_file_id:fileId, invoice_date:new Date().toISOString().slice(0,10)});
+      if(ins.error) throw ins.error;
+      await reloadActive();
+    }catch(e){ msg.textContent='Failed: '+(e.message||e); if(btn) btn.disabled=false; }
+  }
+
+  async function markBillPaid(billId){
+    var method=prompt('How did you pay the supplier? (e.g. bank transfer, card)','bank transfer');
+    if(method===null) return;
+    var r=await sb.from('supplier_bills').update({status:'paid', paid_at:new Date().toISOString(), paid_method:method||null}).eq('id',billId);
+    if(r.error){ alert('Failed: '+r.error.message); return; }
+    await reloadActive();
+  }
+
+  async function deleteBill(billId){
+    if(!confirm('Remove this supplier cost line?')) return;
+    var r=await sb.from('supplier_bills').delete().eq('id',billId);
+    if(r.error){ alert('Failed: '+r.error.message); return; }
+    await reloadActive();
+  }
+
+  async function openBill(path){
+    var r=await sb.storage.from('artwork').createSignedUrl(path, 3600);
+    if(r.error || !r.data){ alert('Could not open the invoice: '+(r.error?r.error.message:'unknown')); return; }
+    window.open(r.data.signedUrl, '_blank', 'noopener');
+  }
+
+  async function markOrderComplete(orderId, btn){
+    if(!confirm('Mark this job complete? Customer paid, supplier paid, proof approved and dispatched are all done.')) return;
+    if(btn) btn.disabled=true;
+    var r=await sb.from('orders').update({status:'completed'}).eq('id',orderId);
+    if(r.error){ alert('Failed: '+r.error.message); if(btn) btn.disabled=false; return; }
+    await reloadActive();
+  }
+
+  function payablesHtml(){
+    var rows=(dirBills||[]).filter(function(b){return b.status!=='paid';});
+    rows.sort(function(a,b){return b.cost_inc_cents-a.cost_inc_cents;});
+    var total=rows.reduce(function(s,b){return s+b.cost_inc_cents;},0);
+    var head='<div class="csearch" style="margin-top:2px"><b style="font-size:15px">What you owe suppliers</b><span class="muted">'+rows.length+' unpaid · '+money(total)+'</span><button id="cPayBack" class="btn-sm btn-ghost">← back to all contacts</button></div>';
+    if(!rows.length) return head+'<div class="empty">No unpaid supplier bills recorded.</div>';
+    var h=head+'<table><thead><tr><th>Supplier</th><th>Invoice</th><th>Order</th><th>Recorded</th><th>Cost inc</th><th></th></tr></thead><tbody>';
+    rows.forEach(function(b){
+      var when=b.invoice_date||b.created_at;
+      var days=Math.floor((Date.now()-new Date(when).getTime())/86400000);
+      h+='<tr>'+
+        '<td><b>'+esc(b.supplier_name||b.supplier_code||'Supplier')+'</b>'+(b.supplier_ref?'<div class="muted">'+esc(b.supplier_ref)+'</div>':'')+'</td>'+
+        '<td>'+esc(b.invoice_number||'—')+'</td>'+
+        '<td>'+esc((b.order&&b.order.order_number)||'')+'<div class="muted">'+esc((b.order&&(b.order.company||b.order.contact_name))||'')+'</div></td>'+
+        '<td>'+esc(shortDate(when))+'<div class="muted">'+(days<=0?'today':days+' days')+'</div></td>'+
+        '<td><b>'+money(b.cost_inc_cents)+'</b></td>'+
+        '<td><button class="btn-sm btn-aura2 pay-bill" data-id="'+esc(b.id)+'">Mark paid</button></td>'+
+        '</tr>';
+    });
+    return h+'</tbody></table>';
+  }
+
   /* ============ CONTACTS ============ */
   var allContacts = [], contactDir = [], openContact = null, contactSearch = '', csvRecs = [], outstandingView=false, dirOrders=[];
 
@@ -1459,12 +1601,14 @@
       sb.from('contacts').select('*'),
       sb.from('leads').select('id,name,email,company,phone,status,created_at,category,job_details'),
       sb.from('quotes').select('id,quote_number,contact_name,contact_email,company,contact_phone,status,created_at,valid_until,access_token,converted_order_id,quote_items(price_inc_cents,qty,description,item_no)'),
-      sb.from('orders').select('id,order_number,contact_name,contact_email,company,contact_phone,status,archived,created_at,order_items(description,qty,price_inc_cents,status,item_no),invoices(id,invoice_number,total_inc_cents,status,issued_at,first_viewed_at,view_count,access_token),payments(amount_cents,status,paid_at)')
+      sb.from('orders').select('id,order_number,contact_name,contact_email,company,contact_phone,status,archived,created_at,order_items(description,qty,price_inc_cents,status,item_no),invoices(id,invoice_number,total_inc_cents,status,issued_at,first_viewed_at,view_count,access_token),payments(amount_cents,status,paid_at)'),
+      sb.from('supplier_bills').select('*, order:orders!order_id(order_number,contact_name,company)')
     ]);
     var bad = results.filter(function(r){ return r.error; })[0];
     if (bad){ document.getElementById('contactsWrap').innerHTML = '<div class="empty">Could not load contacts: '+esc(bad.error.message)+'</div>'; document.getElementById('count').textContent='Contacts'; return; }
     allContacts = results[0].data || [];
     dirOrders = results[3].data||[];
+    dirBills = results[4].data||[];
     contactDir = buildDirectory(allContacts, results[1].data||[], results[2].data||[], results[3].data||[]);
     document.getElementById('count').textContent = contactDir.filter(function(c){return !c.archived;}).length+' contacts';
     renderContacts();
@@ -1529,9 +1673,12 @@
     var rev12=contactDir.reduce(function(s,c){return s+c.spent_12m;},0);
     var revAll=contactDir.reduce(function(s,c){return s+c.total_spent;},0);
     var outAll=contactDir.reduce(function(s,c){return s+c.outstanding;},0);
+    var payTotal=(dirBills||[]).filter(function(b){return b.status!=='paid';}).reduce(function(s,b){return s+b.cost_inc_cents;},0);
     var outTile='<div class="cstat cstat-btn'+(outstandingView?' cstat-on':'')+'" id="cstatOut" title="Click to see who owes you"><div class="n">'+(outAll>0?money(outAll):'—')+'</div><div class="l">Outstanding'+(outAll>0?' \u25b8':'')+'</div></div>';
+    var payTile='<div class="cstat cstat-btn'+(payablesView?' cstat-on':'')+'" id="cstatPay" title="Click to see what you owe suppliers"><div class="n">'+(payTotal>0?money(payTotal):'—')+'</div><div class="l">Payables'+(payTotal>0?' \u25b8':'')+'</div></div>';
     var stats='<div class="cstats">'+cstat(contactDir.filter(function(c){return !c.archived;}).length,'Contacts')+
-      cstat(money(rev12),'Revenue 12 mo')+cstat(money(revAll),'Lifetime revenue')+outTile+'</div>';
+      cstat(money(rev12),'Revenue 12 mo')+cstat(money(revAll),'Lifetime revenue')+outTile+payTile+'</div>';
+    if(payablesView){ document.getElementById('contactsWrap').innerHTML=stats+payablesHtml(); bindStats(); return; }
     if(outstandingView){ document.getElementById('contactsWrap').innerHTML=stats+outstandingHtml(); bindStats(); return; }
     if(!rows.length){ document.getElementById('contactsWrap').innerHTML=stats+'<div class="empty">'+(q?'No contacts match “'+esc(contactSearch)+'”.':'No contacts yet. Add one, import a CSV, or they will appear here automatically as enquiries and orders come in.')+'</div>'; bindStats(); return; }
     var html=stats+'<table><thead><tr><th>Customer</th><th>Contact</th><th>Orders</th><th>12-mo spend</th><th>Lifetime</th><th>Last order</th><th></th></tr></thead><tbody>';
@@ -1584,7 +1731,12 @@
   }
   function bindStats(){
     var b=document.getElementById('cstatOut');
-    if(b) b.addEventListener('click', function(){ outstandingView=!outstandingView; renderContacts(); });
+    if(b) b.addEventListener('click', function(){ outstandingView=!outstandingView; payablesView=false; renderContacts(); });
+    var bp=document.getElementById('cstatPay');
+    if(bp) bp.addEventListener('click', function(){ payablesView=!payablesView; outstandingView=false; renderContacts(); });
+    var pb=document.getElementById('cPayBack');
+    if(pb) pb.addEventListener('click', function(){ payablesView=false; renderContacts(); });
+    document.querySelectorAll('.pay-bill').forEach(function(x){ x.addEventListener('click', function(){ markBillPaid(x.dataset.id); }); });
     var back=document.getElementById('cOutBack');
     if(back) back.addEventListener('click', function(){ outstandingView=false; renderContacts(); });
     document.querySelectorAll('.out-open').forEach(function(x){ x.addEventListener('click', function(){ openOrder=x.dataset.id; document.querySelector('.tab[data-tab=orders]').click(); }); });
@@ -1828,7 +1980,7 @@
     return {inserted:toInsert.length};
   }
 
-  document.getElementById('cSearch').addEventListener('input', function(){ contactSearch=this.value; outstandingView=false; renderContacts(); });
+  document.getElementById('cSearch').addEventListener('input', function(){ contactSearch=this.value; outstandingView=false; payablesView=false; renderContacts(); });
   document.getElementById('cShowArchived').addEventListener('change', renderContacts);
   document.getElementById('cAddBtn').addEventListener('click', function(){ var p=document.getElementById('cAddPanel'); p.style.display=p.style.display==='none'?'':'none'; document.getElementById('cImportPanel').style.display='none'; });
   document.getElementById('ncCancel').addEventListener('click', function(){ document.getElementById('cAddPanel').style.display='none'; });
