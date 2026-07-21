@@ -222,6 +222,3 @@ body.drawer-open #aura-chat-btn,body.drawer-open #aura-chat{display:none !import
    so the menu gets stuck open on phones and the X appears to do nothing. */
 .drawer[hidden]{display:none !important}
 .drawer-backdrop[hidden]{display:none !important}
-
-/* SEO: location subline inside product H1s */
-.h1-loc{display:block;font-size:.38em;letter-spacing:.14em;margin-top:6px;font-family:'Archivo Black',sans-serif}
