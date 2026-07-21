@@ -917,6 +917,7 @@
     h += '</div>';
 
     h += supplierPanel(o);
+    h += orderDangerRow(o);
     h += '<div class="events" id="oemails-'+o.id+'" style="margin-top:10px">Loading email history…</div>';
     h += '<div class="events" id="events-'+o.id+'">Loading history…</div>';
     return h;
@@ -1023,6 +1024,9 @@
     document.querySelectorAll('.bill-del').forEach(function(b){ b.addEventListener('click', function(){ deleteBill(b.dataset.id); }); });
     document.querySelectorAll('.openbill').forEach(function(b){ b.addEventListener('click', function(e){ e.preventDefault(); openBill(b.dataset.path); }); });
     document.querySelectorAll('.job-complete').forEach(function(b){ b.addEventListener('click', function(){ markOrderComplete(b.dataset.order, b); }); });
+    document.querySelectorAll('.order-arch').forEach(function(b){ b.addEventListener('click', function(){ archiveOrderDetail(b.dataset.id); }); });
+    document.querySelectorAll('.order-unarch').forEach(function(b){ b.addEventListener('click', function(){ unarchiveOrderDetail(b.dataset.id); }); });
+    document.querySelectorAll('.order-del').forEach(function(b){ b.addEventListener('click', function(){ deleteOrderPermanent(b.dataset.id); }); });
   }
 
   /* ============ EMAIL PREVIEW MODAL ============ */
@@ -1565,6 +1569,39 @@
     await reloadActive();
   }
 
+  function orderDangerRow(o){
+    var noDeps = !((o.invoices||[]).length) && !((o.payments||[]).length) && !((o.supplier_bills||[]).length) && !((o.order_items||[]).some(function(i){return (i.proofs||[]).length;}));
+    var h='<div class="oitem" style="margin-top:10px;border-color:#f1d4d4"><div class="oitem-head"><b>Remove this order</b>'+(o.archived?'<span class="arch-badge">archived</span>':'')+'</div>';
+    h+='<div class="proofrow" style="gap:8px;flex-wrap:wrap">';
+    if(o.archived) h+='<button class="btn-sm btn-ghost order-unarch" data-id="'+o.id+'">Unarchive (back to board)</button>';
+    else h+='<button class="btn-sm btn-ghost order-arch" data-id="'+o.id+'">Archive (remove from board)</button>';
+    if(noDeps) h+='<button class="btn-sm order-del" data-id="'+o.id+'" style="background:#fee2e2;color:#b91c1c;border:none;border-radius:9px;padding:9px 12px;font-weight:700;cursor:pointer">Delete permanently</button>';
+    h+='<span class="muted order-danger-msg" data-id="'+o.id+'"></span></div>';
+    h+='<div class="proofrow muted">'+(noDeps?'No invoice, payment, proof or supplier cost yet, so this order can be deleted outright. Anything with history should be archived instead — kept in your records, hidden from the board.':'This order has history (invoice, payment, proof or supplier cost), so it can only be archived, not deleted. That protects your audit trail.')+'</div>';
+    h+='</div>';
+    return h;
+  }
+  async function archiveOrderDetail(id){
+    var reason=prompt('Archive this order and take it off the board? It stays in your records and can be restored. Optional note:','');
+    if(reason===null) return;
+    var r=await sb.from('orders').update({archived:true, archive_reason:reason||null}).eq('id',id);
+    if(r.error){ alert('Failed: '+r.error.message); return; }
+    await reloadActive();
+  }
+  async function unarchiveOrderDetail(id){
+    if(!confirm('Bring this order back onto the board?')) return;
+    var r=await sb.from('orders').update({archived:false, archive_reason:null}).eq('id',id);
+    if(r.error){ alert('Failed: '+r.error.message); return; }
+    await reloadActive();
+  }
+  async function deleteOrderPermanent(id){
+    var msg=document.querySelector('.order-danger-msg[data-id="'+id+'"]');
+    if(!confirm('Permanently delete this order? This cannot be undone. It is only allowed because the order has no invoice, payment, proof or supplier cost.')) return;
+    if(msg) msg.textContent='Deleting…';
+    var r=await sb.rpc('delete_order_if_empty',{p_order_id:id});
+    if(r.error){ if(msg) msg.textContent=''; alert('Could not delete: '+r.error.message); return; }
+    openOrder=null; await reloadActive();
+  }
   function payablesHtml(){
     var rows=(dirBills||[]).filter(function(b){return b.status!=='paid';});
     rows.sort(function(a,b){return b.cost_inc_cents-a.cost_inc_cents;});
