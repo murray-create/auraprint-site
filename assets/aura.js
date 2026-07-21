@@ -123,14 +123,14 @@ const FOOTER = `
         <div class="newsletter"><input type="email" id="nl-email" placeholder="Your email address" aria-label="Email address for newsletter"><button class="btn btn-aura" id="nl-join" style="padding:12px 22px">Join</button></div>
         <p id="nl-status" style="font-size:13px;min-height:18px;margin-top:8px"></p>
       </div>
-      <div><h4>Products</h4><ul><li><a href="business-cards.html">Business Cards</a></li><li><a href="flyers.html">Flyers</a></li><li><a href="corflute-signs.html">Corflute Signs</a></li><li><a href="pull-up-banners.html">Pull Up Banners</a></li><li><a href="stickers.html">Stickers</a></li><li><a href="promo.html">Promo Products</a></li><li><a href="same-day-printing.html">Same Day Printing</a></li><li><a href="real-estate-print-signage.html">Real Estate Signs</a></li></ul></div>
+      <div><h4>Products</h4><ul><li><a href="business-cards.html">Business Cards</a></li><li><a href="flyers.html">Flyers</a></li><li><a href="corflute-signs.html">Corflute Signs</a></li><li><a href="pull-up-banners.html">Pull Up Banners</a></li><li><a href="signage.html">Stickers</a></li><li><a href="promo.html">Promo Products</a></li><li><a href="promo.html">Workwear</a></li></ul></div>
       <div><h4>Company</h4><ul><li><a href="about.html">About</a></li><li><a href="blog.html">Blog</a></li><li><a href="art-setup.html">Artwork Setup Guide</a></li><li><a href="trade-terms.html">Terms of Trade</a></li><li><a href="privacy-policy.html">Privacy Policy</a></li><li><a href="refund-policy.html">Refunds &amp; Reprints</a></li></ul></div>
       <div><h4>Contact</h4><ul>
         <li>4/1 Packer Road, Baringa QLD 4551</li>
         <li><a href="tel:1300291277">1300 291 277</a></li>
         <li><a class="email-link" data-u="admin" data-d="auraprint.com.au"></a></li>
         <li>Mon-Fri 8:30am - 5pm</li>
-        <li style="margin-top:10px"><b style="color:#fff">Need it fast? <a href="same-day-printing.html" style="color:#fff;text-decoration:underline">Same day printing →</a></b></li>
+        <li style="margin-top:10px"><b style="color:#fff">Need it fast? Ask about express options.</b></li>
       </ul></div>
     </div>
     <div class="legal">
@@ -138,18 +138,7 @@ const FOOTER = `
       <span>Sunshine Coast, QLD | Australia-wide delivery</span>
     </div>
   </div>
-</footer>
-
-<button id="aura-chat-btn" aria-label="Chat with us">💬</button>
-<div id="aura-chat">
-  <div class="chat-head"><b>AURA ASSISTANT</b><span>Typically replies in seconds</span></div>
-  <div class="chat-body" id="chat-body"></div>
-  <div class="chat-quick" id="chat-quick"></div>
-  <div class="chat-input">
-    <input id="chat-in" type="text" placeholder="Type a message...">
-    <button id="chat-send">→</button>
-  </div>
-</div>`;
+</footer>`;
 
 /* Spam-resistant email links: assembled in JS so the address never appears in the HTML source */
 function fillEmails(){
@@ -273,7 +262,6 @@ function wireForms(){
         var stored  = rs[0].status === 'fulfilled' && (db.ok || db.skipped);
         var emailed = rs[1].status === 'fulfilled' && rs[1].value === true;
         if (stored || emailed){
-          track('generate_lead', { form: form.getAttribute('data-subject') || 'enquiry', page: location.pathname });
           form.querySelectorAll('input,textarea,select').forEach(function(el){ if(el.type!=='hidden' && el.type!=='checkbox') el.value=''; });
           status.style.color = '#1a8a4a';
           status.innerHTML = '✓ Thanks! Your request is in — we’ll be in touch within the hour (Mon–Fri 8:30–5).';
@@ -288,28 +276,6 @@ function wireForms(){
   });
 }
 
-/* GA4 analytics: loads only when AURA_CONFIG.ga4Id is set (e.g. "G-XXXXXXXXXX").
-   Events: tel_click, generate_lead (forms), newsletter_signup, chat_open. */
-function track(name, params){
-  try { if (window.gtag && (window.AURA_CONFIG||{}).ga4Id) window.gtag('event', name, params || {}); } catch(e){}
-}
-function wireAnalytics(){
-  var CFG = (window.AURA_CONFIG || {});
-  if (!CFG.ga4Id) return;
-  var s = document.createElement('script');
-  s.async = true; s.src = 'https://www.googletagmanager.com/gtag/js?id=' + CFG.ga4Id;
-  document.head.appendChild(s);
-  window.dataLayer = window.dataLayer || [];
-  window.gtag = function(){ window.dataLayer.push(arguments); };
-  window.gtag('js', new Date());
-  window.gtag('config', CFG.ga4Id);
-  /* tel: clicks are the call-conversion proxy for local SEO reporting */
-  document.addEventListener('click', function(e){
-    var a = e.target && e.target.closest ? e.target.closest('a[href^="tel:"]') : null;
-    if (a) track('tel_click', { link_url: a.getAttribute('href'), page: location.pathname });
-  });
-}
-
 /* Mobile drawer: burger below 900px, accordion groups, keyboard + backdrop close. */
 function wireDrawer(){
   var burger = document.getElementById('navBurger'), drawer = document.getElementById('navDrawer'),
@@ -319,15 +285,6 @@ function wireDrawer(){
     drawer.hidden = !open; backdrop.hidden = !open;
     burger.setAttribute('aria-expanded', open ? 'true' : 'false');
     document.body.classList.toggle('drawer-open', open);
-    /* Tawk's iframe sits above everything, so hide the chat while the menu is open.
-       An open chat window ignores hideWidget, so minimise it first. */
-    try{
-      var T = window.Tawk_API;
-      if (T && typeof T.hideWidget === 'function'){
-        if (open){ if (typeof T.minimize === 'function') T.minimize(); T.hideWidget(); }
-        else T.showWidget();
-      }
-    }catch(e){}
     if (open) { var f = drawer.querySelector('a,button'); if (f) f.focus(); } else { burger.focus(); }
   }
   burger.addEventListener('click', function(){ setOpen(drawer.hidden); });
@@ -360,7 +317,6 @@ function wireNewsletter(){
       job_details: 'Newsletter signup (footer)', user_agent: navigator.userAgent
     }).then(function(r){
       if (r.ok || r.skipped){
-        track('newsletter_signup', { page: location.pathname });
         input.value = ''; status.style.color = '#8fd3a8'; status.textContent = '✓ You’re on the list.';
         btn.textContent = '✓';
       } else {
@@ -375,98 +331,12 @@ function wireNewsletter(){
 
 document.addEventListener('DOMContentLoaded', function(){
   document.body.insertAdjacentHTML('afterbegin', HEADER);
-  wireAnalytics();
   wireForms();
   wireDrawer();
 
-  /* Tawk.to live chat: if configured, load it and skip the demo bot */
-  const cfg = window.AURA_CONFIG || {};
-  if (cfg.tawkId) {
-    window.Tawk_API = window.Tawk_API || {}; window.Tawk_LoadStart = new Date();
-    /* If Tawk finishes loading while the menu is already open, hide it straight away */
-    window.Tawk_API.onLoad = function(){
-      if (document.body.classList.contains('drawer-open')) window.Tawk_API.hideWidget();
-    };
-    const s = document.createElement('script');
-    s.async = true; s.src = 'https://embed.tawk.to/' + cfg.tawkId; s.charset = 'UTF-8';
-    s.setAttribute('crossorigin', '*');
-    document.head.appendChild(s);
-    document.body.insertAdjacentHTML('beforeend', FOOTER.replace(/<button id="aura-chat-btn"[\s\S]*$/, ''));
-    fillEmails();
-    wireNewsletter();
-    const m0=document.getElementById('marq'); if(m0) m0.innerHTML+=m0.innerHTML;
-    return;
-  }
   document.body.insertAdjacentHTML('beforeend', FOOTER);
   fillEmails();
   wireNewsletter();
-
-  /* ---------- chat bot (demo brain - production version will be AI-powered) ---------- */
-  const body=document.getElementById('chat-body'), quick=document.getElementById('chat-quick'),
-        input=document.getElementById('chat-in'), send=document.getElementById('chat-send'),
-        panel=document.getElementById('aura-chat'), btn=document.getElementById('aura-chat-btn');
-  let greeted=false, awaitingEmail=false;
-
-  const QUICKS=[['Get a price','price'],['Turnaround times','turnaround'],['Artwork help','artwork'],['Talk to a human','human']];
-
-  function addMsg(text, who){
-    const d=document.createElement('div'); d.className='msg '+who; d.innerHTML=text;
-    body.appendChild(d); body.scrollTop=body.scrollHeight;
-  }
-  function botReply(text, delay){
-    setTimeout(()=>addMsg(text,'bot'), delay||420);
-  }
-  function renderQuicks(){
-    quick.innerHTML='';
-    QUICKS.forEach(([label,key])=>{
-      const b=document.createElement('button'); b.textContent=label;
-      b.onclick=()=>{ addMsg(label,'user'); respond(key); };
-      quick.appendChild(b);
-    });
-  }
-  function respond(key){
-    awaitingEmail=false;
-    if(key==='price') botReply('Easy! Most products have <b>instant online pricing</b> — try the quoter on the <a href="index.html#quoter" style="color:var(--violet);font-weight:700">homepage</a> or open any product page. For anything custom, I can arrange a quote — just tell me the product and quantity.');
-    else if(key==='turnaround') botReply('Standard turnaround is <b>3-5 business days</b>, plus a day or two in transit. Next-day and same-day options exist on selected products — ask us and we’ll confirm what’s possible for your job.');
-    else if(key==='artwork') botReply('We accept <b>print-ready PDFs</b> with 3mm bleed and crop marks. Working from Canva? Our setup guides cover that too. You can upload artwork on any product page or via <a href="quote.html" style="color:var(--violet);font-weight:700">the quote form</a> and our preflight check will catch any problems.');
-    else if(key==='human') { botReply('No worries — leave your <b>email or phone number</b> and one of the team will get back to you within the hour (Mon-Fri 8:30-5). Or call us now on <b>1300 291 277</b>.'); awaitingEmail=true; }
-    else if(key==='thanks') botReply('Anytime! Anything else I can help with?');
-    else botReply("I can help with pricing, turnaround, artwork setup, or connect you with the team. What's your project?");
-  }
-  function classify(t){
-    t=t.toLowerCase();
-    if(awaitingEmail && (t.includes('@')||/\d{8,}/.test(t.replace(/\s/g,'')))) { awaitingEmail=false; return '_captured'; }
-    if(/price|cost|quote|how much|\$/.test(t)) return 'price';
-    if(/turnaround|fast|urgent|when|deliver|shipping|express/.test(t)) return 'turnaround';
-    if(/artwork|file|pdf|canva|bleed|design|setup/.test(t)) return 'artwork';
-    if(/human|person|call|phone|speak|someone|staff/.test(t)) return 'human';
-    if(/thank|cheers|great|awesome/.test(t)) return 'thanks';
-    return 'fallback';
-  }
-  function userSend(){
-    const t=input.value.trim(); if(!t) return;
-    addMsg(t,'user'); input.value='';
-    const key=classify(t);
-    if(key==='_captured'){
-      saveLead(window.AURA_CONFIG || {}, {
-        email: t.indexOf('@') > -1 ? t : null, phone: t.indexOf('@') > -1 ? null : t,
-        source_form: 'chat', source_page: location.pathname.split('/').pop() || 'index.html',
-        job_details: 'Chat contact capture', user_agent: navigator.userAgent
-      });
-      botReply('Got it — thanks! ✅ A team member will reach out shortly (Mon-Fri 8:30-5).');
-    }
-    else respond(key);
-  }
-  send.onclick=userSend;
-  input.addEventListener('keydown',e=>{if(e.key==='Enter')userSend();});
-  btn.onclick=()=>{
-    panel.classList.toggle('open');
-    if(panel.classList.contains('open') && !greeted){
-      greeted=true;
-      botReply("G'day! 👋 I'm the Aura assistant. I can price a job, explain turnaround, or help with artwork. What are you after?",200);
-      renderQuicks();
-    }
-  };
 
   /* marquee helper (if page has one) */
   const m=document.getElementById('marq'); if(m) m.innerHTML+=m.innerHTML;

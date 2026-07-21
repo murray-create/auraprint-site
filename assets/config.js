@@ -1,9 +1,8 @@
 /* AURA site configuration */
 window.AURA_CONFIG = {
-  /* Tawk.to live chat: paste your property ID here, e.g. "68123abc.../1abc2def3".
-     Get it from tawk.to Dashboard > Administration > Chat Widget (the part of the
-     widget code after 'embed.tawk.to/'). Leave empty to use the built-in demo bot. */
-  tawkId: "6a47acded339301d469eebb0/1jsjvmhi0",
+  /* Live chat removed (Murray, 21 Jul 2026). Leave tawkId empty; the chat
+     widget and the built-in fallback bot have both been taken out of aura.js. */
+  tawkId: "",
 
   /* Google Analytics 4: create a GA4 property at analytics.google.com,
      add a Web data stream for auraprint.com.au, and paste the
