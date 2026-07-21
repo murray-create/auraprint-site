@@ -1575,7 +1575,9 @@
         '<td>'+esc(shortDate(issued))+'<div class="muted">'+(days<=0?'today':days+' days ago')+'</div></td>'+
         '<td>'+(v.first_viewed_at?'<span style="color:#15803d;font-weight:600">👁 opened</span>':'<span class="muted">not opened</span>')+'</td>'+
         '<td><b>'+money(r.owing)+'</b></td>'+
-        '<td><button class="btn-sm btn-aura2 out-open" data-id="'+esc(o.id)+'">Open order</button></td>'+
+        '<td style="white-space:nowrap"><button class="btn-sm btn-aura2 out-open" data-id="'+esc(o.id)+'">Open</button> '+
+        '<button class="btn-sm btn-ghost out-remind" data-id="'+esc(o.id)+'" data-inv="'+esc(v.id)+'">Remind</button> '+
+        '<button class="btn-sm out-cancel" data-id="'+esc(o.id)+'" style="background:#fee2e2;color:#b91c1c;border:none;border-radius:9px;padding:9px 12px;font-weight:700;font-size:13px;cursor:pointer">Cancel</button></td>'+
         '</tr>';
     });
     return h+'</tbody></table>';
@@ -1586,6 +1588,36 @@
     var back=document.getElementById('cOutBack');
     if(back) back.addEventListener('click', function(){ outstandingView=false; renderContacts(); });
     document.querySelectorAll('.out-open').forEach(function(x){ x.addEventListener('click', function(){ openOrder=x.dataset.id; document.querySelector('.tab[data-tab=orders]').click(); }); });
+    document.querySelectorAll('.out-remind').forEach(function(x){ x.addEventListener('click', function(){ sendReminder(x.dataset.id, x.dataset.inv); }); });
+    document.querySelectorAll('.out-cancel').forEach(function(x){ x.addEventListener('click', function(){ cancelOrder(x.dataset.id); }); });
+  }
+  function sendReminder(orderId, invoiceId){
+    var o=(dirOrders||[]).filter(function(x){return String(x.id)===String(orderId);})[0]; if(!o) return;
+    var v=(o.invoices||[]).filter(function(x){return String(x.id)===String(invoiceId);})[0]; if(!v) return;
+    var paid=(o.payments||[]).filter(function(p){return p.status==='succeeded';}).reduce(function(s,p){return s+p.amount_cents;},0);
+    var owing=v.total_inc_cents-paid;
+    var invUrl=PROOF_BASE.replace(/proof\.html$/,'invoice.html')+'?t='+v.access_token;
+    var first=(o.contact_name||'').split(' ')[0]||'there';
+    var subject='Friendly reminder — invoice '+(v.invoice_number||'')+' ('+money(owing)+' outstanding)';
+    var body='Hi '+first+',\n\n'+
+      'Just a friendly reminder that your invoice '+(v.invoice_number||'')+' for order '+(o.order_number||'')+' is still outstanding: '+money(owing)+' inc GST.\n\n'+
+      'View and pay online:\n'+invUrl+'\n\n'+
+      'You can pay securely by card on that page — production is released automatically — or by EFT using the bank details on the invoice with '+(v.invoice_number||'')+' as the reference.\n\n'+
+      'If you have already paid, thank you and please ignore this note. Any questions, just reply.\n\n'+
+      'Kind regards,\nMurray\nAura Print & Promo\ne: admin@auraprint.com.au\nw: auraprint.com.au';
+    showEmailModal(o.contact_email, {subject:subject, body:body}, {kind:'reminder', order_id:o.id, invoice_id:v.id}, function(){});
+  }
+  async function cancelOrder(orderId){
+    var o=(dirOrders||[]).filter(function(x){return String(x.id)===String(orderId);})[0]; if(!o) return;
+    var paid=(o.payments||[]).filter(function(p){return p.status==='succeeded';}).reduce(function(s,p){return s+p.amount_cents;},0);
+    if(paid>0){ alert('Order '+(o.order_number||'')+' already has '+money(paid)+' in payments recorded. Cancel or refund it from the order itself so the money is handled correctly.'); return; }
+    if(!confirm('Cancel order '+(o.order_number||'')+'? This voids its unpaid invoice and moves the job to Archived / Lost. The customer stays in your database.')) return;
+    var reason=prompt('Optional note (why cancelled):','')||null;
+    var vi=await sb.from('invoices').update({status:'void'}).eq('order_id',orderId).eq('status','issued');
+    if(vi.error){ alert('Could not void the invoice: '+vi.error.message); return; }
+    var uo=await sb.from('orders').update({status:'cancelled', archived:true, archive_reason:reason}).eq('id',orderId);
+    if(uo.error){ alert('Could not cancel the order: '+uo.error.message); return; }
+    await loadContacts();
   }
   function contactDetail(rec){
     var c=rec.contact||{};
