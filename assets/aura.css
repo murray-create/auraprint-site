@@ -222,3 +222,11 @@ body.drawer-open #aura-chat-btn,body.drawer-open #aura-chat{display:none !import
    so the menu gets stuck open on phones and the X appears to do nothing. */
 .drawer[hidden]{display:none !important}
 .drawer-backdrop[hidden]{display:none !important}
+
+/* Mobile footer overflow fix: below ~640px the two-column footer grid's
+   min-content (driven by the newsletter signup form) is wider than a phone
+   screen, which pushed the right-hand column off-canvas and caused the whole
+   page to scroll sideways. Collapse the footer to a single column on phones,
+   and let the newsletter input shrink. */
+@media(max-width:640px){footer .cols{grid-template-columns:1fr;gap:30px}}
+.newsletter input{min-width:0}
