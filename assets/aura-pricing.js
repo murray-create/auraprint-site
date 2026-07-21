@@ -85,10 +85,6 @@
     });
     return sel;
   }
-  function currentQty() {
-    var b = host.querySelector('.opts[data-group="qty"] .on');
-    return b ? parseInt(b.dataset.val, 10) : startQty;
-  }
   function nearest(target, arr) {
     return arr.reduce(function (a, b) { return Math.abs(b - target) < Math.abs(a - target) ? b : a; });
   }
@@ -107,6 +103,11 @@
           return '<div class="optlabel">' + a[1] + '</div>' + optBtns(a[0], a[2], DEF[a[0]]);
         }).join('')) +
     '<div class="optlabel">Quantity</div><div class="opts" data-group="qty" id="qtyGroup"></div>' +
+    '<div id="customQtyWrap" style="margin-top:12px;display:flex;align-items:center;gap:10px;flex-wrap:wrap">' +
+      '<label for="customQty" style="font-size:13px;color:#6f6961">Or enter your own quantity:</label>' +
+      '<input id="customQty" type="number" min="1" step="1" inputmode="numeric" placeholder="Qty" ' +
+      'style="width:96px;padding:9px 11px;border:1px solid #d8d2ca;border-radius:9px;font-size:14px;font-family:inherit" />' +
+    '</div>' +
     '<div class="price-box" style="margin-top:28px">' +
       '<div><div class="from">Your price</div><div class="gst" id="gstLabel">inc. GST &amp; delivery</div></div>' +
       '<div class="amount grad-text" id="price">—</div>' +
@@ -183,34 +184,89 @@
     updateQuoteLinks(sel, qty);
   }
 
-  /* Quantity buttons follow the breaks available for the selected combo. */
-  function renderQtys(sel) {
-    var row = GRID && GRID[comboKey(sel)];
-    var qtys = row ? Object.keys(row).map(Number).sort(function (a, b) { return a - b; }) : [];
-    if (!qtys.length) { qtyGroup.innerHTML = '<span style="font-size:13px;color:#6f6961">Priced by quote for this combination.</span>'; return null; }
-    var want = currentQty() || startQty || qtys[0];
-    var active = qtys.indexOf(want) >= 0 ? want : nearest(want, qtys);
-    qtyGroup.innerHTML = qtys.map(function (q) {
-      return '<button class="opt' + (q === active ? ' on' : '') + '" data-val="' + q + '">' + q.toLocaleString() + '</button>';
-    }).join('');
-    return active;
+  /* Per-unit interpolation: price any quantity from the stored breaks.
+     Exact break -> stored price. Between breaks -> slide the per-unit rate
+     linearly between the two nearest breaks, then multiply by the quantity.
+     Below the smallest / above the largest break -> clamp to that break's
+     per-unit rate. */
+  function priceForQty(row, qty) {
+    var breaks = Object.keys(row).map(Number).sort(function (a, b) { return a - b; });
+    if (!breaks.length || !(qty >= 1)) return null;
+    if (row[qty]) return { cents: row[qty].cents, source: row[qty].source, exact: true };
+    function unit(q) { return row[q].cents / q; }
+    var lo = breaks[0], hi = breaks[breaks.length - 1], rate;
+    if (qty <= lo) rate = unit(lo);
+    else if (qty >= hi) rate = unit(hi);
+    else {
+      var a = lo, b = hi;
+      for (var i = 0; i < breaks.length - 1; i++) {
+        if (qty >= breaks[i] && qty <= breaks[i + 1]) { a = breaks[i]; b = breaks[i + 1]; break; }
+      }
+      var ra = unit(a), rb = unit(b);
+      rate = ra + (rb - ra) * (qty - a) / (b - a);
+    }
+    return { cents: Math.round(rate * qty), source: 'estimate', exact: false };
+  }
+
+  /* Effective quantity: a valid custom entry wins, else the active preset
+     button, else the starting quantity. */
+  function readQty() {
+    var ci = host.querySelector('#customQty');
+    if (ci && ci.value.trim() !== '') {
+      var n = parseInt(ci.value, 10);
+      if (n >= 1) return { qty: n, custom: true };
+    }
+    var b = host.querySelector('.opts[data-group="qty"] .on');
+    if (b) return { qty: parseInt(b.dataset.val, 10), custom: false };
+    return { qty: startQty || null, custom: false };
   }
 
   function calc() {
     var sel = currentSel();
-    if (loadFailed) { showPoa(sel, currentQty() || startQty, 'Live pricing is unavailable right now.'); return; }
+    if (loadFailed) { showPoa(sel, readQty().qty || 1, 'Live pricing is unavailable right now.'); return; }
     if (!GRID) return; // still loading
 
-    var qty = renderQtys(sel);
-    if (qty === null) { showPoa(sel, startQty || 1, 'That combination isn’t online yet.'); return; }
+    var row = GRID[comboKey(sel)];
+    var qtys = row ? Object.keys(row).map(Number).sort(function (a, b) { return a - b; }) : [];
+    if (!qtys.length) {
+      qtyGroup.innerHTML = '<span style="font-size:13px;color:#6f6961">Priced by quote for this combination.</span>';
+      showPoa(sel, readQty().qty || 1, 'That combination isn’t online yet.');
+      return;
+    }
 
-    var row = GRID[comboKey(sel)][qty];
-    var dollars = row.cents / 100;
+    var eq = readQty(), custom = eq.custom, qty = eq.qty;
+    if (!custom) {
+      var want = qty || qtys[0];
+      qty = qtys.indexOf(want) >= 0 ? want : nearest(want, qtys);
+    }
+    /* Preset buttons always show the break points; highlight one only when the
+       customer is on a preset (not typing their own number). */
+    qtyGroup.innerHTML = qtys.map(function (q) {
+      return '<button class="opt' + (!custom && q === qty ? ' on' : '') + '" data-val="' + q + '">' + q.toLocaleString() + '</button>';
+    }).join('');
+
+    if (!(qty >= 1)) { showPoa(sel, 1, 'Enter a quantity to see your price.'); return; }
+
+    /* Above our largest stored break we have no supplier rate to trust, so we
+       route to a custom quote instead of extrapolating a price. */
+    var maxBreak = qtys[qtys.length - 1];
+    if (qty > maxBreak) {
+      showPoa(sel, qty, 'Over ' + maxBreak.toLocaleString() + ' is priced by custom quote.');
+      return;
+    }
+
+    var p = priceForQty(row, qty);
+    if (!p) { showPoa(sel, qty, 'That combination isn’t online yet.'); return; }
+    var dollars = p.cents / 100;
     gstEl.textContent = 'inc. GST & delivery';
     animateTo(dollars);
-    noteEl.innerHTML = row.source === 'real'
-      ? '<span style="color:#2f7d4f;font-weight:700">✓ Confirmed price.</span> This is what you pay.'
-      : '<b>Indicative price.</b> We confirm it on your proof, before you pay.';
+    if (p.exact) {
+      noteEl.innerHTML = p.source === 'real'
+        ? '<span style="color:#2f7d4f;font-weight:700">✓ Confirmed price.</span> This is what you pay.'
+        : '<b>Indicative price.</b> We confirm it on your proof, before you pay.';
+    } else {
+      noteEl.innerHTML = '<b>Indicative price for ' + qty.toLocaleString() + '.</b> Worked out from our price breaks; we confirm it on your proof, before you pay.';
+    }
     cta.href = quoteHref(sel, qty, dollars);
     updateQuoteLinks(sel, qty);
   }
@@ -220,9 +276,22 @@
     var g = btn.closest('.opts');
     g.querySelectorAll('.opt').forEach(function (o) { o.classList.remove('on'); });
     btn.classList.add('on');
+    /* Choosing a preset break clears any custom quantity the customer typed. */
+    if (g.getAttribute('data-group') === 'qty') { var ci = host.querySelector('#customQty'); if (ci) ci.value = ''; }
     if (STYLES && g.getAttribute('data-group') === 'style') renderSubAxes(btn.dataset.val);
     calc();
   });
+
+  /* Typing a custom quantity deselects the preset buttons and reprices live. */
+  var customInput = host.querySelector('#customQty');
+  if (customInput) {
+    customInput.addEventListener('input', function () {
+      if (this.value.trim() !== '') {
+        host.querySelectorAll('.opts[data-group="qty"] .opt').forEach(function (o) { o.classList.remove('on'); });
+      }
+      calc();
+    });
+  }
 
   /* ---- live price feed: one fetch per page load ---- */
   (function load() {
