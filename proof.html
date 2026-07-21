@@ -111,6 +111,7 @@
     var p = res.data;
     if (!p){ tokenError('We couldn\'t find a proof for this link. It may have been replaced by a newer version — check your latest email, or contact us.'); return; }
     tokenProofId = p.proof_id;
+    try { sb.auth.getSession().then(function(){ sb.rpc('mark_link_viewed',{p_kind:'proof',p_token:TOKEN}); }); } catch(e){}
     renderToken(p);
     /* fetch the PDF via the token endpoint */
     try {

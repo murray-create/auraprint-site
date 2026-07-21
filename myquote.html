@@ -86,6 +86,7 @@
       if (res.error){ fail(esc(res.error.message)); return; }
       var q = res.data;
       if (!q){ fail('We couldn\'t find a quote for this link. Contact us and we\'ll sort it out.'); return; }
+      try { sb.auth.getSession().then(function(){ sb.rpc('mark_link_viewed',{p_kind:'quote',p_token:t}); }); } catch(e){}
       render(q);
     });
   }

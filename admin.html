@@ -301,6 +301,8 @@
   function mailto(to, c){ return 'mailto:'+encodeURIComponent(to||'')+'?cc=admin%40auraprint.com.au&subject='+encodeURIComponent(c.subject)+'&body='+encodeURIComponent(c.body); }
   function fmtDate(s){ var d=new Date(s); return d.toLocaleDateString('en-AU',{day:'2-digit',month:'short'})+' '+d.toLocaleTimeString('en-AU',{hour:'2-digit',minute:'2-digit'}); }
   function money(c){ return '$'+(c/100).toLocaleString('en-AU',{minimumFractionDigits:2,maximumFractionDigits:2}); }
+  function payLabel(p){ return p==='stripe'?'card (Stripe)':(p==='bank'?'bank transfer':(p==='manual'?'manual/other':(p||'other'))); }
+  function viewedInline(o){ if(!o) return ''; if(!o.first_viewed_at) return ' <span class="muted">· not opened yet</span>'; return ' <span style="color:#15803d;font-weight:600">· \ud83d\udc41 opened '+esc(fmtDate(o.first_viewed_at))+(o.view_count>1?' ('+o.view_count+'\u00d7)':'')+'</span>'; }
 
   async function showApp(){
     loginEl.style.display='none'; appEl.style.display='block';
@@ -615,6 +617,7 @@
     if (q.status!=='converted'){
       h += '<div class="proofrow" style="margin-top:10px"><button class="btn-sm btn-ghost q-delete" data-id="'+q.id+'" data-num="'+esc(q.quote_number||'')+'" data-status="'+esc(q.status)+'">🗑 Delete quote</button></div>';
     }
+    h += '<div class="proofrow muted">'+(q.first_viewed_at?'<span style="color:#15803d;font-weight:600">\ud83d\udc41 Customer opened this quote '+esc(fmtDate(q.first_viewed_at))+(q.view_count>1?' ('+q.view_count+'\u00d7)':'')+'</span>':'Customer has not opened this quote yet')+'</div>';
     h += '<div class="events" id="qemails-'+q.id+'">Loading email history…</div>';
     return h;
   }
@@ -760,7 +763,7 @@
   async function loadOrders(){
     document.getElementById('count').textContent = 'Loading…';
     var res = await sb.from('orders')
-      .select('*, order_items(*, proofs(id,version,status,sent_at,decided_at,decision_comments,approver_name,approval_token,file_id)), invoices(id,invoice_number,status,total_inc_cents,payment_link_url,access_token,paid_at), payments(id,amount_cents,status,provider,paid_at)')
+      .select('*, order_items(*, proofs(id,version,status,sent_at,decided_at,decision_comments,approver_name,approval_token,file_id,first_viewed_at,last_viewed_at,view_count)), invoices(id,invoice_number,status,total_inc_cents,payment_link_url,access_token,paid_at,first_viewed_at,last_viewed_at,view_count), payments(id,amount_cents,status,provider,paid_at)')
       .order('created_at',{ascending:false});
     if (res.error){ document.getElementById('ordersWrap').innerHTML = '<div class="empty">Could not load orders: '+esc(res.error.message)+'</div>'; return; }
     allOrders = res.data || [];
@@ -825,6 +828,7 @@
           (p.sent_at?' <span class="muted">sent '+esc(fmtDate(p.sent_at))+'</span>':'')+
           (p.decided_at?' <span class="muted">decided '+esc(fmtDate(p.decided_at))+(p.approver_name?' by '+esc(p.approver_name):'')+'</span>':'')+
           (p.decision_comments?'<div class="muted" style="width:100%">Customer: “'+esc(p.decision_comments)+'”</div>':'')+
+          viewedInline(p)+
           '</div>';
         if (p.approval_token){
           var link = PROOF_BASE + '?t=' + p.approval_token;
@@ -855,6 +859,8 @@
       var paidCents = (o.payments||[]).filter(function(pm){return pm.status==='succeeded';})
         .reduce(function(s,pm){return s+pm.amount_cents;},0);
       var owing = v.total_inc_cents - paidCents;
+      var _provs = (o.payments||[]).filter(function(pm){return pm.status==='succeeded';}).map(function(pm){return payLabel(pm.provider);});
+      var paidVia = _provs.filter(function(x,ix){return _provs.indexOf(x)===ix;}).join(', ');
       h += '<div class="oitem" style="margin-top:12px">'+
         '<div class="oitem-head"><b>🧾 '+esc(v.invoice_number)+'</b>'+
         '<span>'+money(v.total_inc_cents)+' inc · <span class="pill p-'+esc(v.status)+'">'+esc(v.status)+'</span></span></div>';
@@ -872,7 +878,8 @@
           '<button class="btn-sm btn-aura2 make-link" data-inv="'+v.id+'">Create Stripe payment link</button>'+
           '<span class="muted link-msg" data-inv="'+v.id+'"></span></div>';
       }
-      if (paidCents>0) h += '<div class="proofrow muted">Paid so far: '+money(paidCents)+(owing>0?' · owing '+money(owing):'')+'</div>';
+      h += '<div class="proofrow muted">Invoice link '+(v.first_viewed_at?'<span style="color:#15803d;font-weight:600">\ud83d\udc41 opened '+esc(fmtDate(v.first_viewed_at))+(v.view_count>1?' ('+v.view_count+'\u00d7)':'')+'</span>':'not opened yet')+'</div>';
+      if (paidCents>0) h += '<div class="proofrow muted">Paid so far: '+money(paidCents)+(paidVia?' · via '+esc(paidVia):'')+(owing>0?' · owing '+money(owing):'')+'</div>';
       if (owing>0 && v.status!=='void'){
         h += '<div class="proofrow">'+
           '<select class="status-sel pay-provider" data-inv="'+v.id+'"><option value="bank">bank transfer</option><option value="manual">manual/other</option><option value="stripe">card (stripe)</option></select>'+
@@ -880,7 +887,7 @@
           '<button class="btn-sm btn-aura2 pay-record" data-inv="'+v.id+'" data-order="'+o.id+'">Record payment</button>'+
           '<span class="muted pay-msg" data-inv="'+v.id+'"></span></div>';
       } else if (owing<=0){
-        h += '<div class="proofrow ok">✓ Fully paid'+(v.paid_at?' '+esc(fmtDate(v.paid_at)):'')+'</div>';
+        h += '<div class="proofrow ok">✓ Fully paid'+(paidVia?' via '+esc(paidVia):'')+(v.paid_at?' '+esc(fmtDate(v.paid_at)):'')+'</div>';
       }
       h += '</div>';
     });
@@ -1227,7 +1234,7 @@
     var r = await Promise.all([
       sb.from('leads').select('id,name,email,company,status,created_at,category,job_details,quantity'),
       sb.from('quotes').select('id,quote_number,contact_name,contact_email,company,status,created_at,access_token,converted_order_id,lead_id,quote_items(price_inc_cents)'),
-      sb.from('orders').select('id,order_number,contact_name,contact_email,company,status,archived,archive_reason,created_at,lead_id,order_items(price_inc_cents,status),invoices(total_inc_cents,status),payments(amount_cents,status)')
+      sb.from('orders').select('id,order_number,contact_name,contact_email,company,status,archived,archive_reason,created_at,lead_id,order_items(price_inc_cents,status,proofs(status,first_viewed_at)),invoices(total_inc_cents,status,first_viewed_at),payments(amount_cents,status,provider)')
     ]);
     var bad = r.filter(function(x){return x.error;})[0];
     if (bad){ document.getElementById('boardWrap').innerHTML='<div class="empty">Could not load pipeline: '+esc(bad.error.message)+'</div>'; document.getElementById('count').textContent='Pipeline'; return; }
@@ -1260,7 +1267,13 @@
     orders.forEach(function(o){
       var val=(o.order_items||[]).reduce(function(s,i){return s+i.price_inc_cents;},0);
       var stage=(o.archived||o.status==='cancelled')?'archived':deriveOrderStage(o);
-      cards.push({type:'order', id:o.id, no:o.order_number, name:o.contact_name, company:o.company, amount:val, stage:stage, status:o.status, archived:!!o.archived, when:o.created_at, o:o});
+      var succ=(o.payments||[]).filter(function(p){return p.status==='succeeded';});
+      var provs=succ.map(function(p){return payLabel(p.provider);});
+      var paidVia=provs.filter(function(x,ix){return provs.indexOf(x)===ix;}).join(', ');
+      var proofSeen=(o.order_items||[]).some(function(i){return (i.proofs||[]).some(function(pr){return pr.first_viewed_at;});});
+      var invSeen=(o.invoices||[]).some(function(v){return v.first_viewed_at;});
+      var seenTag = (stage==='proofing'&&proofSeen)?'\ud83d\udc41 proof opened':((stage==='awaiting_payment'&&invSeen)?'\ud83d\udc41 invoice opened':'');
+      cards.push({type:'order', id:o.id, no:o.order_number, name:o.contact_name, company:o.company, amount:val, stage:stage, status:o.status, archived:!!o.archived, when:o.created_at, paidVia:paidVia, seenTag:seenTag, o:o});
     });
     quotes.forEach(function(q){
       if(q.status==='converted') return;
@@ -1301,6 +1314,8 @@
           '<div class="cnm">'+esc(c.name||'(no name)')+'</div>'+
           (c.company?'<div class="cco">'+esc(c.company)+'</div>':'')+
           (c.amount>0?'<div class="camt">'+money(c.amount)+'</div>':(c.text?'<div class="cco">'+esc(String(c.text).slice(0,60))+'</div>':''))+
+          (c.paidVia?'<div class="cco" style="color:#15803d;font-weight:600">Paid via '+esc(c.paidVia)+'</div>':'')+
+          (c.seenTag?'<div class="cco" style="color:#15803d">'+c.seenTag+'</div>':'')+
           '<div class="cfoot">'+
             (c.stage==='archived'?'<button class="crestore" data-type="'+c.type+'" data-id="'+esc(c.id)+'">Restore</button>':'<button class="copen" data-type="'+c.type+'" data-id="'+esc(c.id)+'">open ↗</button>')+
             '<span class="cage">'+esc(ageStr(c.when))+'</span>'+
