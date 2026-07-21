@@ -88,6 +88,9 @@
   .cstat{background:#fff;border:1px solid #e8e2da;border-radius:12px;padding:12px 16px;min-width:118px}
   .cstat .n{font-size:20px;font-weight:900;color:#1a1a1a;line-height:1.1}
   .cstat .l{font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:#8a847d;font-weight:700;margin-top:3px}
+  .cstat-btn{cursor:pointer;transition:border-color .15s,box-shadow .15s}
+  .cstat-btn:hover{border-color:#c026a3}
+  .cstat-on{border-color:#c026a3;box-shadow:0 0 0 2px #f6eef4}
   .cf-row{display:flex;gap:8px;align-items:center;margin-bottom:8px}
   .cf-row input{padding:8px;border:2px solid #e8e2da;border-radius:8px;font-size:13.5px;font-family:inherit}
   .cf-row .cf-k{width:180px}.cf-row .cf-v{flex:1;min-width:150px}
@@ -1443,7 +1446,7 @@
   }
 
   /* ============ CONTACTS ============ */
-  var allContacts = [], contactDir = [], openContact = null, contactSearch = '', csvRecs = [];
+  var allContacts = [], contactDir = [], openContact = null, contactSearch = '', csvRecs = [], outstandingView=false, dirOrders=[];
 
   function normEmail(e){ return String(e==null?'':e).trim().toLowerCase(); }
   function shortDate(s){ if(!s) return ''; var d=new Date(s); return d.toLocaleDateString('en-AU',{day:'2-digit',month:'short',year:'2-digit'}); }
@@ -1456,11 +1459,12 @@
       sb.from('contacts').select('*'),
       sb.from('leads').select('id,name,email,company,phone,status,created_at,category,job_details'),
       sb.from('quotes').select('id,quote_number,contact_name,contact_email,company,contact_phone,status,created_at,valid_until,access_token,converted_order_id,quote_items(price_inc_cents,qty,description,item_no)'),
-      sb.from('orders').select('id,order_number,contact_name,contact_email,company,contact_phone,status,archived,created_at,order_items(description,qty,price_inc_cents,status,item_no),invoices(total_inc_cents,status),payments(amount_cents,status,paid_at)')
+      sb.from('orders').select('id,order_number,contact_name,contact_email,company,contact_phone,status,archived,created_at,order_items(description,qty,price_inc_cents,status,item_no),invoices(id,invoice_number,total_inc_cents,status,issued_at,first_viewed_at,view_count,access_token),payments(amount_cents,status,paid_at)')
     ]);
     var bad = results.filter(function(r){ return r.error; })[0];
     if (bad){ document.getElementById('contactsWrap').innerHTML = '<div class="empty">Could not load contacts: '+esc(bad.error.message)+'</div>'; document.getElementById('count').textContent='Contacts'; return; }
     allContacts = results[0].data || [];
+    dirOrders = results[3].data||[];
     contactDir = buildDirectory(allContacts, results[1].data||[], results[2].data||[], results[3].data||[]);
     document.getElementById('count').textContent = contactDir.filter(function(c){return !c.archived;}).length+' contacts';
     renderContacts();
@@ -1525,9 +1529,11 @@
     var rev12=contactDir.reduce(function(s,c){return s+c.spent_12m;},0);
     var revAll=contactDir.reduce(function(s,c){return s+c.total_spent;},0);
     var outAll=contactDir.reduce(function(s,c){return s+c.outstanding;},0);
+    var outTile='<div class="cstat cstat-btn'+(outstandingView?' cstat-on':'')+'" id="cstatOut" title="Click to see who owes you"><div class="n">'+(outAll>0?money(outAll):'—')+'</div><div class="l">Outstanding'+(outAll>0?' \u25b8':'')+'</div></div>';
     var stats='<div class="cstats">'+cstat(contactDir.filter(function(c){return !c.archived;}).length,'Contacts')+
-      cstat(money(rev12),'Revenue 12 mo')+cstat(money(revAll),'Lifetime revenue')+cstat(outAll>0?money(outAll):'—','Outstanding')+'</div>';
-    if(!rows.length){ document.getElementById('contactsWrap').innerHTML=stats+'<div class="empty">'+(q?'No contacts match “'+esc(contactSearch)+'”.':'No contacts yet. Add one, import a CSV, or they will appear here automatically as enquiries and orders come in.')+'</div>'; return; }
+      cstat(money(rev12),'Revenue 12 mo')+cstat(money(revAll),'Lifetime revenue')+outTile+'</div>';
+    if(outstandingView){ document.getElementById('contactsWrap').innerHTML=stats+outstandingHtml(); bindStats(); return; }
+    if(!rows.length){ document.getElementById('contactsWrap').innerHTML=stats+'<div class="empty">'+(q?'No contacts match “'+esc(contactSearch)+'”.':'No contacts yet. Add one, import a CSV, or they will appear here automatically as enquiries and orders come in.')+'</div>'; bindStats(); return; }
     var html=stats+'<table><thead><tr><th>Customer</th><th>Contact</th><th>Orders</th><th>12-mo spend</th><th>Lifetime</th><th>Last order</th><th></th></tr></thead><tbody>';
     rows.forEach(function(c){
       html+='<tr>'+
@@ -1543,9 +1549,44 @@
     });
     html+='</tbody></table>';
     document.getElementById('contactsWrap').innerHTML=html;
-    bindContacts();
+    bindStats(); bindContacts();
   }
 
+  function outstandingHtml(){
+    var rows=[];
+    (dirOrders||[]).forEach(function(o){
+      var paid=(o.payments||[]).filter(function(p){return p.status==='succeeded';}).reduce(function(s,p){return s+p.amount_cents;},0);
+      var invs=(o.invoices||[]).filter(function(v){return v.status!=='void';});
+      var invSum=invs.reduce(function(s,v){return s+v.total_inc_cents;},0);
+      var owing=invSum-paid;
+      if(owing>0) rows.push({o:o, inv:invs[0]||{}, owing:owing, paid:paid});
+    });
+    rows.sort(function(a,b){return b.owing-a.owing;});
+    var total=rows.reduce(function(s,r){return s+r.owing;},0);
+    var head='<div class="csearch" style="margin-top:2px"><b style="font-size:15px">Who owes you</b><span class="muted">'+rows.length+' unpaid · '+money(total)+' outstanding</span><button id="cOutBack" class="btn-sm btn-ghost">← back to all contacts</button></div>';
+    if(!rows.length) return head+'<div class="empty">Nothing outstanding — every issued invoice is paid.</div>';
+    var h=head+'<table><thead><tr><th>Customer</th><th>Invoice</th><th>Issued</th><th>Link</th><th>Owing</th><th></th></tr></thead><tbody>';
+    rows.forEach(function(r){
+      var o=r.o, v=r.inv, issued=v.issued_at||o.created_at;
+      var days=Math.floor((Date.now()-new Date(issued).getTime())/86400000);
+      h+='<tr>'+
+        '<td><div class="lead-name">'+esc(o.company||o.contact_name||'(no name)')+'</div><div class="lead-contact"><a href="mailto:'+esc(o.contact_email||'')+'">'+esc(o.contact_email||'')+'</a></div></td>'+
+        '<td><b>'+esc(v.invoice_number||'—')+'</b><div class="muted">'+esc(o.order_number||'')+'</div>'+(r.paid>0?'<div class="muted">'+money(r.paid)+' part-paid</div>':'')+'</td>'+
+        '<td>'+esc(shortDate(issued))+'<div class="muted">'+(days<=0?'today':days+' days ago')+'</div></td>'+
+        '<td>'+(v.first_viewed_at?'<span style="color:#15803d;font-weight:600">👁 opened</span>':'<span class="muted">not opened</span>')+'</td>'+
+        '<td><b>'+money(r.owing)+'</b></td>'+
+        '<td><button class="btn-sm btn-aura2 out-open" data-id="'+esc(o.id)+'">Open order</button></td>'+
+        '</tr>';
+    });
+    return h+'</tbody></table>';
+  }
+  function bindStats(){
+    var b=document.getElementById('cstatOut');
+    if(b) b.addEventListener('click', function(){ outstandingView=!outstandingView; renderContacts(); });
+    var back=document.getElementById('cOutBack');
+    if(back) back.addEventListener('click', function(){ outstandingView=false; renderContacts(); });
+    document.querySelectorAll('.out-open').forEach(function(x){ x.addEventListener('click', function(){ openOrder=x.dataset.id; document.querySelector('.tab[data-tab=orders]').click(); }); });
+  }
   function contactDetail(rec){
     var c=rec.contact||{};
     var cf=(c.custom_fields && typeof c.custom_fields==='object') ? c.custom_fields : {};
@@ -1755,7 +1796,7 @@
     return {inserted:toInsert.length};
   }
 
-  document.getElementById('cSearch').addEventListener('input', function(){ contactSearch=this.value; renderContacts(); });
+  document.getElementById('cSearch').addEventListener('input', function(){ contactSearch=this.value; outstandingView=false; renderContacts(); });
   document.getElementById('cShowArchived').addEventListener('change', renderContacts);
   document.getElementById('cAddBtn').addEventListener('click', function(){ var p=document.getElementById('cAddPanel'); p.style.display=p.style.display==='none'?'':'none'; document.getElementById('cImportPanel').style.display='none'; });
   document.getElementById('ncCancel').addEventListener('click', function(){ document.getElementById('cAddPanel').style.display='none'; });
