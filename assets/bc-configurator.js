@@ -110,7 +110,7 @@
     return '<select id="bc-stock" style="width:100%;padding:12px 14px;border:1px solid var(--aura-line,#e5e1db);border-radius:10px;font-size:15px;background:#fff">' + html + '</select>';
   }
 
-  function money(cents) { return '$' + (cents / 100).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }); }
+  function money(cents) { return '$' + Math.round(cents / 100).toLocaleString(); }
 
   function quoteHref() {
     return 'quote.html?product=business-cards&speed=' + sel.turnaround +
@@ -153,7 +153,7 @@
              : 'That exact combination is a custom quote. Send it through and we’ll price it fast.') + '</div>' +
       '<div id="dispatch" style="font-size:13px;color:#6b6560;margin-top:8px">' + dispatchNote() + '</div>' +
       '<div style="display:flex;gap:12px;margin-top:18px;flex-wrap:wrap">' +
-        '<a class="btn btn-aura" id="orderCta" href="' + quoteHref() + (row ? '&price=' + (row / 100).toFixed(2) : '') + '" style="flex:1;text-align:center;min-width:220px">Get a quote &amp; upload artwork &rarr;</a>' +
+        '<a class="btn btn-aura" id="orderCta" href="' + quoteHref() + (row ? '&price=' + Math.round(row / 100) : '') + '" style="flex:1;text-align:center;min-width:220px">Get a quote &amp; upload artwork &rarr;</a>' +
       '</div>' +
       '<p style="font-size:12.5px;color:#8a847d;margin-top:12px">Prices are read live from our current supplier rates and include GST and standard delivery. 90 x 55mm cards. You approve a digital proof before anything prints.</p>';
   }
