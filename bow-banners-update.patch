@@ -1,0 +1,112 @@
+diff --git a/bow-banners.html b/bow-banners.html
+index 04b1fc6..a99dffe 100644
+--- a/bow-banners.html
++++ b/bow-banners.html
+@@ -78,6 +78,24 @@
+ 
+ 
+ 
++
++<section class="pad" style="padding-top:0">
++  <div class="wrap">
++    <div class="sec-head"><h2>You might also <span class="grad-text">need</span></h2></div>
++    <div class="grid">
++      <a class="card" href="teardrop-flags.html"><div class="thumb photo"><img src="assets/img/teardrop-flags.jpg" alt="Teardrop Flags" loading="lazy"></div>
++  <div class="body"><h3>Teardrop Flags</h3><p>Single or double sided knitted polyester with spike, cross or water bases.</p>
++  <div class="cardfoot"><div class="from">from <em>$153</em></div><span class="cardtag">Price online →</span></div></div></a>
++      <a class="card" href="pull-up-banners.html"><span class="badge">Best seller</span><div class="thumb photo"><img src="assets/img/pull-up-banners.jpg" alt="Pull Up Banners" loading="lazy"></div>
++  <div class="body"><h3>Pull Up Banners</h3><p>Economy to premium bases with vivid print. Includes padded carry bag.</p>
++  <div class="cardfoot"><div class="from">from <em>$136</em></div><span class="cardtag">Price online →</span></div></div></a>
++      <a class="card" href="outdoor-banners.html"><div class="thumb photo"><img src="assets/img/outdoor-banners.jpg" alt="Outdoor Vinyl Banners" loading="lazy"></div>
++  <div class="body"><h3>Outdoor Vinyl Banners</h3><p>Hemmed and eyeletted heavy-duty vinyl, any size, built for weather.</p>
++  <div class="cardfoot"><div class="from">from <em>$130</em></div><span class="cardtag">Price online →</span></div></div></a>
++    </div>
++  </div>
++</section>
++
+ <script src="assets/config.js?v=20260720a"></script>
+ <script src="assets/aura.js?v=20260720a"></script>
+ <script src="assets/aura-pricing.js?v=20260721a"></script>
+diff --git a/index.html b/index.html
+index 046ef11..4c3a287 100644
+--- a/index.html
++++ b/index.html
+@@ -149,7 +149,7 @@ input[type=range]{accent-color:var(--magenta);height:34px}
+     <div class="cat-panel" id="panel-signage">
+       <p class="cat-desc">Wide format is our specialty. Site signage, banners, flags and event displays printed tough for Queensland conditions.</p>
+       <div class="chips">
+-        <a href="corflute-signs.html">Corflute Signs</a><a href="a-frames.html">A-Frames</a><a href="aluminium-signs.html">Aluminium Composite</a><a href="safety-signs.html">Safety Signs</a><a href="posters.html">Posters</a><a href="stickers.html">Stickers &amp; Labels</a><a href="vehicle-magnets.html">Magnets</a><a href="pull-up-banners.html">Pull Up Banners</a><a href="outdoor-banners.html">Outdoor Banners</a><a href="teardrop-flags.html">Teardrop Flags</a><a href="fence-mesh.html">Fence Mesh</a><a href="exhibition-displays.html">Exhibition Displays</a><a href="media-walls.html">Media Walls</a><a href="marquees.html">Marquees</a><a href="standees.html">Standees</a>
++        <a href="corflute-signs.html">Corflute Signs</a><a href="a-frames.html">A-Frames</a><a href="aluminium-signs.html">Aluminium Composite</a><a href="safety-signs.html">Safety Signs</a><a href="posters.html">Posters</a><a href="stickers.html">Stickers &amp; Labels</a><a href="vehicle-magnets.html">Magnets</a><a href="pull-up-banners.html">Pull Up Banners</a><a href="outdoor-banners.html">Outdoor Banners</a><a href="teardrop-flags.html">Teardrop Flags</a><a href="bow-banners.html">Bow Banners</a><a href="fence-mesh.html">Fence Mesh</a><a href="exhibition-displays.html">Exhibition Displays</a><a href="media-walls.html">Media Walls</a><a href="marquees.html">Marquees</a><a href="standees.html">Standees</a>
+       </div>
+       <!--GEN:signage-->
+       <div class="grid">
+diff --git a/marquees.html b/marquees.html
+index 984120f..8d09103 100644
+--- a/marquees.html
++++ b/marquees.html
+@@ -89,6 +89,9 @@
+       <a class="card" href="teardrop-flags.html"><div class="thumb photo"><img src="assets/img/teardrop-flags.jpg" alt="Teardrop Flags" loading="lazy"></div>
+   <div class="body"><h3>Teardrop Flags</h3><p>Single or double sided knitted polyester with spike, cross or water bases.</p>
+   <div class="cardfoot"><div class="from">from <em>$153</em></div><span class="cardtag">Price online →</span></div></div></a>
++      <a class="card" href="bow-banners.html"><div class="thumb photo"><img src="assets/img/bowbanner-f-shape-flag.jpg" alt="Bow Banners" loading="lazy"></div>
++  <div class="body"><h3>Bow Banners</h3><p>Curved bow-shaped advertising flag for standout roadside visibility. Spike, cross or water bases.</p>
++  <div class="cardfoot"><div class="from">from <em>$144</em></div><span class="cardtag">Price online →</span></div></div></a>
+       <a class="card" href="tablecloths.html"><div class="thumb photo"><img src="assets/img/tablecloths.jpg" alt="Printed Tablecloths" loading="lazy"></div>
+   <div class="body"><h3>Printed Tablecloths</h3><p>Fitted or throw-style, full colour dye-sublimation. Machine washable.</p>
+   <div class="cardfoot"><div class="from">from <em>$164</em></div><span class="cardtag">Price online →</span></div></div></a>
+diff --git a/outdoor-banners.html b/outdoor-banners.html
+index 7c6676f..18df52b 100644
+--- a/outdoor-banners.html
++++ b/outdoor-banners.html
+@@ -85,6 +85,9 @@
+       <a class="card" href="teardrop-flags.html"><div class="thumb photo"><img src="assets/img/teardrop-flags.jpg" alt="Teardrop Flags" loading="lazy"></div>
+   <div class="body"><h3>Teardrop Flags</h3><p>Single or double sided knitted polyester with spike, cross or water bases.</p>
+   <div class="cardfoot"><div class="from">from <em>$153</em></div><span class="cardtag">Price online →</span></div></div></a>
++      <a class="card" href="bow-banners.html"><div class="thumb photo"><img src="assets/img/bowbanner-f-shape-flag.jpg" alt="Bow Banners" loading="lazy"></div>
++  <div class="body"><h3>Bow Banners</h3><p>Curved bow-shaped advertising flag for standout roadside visibility. Spike, cross or water bases.</p>
++  <div class="cardfoot"><div class="from">from <em>$144</em></div><span class="cardtag">Price online →</span></div></div></a>
+       <a class="card" href="corflute-signs.html"><div class="thumb photo"><img src="assets/img/corflute-signs.jpg" alt="Corflute Signs" loading="lazy"></div>
+   <div class="body"><h3>Corflute Signs</h3><p>Real estate, builders and event boards on 3mm or 5mm corflute, any size.</p>
+   <div class="cardfoot"><div class="from">from <em>$122</em></div><span class="cardtag">Price online →</span></div></div></a>
+diff --git a/pull-up-banners.html b/pull-up-banners.html
+index bc40975..6dd2075 100644
+--- a/pull-up-banners.html
++++ b/pull-up-banners.html
+@@ -83,6 +83,9 @@
+       <a class="card" href="teardrop-flags.html"><div class="thumb photo"><img src="assets/img/teardrop-flags.jpg" alt="Teardrop Flags" loading="lazy"></div>
+   <div class="body"><h3>Teardrop Flags</h3><p>Single or double sided knitted polyester with spike, cross or water bases.</p>
+   <div class="cardfoot"><div class="from">from <em>$153</em></div><span class="cardtag">Price online →</span></div></div></a>
++      <a class="card" href="bow-banners.html"><div class="thumb photo"><img src="assets/img/bowbanner-f-shape-flag.jpg" alt="Bow Banners" loading="lazy"></div>
++  <div class="body"><h3>Bow Banners</h3><p>Curved bow-shaped advertising flag for standout roadside visibility. Spike, cross or water bases.</p>
++  <div class="cardfoot"><div class="from">from <em>$144</em></div><span class="cardtag">Price online →</span></div></div></a>
+       <a class="card" href="media-walls.html"><div class="thumb photo"><img src="assets/img/media-walls.jpg" alt="Media Walls" loading="lazy"></div>
+   <div class="body"><h3>Media Walls</h3><p>Straight or curved backdrops for events, launches and step-and-repeats.</p>
+   <div class="cardfoot"><div class="from">from <em>$174</em></div><span class="cardtag">Price online →</span></div></div></a>
+diff --git a/real-estate-print-signage.html b/real-estate-print-signage.html
+index ac4fa26..1d4fcbf 100644
+--- a/real-estate-print-signage.html
++++ b/real-estate-print-signage.html
+@@ -44,6 +44,9 @@
+       <a class="card" href="teardrop-flags.html"><div class="thumb photo"><img src="assets/img/teardrop-flags.jpg" alt="Teardrop Flags" loading="lazy"></div>
+   <div class="body"><h3>Teardrop Flags</h3><p>Single or double sided knitted polyester with spike, cross or water bases.</p>
+   <div class="cardfoot"><div class="from">from <em>$153</em></div><span class="cardtag">Price online →</span></div></div></a>
++      <a class="card" href="bow-banners.html"><div class="thumb photo"><img src="assets/img/bowbanner-f-shape-flag.jpg" alt="Bow Banners" loading="lazy"></div>
++  <div class="body"><h3>Bow Banners</h3><p>Curved bow-shaped advertising flag for standout roadside visibility. Spike, cross or water bases.</p>
++  <div class="cardfoot"><div class="from">from <em>$144</em></div><span class="cardtag">Price online →</span></div></div></a>
+       <a class="card" href="rectangle-flags.html"><div class="thumb photo"><img src="assets/img/rectangle-flags.jpg" alt="Rectangle Flags" loading="lazy"></div>
+   <div class="body"><h3>Rectangle Flags</h3><p>Rectangle Flags produced through our trade production network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.</p>
+   <div class="cardfoot"><div class="from">from <em>$152</em></div><span class="cardtag">Price online →</span></div></div></a>
+diff --git a/teardrop-flags.html b/teardrop-flags.html
+index fd589e7..84c9dd4 100644
+--- a/teardrop-flags.html
++++ b/teardrop-flags.html
+@@ -79,6 +79,9 @@
+   <div class="wrap">
+     <div class="sec-head"><h2>You might also <span class="grad-text">need</span></h2></div>
+     <div class="grid">
++      <a class="card" href="bow-banners.html"><div class="thumb photo"><img src="assets/img/bowbanner-f-shape-flag.jpg" alt="Bow Banners" loading="lazy"></div>
++  <div class="body"><h3>Bow Banners</h3><p>Curved bow-shaped advertising flag for standout roadside visibility. Spike, cross or water bases.</p>
++  <div class="cardfoot"><div class="from">from <em>$144</em></div><span class="cardtag">Price online →</span></div></div></a>
+       <a class="card" href="pull-up-banners.html"><span class="badge">Best seller</span><div class="thumb photo"><img src="assets/img/pull-up-banners.jpg" alt="Pull Up Banners" loading="lazy"></div>
+   <div class="body"><h3>Pull Up Banners</h3><p>Economy to premium bases with vivid print. Includes padded carry bag.</p>
+   <div class="cardfoot"><div class="from">from <em>$136</em></div><span class="cardtag">Price online →</span></div></div></a>
