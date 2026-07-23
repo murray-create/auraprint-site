@@ -196,6 +196,19 @@
       <div style="margin-bottom:6px"><label style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:#8a847d">Line items *</label></div>
       <div id="qLines"></div>
       <button id="qAddLine" class="btn-sm btn-ghost" style="margin-bottom:12px">+ Add line</button>
+      <div style="margin:2px 0 14px;padding:12px;border:1px dashed #d8d2ca;border-radius:10px;background:#faf8f5">
+        <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:#8a847d;margin-bottom:8px">Add a priced product — auto-fills from live website pricing</div>
+        <div class="frow" style="align-items:flex-end;flex-wrap:wrap">
+          <div class="f" style="min-width:220px"><label>Product</label><select id="qcatProduct"><option value="">Pick a product…</option></select></div>
+        </div>
+        <div id="qcatOpts" class="frow" style="align-items:flex-end;flex-wrap:wrap"></div>
+        <div class="frow" style="align-items:flex-end;flex-wrap:wrap">
+          <div class="f" style="max-width:90px"><label>Qty</label><input id="qcatQty" type="number" min="1" value="1"></div>
+          <div class="f" style="max-width:190px"><label>Price</label><div id="qcatPrice" style="font-weight:800;font-size:16px;padding:8px 0">—</div></div>
+          <div class="f" style="max-width:170px"><button id="qcatAdd" type="button" class="btn-sm btn-aura2" disabled>Add to quote &uarr;</button></div>
+        </div>
+        <div id="qcatMsg" class="muted"></div>
+      </div>
       <div class="frow">
         <div class="f" style="flex:3"><label>Notes shown on quote</label><input id="qNotes" placeholder="e.g. Price includes delivery to Baringa. Turnaround 5–7 business days after proof approval."></div>
         <div class="f"><label>Valid until</label><input id="qValid" type="date"></div>
@@ -437,6 +450,91 @@
     var d = new Date(); d.setDate(d.getDate()+days);
     return d.toISOString().slice(0,10);
   }
+  /* ---- Live-pricing catalogue picker for the New Quote builder ----
+     Reads product_prices directly, derives cascading option dropdowns per
+     product, and prices with the same interpolation the website uses, then
+     drops a normal (still-editable) line into the quote. */
+  var qcatInited=false, qcatRows=[], qcatKeys=[], qcatSel={}, qcatCur=null;
+  var QCAT_LABELS={size:'Size',sides:'Printed Sides',base:'Base',base_size:'Base weight',style:'Style',thickness:'Thickness',lamination:'Lamination',material:'Material',finish:'Finish',colour:'Colour',color:'Colour',stock:'Stock',shape:'Shape',orientation:'Orientation'};
+  var QCAT_ORDER=['style','size','shape','sides','material','stock','thickness','lamination','base','base_size','finish','colour','color','orientation'];
+  function qcatPretty(slug){ return String(slug||'').replace(/-/g,' ').replace(/\b\w/g,function(c){return c.toUpperCase();}); }
+  function qcatLabel(k){ return QCAT_LABELS[k] || qcatPretty(k); }
+  async function qcatInit(){
+    if (qcatInited) return; var selEl=document.getElementById('qcatProduct'); if(!selEl) return; qcatInited=true;
+    var res=await sb.from('product_prices').select('product_slug').limit(20000);
+    var seen={}, slugs=[];
+    (res.data||[]).forEach(function(r){ if(!seen[r.product_slug]){seen[r.product_slug]=1; slugs.push(r.product_slug);} });
+    slugs.sort();
+    selEl.innerHTML='<option value="">Pick a product…</option>'+slugs.map(function(s){return '<option value="'+esc(s)+'">'+esc(qcatPretty(s))+'</option>';}).join('');
+    selEl.addEventListener('change', function(){ if(this.value){ qcatLoadProduct(this.value); } else { qcatRows=[]; qcatKeys=[]; qcatSel={}; qcatCur=null; document.getElementById('qcatOpts').innerHTML=''; qcatUpdatePrice(); } });
+    document.getElementById('qcatQty').addEventListener('input', qcatUpdatePrice);
+    document.getElementById('qcatAdd').addEventListener('click', qcatAddToQuote);
+  }
+  async function qcatLoadProduct(slug){
+    var msg=document.getElementById('qcatMsg'); msg.textContent='Loading pricing…';
+    var res=await sb.from('product_prices').select('options,qty,price_cents,source').eq('product_slug',slug).limit(5000);
+    qcatRows=(res.data||[]); qcatSel={};
+    var seen={}, keys=[];
+    qcatRows.forEach(function(r){ Object.keys(r.options||{}).forEach(function(k){ if(!seen[k]){seen[k]=1; keys.push(k);} }); });
+    keys.sort(function(a,b){ var ia=QCAT_ORDER.indexOf(a), ib=QCAT_ORDER.indexOf(b); ia=ia<0?99:ia; ib=ib<0?99:ib; return ia-ib || a.localeCompare(b); });
+    qcatKeys=keys; msg.textContent=''; qcatRenderOpts();
+  }
+  function qcatCandidates(stopKey){
+    return qcatRows.filter(function(r){
+      for(var i=0;i<qcatKeys.length;i++){ var k=qcatKeys[i]; if(k===stopKey) break; if(qcatSel[k]!=null && (r.options||{})[k]!==qcatSel[k]) return false; }
+      return true;
+    });
+  }
+  function qcatRenderOpts(){
+    var host=document.getElementById('qcatOpts'); if(!host) return;
+    var html='';
+    qcatKeys.forEach(function(k){
+      var cands=qcatCandidates(k), vals=[], vseen={};
+      cands.forEach(function(r){ var v=(r.options||{})[k]; if(v!=null && !vseen[v]){vseen[v]=1; vals.push(v);} });
+      if(!vals.length){ delete qcatSel[k]; return; }
+      if(qcatSel[k]==null || vals.indexOf(qcatSel[k])<0) qcatSel[k]=vals[0];
+      html+='<div class="f"><label>'+esc(qcatLabel(k))+'</label><select class="qcat-opt" data-k="'+esc(k)+'">'+vals.map(function(v){return '<option'+(v===qcatSel[k]?' selected':'')+'>'+esc(v)+'</option>';}).join('')+'</select></div>';
+    });
+    host.innerHTML=html;
+    host.querySelectorAll('.qcat-opt').forEach(function(s){ s.addEventListener('change', function(){ qcatSel[this.dataset.k]=this.value; qcatRenderOpts(); }); });
+    qcatUpdatePrice();
+  }
+  function qcatQtyMap(){
+    var m={}; qcatRows.forEach(function(r){ if(qcatKeys.every(function(k){ return qcatSel[k]==null || (r.options||{})[k]===qcatSel[k]; })) m[r.qty]=r.price_cents; });
+    return m;
+  }
+  function qcatPriceForQty(m, qty){
+    var breaks=Object.keys(m).map(Number).sort(function(a,b){return a-b;});
+    if(!breaks.length||!(qty>=1)) return null;
+    if(m[qty]!=null) return {cents:m[qty], exact:true, maxBreak:breaks[breaks.length-1]};
+    function unit(q){return m[q]/q;}
+    var lo=breaks[0], hi=breaks[breaks.length-1], rate;
+    if(qty<=lo) rate=unit(lo);
+    else if(qty>=hi) rate=unit(hi);
+    else { var a=lo,b=hi; for(var i=0;i<breaks.length-1;i++){ if(qty>=breaks[i]&&qty<=breaks[i+1]){a=breaks[i];b=breaks[i+1];break;} } var ra=unit(a),rb=unit(b); rate=ra+(rb-ra)*(qty-a)/(b-a); }
+    return {cents:Math.round(rate*qty), exact:false, maxBreak:hi};
+  }
+  function qcatUpdatePrice(){
+    var priceEl=document.getElementById('qcatPrice'), addBtn=document.getElementById('qcatAdd'), msg=document.getElementById('qcatMsg');
+    if(!priceEl) return;
+    var qty=parseInt(document.getElementById('qcatQty').value,10)||0;
+    var m=qcatQtyMap();
+    if(!Object.keys(m).length){ priceEl.textContent='—'; addBtn.disabled=true; qcatCur=null; if(qcatRows.length) msg.textContent='No set price for this combination — add it as a manual line instead.'; return; }
+    var p=(qty>=1)?qcatPriceForQty(m,qty):null;
+    if(!p){ priceEl.textContent='—'; addBtn.disabled=true; qcatCur=null; msg.textContent='Enter a quantity.'; return; }
+    priceEl.textContent=money(p.cents)+' inc';
+    addBtn.disabled=false; qcatCur={cents:p.cents, qty:qty};
+    msg.textContent = p.exact ? '' : ('Between price breaks — worked out from the nearest breaks'+(qty>p.maxBreak?'; over the top break of '+p.maxBreak+', double-check before sending.':'.'));
+  }
+  function qcatAddToQuote(){
+    if(!qcatCur) return;
+    var slug=document.getElementById('qcatProduct').value;
+    var vals=qcatKeys.filter(function(k){return qcatSel[k]!=null;}).map(function(k){return qcatSel[k];});
+    var desc=qcatPretty(slug)+(vals.length?' — '+vals.join(', '):'');
+    addQuoteLine(desc, qcatCur.qty, (qcatCur.cents/100).toFixed(2));
+    document.getElementById('qcatMsg').textContent='Added to quote ✓ — see the line above; you can still edit it.';
+  }
+
   function addQuoteLine(desc, qty, price){
     var row = document.createElement('div');
     row.className = 'qline';
@@ -509,6 +607,7 @@
 
   async function loadQuotes(){
     document.getElementById('count').textContent = 'Loading…';
+    qcatInit();
     if (!document.getElementById('qLines').children.length) addQuoteLine('',1,'');
     if (!document.getElementById('qValid').value) document.getElementById('qValid').value = todayPlus(30);
     var res = await sb.from('quotes')
