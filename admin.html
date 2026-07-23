@@ -456,7 +456,19 @@
      product, and prices with the same interpolation the website uses, then
      drops a normal (still-editable) line into the quote. */
   var qcatInited=false, qcatRows=[], qcatKeys=[], qcatSel={}, qcatCur=null;
-  var QCAT_LABELS={size:'Size',sides:'Printed Sides',base:'Base',base_size:'Base weight',style:'Style',thickness:'Thickness',lamination:'Lamination',material:'Material',finish:'Finish',colour:'Colour',color:'Colour',stock:'Stock',shape:'Shape',orientation:'Orientation'};
+  var QCAT_LABELS={turnaround:'Speed',size:'Size',sides:'Printed Sides',base:'Base',base_size:'Base weight',style:'Style',thickness:'Thickness',lamination:'Lamination',material:'Material',finish:'Finish',corners:'Corners',colour:'Colour',color:'Colour',stock:'Stock',shape:'Shape',orientation:'Orientation'};
+  /* Business Cards live in their own bc_prices table (own configurator), not in
+     product_prices, so they are injected into the picker as a special product and
+     shaped into the same {options,qty,price_cents} form the generic code expects.
+     Prices rounded to whole dollars to match the live website display. */
+  var BC_TMAP={standard:'Standard',nextday:'Next Day',sameday:'Same Day'};
+  var BC_SIDEMAP={'2S':'Double sided','1S':'Single sided'};
+  var BC_STOCKMAP={'Deluxe 310gsm':'310gsm Deluxe Artboard','Deluxe 360gsm':'360gsm Deluxe Artboard','Deluxe 420gsm':'420gsm Deluxe Artboard','Speciality White Felt 300gsm':'White Felt 300gsm','Speciality White Linen 300gsm':'White Linen 300gsm','Speciality Eggshell Ultra White 324gsm':'Eggshell Ultra White 324gsm','Speciality Superfine Smooth 324gsm':'Superfine Smooth 324gsm','Speciality Knight Smooth 325gsm':'Knight Smooth 325gsm','Speciality Yupo Flexi 410gsm':'Yupo Flexi 410gsm','Loyalty Card':'Loyalty Card'};
+  var BC_TORDER=['Standard','Next Day','Same Day'];
+  var BC_STOCKORDER=['310gsm Deluxe Artboard','360gsm Deluxe Artboard','420gsm Deluxe Artboard','White Felt 300gsm','White Linen 300gsm','Eggshell Ultra White 324gsm','Superfine Smooth 324gsm','Knight Smooth 325gsm','Yupo Flexi 410gsm','Loyalty Card'];
+  var BC_FINORDER=['Uncoated','Matt cello','Gloss cello','Velvet cello'];
+  var BC_CORORDER=['Square','Rounded'];
+  var BC_SIDEORDER=['Double sided','Single sided'];
   var QCAT_ORDER=['style','size','shape','sides','material','stock','thickness','lamination','base','base_size','finish','colour','color','orientation'];
   function qcatPretty(slug){ return String(slug||'').replace(/-/g,' ').replace(/\b\w/g,function(c){return c.toUpperCase();}); }
   function qcatLabel(k){ return QCAT_LABELS[k] || qcatPretty(k); }
@@ -470,6 +482,7 @@
       (res2.data||[]).forEach(function(r){ if(!seen[r.product_slug]){seen[r.product_slug]=1; slugs.push(r.product_slug);} });
       slugs.sort();
     }
+    if(slugs.indexOf('business-cards')<0){ slugs.push('business-cards'); slugs.sort(); }  // BC lives in bc_prices, not the catalogue
     selEl.innerHTML='<option value="">Pick a product…</option>'+slugs.map(function(s){return '<option value="'+esc(s)+'">'+esc(qcatPretty(s))+'</option>';}).join('');
     selEl.addEventListener('change', function(){ if(this.value){ qcatLoadProduct(this.value); } else { qcatRows=[]; qcatKeys=[]; qcatSel={}; qcatCur=null; document.getElementById('qcatOpts').innerHTML=''; qcatUpdatePrice(); } });
     document.getElementById('qcatQty').addEventListener('input', qcatUpdatePrice);
@@ -510,8 +523,37 @@
       });
     }, 220);
   }
+  async function qcatLoadBusinessCards(msg){
+    var res=await sb.from('bc_prices').select('stock,finish,corners,sides,qty,price_cents,turnaround,source').eq('source','real').limit(5000);
+    if(res.error){ msg.textContent='Could not load business-card pricing — add it as a manual line instead.'; qcatRows=[]; qcatKeys=[]; qcatSel={}; document.getElementById('qcatOpts').innerHTML=''; qcatUpdatePrice(); return; }
+    function ord(arr,v){ var i=arr.indexOf(v); return i<0?99:i; }
+    var rows=(res.data||[]).filter(function(r){ return r.finish!=='(legacy)'; }).map(function(r){
+      return { options:{
+          turnaround: BC_TMAP[r.turnaround]||r.turnaround,
+          stock: BC_STOCKMAP[r.stock]||r.stock,
+          finish: r.finish,
+          corners: r.corners,
+          sides: BC_SIDEMAP[r.sides]||r.sides
+        },
+        qty: Number(r.qty),
+        price_cents: Math.round(r.price_cents/100)*100  // whole-dollar, matches live site
+      };
+    });
+    rows.sort(function(a,b){ var A=a.options,B=b.options;
+      return ord(BC_TORDER,A.turnaround)-ord(BC_TORDER,B.turnaround)
+        || ord(BC_STOCKORDER,A.stock)-ord(BC_STOCKORDER,B.stock)
+        || ord(BC_FINORDER,A.finish)-ord(BC_FINORDER,B.finish)
+        || ord(BC_CORORDER,A.corners)-ord(BC_CORORDER,B.corners)
+        || ord(BC_SIDEORDER,A.sides)-ord(BC_SIDEORDER,B.sides)
+        || a.qty-b.qty;
+    });
+    qcatRows=rows; qcatSel={}; qcatKeys=['turnaround','stock','finish','corners','sides'];
+    var qEl=document.getElementById('qcatQty'); if(qEl && (parseInt(qEl.value,10)||0)<100) qEl.value=100;  // BC minimum run is 100
+    msg.textContent=''; qcatRenderOpts();
+  }
   async function qcatLoadProduct(slug){
     var msg=document.getElementById('qcatMsg'); msg.textContent='Loading pricing…';
+    if(slug==='business-cards'){ return qcatLoadBusinessCards(msg); }
     var res=await sb.from('product_prices').select('options,qty,price_cents,source').eq('product_slug',slug).limit(5000);
     qcatRows=(res.data||[]); qcatSel={};
     var seen={}, keys=[];
