@@ -191,8 +191,9 @@
         <div class="f"><label>Contact name *</label><input id="qName"></div>
         <div class="f"><label>Email *</label><input id="qEmail" type="email"></div>
         <div class="f"><label>Phone</label><input id="qPhone"></div>
-        <div class="f"><label>Company</label><input id="qCompany"></div>
+        <div class="f"><label>Company</label><input id="qCompany" autocomplete="off"></div>
       </div>
+      <div id="qContactSug" style="margin:-6px 0 12px"></div>
       <div style="margin-bottom:6px"><label style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:#8a847d">Line items *</label></div>
       <div id="qLines"></div>
       <button id="qAddLine" class="btn-sm btn-ghost" style="margin-bottom:12px">+ Add line</button>
@@ -461,14 +462,53 @@
   function qcatLabel(k){ return QCAT_LABELS[k] || qcatPretty(k); }
   async function qcatInit(){
     if (qcatInited) return; var selEl=document.getElementById('qcatProduct'); if(!selEl) return; qcatInited=true;
-    var res=await sb.from('product_prices').select('product_slug').limit(20000);
-    var seen={}, slugs=[];
-    (res.data||[]).forEach(function(r){ if(!seen[r.product_slug]){seen[r.product_slug]=1; slugs.push(r.product_slug);} });
-    slugs.sort();
+    var res=await sb.from('product_catalogue').select('product_slug').order('product_slug');
+    var slugs=(res.data||[]).map(function(r){return r.product_slug;});
+    if(res.error || !slugs.length){   // fallback if the catalogue view is unavailable
+      var res2=await sb.from('product_prices').select('product_slug').limit(20000);
+      var seen={}; slugs=[];
+      (res2.data||[]).forEach(function(r){ if(!seen[r.product_slug]){seen[r.product_slug]=1; slugs.push(r.product_slug);} });
+      slugs.sort();
+    }
     selEl.innerHTML='<option value="">Pick a product…</option>'+slugs.map(function(s){return '<option value="'+esc(s)+'">'+esc(qcatPretty(s))+'</option>';}).join('');
     selEl.addEventListener('change', function(){ if(this.value){ qcatLoadProduct(this.value); } else { qcatRows=[]; qcatKeys=[]; qcatSel={}; qcatCur=null; document.getElementById('qcatOpts').innerHTML=''; qcatUpdatePrice(); } });
     document.getElementById('qcatQty').addEventListener('input', qcatUpdatePrice);
     document.getElementById('qcatAdd').addEventListener('click', qcatAddToQuote);
+    ['qName','qEmail','qCompany'].forEach(function(id){ var el=document.getElementById(id); if(el){ el.setAttribute('autocomplete','off'); el.addEventListener('input', qContactSearch); } });
+    document.addEventListener('click', function(e){ var b=document.getElementById('qContactSug'); if(b && !b.contains(e.target) && !/^q(Name|Email|Company)$/.test(e.target.id||'')) b.innerHTML=''; });
+  }
+  /* ---- Preemptive contact search: match existing contacts as you type the
+     name/email/company on a new quote, click to fill all their details. ---- */
+  var qSugTimer=null;
+  function qContactFill(c){
+    document.getElementById('qName').value=c.name||'';
+    document.getElementById('qEmail').value=c.email||'';
+    document.getElementById('qPhone').value=c.phone||'';
+    document.getElementById('qCompany').value=c.company||'';
+    document.getElementById('qContactSug').innerHTML='';
+  }
+  function qContactSearch(){
+    var box=document.getElementById('qContactSug'); if(!box) return;
+    var qn=document.getElementById('qName').value.trim(), qe=document.getElementById('qEmail').value.trim(), qc=document.getElementById('qCompany').value.trim();
+    var term=[qe,qn,qc].sort(function(a,b){return b.length-a.length;})[0];
+    if(!term || term.length<2){ box.innerHTML=''; return; }
+    var t=term.replace(/[,()*%]/g,' ').trim(); if(t.length<2){ box.innerHTML=''; return; }
+    clearTimeout(qSugTimer);
+    qSugTimer=setTimeout(async function(){
+      var r=await sb.from('contacts').select('name,email,phone,company,archived').or('name.ilike.*'+t+'*,email.ilike.*'+t+'*,company.ilike.*'+t+'*').order('archived',{nullsFirst:true}).limit(8);
+      if(r.error){ box.innerHTML=''; return; }
+      var rows=r.data||[];
+      if(!rows.length){ box.innerHTML='<div style="padding:7px 10px;font-size:12.5px;color:#8a847d;background:#faf8f5;border:1px solid #eee;border-radius:8px">No match — a new contact will be used for this quote.</div>'; return; }
+      window.__qSug=rows;
+      box.innerHTML='<div style="border:1px solid #e3ddd4;border-radius:8px;overflow:hidden;max-width:640px">'+rows.map(function(c,i){
+        return '<div class="qsug-item" data-i="'+i+'" style="padding:8px 11px;cursor:pointer;font-size:13px;'+(i?'border-top:1px solid #eee;':'')+'background:#fff"><b>'+esc(c.name||'(no name)')+'</b> · '+esc(c.email||'')+(c.company?' · '+esc(c.company):'')+(c.phone?' · '+esc(c.phone):'')+(c.archived?' <span style="color:#b6641e;font-size:11px">· archived</span>':'')+'</div>';
+      }).join('')+'</div>';
+      box.querySelectorAll('.qsug-item').forEach(function(el){
+        el.addEventListener('mouseover', function(){ this.style.background='#f4eefb'; });
+        el.addEventListener('mouseout', function(){ this.style.background='#fff'; });
+        el.addEventListener('click', function(){ qContactFill(window.__qSug[+el.dataset.i]); });
+      });
+    }, 220);
   }
   async function qcatLoadProduct(slug){
     var msg=document.getElementById('qcatMsg'); msg.textContent='Loading pricing…';
