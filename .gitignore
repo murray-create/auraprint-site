@@ -1,0 +1,9 @@
+# Local working files - not part of the live site
+node_modules/
+_live_sync.zip
+_pre_sync_backup_*/
+_*.zip
+*.bak
+*-backup.json
+*.tgz
+.DS_Store
