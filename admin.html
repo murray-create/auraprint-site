@@ -288,7 +288,8 @@
 <div class="emodal" id="emailModal">
   <div class="box">
     <h2>Preview email</h2>
-    <div class="meta">To: <b id="emTo"></b> · Cc: admin@auraprint.com.au<br>Edit anything below before it goes out.</div>
+    <div class="meta">To: <b id="emTo"></b><br>Edit anything below before it goes out.</div>
+    <label>Cc <span style="font-weight:400;color:#8a847d">(comma-separated for more than one; clear it to send with no Cc)</span></label><input id="emCc">
     <label>Subject</label><input id="emSubject">
     <label>Message</label><textarea id="emBody"></textarea>
     <div class="btns">
@@ -1249,6 +1250,7 @@
   function showEmailModal(to, content, meta, onSent){
     EM.to = to; EM.meta = meta || {}; EM.onSent = onSent || null;
     document.getElementById('emTo').textContent = to || '';
+    document.getElementById('emCc').value = (content.cc != null ? content.cc : 'admin@auraprint.com.au');
     document.getElementById('emSubject').value = content.subject || '';
     document.getElementById('emBody').value = content.body || '';
     document.getElementById('emMsg').textContent = '';
@@ -1265,7 +1267,7 @@
     btn.disabled = true; msg.textContent = 'Sending…';
     try {
       var s = await sb.auth.getSession();
-      var payload = { to: EM.to, subject: subject, text: body };
+      var payload = { to: EM.to, subject: subject, text: body, cc: document.getElementById('emCc').value.trim() };
       ['order_id','quote_id','invoice_id','kind'].forEach(function(k){ if (EM.meta[k]) payload[k] = EM.meta[k]; });
       var r = await fetch(CFG.supabaseUrl+'/functions/v1/send-email', {
         method:'POST',
