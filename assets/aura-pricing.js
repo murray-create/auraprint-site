@@ -257,7 +257,7 @@
 
     var p = priceForQty(row, qty);
     if (!p) { showPoa(sel, qty, 'That combination isn’t online yet.'); return; }
-    var dollars = p.cents / 100;
+    var dollars = Math.round(p.cents / 100); /* whole-dollar price: display and quote link match */
     gstEl.textContent = 'inc. GST & delivery';
     animateTo(dollars);
     if (p.exact) {

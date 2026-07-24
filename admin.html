@@ -193,6 +193,10 @@
         <div class="f"><label>Phone</label><input id="qPhone"></div>
         <div class="f"><label>Company</label><input id="qCompany" autocomplete="off"></div>
       </div>
+      <div class="frow">
+        <div class="f" style="flex:3"><label>Address</label><input id="qAddress" placeholder="Street address, suburb, state"></div>
+        <div class="f"><label>Postcode</label><input id="qPostcode" inputmode="numeric" autocomplete="off"></div>
+      </div>
       <div id="qContactSug" style="margin:-6px 0 12px"></div>
       <div style="margin-bottom:6px"><label style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:#8a847d">Line items *</label></div>
       <div id="qLines"></div>
@@ -604,8 +608,9 @@
     if(!Object.keys(m).length){ priceEl.textContent='—'; addBtn.disabled=true; qcatCur=null; if(qcatRows.length) msg.textContent='No set price for this combination — add it as a manual line instead.'; return; }
     var p=(qty>=1)?qcatPriceForQty(m,qty):null;
     if(!p){ priceEl.textContent='—'; addBtn.disabled=true; qcatCur=null; msg.textContent='Enter a quantity.'; return; }
-    priceEl.textContent=money(p.cents)+' inc';
-    addBtn.disabled=false; qcatCur={cents:p.cents, qty:qty};
+    var rc=Math.round(p.cents/100)*100; /* round inc-GST price to the nearest whole dollar */
+    priceEl.textContent=money(rc)+' inc';
+    addBtn.disabled=false; qcatCur={cents:rc, qty:qty};
     msg.textContent = p.exact ? '' : ('Between price breaks — worked out from the nearest breaks'+(qty>p.maxBreak?'; over the top break of '+p.maxBreak+', double-check before sending.':'.'));
   }
   function qcatAddToQuote(){
@@ -658,6 +663,8 @@
         contact_name:name, contact_email:email,
         contact_phone:document.getElementById('qPhone').value.trim()||null,
         company:document.getElementById('qCompany').value.trim()||null,
+        address:document.getElementById('qAddress').value.trim()||null,
+        postcode:document.getElementById('qPostcode').value.trim()||null,
         customer_notes:document.getElementById('qNotes').value.trim()||null,
         valid_until:document.getElementById('qValid').value||todayPlus(30),
         lead_id: quoteLeadId
@@ -671,7 +678,7 @@
         var ld = allLeads.find(function(x){return x.id===quoteLeadId;}); if (ld) ld.status='quoted';
       }
       m.textContent = 'Created '+q.data.quote_number+' ✓ — now review and send it below.';
-      ['qName','qEmail','qPhone','qCompany','qNotes','qValid'].forEach(function(id){ document.getElementById(id).value=''; });
+      ['qName','qEmail','qPhone','qCompany','qAddress','qPostcode','qNotes','qValid'].forEach(function(id){ document.getElementById(id).value=''; });
       document.getElementById('qLines').innerHTML = ''; addQuoteLine('',1,'');
       quoteLeadId = null;
       openQuote = q.data.id;
@@ -745,6 +752,10 @@
       });
       h += '</div>'+
         '<div class="proofrow"><button class="btn-sm btn-ghost q-edit-add" data-id="'+q.id+'">+ Add line</button></div>'+
+        '<div class="frow" style="margin-top:10px">'+
+        '<div class="f" style="flex:3"><label>Address</label><input class="q-edit-address" data-id="'+q.id+'" placeholder="Street address, suburb, state" value="'+esc(q.address||'')+'"></div>'+
+        '<div class="f"><label>Postcode</label><input class="q-edit-postcode" data-id="'+q.id+'" inputmode="numeric" value="'+esc(q.postcode||'')+'"></div>'+
+        '</div>'+
         '<div class="frow" style="margin-top:10px">'+
         '<div class="f" style="flex:3"><label>Notes shown on quote</label><input class="q-edit-notes" data-id="'+q.id+'" value="'+esc(q.customer_notes||'')+'"></div>'+
         '<div class="f"><label>Valid until</label><input class="q-edit-valid" data-id="'+q.id+'" type="date" value="'+esc(q.valid_until)+'"></div>'+
@@ -849,6 +860,8 @@
     try {
       var up = await sb.from('quotes').update({
         customer_notes: document.querySelector('.q-edit-notes[data-id="'+quoteId+'"]').value.trim()||null,
+        address: document.querySelector('.q-edit-address[data-id="'+quoteId+'"]').value.trim()||null,
+        postcode: document.querySelector('.q-edit-postcode[data-id="'+quoteId+'"]').value.trim()||null,
         valid_until: document.querySelector('.q-edit-valid[data-id="'+quoteId+'"]').value
       }).eq('id', quoteId);
       if (up.error) throw up.error;

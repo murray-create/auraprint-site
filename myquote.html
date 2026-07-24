@@ -133,7 +133,8 @@
       '<div class="col"><div class="lbl">Prepared for</div>'+
         '<b>'+esc(q.company||q.contact_name)+'</b><br>'+
         (q.company?esc(q.contact_name)+'<br>':'')+
-        esc(q.contact_email)+'</div>'+
+        esc(q.contact_email)+
+        ((q.address||q.postcode)?'<br>'+esc([q.address,q.postcode].filter(Boolean).join(' ')):'')+'</div>'+
       '<div class="col"><div class="lbl">Total (inc GST)</div><div class="total">'+money(q.total_inc_cents)+'</div>'+statusFlag(q)+'</div>'+
       '</div>'+
 
