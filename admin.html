@@ -194,7 +194,8 @@
         <div class="f"><label>Company</label><input id="qCompany" autocomplete="off"></div>
       </div>
       <div class="frow">
-        <div class="f" style="flex:3"><label>Address</label><input id="qAddress" placeholder="Street address, suburb, state"></div>
+        <div class="f" style="flex:2"><label>Street</label><input id="qStreet" placeholder="e.g. 12 Smith St"></div>
+        <div class="f" style="flex:2"><label>Suburb</label><input id="qSuburb" placeholder="e.g. Buderim"></div>
         <div class="f"><label>Postcode</label><input id="qPostcode" inputmode="numeric" autocomplete="off"></div>
       </div>
       <div id="qContactSug" style="margin:-6px 0 12px"></div>
@@ -320,7 +321,7 @@
 
   function esc(s){ return String(s==null?'':s).replace(/[&<>"]/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
   function mailto(to, c){ return 'mailto:'+encodeURIComponent(to||'')+'?cc=admin%40auraprint.com.au&subject='+encodeURIComponent(c.subject)+'&body='+encodeURIComponent(c.body); }
-  function fmtDate(s){ var d=new Date(s); return d.toLocaleDateString('en-AU',{day:'2-digit',month:'short'})+' '+d.toLocaleTimeString('en-AU',{hour:'2-digit',minute:'2-digit'}); }
+  function fmtDate(s){ var d=new Date(s); return d.toLocaleDateString('en-AU',{day:'2-digit',month:'short',timeZone:'Australia/Brisbane'})+' '+d.toLocaleTimeString('en-AU',{hour:'2-digit',minute:'2-digit',timeZone:'Australia/Brisbane'}); }
   function money(c){ return '$'+(c/100).toLocaleString('en-AU',{minimumFractionDigits:2,maximumFractionDigits:2}); }
   function payLabel(p){ return p==='stripe'?'card (Stripe)':(p==='bank'?'bank transfer':(p==='manual'?'manual/other':(p||'other'))); }
   function viewedInline(o){ if(!o) return ''; if(!o.first_viewed_at) return ' <span class="muted">· not opened yet</span>'; return ' <span style="color:#15803d;font-weight:600">· \ud83d\udc41 opened '+esc(fmtDate(o.first_viewed_at))+(o.view_count>1?' ('+o.view_count+'\u00d7)':'')+'</span>'; }
@@ -502,6 +503,9 @@
     document.getElementById('qEmail').value=c.email||'';
     document.getElementById('qPhone').value=c.phone||'';
     document.getElementById('qCompany').value=c.company||'';
+    var _st=document.getElementById('qStreet'); if(_st) _st.value=c.street||'';
+    var _su=document.getElementById('qSuburb'); if(_su) _su.value=c.suburb||'';
+    var _pc=document.getElementById('qPostcode'); if(_pc) _pc.value=c.postcode||'';
     document.getElementById('qContactSug').innerHTML='';
   }
   function qContactSearch(){
@@ -512,13 +516,26 @@
     var t=term.replace(/[,()*%]/g,' ').trim(); if(t.length<2){ box.innerHTML=''; return; }
     clearTimeout(qSugTimer);
     qSugTimer=setTimeout(async function(){
-      var r=await sb.from('contacts').select('name,email,phone,company,archived').or('name.ilike.*'+t+'*,email.ilike.*'+t+'*,company.ilike.*'+t+'*').order('archived',{nullsFirst:true}).limit(8);
-      if(r.error){ box.innerHTML=''; return; }
-      var rows=r.data||[];
+      var _res=await Promise.all([
+        sb.from('quotes').select('contact_name,contact_email,contact_phone,company,street,suburb,postcode,created_at').or('contact_name.ilike.*'+t+'*,contact_email.ilike.*'+t+'*,company.ilike.*'+t+'*').order('created_at',{ascending:false}).limit(20),
+        sb.from('contacts').select('name,email,phone,company,archived').or('name.ilike.*'+t+'*,email.ilike.*'+t+'*,company.ilike.*'+t+'*').order('archived',{nullsFirst:true}).limit(8)
+      ]);
+      var _q=_res[0], _c=_res[1];
+      if(_q.error && _c.error){ box.innerHTML=''; return; }
+      var _map={}, _ord=[];
+      function _k(e,n){ return String(e||n||'').toLowerCase().trim(); }
+      (_q.data||[]).forEach(function(x){ var k=_k(x.contact_email,x.contact_name); if(!k) return;
+        if(!_map[k]){ _map[k]={name:x.contact_name||'',email:x.contact_email||'',phone:x.contact_phone||'',company:x.company||'',street:x.street||'',suburb:x.suburb||'',postcode:x.postcode||''}; _ord.push(k); }
+        else { var m=_map[k]; m.name=m.name||x.contact_name||''; m.phone=m.phone||x.contact_phone||''; m.company=m.company||x.company||''; m.street=m.street||x.street||''; m.suburb=m.suburb||x.suburb||''; m.postcode=m.postcode||x.postcode||''; } });
+      (_c.data||[]).forEach(function(x){ var k=_k(x.email,x.name); if(!k) return;
+        if(!_map[k]){ _map[k]={name:x.name||'',email:x.email||'',phone:x.phone||'',company:x.company||'',street:'',suburb:'',postcode:'',archived:x.archived}; _ord.push(k); }
+        else { var m=_map[k]; m.name=m.name||x.name||''; m.phone=m.phone||x.phone||''; m.company=m.company||x.company||''; if(m.archived===undefined)m.archived=x.archived; } });
+      var rows=_ord.slice(0,8).map(function(k){ return _map[k]; });
       if(!rows.length){ box.innerHTML='<div style="padding:7px 10px;font-size:12.5px;color:#8a847d;background:#faf8f5;border:1px solid #eee;border-radius:8px">No match — a new contact will be used for this quote.</div>'; return; }
       window.__qSug=rows;
       box.innerHTML='<div style="border:1px solid #e3ddd4;border-radius:8px;overflow:hidden;max-width:640px">'+rows.map(function(c,i){
-        return '<div class="qsug-item" data-i="'+i+'" style="padding:8px 11px;cursor:pointer;font-size:13px;'+(i?'border-top:1px solid #eee;':'')+'background:#fff"><b>'+esc(c.name||'(no name)')+'</b> · '+esc(c.email||'')+(c.company?' · '+esc(c.company):'')+(c.phone?' · '+esc(c.phone):'')+(c.archived?' <span style="color:#b6641e;font-size:11px">· archived</span>':'')+'</div>';
+        var _addr=[c.street,c.suburb].filter(Boolean).join(', ');
+        return '<div class="qsug-item" data-i="'+i+'" style="padding:8px 11px;cursor:pointer;font-size:13px;'+(i?'border-top:1px solid #eee;':'')+'background:#fff"><b>'+esc(c.name||'(no name)')+'</b> · '+esc(c.email||'')+(c.company?' · '+esc(c.company):'')+(c.phone?' · '+esc(c.phone):'')+(_addr?' · '+esc(_addr):'')+(c.archived?' <span style="color:#b6641e;font-size:11px">· archived</span>':'')+'</div>';
       }).join('')+'</div>';
       box.querySelectorAll('.qsug-item').forEach(function(el){
         el.addEventListener('mouseover', function(){ this.style.background='#f4eefb'; });
@@ -663,7 +680,8 @@
         contact_name:name, contact_email:email,
         contact_phone:document.getElementById('qPhone').value.trim()||null,
         company:document.getElementById('qCompany').value.trim()||null,
-        address:document.getElementById('qAddress').value.trim()||null,
+        street:document.getElementById('qStreet').value.trim()||null,
+        suburb:document.getElementById('qSuburb').value.trim()||null,
         postcode:document.getElementById('qPostcode').value.trim()||null,
         customer_notes:document.getElementById('qNotes').value.trim()||null,
         valid_until:document.getElementById('qValid').value||todayPlus(30),
@@ -678,7 +696,7 @@
         var ld = allLeads.find(function(x){return x.id===quoteLeadId;}); if (ld) ld.status='quoted';
       }
       m.textContent = 'Created '+q.data.quote_number+' ✓ — now review and send it below.';
-      ['qName','qEmail','qPhone','qCompany','qAddress','qPostcode','qNotes','qValid'].forEach(function(id){ document.getElementById(id).value=''; });
+      ['qName','qEmail','qPhone','qCompany','qStreet','qSuburb','qPostcode','qNotes','qValid'].forEach(function(id){ document.getElementById(id).value=''; });
       document.getElementById('qLines').innerHTML = ''; addQuoteLine('',1,'');
       quoteLeadId = null;
       openQuote = q.data.id;
@@ -753,7 +771,8 @@
       h += '</div>'+
         '<div class="proofrow"><button class="btn-sm btn-ghost q-edit-add" data-id="'+q.id+'">+ Add line</button></div>'+
         '<div class="frow" style="margin-top:10px">'+
-        '<div class="f" style="flex:3"><label>Address</label><input class="q-edit-address" data-id="'+q.id+'" placeholder="Street address, suburb, state" value="'+esc(q.address||'')+'"></div>'+
+        '<div class="f" style="flex:2"><label>Street</label><input class="q-edit-street" data-id="'+q.id+'" placeholder="e.g. 12 Smith St" value="'+esc(q.street||'')+'"></div>'+
+        '<div class="f" style="flex:2"><label>Suburb</label><input class="q-edit-suburb" data-id="'+q.id+'" placeholder="e.g. Buderim" value="'+esc(q.suburb||'')+'"></div>'+
         '<div class="f"><label>Postcode</label><input class="q-edit-postcode" data-id="'+q.id+'" inputmode="numeric" value="'+esc(q.postcode||'')+'"></div>'+
         '</div>'+
         '<div class="frow" style="margin-top:10px">'+
@@ -860,7 +879,8 @@
     try {
       var up = await sb.from('quotes').update({
         customer_notes: document.querySelector('.q-edit-notes[data-id="'+quoteId+'"]').value.trim()||null,
-        address: document.querySelector('.q-edit-address[data-id="'+quoteId+'"]').value.trim()||null,
+        street: document.querySelector('.q-edit-street[data-id="'+quoteId+'"]').value.trim()||null,
+        suburb: document.querySelector('.q-edit-suburb[data-id="'+quoteId+'"]').value.trim()||null,
         postcode: document.querySelector('.q-edit-postcode[data-id="'+quoteId+'"]').value.trim()||null,
         valid_until: document.querySelector('.q-edit-valid[data-id="'+quoteId+'"]').value
       }).eq('id', quoteId);
@@ -1827,7 +1847,7 @@
   var allContacts = [], contactDir = [], openContact = null, contactSearch = '', csvRecs = [], outstandingView=false, dirOrders=[];
 
   function normEmail(e){ return String(e==null?'':e).trim().toLowerCase(); }
-  function shortDate(s){ if(!s) return ''; var d=new Date(s); return d.toLocaleDateString('en-AU',{day:'2-digit',month:'short',year:'2-digit'}); }
+  function shortDate(s){ if(!s) return ''; var d=new Date(s); return d.toLocaleDateString('en-AU',{day:'2-digit',month:'short',year:'2-digit',timeZone:'Australia/Brisbane'}); }
   function cstat(n,l){ return '<div class="cstat"><div class="n">'+n+'</div><div class="l">'+l+'</div></div>'; }
   function cfRow(k,v){ return '<div class="cf-row"><input class="cf-k" placeholder="Field" value="'+esc(k)+'"><input class="cf-v" placeholder="Value" value="'+esc(v==null?'':v)+'"><button type="button" class="cf-del">×</button></div>'; }
 

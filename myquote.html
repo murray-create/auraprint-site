@@ -75,7 +75,7 @@
 
   function esc(s){ return String(s==null?'':s).replace(/[&<>"]/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
   function money(c){ return '$' + (c/100).toLocaleString('en-AU',{minimumFractionDigits:2,maximumFractionDigits:2}); }
-  function fmtDate(s){ var d=new Date(s); return d.toLocaleDateString('en-AU',{day:'2-digit',month:'short',year:'numeric'}); }
+  function fmtDate(s){ var d=new Date(s); return d.toLocaleDateString('en-AU',{day:'2-digit',month:'short',year:'numeric',timeZone:'Australia/Brisbane'}); }
   function fmtDay(s){ var d=new Date(s+'T00:00:00'); return d.toLocaleDateString('en-AU',{day:'2-digit',month:'long',year:'numeric'}); }
   function fail(msg){ document.getElementById('doc').innerHTML = '<div class="errpage"><h2>Quote unavailable</h2><p class="muted">'+msg+'</p><p class="muted">Need help? Email admin@auraprint.com.au</p></div>'; }
 
@@ -134,7 +134,7 @@
         '<b>'+esc(q.company||q.contact_name)+'</b><br>'+
         (q.company?esc(q.contact_name)+'<br>':'')+
         esc(q.contact_email)+
-        ((q.address||q.postcode)?'<br>'+esc([q.address,q.postcode].filter(Boolean).join(' ')):'')+'</div>'+
+        ((q.street||q.suburb||q.postcode)?'<br>'+esc([q.street,[q.suburb,q.postcode].filter(Boolean).join(' ')].filter(Boolean).join(', ')):'')+'</div>'+
       '<div class="col"><div class="lbl">Total (inc GST)</div><div class="total">'+money(q.total_inc_cents)+'</div>'+statusFlag(q)+'</div>'+
       '</div>'+
 
