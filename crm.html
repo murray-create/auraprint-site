@@ -1144,7 +1144,7 @@ drawOrgs(0);
       var c=included[i]; var first=((c.name||'').split(' ')[0])||'there';
       var personal=body.replace(/\{first\}/g, first);
       try{
-        var r=await fetch(window.AURA_CONFIG.supabaseUrl+'/functions/v1/send-email',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+tok},body:JSON.stringify({to:c.email,subject:subject,text:personal,cc:ccList})});
+        var r=await fetch(window.AURA_CONFIG.supabaseUrl+'/functions/v1/send-email',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+tok},body:JSON.stringify({to:c.email,subject:subject,text:personal,cc:ccList,attachments:(window._email&&window._email.attachments)||undefined})});
         var j=await r.json();
         if(!r.ok||!j.ok){ failed.push(c.email+' ('+(j.error||('HTTP '+r.status))+')'); } else { sent++; }
       }catch(err){ failed.push(c.email+' ('+(err.message||err)+')'); }
@@ -1160,12 +1160,21 @@ window.openInvoiceEmail=function(num){
   var q=D.quotes.find(function(x){return x.num===num;}); if(!q||!q.invNum) return;
   var link='https://auraprint.com.au/invoice.html?t='+(q._invToken||'');
   var first=((q._name||q.contact||'').split(' ')[0])||'there';
+  var bus=(window.AURA_CONFIG&&window.AURA_CONFIG.business)||{};
+  var pay='';
+  if(q.payLink) pay+='Pay online by card (secure, via Stripe):\n'+q.payLink+'\n\n';
+  pay+='Or pay by EFT (please use '+q.invNum+' as the reference):\n';
+  if(bus.accName) pay+='  Account name: '+bus.accName+'\n';
+  if(bus.bsb) pay+='  BSB: '+bus.bsb+'\n';
+  if(bus.acc) pay+='  Account: '+bus.acc+'\n';
+  if(bus.payid) pay+='  PayID: '+bus.payid+'\n';
+  pay+='\n';
   var subject='Tax invoice '+q.invNum+' — order '+(q.orderNum||'')+' — Aura Print & Promo';
   var body='Hi '+first+',\n\n'+
     'Thank you for completing our online approval process! Your order '+(q.orderNum||'')+' is queued for production — please note full payment is required before production begins.\n\n'+
     'View your tax invoice online ('+money(qTotal(q))+' inc GST):\n'+link+'\n\n'+
-    'To pay by credit or debit card, click the green ‘View & Pay Online’ button on the invoice — payment is processed securely by Stripe and your job is released automatically.\n\n'+
-    'EFT details are also on the invoice; please use your invoice number as the payment reference. Bank transfers can take up to 1 business day for us to receive — if your job is urgent, email your remittance advice to admin@auraprint.com.au and we’ll release it early.\n\n'+
+    pay+
+    'Bank transfers can take up to 1 business day for us to receive — if your job is urgent, email your remittance advice to admin@auraprint.com.au and we’ll release it early.\n\n'+
     'Once your order is dispatched we’ll email you with tracking details.\n\n'+
     'We look forward to working with you again.\n\n'+
     'Kind regards,\nMurray\nAura Print & Promo\ne: admin@auraprint.com.au\nw: auraprint.com.au';
