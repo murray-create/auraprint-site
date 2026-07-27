@@ -259,6 +259,7 @@ tr.clk{cursor:pointer}tr.clk:hover td{background:var(--soft)}
 </style>
 <script src="assets/config.js?v=20260727crm"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
 <script src="https://js.hcaptcha.com/1/api.js" async defer></script>
 <style>
 #authGate{position:fixed;inset:0;z-index:200;background:linear-gradient(120deg,#7c3aed,#e6119b 55%,#f97316);display:grid;place-items:center;padding:20px;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif}
@@ -844,7 +845,8 @@ function renderComposer(){
       <div class="field" style="margin-top:16px"><label>Start from a template</label><select id="e_tpl" onchange="applyTemplate()">${tplOpts}</select></div>
       <div class="field"><label>Subject</label><input id="e_subj" placeholder="Subject line" value="${esc(e.subject)}"></div>
       <div class="field"><label>Message</label><textarea id="e_body" style="min-height:180px" placeholder="Write your message… use {first} for the contact's first name">${esc(e.body)}</textarea></div>
-      <div class="note">Sends through the existing Resend <code>send-email</code> Edge Function server-side (it already accepts a <code>cc</code>). {first} is personalised per recipient at send time.</div>
+      ${e.attachments&&e.attachments.length?`<div class="rchip" style="margin-top:12px;cursor:default"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg> ${esc(e.attachments[0].filename)} attached</div>`:''}
+      <div class="note">Sends through the existing Resend <code>send-email</code> Edge Function server-side (it already accepts a <code>cc</code>). {first} is personalised per recipient at send time. The PDF is attached automatically.</div>
     </div>
     <div class="mf"><button class="btn" onclick="closeComposer()">Cancel</button><button class="btn primary" onclick="sendEmail()" ${included.length?'':'disabled'}><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 2 11 13M22 2l-7 20-4-9-9-4z"/></svg>${e.marketing?`Send to ${included.length}`:'Send'}</button></div>`;
   md.querySelectorAll('.ccsug').forEach(el=>el.onclick=()=>addCc(el.dataset.email,el.dataset.name));
@@ -1155,6 +1157,75 @@ drawOrgs(0);
 })();
 </script>
 <script>
+/* Build a branded A4 PDF (invoice or quote) and return base64 for email attachment */
+function crmPdf(kind,q){
+  try{
+    var J=(window.jspdf&&window.jspdf.jsPDF)||window.jsPDF; if(!J) return null;
+    var bus=(window.AURA_CONFIG&&window.AURA_CONFIG.business)||{};
+    var doc=new J({unit:'pt',format:'a4'}); var W=595,M=40;
+    doc.setFillColor(23,21,34); doc.rect(0,0,W,92,'F');
+    doc.setTextColor(255,255,255); doc.setFont('helvetica','bold'); doc.setFontSize(19);
+    doc.text(bus.name||'Aura Print & Promo', M, 40);
+    doc.setFont('helvetica','normal'); doc.setFontSize(8.5); doc.setTextColor(200,200,212);
+    doc.text(((bus.address1||'')+', '+(bus.address2||'')).replace(/^, | ,|, $/g,''), M, 56);
+    doc.text('ABN '+(bus.abn||'')+'    '+(bus.phone||''), M, 68);
+    doc.text((bus.email||'admin@auraprint.com.au')+'    auraprint.com.au', M, 80);
+    doc.setTextColor(255,255,255); doc.setFont('helvetica','bold'); doc.setFontSize(22);
+    doc.text(kind==='invoice'?'TAX INVOICE':'QUOTE', W-M, 42, {align:'right'});
+    doc.setFont('helvetica','normal'); doc.setFontSize(11);
+    doc.text(String(kind==='invoice'?(q.invNum||''):(q.num||'')), W-M, 62, {align:'right'});
+    var y=126;
+    doc.setTextColor(120,120,130); doc.setFont('helvetica','bold'); doc.setFontSize(8); doc.text('BILL TO', M, y);
+    doc.setTextColor(17,16,24); doc.setFont('helvetica','normal'); doc.setFontSize(10.5);
+    var bl=[]; if(q._name||q.contact) bl.push(q._name||q.contact); if(q._email) bl.push(q._email);
+    doc.text(bl.length?bl:['—'], M, y+15);
+    doc.setTextColor(120,120,130); doc.setFont('helvetica','bold'); doc.setFontSize(8); doc.text('DETAILS', W-M-170, y);
+    doc.setTextColor(17,16,24); doc.setFont('helvetica','normal'); doc.setFontSize(9.5);
+    var meta=[]; if(kind==='invoice'&&q.orderNum) meta.push('Order: '+q.orderNum);
+    meta.push('Date: '+new Date().toLocaleDateString('en-AU'));
+    if(kind==='quote'&&q._valid) meta.push('Valid until: '+new Date(q._valid+'T00:00:00').toLocaleDateString('en-AU'));
+    doc.text(meta, W-M-170, y+15);
+    y+=64;
+    doc.setFillColor(245,244,247); doc.rect(M,y-14,W-2*M,22,'F');
+    doc.setTextColor(120,120,130); doc.setFont('helvetica','bold'); doc.setFontSize(8);
+    doc.text('DESCRIPTION', M+8, y); doc.text('QTY', W-M-190, y,{align:'right'}); doc.text('UNIT', W-M-95, y,{align:'right'}); doc.text('AMOUNT', W-M-8, y,{align:'right'});
+    y+=20; doc.setTextColor(17,16,24); doc.setFont('helvetica','normal'); doc.setFontSize(9.5);
+    (q.items||[]).forEach(function(it){
+      var lines=doc.splitTextToSize(String(it.n||''), W-2*M-235);
+      doc.text(lines, M+8, y);
+      doc.text(String(it.qty), W-M-190, y,{align:'right'});
+      doc.text(money(unitOf(it)), W-M-95, y,{align:'right'});
+      doc.text(money(it.price), W-M-8, y,{align:'right'});
+      y+=Math.max(16, lines.length*12+4);
+    });
+    y+=8; doc.setDrawColor(230,228,233); doc.line(W-M-220,y,W-M,y); y+=18;
+    var inc=qTotal(q), ex=Math.round(inc/1.1), gst=inc-ex;
+    doc.setFontSize(9.5); doc.setTextColor(90,90,100); doc.setFont('helvetica','normal');
+    doc.text('Subtotal (ex GST)', W-M-120, y,{align:'right'}); doc.text(money(ex), W-M-8, y,{align:'right'}); y+=15;
+    doc.text('GST 10%', W-M-120, y,{align:'right'}); doc.text(money(gst), W-M-8, y,{align:'right'}); y+=18;
+    doc.setFont('helvetica','bold'); doc.setFontSize(12); doc.setTextColor(17,16,24);
+    doc.text('Total (inc GST)', W-M-120, y,{align:'right'}); doc.text(money(inc), W-M-8, y,{align:'right'}); y+=28;
+    doc.setFont('helvetica','normal');
+    if(kind==='invoice'){
+      doc.setFont('helvetica','bold'); doc.setFontSize(10); doc.setTextColor(201,16,127); doc.text('Payment', M, y); y+=16;
+      doc.setFont('helvetica','normal'); doc.setFontSize(9.5); doc.setTextColor(60,60,70);
+      var pl=[]; if(q.payLink) pl.push('Pay online by card: '+q.payLink);
+      pl.push('EFT reference: '+(q.invNum||''));
+      if(bus.accName) pl.push('Account name: '+bus.accName);
+      if(bus.bsb) pl.push('BSB: '+bus.bsb+'     Account: '+(bus.acc||''));
+      if(bus.payid) pl.push('PayID: '+bus.payid);
+      doc.text(pl, M, y); y+=pl.length*13+4;
+    } else {
+      doc.setFontSize(9.5); doc.setTextColor(60,60,70);
+      doc.text('To accept this quote, open it online and click Accept:', M, y); y+=13;
+      doc.setTextColor(201,16,127); doc.text('https://auraprint.com.au/myquote.html?t='+(q._token||''), M, y); y+=18;
+    }
+    doc.setDrawColor(230,228,233); doc.line(M,812,W-M,812);
+    doc.setTextColor(150,150,160); doc.setFontSize(8);
+    doc.text('Aura Print & Promo     admin@auraprint.com.au     auraprint.com.au', M, 826);
+    return doc.output('datauristring').split(',')[1];
+  }catch(e){ console.error('pdf failed',e); return null; }
+}
 /* Send invoice email — mirrors admin.html invoiceEmailContent, opens the composer prefilled */
 window.openInvoiceEmail=function(num){
   var q=D.quotes.find(function(x){return x.num===num;}); if(!q||!q.invNum) return;
@@ -1181,6 +1252,7 @@ window.openInvoiceEmail=function(num){
   if(!q._email){ alert('This quote has no customer email on file, so the invoice email cannot be addressed.'); return; }
   openEmailComposer([{name:q._name||q.contact,email:q._email,consent:true}], 'Send invoice '+q.invNum, false);
   window._email.subject=subject; window._email.body=body;
+  var pdf=crmPdf('invoice',q); if(pdf) window._email.attachments=[{filename:'Invoice-'+(q.invNum||'')+'.pdf',content:pdf}];
   renderComposer();
 };
 /* Send quote email — mirrors admin.html quoteEmailContent, links to the myquote approval page */
@@ -1199,6 +1271,7 @@ window.openQuoteEmail=function(num){
     'Kind regards,\nMurray\nAura Print & Promo\ne: admin@auraprint.com.au\nw: auraprint.com.au';
   openEmailComposer([{name:q._name||q.contact,email:q._email,consent:true}], 'Send quote '+q.num, false);
   window._email.subject=subject; window._email.body=body; window._email._sentQuote=q._id;
+  var pdf=crmPdf('quote',q); if(pdf) window._email.attachments=[{filename:'Quote-'+(q.num||'')+'.pdf',content:pdf}];
   renderComposer();
 };
 </script>
