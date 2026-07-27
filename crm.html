@@ -1220,9 +1220,10 @@ function crmPdf(kind,q){
       doc.text('To accept this quote, open it online and click Accept:', M, y); y+=13;
       doc.setTextColor(201,16,127); doc.text('https://auraprint.com.au/myquote.html?t='+(q._token||''), M, y); y+=18;
     }
+    if(bus.terms){ doc.setFontSize(7.5); doc.setTextColor(140,140,150); var tl=doc.splitTextToSize('Terms: '+bus.terms, W-2*M); doc.text(tl, M, 812-(tl.length*9)-8); }
     doc.setDrawColor(230,228,233); doc.line(M,812,W-M,812);
     doc.setTextColor(150,150,160); doc.setFontSize(8);
-    doc.text('Aura Print & Promo     admin@auraprint.com.au     auraprint.com.au', M, 826);
+    doc.text((bus.name||'Aura Print & Promo')+'     '+(bus.phone||'')+'     '+(bus.email||'admin@auraprint.com.au')+'     auraprint.com.au', M, 826);
     return doc.output('datauristring').split(',')[1];
   }catch(e){ console.error('pdf failed',e); return null; }
 }

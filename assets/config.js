@@ -26,19 +26,22 @@ window.AURA_CONFIG = {
   supabaseUrl: "https://pwjxkzifitybvtnrfxfi.supabase.co",
   supabaseKey: "sb_publishable_HYMPZZd4CPpmWktzmht7Jg_xD1C-QZ1",
 
-  /* Business details printed on tax invoices (invoice.html).
+  /* Business details printed on tax invoices (invoice.html) and the CRM PDF.
      Fill in bsb/acc (and payid if you have one) to show EFT details;
-     leave blank to hide that section's numbers. */
+     leave blank to hide that section's numbers.
+     `phone` is the number shown on invoices (1300 business line).
+     `terms` is a short terms block printed at the foot of the invoice/PDF. */
   business: {
     name: "Aura Print",
     abn: "75 642 501 493",
     address1: "4/1 Packer Road",
     address2: "Baringa QLD 4551",
-    phone: "0404 601 314",
+    phone: "1300 291 277",
     email: "admin@auraprint.com.au",
     accName: "Murray Alexander Boyton t/a Aura Print",
     bsb: "034-168",
     acc: "510720",
-    payid: "0404 601 314"
+    payid: "0404 601 314",
+    terms: "Full payment is required before production begins. Prices are in AUD and include GST. Goods remain the property of Aura Print & Promo until paid in full. Full terms: auraprint.com.au/trade-terms.html"
   }
 };
