@@ -580,18 +580,18 @@ function openQuote(num){
     banner=`<div class="banner bad">This quote was declined by the customer.</div>`;
     actions=`<button class="btn" onclick="duplicateQuote('${q.num}')">Duplicate quote</button>`;
   } else if(q.stage==='quote'){
-    if(q.status==='draft') actions+=`<button class="btn" onclick="advance('${q.num}','send')">Send to customer</button>`;
-    actions+=`<button class="btn primary" onclick="advance('${q.num}','order')" ${total===0?'disabled':''}>Convert to order ›</button>`;
+    actions+=`<button class="btn primary" onclick="openQuoteEmail('${q.num}')" ${total===0?'disabled':''}>Send quote email</button>`;
+    actions+=`<button class="btn" onclick="advance('${q.num}','order')" ${total===0?'disabled':''}>Convert to order ›</button>`;
     if(q.status==='sent') banner=`<div class="banner info">Sent to ${esc(q.contact)} — awaiting their approval.</div>`;
   } else if(q.stage==='order'){
     banner=`<div class="banner good">Converted to order <b>${q.orderNum}</b>. Ready to invoice.</div>`;
     actions=`<button class="btn primary" onclick="advance('${q.num}','invoice')">Create invoice ›</button>`;
   } else if(q.stage==='invoice'){
     banner=`<div class="banner info">Invoice <b>${q.invNum}</b> raised — payment link ready to send.</div>`;
-    actions=`<button class="btn" onclick="copyLink('${q.num}')">Copy payment link</button><button class="btn primary" onclick="advance('${q.num}','paid')">Mark as paid</button>`;
+    actions=`<button class="btn primary" onclick="openInvoiceEmail('${q.num}')">Send invoice email</button><button class="btn" onclick="copyLink('${q.num}')">Copy payment link</button><button class="btn" onclick="advance('${q.num}','paid')">Mark as paid</button>`;
   } else if(q.stage==='paid'){
     banner=`<div class="banner good">Invoice <b>${q.invNum}</b> paid in full. ${money(total)} received.</div>`;
-    actions=`<button class="btn" onclick="copyLink('${q.num}')">View receipt link</button>`;
+    actions=`<button class="btn" onclick="openInvoiceEmail('${q.num}')">Resend invoice email</button><button class="btn" onclick="copyLink('${q.num}')">View receipt link</button>`;
   }
 
   // right rail: linked records + summary
@@ -605,7 +605,7 @@ function openQuote(num){
     <div class="row tot"><span>Total (inc GST)</span><span>${money(total)}</span></div>
     ${linked.length?`<div style="margin-top:14px;border-top:1px solid var(--line);padding-top:10px">${linked.join('')}</div>`:''}
     ${payLink}
-    ${q.invNum?`<button class="btn primary sm" style="width:100%;justify-content:center;margin-top:6px" onclick="alert('Prototype: this would email the Stripe payment link to '+${JSON.stringify(esc(c?c.email:''))})">Email payment link</button>`:''}
+    ${q.invNum?`<button class="btn primary sm" style="width:100%;justify-content:center;margin-top:6px" onclick="openInvoiceEmail('${q.num}')">Send invoice email</button>`:''}
   </div>`;
 
   const customerLine = org
@@ -991,7 +991,7 @@ async function refreshFromSupabase(sb){
     if(inv&&inv.status==='paid')stage='paid'; else if(inv)stage='invoice'; else if(ord)stage='order';
     let contact=q.contact_name||q.contact_email||'—';
     if(q.company){const org=D.orgs.find(o=>o.name.toLowerCase()===q.company.toLowerCase());if(org){const ppl=D.contacts.filter(c=>c.orgId===org.id);if(ppl.length&&!D.contacts.some(c=>c.name===contact))contact=ppl[0].name;}}
-    D.quotes.push({num:q.quote_number,contact,status:q.status,stage,orderNum:ord?ord.order_number:null,invNum:inv?inv.invoice_number:null,payLink:inv?inv.payment_link_url:null,items,_id:q.id,_orderId:q.converted_order_id||null,_invId:inv?inv.id:null});
+    D.quotes.push({num:q.quote_number,contact,status:q.status,stage,orderNum:ord?ord.order_number:null,invNum:inv?inv.invoice_number:null,payLink:inv?inv.payment_link_url:null,items,_id:q.id,_orderId:q.converted_order_id||null,_invId:inv?inv.id:null,_invToken:inv?inv.access_token:null,_email:q.contact_email||'',_name:q.contact_name||'',_token:q.access_token||'',_valid:q.valid_until||null});
   });
   D.orders.length=0;
   (ords.data||[]).forEach(o=>{const q=(qs.data||[]).find(x=>x.converted_order_id===o.id);D.orders.push({num:o.order_number,name:o.contact_name||'—',company:o.company||null,status:o.status,total:orderTotal[o.id]||0,q:q?q.quote_number:null});});
@@ -1149,9 +1149,49 @@ drawOrgs(0);
         if(!r.ok||!j.ok){ failed.push(c.email+' ('+(j.error||('HTTP '+r.status))+')'); } else { sent++; }
       }catch(err){ failed.push(c.email+' ('+(err.message||err)+')'); }
     }
+    if(window._email&&window._email._sentQuote){ try{ await SB().from('quotes').update({status:'sent',sent_at:new Date().toISOString()}).eq('id',window._email._sentQuote); await refreshFromSupabase(SB()); }catch(_e){} }
     md.innerHTML='<div class="mh"><h3>'+(failed.length?'Sent with errors':'Sent')+'</h3><div class="x" onclick="closeComposer()">✕</div></div><div class="mb"><div class="sendok"><div class="tick"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg></div><h3 style="margin:0 0 4px;font-size:17px">Sent to '+sent+' recipient'+(sent===1?'':'s')+(ccList?(' · Cc '+e.cc.length):'')+'</h3><div class="mini">Sent live via Resend'+(failed.length?('. Failed: '+failed.join(', ')):'.')+'</div></div></div><div class="mf"><button class="btn primary" onclick="closeComposer()">Done</button></div>';
   };
 })();
+</script>
+<script>
+/* Send invoice email — mirrors admin.html invoiceEmailContent, opens the composer prefilled */
+window.openInvoiceEmail=function(num){
+  var q=D.quotes.find(function(x){return x.num===num;}); if(!q||!q.invNum) return;
+  var link='https://auraprint.com.au/invoice.html?t='+(q._invToken||'');
+  var first=((q._name||q.contact||'').split(' ')[0])||'there';
+  var subject='Tax invoice '+q.invNum+' — order '+(q.orderNum||'')+' — Aura Print & Promo';
+  var body='Hi '+first+',\n\n'+
+    'Thank you for completing our online approval process! Your order '+(q.orderNum||'')+' is queued for production — please note full payment is required before production begins.\n\n'+
+    'View your tax invoice online ('+money(qTotal(q))+' inc GST):\n'+link+'\n\n'+
+    'To pay by credit or debit card, click the green ‘View & Pay Online’ button on the invoice — payment is processed securely by Stripe and your job is released automatically.\n\n'+
+    'EFT details are also on the invoice; please use your invoice number as the payment reference. Bank transfers can take up to 1 business day for us to receive — if your job is urgent, email your remittance advice to admin@auraprint.com.au and we’ll release it early.\n\n'+
+    'Once your order is dispatched we’ll email you with tracking details.\n\n'+
+    'We look forward to working with you again.\n\n'+
+    'Kind regards,\nMurray\nAura Print & Promo\ne: admin@auraprint.com.au\nw: auraprint.com.au';
+  if(!q._email){ alert('This quote has no customer email on file, so the invoice email cannot be addressed.'); return; }
+  openEmailComposer([{name:q._name||q.contact,email:q._email,consent:true}], 'Send invoice '+q.invNum, false);
+  window._email.subject=subject; window._email.body=body;
+  renderComposer();
+};
+/* Send quote email — mirrors admin.html quoteEmailContent, links to the myquote approval page */
+window.openQuoteEmail=function(num){
+  var q=D.quotes.find(function(x){return x.num===num;}); if(!q) return;
+  if(!q._email){ alert('This quote has no customer email on file, so the quote email cannot be addressed.'); return; }
+  var link='https://auraprint.com.au/myquote.html?t='+(q._token||'');
+  var first=((q._name||q.contact||'').split(' ')[0])||'there';
+  var validStr = q._valid ? new Date(q._valid+'T00:00:00').toLocaleDateString('en-AU',{day:'2-digit',month:'long',year:'numeric'}) : '';
+  var subject='Your quote '+q.num+' — Aura Print & Promo';
+  var body='Hi '+first+',\n\n'+
+    'Thanks for your enquiry — your quote is ready.\n\n'+
+    'View quote '+q.num+' online ('+money(qTotal(q))+' inc GST):\n'+link+'\n\n'+
+    'If you’re happy with everything, just click the green Accept button on the quote page and type your name — no sign-in needed, and you can forward this email to a colleague if someone else gives the go-ahead. Once accepted we’ll send your tax invoice, and production starts as soon as payment lands and you’ve approved your artwork proof.\n\n'+
+    (validStr?('This quote is valid until '+validStr+'. '):'')+'If anything needs adjusting — quantity, stock, finishing — just reply to this email and we’ll update it for you.\n\n'+
+    'Kind regards,\nMurray\nAura Print & Promo\ne: admin@auraprint.com.au\nw: auraprint.com.au';
+  openEmailComposer([{name:q._name||q.contact,email:q._email,consent:true}], 'Send quote '+q.num, false);
+  window._email.subject=subject; window._email.body=body; window._email._sentQuote=q._id;
+  renderComposer();
+};
 </script>
 </body>
 </html>
