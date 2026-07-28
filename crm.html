@@ -246,6 +246,28 @@ tr.clk{cursor:pointer}tr.clk:hover td{background:var(--soft)}
 .consent{display:flex;align-items:center;gap:9px;background:var(--soft);border:1px solid var(--line);border-radius:11px;padding:11px 13px;font-size:13px}
 .consent input{width:auto}
 .modal.wide{max-width:640px}
+.modal.xwide{max-width:760px}
+.modal .nqsec{border-top:1px solid var(--line);margin:18px 0 14px;padding-top:16px}
+.modal .nqsec h4{margin:0 0 2px;font-size:14px;font-weight:800}
+.modal .nqsec .sub{color:var(--muted);font-size:12.5px;margin-bottom:14px}
+.nqopts{display:flex;flex-wrap:wrap;gap:14px}
+.nqopts .field{flex:1;min-width:150px;margin-bottom:14px}
+.nqpickrow{display:flex;gap:14px;align-items:flex-end;flex-wrap:wrap}
+.nqprice{flex:1;min-width:170px;background:var(--pink-soft);border-radius:12px;padding:10px 15px;font-size:22px;font-weight:800;color:var(--pink-ink);display:flex;flex-direction:column;line-height:1.1;margin-bottom:14px}
+.nqprice .nqp-sub{font-size:11.5px;font-weight:600;opacity:.82;margin-top:4px}
+.nqprice .nqp-na{color:var(--muted)}
+.nqdivider{display:flex;align-items:center;gap:10px;color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.05em;font-weight:700;margin:18px 0 12px}
+.nqdivider:before,.nqdivider:after{content:"";flex:1;height:1px;background:var(--line)}
+.nqsug{position:absolute;left:0;right:0;top:calc(100% + 4px);background:#fff;border:1px solid var(--line);border-radius:12px;box-shadow:0 8px 26px rgba(20,10,40,.10);z-index:20;overflow:hidden;display:none}
+.nqsug.show{display:block}
+.nqsugrow{padding:9px 13px;cursor:pointer;display:flex;justify-content:space-between;gap:10px;font-size:13.5px;border-bottom:1px solid var(--line2)}
+.nqsugrow:last-child{border-bottom:none}
+.nqsugrow:hover{background:var(--soft)}
+.nqsugrow span{color:var(--muted);font-size:12.5px}
+.nqsugrow.none{cursor:default;color:var(--muted)}
+.nqsearch{width:100%;border:1px solid var(--line);border-radius:11px;padding:10px 13px;font-size:14px;font-family:inherit;background:var(--soft);outline:none;color:var(--ink)}
+.nqsearch:focus{border-color:var(--pink);background:#fff}
+input.nqqty{width:74px;text-align:right;border:1px solid var(--line);border-radius:8px;padding:6px 8px;font-size:13px;font-family:inherit;background:var(--soft);color:var(--ink)}
 .recips{display:flex;flex-wrap:wrap;gap:7px;border:1px solid var(--line);border-radius:11px;padding:10px 11px;background:var(--soft);max-height:120px;overflow:auto}
 .rchip{display:inline-flex;align-items:center;gap:6px;background:#fff;border:1px solid var(--line);border-radius:20px;padding:4px 10px 4px 5px;font-size:12.5px;font-weight:600}
 .rchip .d{width:20px;height:20px;border-radius:50%;color:#fff;display:grid;place-items:center;font-size:9px;font-weight:700}
@@ -533,7 +555,7 @@ document.querySelectorAll('.side .nav[data-v]').forEach(n=>n.onclick=()=>{
 document.querySelectorAll('.side .sub').forEach(s=>s.onclick=()=>{
   document.querySelectorAll('.side .sub').forEach(x=>x.classList.remove('active'));s.classList.add('active');go(s.dataset.v);
 });
-document.getElementById('newQuoteBtn').onclick=()=>{go('sales');};
+document.getElementById('newQuoteBtn').onclick=()=>{newQuote();};
 
 /* ---------- Dashboard ---------- */
 function renderHero(){
@@ -1005,6 +1027,304 @@ function saveOrg(){
   closeModal();
   document.getElementById('navOrgs').textContent=D.orgs.length;
   drawOrgs(D.orgs.length-1);
+}
+
+/* ================= New Quote builder — live catalogue picker (ported from prototype) =================
+   Reads the SAME Supabase data as the website: product_catalogue (product list) + product_prices
+   (option combos + qty breaks) + bc_prices (business cards). Saving inserts a real draft quote. */
+const QREST={url:(window.AURA_CONFIG&&window.AURA_CONFIG.supabaseUrl)||'https://pwjxkzifitybvtnrfxfi.supabase.co',key:(window.AURA_CONFIG&&window.AURA_CONFIG.supabaseKey)||''};
+async function sbPage(path){ // pages past the 1000-row PostgREST cap
+  let all=[],from=0;const step=1000;
+  for(;;){
+    const sep=path.includes('?')?'&':'?';
+    const rows=await fetch(QREST.url+'/rest/v1/'+path+sep+'limit='+step+'&offset='+from,{headers:{apikey:QREST.key,Authorization:'Bearer '+QREST.key}}).then(r=>{if(!r.ok)throw new Error('HTTP '+r.status);return r.json();});
+    all=all.concat(rows);
+    if(rows.length<step||from>20000)break;
+    from+=step;
+  }
+  return all;
+}
+const QCAT_LABELS={turnaround:'Speed',size:'Size',sides:'Printed sides',base:'Base',base_size:'Base weight',style:'Style',thickness:'Thickness',lamination:'Lamination',material:'Material',finish:'Finish',corners:'Corners',colour:'Colour',color:'Colour',stock:'Stock',shape:'Shape',orientation:'Orientation',package:'Package'};
+const QCAT_ORDER=['style','size','shape','sides','material','stock','thickness','lamination','base','base_size','finish','corners','colour','color','orientation','package'];
+const BC_TMAP={standard:'Standard',nextday:'Next Day',sameday:'Same Day'};
+const BC_SIDEMAP={'2S':'Double sided','1S':'Single sided'};
+const BC_STOCKMAP={'Deluxe 310gsm':'310gsm Deluxe Artboard','Deluxe 360gsm':'360gsm Deluxe Artboard','Deluxe 420gsm':'420gsm Deluxe Artboard','Speciality White Felt 300gsm':'White Felt 300gsm','Speciality White Linen 300gsm':'White Linen 300gsm','Speciality Eggshell Ultra White 324gsm':'Eggshell Ultra White 324gsm','Speciality Superfine Smooth 324gsm':'Superfine Smooth 324gsm','Speciality Knight Smooth 325gsm':'Knight Smooth 325gsm','Speciality Yupo Flexi 410gsm':'Yupo Flexi 410gsm','Loyalty Card':'Loyalty Card'};
+const BC_FINMAP={'Uncoated':'No lamination','Matt cello':'Matt cello (both sides)','Gloss cello':'Gloss cello (both sides)','Velvet cello':'Velvet cello (both sides)'};
+const BC_TORDER=['Standard','Next Day','Same Day'];
+const BC_STOCKORDER=['310gsm Deluxe Artboard','360gsm Deluxe Artboard','420gsm Deluxe Artboard','White Felt 300gsm','White Linen 300gsm','Eggshell Ultra White 324gsm','Superfine Smooth 324gsm','Knight Smooth 325gsm','Yupo Flexi 410gsm','Loyalty Card'];
+const BC_FINORDER=['No lamination','Matt cello (both sides)','Gloss cello (both sides)','Velvet cello (both sides)'];
+const BC_CORORDER=['Square','Rounded'];
+const BC_SIDEORDER=['Double sided','Single sided'];
+const qcPretty=s=>String(s||'').replace(/-/g,' ').replace(/\b\w/g,c=>c.toUpperCase());
+const qcLabel=k=>QCAT_LABELS[k]||qcPretty(k);
+function nqShapeBC(data){
+  const ord=(arr,v)=>{const i=arr.indexOf(v);return i<0?99:i;};
+  const rows=(data||[]).filter(r=>r.finish!=='(legacy)').map(r=>({options:{turnaround:BC_TMAP[r.turnaround]||r.turnaround,stock:BC_STOCKMAP[r.stock]||r.stock,finish:BC_FINMAP[r.finish]||r.finish,corners:r.corners,sides:BC_SIDEMAP[r.sides]||r.sides},qty:Number(r.qty),price_cents:Math.round(r.price_cents/100)*100}));
+  rows.sort((a,b)=>{const A=a.options,B=b.options;return ord(BC_TORDER,A.turnaround)-ord(BC_TORDER,B.turnaround)||ord(BC_STOCKORDER,A.stock)-ord(BC_STOCKORDER,B.stock)||ord(BC_FINORDER,A.finish)-ord(BC_FINORDER,B.finish)||ord(BC_CORORDER,A.corners)-ord(BC_CORORDER,B.corners)||ord(BC_SIDEORDER,A.sides)-ord(BC_SIDEORDER,B.sides)||a.qty-b.qty;});
+  return rows;
+}
+function newQuote(preName,opts){
+  window._nq={items:[],prodSlug:'',qty:100,name:'',email:'',phone:'',orgId:(opts&&opts.orgId)||'',suburb:'',_price:null,_priceQty:0};
+  window._qc={rows:[],keys:[],sel:{},title:'',live:true};
+  md.className='modal xwide';
+  renderNewQuote(preName||'');
+  mb.classList.add('show');
+}
+function renderNewQuote(preName){
+  const nq=window._nq;
+  const pc=preName?contactByName(preName):null;
+  if(pc){nq.name=pc.name;nq.email=pc.email||'';nq.phone=pc.phone||'';nq.orgId=pc.orgId||nq.orgId||'';nq.suburb=pc.suburb||'';}
+  const plus='<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M12 5v14M5 12h14"/></svg>';
+  md.innerHTML=`<div class="mh"><h3>New Quote</h3><div class="x" onclick="closeModal()">✕</div></div>
+    <div class="mb">
+      <div class="sub" style="color:var(--muted);font-size:12.5px;margin:-4px 0 14px">Search a past customer to autofill, or enter a new one.</div>
+      <div style="position:relative">
+        <input id="nq_search" class="nqsearch" placeholder="Search name, email or organisation…" autocomplete="off" oninput="nqSearch(this.value)">
+        <div id="nq_sug" class="nqsug"></div>
+      </div>
+      <div class="field two" style="margin-top:14px"><div class="field"><label>Contact name</label><input id="nq_name" value="${esc(nq.name)}" placeholder="e.g. Sarah Mitchell"></div><div class="field"><label>Phone</label><input id="nq_phone" value="${esc(nq.phone)}" placeholder="04xx xxx xxx"></div></div>
+      <div class="field"><label>Email</label><input id="nq_email" value="${esc(nq.email)}" placeholder="name@company.com.au"></div>
+      <div class="field"><label>Organisation</label>
+        <div style="display:flex;gap:8px;align-items:center"><select id="nq_org" style="flex:1">${orgOptions(nq.orgId||'')}</select><button type="button" class="btn sm" onclick="nqToggleNewOrg()">+ New</button></div>
+        <div id="nq_neworg" style="display:none;margin-top:10px;padding:12px;border:1px solid var(--line);border-radius:12px;background:var(--soft)">
+          <div class="field two" style="margin:0 0 8px"><div class="field" style="margin:0"><input id="nq_orgname" placeholder="New organisation name"></div><div class="field" style="margin:0"><input id="nq_orgsub" placeholder="Suburb (optional)"></div></div>
+          <button type="button" class="btn sm primary" onclick="nqAddOrg()">Add organisation</button>
+        </div>
+      </div>
+      <div class="field" style="margin-bottom:0"><label>Suburb</label><input id="nq_suburb" value="${esc(nq.suburb)}" placeholder="Suburb, State Postcode"></div>
+
+      <div class="nqsec"><h4>Add a priced product</h4><div class="sub">Pick a product, choose options and quantity — the price is pulled live from your catalogue.</div>
+        <div class="field"><label>Product</label><select id="nq_prod" onchange="nqSelectProduct(this.value)"><option value="">Loading catalogue…</option></select></div>
+        <div id="nq_opts" class="nqopts"></div>
+        <div class="nqpickrow">
+          <div class="field" style="max-width:150px;margin-bottom:14px"><label>Quantity</label><input id="nq_qty" type="number" min="1" value="${nq.qty}" oninput="nqUpdatePrice()"></div>
+          <div class="nqprice" id="nq_price"><span class="nqp-na">—</span></div>
+        </div>
+        <div id="nq_pmsg" class="note" style="margin:-6px 0 12px"></div>
+        <button class="btn primary" id="nq_add" onclick="nqAddPriced()" disabled>${plus}Add to quote</button>
+        <div class="nqdivider"><span>or add a manual line</span></div>
+        <div class="nqpickrow">
+          <div class="field" style="flex:1;min-width:180px;margin-bottom:12px"><label>Description</label><input id="nq_cdesc" placeholder="e.g. Delivery, setup, custom item"></div>
+          <div class="field" style="max-width:90px;margin-bottom:12px"><label>Qty</label><input id="nq_cqty" type="number" min="1" value="1"></div>
+          <div class="field" style="max-width:140px;margin-bottom:12px"><label>Line total $</label><input id="nq_cprice" type="number" min="0" step="0.01" placeholder="0.00"></div>
+        </div>
+        <button class="btn" onclick="nqAddCustom()">Add manual line</button>
+      </div>
+
+      <div class="nqsec"><h4>Line items</h4><div class="sub" id="nq_lsub"></div>
+        <table><thead><tr><th>Product</th><th class="num">Qty</th><th class="num">Unit</th><th class="num">Line total</th><th></th></tr></thead>
+        <tbody id="nq_lbody"></tbody></table>
+        <div class="note">Nothing is charged here. Saving creates a real draft quote you can review, send, convert to an order and invoice.</div>
+      </div>
+    </div>
+    <div class="mf">
+      <span style="margin-right:auto;align-self:center;font-weight:800;font-size:15px">Total (inc GST): <span id="nq_tot">$0.00</span></span>
+      <button class="btn" onclick="closeModal()">Cancel</button>
+      <button class="btn" id="nq_saveSend" onclick="nqSave(true)"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 2 11 13M22 2l-7 20-4-9-9-4z"/></svg>Save &amp; send</button>
+      <button class="btn primary" id="nq_saveDraft" onclick="nqSave(false)">Save as draft</button>
+    </div>`;
+  nqInitCatalogue();
+  nqRenderLines();
+}
+async function nqInitCatalogue(){
+  const sel=document.getElementById('nq_prod'),msg=document.getElementById('nq_pmsg');if(!sel)return;
+  const fill=slugs=>{sel.innerHTML='<option value="">Pick a product…</option>'+slugs.map(s=>`<option value="${esc(s)}">${esc(qcPretty(s))}</option>`).join('');};
+  if(window._qcSlugs){window._qc.live=true;fill(window._qcSlugs);if(msg)msg.textContent=window._qcSlugs.length.toLocaleString()+' products live from your catalogue.';return;}
+  try{
+    const data=await sbPage('product_catalogue?select=product_slug&order=product_slug');
+    let slugs=data.map(r=>r.product_slug).filter(Boolean);
+    if(slugs.indexOf('business-cards')<0){slugs.push('business-cards');slugs.sort();}
+    window._qcSlugs=slugs;window._qc.live=true;
+    fill(slugs);
+    if(msg)msg.textContent=slugs.length.toLocaleString()+' products live from your catalogue.';
+  }catch(e){
+    window._qc.live=false;
+    sel.innerHTML='<option value="">Live catalogue unavailable — use manual lines below</option>';
+    if(msg)msg.textContent='Could not reach the catalogue right now. You can still add manual lines below.';
+  }
+}
+async function nqSelectProduct(slug){
+  const qc=window._qc;qc.sel={};qc.slug=slug;window._nq.prodSlug=slug;window._nq._price=null;
+  const optsEl=document.getElementById('nq_opts'),msg=document.getElementById('nq_pmsg');
+  if(!slug){qc.rows=[];qc.keys=[];qc.title='';if(optsEl)optsEl.innerHTML='<div class="mini" style="margin:-4px 0 12px">Pick a product to see its options and live price.</div>';nqUpdatePrice();return;}
+  if(msg)msg.textContent='Loading pricing…';
+  const cache=window._qcCache||(window._qcCache={});
+  try{
+    let rows,title;
+    if(cache[slug]){rows=cache[slug].rows;title=cache[slug].title;}
+    else if(slug==='business-cards'){rows=nqShapeBC(await sbPage('bc_prices?select=stock,finish,corners,sides,qty,price_cents,turnaround,source&source=eq.real'));title='Business Cards';cache[slug]={rows,title};}
+    else{rows=await sbPage('product_prices?select=options,qty,price_cents,source&product_slug=eq.'+encodeURIComponent(slug));title=qcPretty(slug);cache[slug]={rows,title};}
+    qc.rows=rows;qc.title=title;
+    const seen={},keys=[];rows.forEach(r=>Object.keys(r.options||{}).forEach(k=>{if(!seen[k]){seen[k]=1;keys.push(k);}}));
+    keys.sort((a,b)=>{let ia=QCAT_ORDER.indexOf(a),ib=QCAT_ORDER.indexOf(b);ia=ia<0?99:ia;ib=ib<0?99:ib;return ia-ib||a.localeCompare(b);});
+    qc.keys=keys;if(msg)msg.textContent='';
+    nqRenderOpts(true);
+  }catch(e){
+    qc.rows=[];qc.keys=[];if(optsEl)optsEl.innerHTML='';if(msg)msg.textContent='Could not load pricing for this product — add it as a manual line instead.';nqUpdatePrice();
+  }
+}
+function nqCandidates(stopKey){
+  const qc=window._qc;
+  return qc.rows.filter(r=>{for(let i=0;i<qc.keys.length;i++){const k=qc.keys[i];if(k===stopKey)break;if(qc.sel[k]!=null&&(r.options||{})[k]!==qc.sel[k])return false;}return true;});
+}
+function nqRenderOpts(setQty){
+  const qc=window._qc,host=document.getElementById('nq_opts');if(!host)return;
+  let html='';
+  qc.keys.forEach(k=>{
+    const cands=nqCandidates(k),vals=[],vseen={};
+    cands.forEach(r=>{const v=(r.options||{})[k];if(v!=null&&!vseen[v]){vseen[v]=1;vals.push(v);}});
+    if(!vals.length){delete qc.sel[k];return;}
+    if(qc.sel[k]==null||vals.indexOf(qc.sel[k])<0)qc.sel[k]=vals[0];
+    html+=`<div class="field"><label>${esc(qcLabel(k))}</label><select data-k="${esc(k)}" onchange="nqOptChange(this)">${vals.map(v=>`<option${v===qc.sel[k]?' selected':''}>${esc(v)}</option>`).join('')}</select></div>`;
+  });
+  host.innerHTML=html||'<div class="mini" style="margin:-4px 0 12px">No options for this product — a flat catalogue price.</div>';
+  if(setQty){
+    const m=nqQtyMap(),breaks=Object.keys(m).map(Number).sort((a,b)=>a-b),qEl=document.getElementById('nq_qty');
+    if(qEl&&breaks.length){let def=breaks[0];if(qc.slug==='business-cards')def=Math.max(def,100);qEl.value=def;window._nq.qty=def;}
+  }
+  nqUpdatePrice();
+}
+function nqOptChange(sel){window._qc.sel[sel.dataset.k]=sel.value;nqRenderOpts(false);}
+function nqQtyMap(){
+  const qc=window._qc,m={};
+  qc.rows.forEach(r=>{if(qc.keys.every(k=>qc.sel[k]==null||(r.options||{})[k]===qc.sel[k]))m[r.qty]=r.price_cents;});
+  return m;
+}
+function nqPriceForQty(m,qty){
+  const breaks=Object.keys(m).map(Number).sort((a,b)=>a-b);
+  if(!breaks.length||!(qty>=1))return null;
+  if(m[qty]!=null)return {cents:m[qty],exact:true,maxBreak:breaks[breaks.length-1]};
+  const unit=q=>m[q]/q,lo=breaks[0],hi=breaks[breaks.length-1];let rate;
+  if(qty<=lo)rate=unit(lo);
+  else if(qty>=hi)rate=unit(hi);
+  else{let a=lo,b=hi;for(let i=0;i<breaks.length-1;i++){if(qty>=breaks[i]&&qty<=breaks[i+1]){a=breaks[i];b=breaks[i+1];break;}}const ra=unit(a),rb=unit(b);rate=ra+(rb-ra)*(qty-a)/(b-a);}
+  return {cents:Math.round(rate*qty),exact:false,maxBreak:hi};
+}
+function nqUpdatePrice(){
+  const priceEl=document.getElementById('nq_price'),msgEl=document.getElementById('nq_pmsg'),addBtn=document.getElementById('nq_add');
+  if(!priceEl)return;
+  const qty=parseInt((document.getElementById('nq_qty')||{}).value,10)||0;window._nq.qty=qty;
+  const m=nqQtyMap();
+  if(!Object.keys(m).length){priceEl.innerHTML='<span class="nqp-na">—</span>';if(addBtn)addBtn.disabled=true;window._nq._price=null;if(window._qc.rows.length&&msgEl&&!/^(Loading|Added)/.test(msgEl.textContent))msgEl.textContent='No set price for this combination — add it as a manual line.';return;}
+  const p=qty>=1?nqPriceForQty(m,qty):null;
+  if(!p){priceEl.innerHTML='<span class="nqp-na">—</span>';if(addBtn)addBtn.disabled=true;window._nq._price=null;if(msgEl)msgEl.textContent='Enter a quantity.';return;}
+  const rc=Math.round(p.cents/100)*100;
+  window._nq._price=rc;window._nq._priceQty=qty;
+  priceEl.innerHTML=`${money(rc)}<span class="nqp-sub">${qty} unit${qty===1?'':'s'} · ${money(Math.round(rc/qty))}/ea inc GST</span>`;
+  if(addBtn)addBtn.disabled=false;
+  if(msgEl)msgEl.textContent=p.exact?'':('Between price breaks — worked from the nearest breaks'+(qty>p.maxBreak?'; over the top break of '+p.maxBreak+', double-check before sending.':'.'));
+}
+function nqLineDesc(){
+  const qc=window._qc,vals=qc.keys.filter(k=>qc.sel[k]!=null).map(k=>qc.sel[k]);
+  return (qc.title||'Product')+(vals.length?' — '+vals.join(', '):'');
+}
+function nqAddPriced(){
+  const nq=window._nq;if(nq._price==null)return;
+  nq.items.push({n:nqLineDesc(),qty:nq._priceQty||nq.qty,price:nq._price});
+  const msg=document.getElementById('nq_pmsg');if(msg)msg.textContent='Added to the quote ✓ — you can still edit the line below.';
+  nqRenderLines();
+}
+function nqAddCustom(){
+  const nq=window._nq;
+  const d=document.getElementById('nq_cdesc').value.trim();
+  if(!d){alert('Add a description for the manual line.');return;}
+  const q=parseInt(document.getElementById('nq_cqty').value,10)||1;
+  const dollars=parseFloat(document.getElementById('nq_cprice').value);
+  nq.items.push({n:d,qty:q,price:Math.round((isNaN(dollars)?0:dollars)*100)});
+  document.getElementById('nq_cdesc').value='';document.getElementById('nq_cqty').value='1';document.getElementById('nq_cprice').value='';
+  nqRenderLines();
+}
+function nqEditQty(i,val){
+  const nq=window._nq,it=nq.items[i];if(!it)return;
+  const q=parseInt(val,10)||1,unit=it.qty?it.price/it.qty:it.price;
+  it.qty=q;it.price=Math.round(unit*q);nqRenderLines();
+}
+function nqRemoveLine(i){window._nq.items.splice(i,1);nqRenderLines();}
+function nqRenderLines(){
+  const nq=window._nq,tb=document.getElementById('nq_lbody');if(!tb)return;
+  tb.innerHTML=nq.items.length
+    ? nq.items.map((it,i)=>`<tr><td><b>${esc(it.n)}</b></td><td class="num"><input class="nqqty" type="number" min="1" value="${it.qty}" onchange="nqEditQty(${i},this.value)"></td><td class="num">${money(it.qty?Math.round(it.price/it.qty):it.price)}</td><td class="num">${money(it.price)}</td><td class="num"><button class="btn danger iconbtn sm" title="Remove line" onclick="nqRemoveLine(${i})">✕</button></td></tr>`).join('')
+    : '<tr><td colspan="5"><div class="empty">No products added yet. Use the picker above to add priced lines.</div></td></tr>';
+  const total=nq.items.reduce((a,b)=>a+b.price,0);
+  const lsub=document.getElementById('nq_lsub');if(lsub)lsub.textContent=`${nq.items.length} item${nq.items.length===1?'':'s'} · ${money(total)} inc GST`;
+  const tot=document.getElementById('nq_tot');if(tot)tot.textContent=money(total);
+}
+function nqSearch(term){
+  const box=document.getElementById('nq_sug');if(!box)return;
+  term=(term||'').trim().toLowerCase();
+  if(term.length<2){box.classList.remove('show');box.innerHTML='';return;}
+  const seen=new Set(),cand=[];
+  D.contacts.forEach(c=>{const k=(c.email||c.name).toLowerCase();if(!seen.has(k)){seen.add(k);const o=orgById(c.orgId);cand.push({name:c.name,email:c.email||'',phone:c.phone||'',orgId:c.orgId||'',suburb:c.suburb||'',org:o?o.name:''});}});
+  D.quotes.forEach(q=>{const c=contactByName(q.contact),o=orgById(orgOfQuote(q)),k=((c&&c.email)||q.contact).toLowerCase();if(!seen.has(k)){seen.add(k);cand.push({name:q.contact,email:c?c.email:'',phone:c?c.phone:'',orgId:o?o.id:'',suburb:c?(c.suburb||''):'',org:o?o.name:''});}});
+  const hits=cand.filter(c=>[c.name,c.email,c.org].some(f=>(f||'').toLowerCase().includes(term))).slice(0,6);
+  window._nqCand=hits;
+  box.innerHTML=hits.length
+    ? hits.map((h,i)=>`<div class="nqsugrow" data-i="${i}"><b>${esc(h.name)}</b><span>${esc(h.org||h.email||h.suburb||'')}</span></div>`).join('')
+    : '<div class="nqsugrow none">No match — enter the details below as a new customer.</div>';
+  box.classList.add('show');
+  box.querySelectorAll('.nqsugrow[data-i]').forEach(r=>r.onclick=()=>nqFill(+r.dataset.i));
+}
+function nqFill(i){
+  const h=window._nqCand[i];if(!h)return;
+  document.getElementById('nq_name').value=h.name||'';
+  document.getElementById('nq_email').value=h.email||'';
+  document.getElementById('nq_phone').value=h.phone||'';
+  document.getElementById('nq_suburb').value=h.suburb||'';
+  if(h.orgId){document.getElementById('nq_org').value=h.orgId;}
+  document.getElementById('nq_search').value=h.name||'';
+  const box=document.getElementById('nq_sug');box.classList.remove('show');box.innerHTML='';
+}
+function nqToggleNewOrg(){
+  const b=document.getElementById('nq_neworg');if(!b)return;
+  b.style.display=b.style.display==='none'?'block':'none';
+  if(b.style.display==='block')document.getElementById('nq_orgname').focus();
+}
+async function nqAddOrg(){
+  const name=document.getElementById('nq_orgname').value.trim();
+  if(!name){alert('Enter an organisation name.');return;}
+  const sb=window.CRM_SB;if(!sb){alert('Not connected — please reload and sign in.');return;}
+  const sub=document.getElementById('nq_orgsub').value.trim();
+  try{
+    const res=await sb.from('organisations').insert({name,suburb:sub||null}).select('id,name,suburb').single();
+    if(res.error)throw res.error;
+    D.orgs.push({id:res.data.id,name:res.data.name,abn:'—',suburb:res.data.suburb||'—',notes:'—'});
+    const navO=document.getElementById('navOrgs');if(navO)navO.textContent=D.orgs.length;
+    document.getElementById('nq_org').innerHTML=orgOptions(res.data.id);
+    document.getElementById('nq_neworg').style.display='none';
+    document.getElementById('nq_orgname').value='';document.getElementById('nq_orgsub').value='';
+  }catch(e){alert('Could not add the organisation: '+(e.message||e));}
+}
+async function nqSave(send){
+  const nq=window._nq;
+  const name=document.getElementById('nq_name').value.trim();
+  if(!name){alert('Add a customer name for this quote.');return;}
+  const email=document.getElementById('nq_email').value.trim();
+  if(!email){alert('Add a customer email — a quote needs one to be addressed and sent.');return;}
+  if(!nq.items.length){alert('Add at least one line item to the quote.');return;}
+  const sb=window.CRM_SB;if(!sb){alert('Not connected — please reload and sign in.');return;}
+  const orgId=document.getElementById('nq_org').value||'';
+  const org=orgId?orgById(orgId):null;
+  const phone=document.getElementById('nq_phone').value.trim();
+  const suburb=document.getElementById('nq_suburb').value.trim();
+  const bDraft=document.getElementById('nq_saveDraft'),bSend=document.getElementById('nq_saveSend');
+  if(bDraft)bDraft.disabled=true;if(bSend)bSend.disabled=true;
+  if(bDraft)bDraft.textContent='Saving…';
+  try{
+    const ins=await sb.from('quotes').insert({contact_name:name,contact_email:email,contact_phone:phone||null,company:org?org.name:null,suburb:suburb||null}).select('id,quote_number').single();
+    if(ins.error)throw ins.error;
+    const rows=nq.items.map((it,idx)=>{const inc=it.price,ex=Math.round(inc/1.1);return {quote_id:ins.data.id,item_no:idx+1,description:it.n,qty:it.qty,price_inc_cents:inc,price_ex_cents:ex,gst_cents:inc-ex};});
+    const ii=await sb.from('quote_items').insert(rows);
+    if(ii.error)throw ii.error;
+    const num=ins.data.quote_number;
+    closeModal();
+    await refreshFromSupabase(sb);
+    openQuote(num);
+    if(send&&window.openQuoteEmail)window.openQuoteEmail(num);
+  }catch(e){
+    alert('Could not save the quote: '+(e.message||e));
+    if(bDraft){bDraft.disabled=false;bDraft.textContent='Save as draft';}
+    if(bSend)bSend.disabled=false;
+  }
 }
 
 /* ---------- Live data from Supabase ---------- */
