@@ -28,7 +28,7 @@ const HEADER = `
       </div>
       <div><a href="signage.html">Signage &amp; Display ▾</a>
         <div class="mega">
-          <div><h4>Signs</h4><ul><li><a href="corflute-signs.html">Corflute Signs</a></li><li><a href="a-frames.html">A-Frames</a></li><li><a href="posters.html">Posters</a></li><li><a href="safety-signs.html">Safety Signs</a></li><li><a href="vehicle-magnets.html">Vehicle Magnets</a></li></ul></div>
+          <div><h4>Signs</h4><ul><li><a href="corflute-signs.html">Corflute Signs</a></li><li><a href="a-frames.html">A-Frames</a></li><li><a href="posters.html">Posters</a></li><li><a href="safety-signs.html">Safety Signs</a></li></ul></div>
           <div><h4>Banners &amp; Flags</h4><ul><li><a href="pull-up-banners.html">Pull Up Banners</a></li><li><a href="outdoor-banners.html">Outdoor Banners</a></li><li><a href="teardrop-flags.html">Teardrop Flags</a></li><li><a href="fence-mesh.html">Fence Mesh</a></li></ul></div>
           <div><h4>Events &amp; Display</h4><ul><li><a href="exhibition-displays.html">Exhibition Displays</a></li><li><a href="media-walls.html">Media Walls</a></li><li><a href="marquees.html">Marquees</a></li><li><a href="tablecloths.html">Printed Tablecloths</a></li></ul></div>
         </div>
@@ -44,7 +44,7 @@ const HEADER = `
           <div><h4>Drinkware &amp; Gifts</h4><ul><li><a href="promo.html">Mugs &amp; Cups</a></li><li><a href="promo.html">Bottles &amp; Tumblers</a></li><li><a href="promo.html">Stubby Coolers</a></li><li><a href="promo.html">Tote Bags</a></li></ul></div>
           <div><h4>Apparel</h4><ul><li><a href="promo.html">Tees &amp; Polos</a></li><li><a href="promo.html">Hoodies</a></li><li><a href="promo.html">Hi-Vis &amp; Workwear</a></li><li><a href="promo.html">Caps &amp; Hats</a></li></ul></div>
           <div><h4>Office &amp; Tech</h4><ul><li><a href="promo.html">Pens</a></li><li><a href="promo.html">Notebooks</a></li><li><a href="promo.html">Lanyards</a></li><li><a href="promo.html">Eco Range</a></li></ul></div>
-          <div><h4>Fridge Magnets</h4><ul><li><a href="magnets.html">All Fridge Magnets →</a></li><li><a href="magnets.html">Business Card Magnets</a></li><li><a href="magnets.html">Photo Frame Magnets</a></li><li><a href="magnets.html">Whiteboard Magnets</a></li></ul></div>
+          <div><h4>Magnets</h4><ul><li><a href="magnets.html">All Fridge Magnets →</a></li><li><a href="magnets.html">Business Card Magnets</a></li><li><a href="magnets.html">Photo Frame Magnets</a></li><li><a href="magnets.html">Whiteboard Magnets</a></li><li><a href="vehicle-magnets.html">Vehicle Magnets</a></li></ul></div>
         </div>
       </div>
       <div><a href="index.html#quoter">Instant Price</a></div>
