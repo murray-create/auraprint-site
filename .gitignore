@@ -7,3 +7,7 @@ _*.zip
 *-backup.json
 *.tgz
 .DS_Store
+
+# Cowork transfer staging
+_to_delete/
+_deploy/
