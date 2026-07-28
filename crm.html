@@ -338,7 +338,7 @@ input.nqqty{width:74px;text-align:right;border:1px solid var(--line);border-radi
     <div class="nav" data-v="orgs"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 21h18"/><path d="M5 21V7l7-4 7 4v14"/><path d="M9 9h.01M15 9h.01M9 13h.01M15 13h.01M9 17h.01M15 17h.01"/></svg>Organisations<span class="pill" id="navOrgs">3</span></div>
     <div class="nav" data-v="contacts"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 4-6 8-6s8 2 8 6"/></svg>Contacts<span class="pill" id="navContacts">7</span></div>
     <div class="nav open" data-g="sales" data-v="sales"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19V5M4 19h16M8 15l3-4 3 2 4-6"/></svg>Quotes &amp; Orders<svg class="caret" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg></div>
-    <div class="subnav show" data-sub="sales"><div class="sub active" data-v="sales">Quotes</div><div class="sub" data-v="sales">Orders</div><div class="sub" data-v="sales">Invoices</div></div>
+    <div class="subnav show" data-sub="sales"><div class="sub active" data-v="sales" data-sf="quotes">Quotes</div><div class="sub" data-v="sales" data-sf="orders">Orders</div><div class="sub" data-v="sales" data-sf="invoices">Invoices</div></div>
     <div class="nav" data-g="products" data-v="products"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7l9-4 9 4-9 4-9-4z"/><path d="M3 7v10l9 4 9-4V7"/><path d="M12 11v10"/></svg>Products<span class="pill">1.6k</span></div>
     <div class="subnav" data-sub="products"><div class="sub" data-v="products">Products list</div><div class="sub" data-v="templates">Preview artwork</div></div>
     <div class="nav" data-v="suppliers"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="7" width="13" height="10" rx="1.5"/><path d="M16 10h3l2 3v4h-5"/><circle cx="7" cy="18" r="1.6"/><circle cx="17" cy="18" r="1.6"/></svg>Suppliers<span class="pill">5</span></div>
@@ -391,12 +391,14 @@ input.nqqty{width:74px;text-align:right;border:1px solid var(--line);border-radi
       <!-- QUOTES & ORDERS -->
       <section class="view" id="v-sales">
         <div class="tiles" id="salesTiles"></div>
-        <div class="grid g2">
-          <div class="card"><h3>Recent quotes</h3><div class="sub" id="qsub"></div>
+        <div class="grid g2" id="salesGrid">
+          <div class="card" id="card-quotes"><h3>Recent quotes</h3><div class="sub" id="qsub"></div>
             <table><thead><tr><th>Quote</th><th>Customer</th><th class="num">Value</th><th>Status</th></tr></thead><tbody id="qtable2"></tbody></table></div>
-          <div class="card"><h3>Recent orders</h3><div class="sub" id="osub"></div>
+          <div class="card" id="card-orders"><h3>Recent orders</h3><div class="sub" id="osub"></div>
             <table><thead><tr><th>Order</th><th>Customer</th><th>Status</th></tr></thead><tbody id="otable"></tbody></table></div>
         </div>
+        <div class="card" id="card-invoices" style="display:none;margin-top:16px"><h3>Invoices</h3><div class="sub" id="isub"></div>
+          <table><thead><tr><th>Invoice</th><th>Quote</th><th>Customer</th><th class="num">Amount</th><th>Status</th></tr></thead><tbody id="itable"></tbody></table></div>
       </section>
 
       <!-- QUOTE DETAIL -->
@@ -548,12 +550,23 @@ function go(v){
   document.getElementById('pheadBtn').style.display = (v==='quote'||v==='supplier') ? 'none' : '';
   window.scrollTo(0,0);
 }
+function setSalesFilter(sf){
+  const cq=document.getElementById('card-quotes'),co=document.getElementById('card-orders'),ci=document.getElementById('card-invoices');
+  if(!cq||!co||!ci)return;
+  if(sf==='quotes'){cq.style.display='';co.style.display='none';ci.style.display='none';}
+  else if(sf==='orders'){cq.style.display='none';co.style.display='';ci.style.display='none';}
+  else if(sf==='invoices'){cq.style.display='none';co.style.display='none';ci.style.display='';}
+  else {cq.style.display='';co.style.display='';ci.style.display='none';} // default: quotes + orders
+}
 document.querySelectorAll('.side .nav[data-v]').forEach(n=>n.onclick=()=>{
   if(n.dataset.g){const sub=document.querySelector('.subnav[data-sub="'+n.dataset.g+'"]');n.classList.toggle('open');sub.classList.toggle('show');}
   go(n.dataset.v);
+  if(n.dataset.v==='sales'){setSalesFilter(null);document.querySelectorAll('.side .sub[data-sf]').forEach(x=>x.classList.remove('active'));}
 });
 document.querySelectorAll('.side .sub').forEach(s=>s.onclick=()=>{
-  document.querySelectorAll('.side .sub').forEach(x=>x.classList.remove('active'));s.classList.add('active');go(s.dataset.v);
+  document.querySelectorAll('.side .sub').forEach(x=>x.classList.remove('active'));s.classList.add('active');
+  go(s.dataset.v);
+  if(s.dataset.sf)setSalesFilter(s.dataset.sf);
 });
 document.getElementById('newQuoteBtn').onclick=()=>{newQuote();};
 
@@ -585,6 +598,14 @@ function renderQuoteTables(){
   const all=D.orders;
   document.getElementById('otable').innerHTML=all.map(o=>`<tr${o.q?` class="clk" data-q="${o.q}"`:''}><td><b>${o.num}</b></td><td>${esc(o.name)}</td><td><span class="badge b-${o.status}">${o.status}</span></td></tr>`).join('');
   document.querySelectorAll('#otable tr.clk[data-q]').forEach(r=>r.onclick=()=>openQuote(r.dataset.q));
+
+  const invs=D.quotes.filter(q=>q.invNum);
+  const itb=document.getElementById('itable');
+  if(itb){
+    itb.innerHTML=invs.length?invs.map(q=>`<tr class="clk" data-q="${q.num}"><td><b>${esc(q.invNum)}</b></td><td>${q.num}</td><td>${esc(q.contact)}</td><td class="num">${money(qTotal(q))}</td><td><span class="badge b-${q.stage==='paid'?'paid':'unpaid'}">${q.stage==='paid'?'paid':'unpaid'}</span></td></tr>`).join(''):'<tr><td colspan="5"><div class="empty">No invoices raised yet.</div></td></tr>';
+    itb.querySelectorAll('tr.clk[data-q]').forEach(r=>r.onclick=()=>openQuote(r.dataset.q));
+    const isub=document.getElementById('isub');if(isub)isub.textContent=`${invs.length} invoice${invs.length===1?'':'s'} · click one to open the quote`;
+  }
 
   const conv=D.quotes.filter(q=>q.status==='converted').length;
   const active=all.filter(o=>o.status!=='cancelled').length;
@@ -660,7 +681,7 @@ function openQuote(num){
       </div>
     </div>
     <div class="qdgrid">
-      <div class="card"><h3>Line items</h3><div class="sub">${q.items.length} item${q.items.length===1?'':'s'} on this quote</div>
+      <div class="card"><div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px"><div><h3>Line items</h3><div class="sub">${q.items.length} item${q.items.length===1?'':'s'} on this quote</div></div>${q.stage==='quote'?`<button class="btn sm" onclick="openEditQuote('${q.num}')"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg> Edit</button>`:''}</div>
         <table><thead><tr><th>Product</th><th class="num">Qty</th><th class="num">Unit</th><th class="num">Line total</th></tr></thead>
         <tbody>${q.items.map(it=>`<tr><td><b>${esc(it.n)}</b></td><td class="num">${it.qty}</td><td class="num">${money(unitOf(it))}</td><td class="num">${money(it.price)}</td></tr>`).join('')||'<tr><td colspan="4"><div class="empty">No products on this quote yet.</div></td></tr>'}</tbody></table>
         <div class="note">Prices shown include GST. Wholesale cost and supplier stay staff-only and never appear on the customer's copy.</div>
@@ -1066,18 +1087,34 @@ function nqShapeBC(data){
 function newQuote(preName,opts){
   window._nq={items:[],prodSlug:'',qty:100,name:'',email:'',phone:'',orgId:(opts&&opts.orgId)||'',suburb:'',_price:null,_priceQty:0};
   window._qc={rows:[],keys:[],sel:{},title:'',live:true};
+  window._nqMode='new';window._nqEditId=null;window._nqNum=null;
   md.className='modal xwide';
-  renderNewQuote(preName||'');
+  renderNewQuote(preName||'',false);
   mb.classList.add('show');
 }
-function renderNewQuote(preName){
+async function openEditQuote(num){
+  const q=D.quotes.find(x=>x.num===num); if(!q)return;
+  if(q.stage!=='quote'){alert('This quote has been converted to an order or invoice, so its lines are locked. Duplicate it or start a new quote instead.');return;}
+  const sb=window.CRM_SB;if(!sb){alert('Not connected — please reload and sign in.');return;}
+  let row;
+  try{const r=await sb.from('quotes').select('*').eq('id',q._id).single();if(r.error)throw r.error;row=r.data;}
+  catch(e){alert('Could not load the quote to edit: '+(e.message||e));return;}
+  const org=row.company?D.orgs.find(o=>(o.name||'').toLowerCase()===row.company.toLowerCase()):null;
+  window._nq={items:q.items.map(it=>({n:it.n,qty:it.qty,price:it.price})),prodSlug:'',qty:100,name:row.contact_name||q.contact||'',email:row.contact_email||'',phone:row.contact_phone||'',orgId:org?org.id:'',suburb:row.suburb||'',_price:null,_priceQty:0,_company:row.company||''};
+  window._qc={rows:[],keys:[],sel:{},title:'',live:true};
+  window._nqMode='edit';window._nqEditId=q._id;window._nqNum=num;
+  md.className='modal xwide';
+  renderNewQuote('',true);
+  mb.classList.add('show');
+}
+function renderNewQuote(preName,edit){
   const nq=window._nq;
   const pc=preName?contactByName(preName):null;
   if(pc){nq.name=pc.name;nq.email=pc.email||'';nq.phone=pc.phone||'';nq.orgId=pc.orgId||nq.orgId||'';nq.suburb=pc.suburb||'';}
   const plus='<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M12 5v14M5 12h14"/></svg>';
-  md.innerHTML=`<div class="mh"><h3>New Quote</h3><div class="x" onclick="closeModal()">✕</div></div>
+  md.innerHTML=`<div class="mh"><h3>${edit?('Edit quote '+esc(window._nqNum)):'New Quote'}</h3><div class="x" onclick="closeModal()">✕</div></div>
     <div class="mb">
-      <div class="sub" style="color:var(--muted);font-size:12.5px;margin:-4px 0 14px">Search a past customer to autofill, or enter a new one.</div>
+      <div class="sub" style="color:var(--muted);font-size:12.5px;margin:-4px 0 14px">${edit?'Update the customer details and line items below, then save your changes.':'Search a past customer to autofill, or enter a new one.'}</div>
       <div style="position:relative">
         <input id="nq_search" class="nqsearch" placeholder="Search name, email or organisation…" autocomplete="off" oninput="nqSearch(this.value)">
         <div id="nq_sug" class="nqsug"></div>
@@ -1120,8 +1157,8 @@ function renderNewQuote(preName){
     <div class="mf">
       <span style="margin-right:auto;align-self:center;font-weight:800;font-size:15px">Total (inc GST): <span id="nq_tot">$0.00</span></span>
       <button class="btn" onclick="closeModal()">Cancel</button>
-      <button class="btn" id="nq_saveSend" onclick="nqSave(true)"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 2 11 13M22 2l-7 20-4-9-9-4z"/></svg>Save &amp; send</button>
-      <button class="btn primary" id="nq_saveDraft" onclick="nqSave(false)">Save as draft</button>
+      ${edit?'':`<button class="btn" id="nq_saveSend" onclick="nqSave(true)"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 2 11 13M22 2l-7 20-4-9-9-4z"/></svg>Save &amp; send</button>`}
+      <button class="btn primary" id="nq_saveDraft" onclick="nqSave(false)">${edit?'Save changes':'Save as draft'}</button>
     </div>`;
   nqInitCatalogue();
   nqRenderLines();
@@ -1306,14 +1343,30 @@ async function nqSave(send){
   const org=orgId?orgById(orgId):null;
   const phone=document.getElementById('nq_phone').value.trim();
   const suburb=document.getElementById('nq_suburb').value.trim();
+  const isEdit=window._nqMode==='edit';
+  const company=org?org.name:(isEdit?(nq._company||null):null);
+  const mkItems=qid=>nq.items.map((it,idx)=>{const inc=it.price,ex=Math.round(inc/1.1);return {quote_id:qid,item_no:idx+1,description:it.n,qty:it.qty,price_inc_cents:inc,price_ex_cents:ex,gst_cents:inc-ex};});
   const bDraft=document.getElementById('nq_saveDraft'),bSend=document.getElementById('nq_saveSend');
+  const draftLabel=isEdit?'Save changes':'Save as draft';
   if(bDraft)bDraft.disabled=true;if(bSend)bSend.disabled=true;
   if(bDraft)bDraft.textContent='Saving…';
   try{
-    const ins=await sb.from('quotes').insert({contact_name:name,contact_email:email,contact_phone:phone||null,company:org?org.name:null,suburb:suburb||null}).select('id,quote_number').single();
+    if(isEdit){
+      const eid=window._nqEditId;
+      const up=await sb.from('quotes').update({contact_name:name,contact_email:email,contact_phone:phone||null,company:company,suburb:suburb||null}).eq('id',eid);
+      if(up.error)throw up.error;
+      const del=await sb.from('quote_items').delete().eq('quote_id',eid);
+      if(del.error)throw del.error;
+      const ei=await sb.from('quote_items').insert(mkItems(eid));
+      if(ei.error)throw ei.error;
+      closeModal();
+      await refreshFromSupabase(sb);
+      openQuote(window._nqNum);
+      return;
+    }
+    const ins=await sb.from('quotes').insert({contact_name:name,contact_email:email,contact_phone:phone||null,company:company,suburb:suburb||null}).select('id,quote_number').single();
     if(ins.error)throw ins.error;
-    const rows=nq.items.map((it,idx)=>{const inc=it.price,ex=Math.round(inc/1.1);return {quote_id:ins.data.id,item_no:idx+1,description:it.n,qty:it.qty,price_inc_cents:inc,price_ex_cents:ex,gst_cents:inc-ex};});
-    const ii=await sb.from('quote_items').insert(rows);
+    const ii=await sb.from('quote_items').insert(mkItems(ins.data.id));
     if(ii.error)throw ii.error;
     const num=ins.data.quote_number;
     closeModal();
@@ -1322,7 +1375,7 @@ async function nqSave(send){
     if(send&&window.openQuoteEmail)window.openQuoteEmail(num);
   }catch(e){
     alert('Could not save the quote: '+(e.message||e));
-    if(bDraft){bDraft.disabled=false;bDraft.textContent='Save as draft';}
+    if(bDraft){bDraft.disabled=false;bDraft.textContent=draftLabel;}
     if(bSend)bSend.disabled=false;
   }
 }
