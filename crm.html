@@ -135,6 +135,8 @@ tr.clk{cursor:pointer}tr.clk:hover td{background:var(--soft)}
 .b-draft,.b-sent,.b-requested{background:#eef;color:#4a4a8a}
 .b-declined,.b-cancelled,.b-void,.b-unpaid{background:var(--bad-soft);color:var(--bad)}
 .b-api{background:var(--pink-soft);color:var(--pink-ink)}.b-manual{background:var(--warn-soft);color:var(--warn)}
+.b-new{background:#eef;color:#4a4a8a}.b-contacted{background:var(--warn-soft);color:var(--warn)}.b-won,.b-quoted{background:var(--good-soft);color:var(--good)}.b-lost{background:var(--bad-soft);color:var(--bad)}
+#leadFilter .chip{cursor:pointer;border:1px solid var(--line);background:#fff;color:var(--muted);margin-top:0}#leadFilter .chip.on{background:var(--pink-soft);color:var(--pink-ink);border-color:transparent}
 .dom{font-size:11px;font-weight:700;padding:2px 9px;border-radius:20px}
 .dom.Promotional{background:var(--pink-soft);color:var(--pink-ink)}
 .dom.Apparel{background:#efe9fe;color:#6d28d9}
@@ -337,6 +339,7 @@ input.nqqty{width:74px;text-align:right;border:1px solid var(--line);border-radi
     <div class="navlbl">Workspace</div>
     <div class="nav" data-v="orgs"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 21h18"/><path d="M5 21V7l7-4 7 4v14"/><path d="M9 9h.01M15 9h.01M9 13h.01M15 13h.01M9 17h.01M15 17h.01"/></svg>Organisations<span class="pill" id="navOrgs">3</span></div>
     <div class="nav" data-v="contacts"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 4-6 8-6s8 2 8 6"/></svg>Contacts<span class="pill" id="navContacts">7</span></div>
+    <div class="nav" data-v="leads"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 5h18v14H3z"/><path d="M3 7l9 6 9-6"/></svg>Leads<span class="pill" id="navLeads">0</span></div>
     <div class="nav open" data-g="sales" data-v="sales"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19V5M4 19h16M8 15l3-4 3 2 4-6"/></svg>Quotes &amp; Orders<svg class="caret" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg></div>
     <div class="subnav show" data-sub="sales"><div class="sub active" data-v="sales" data-sf="quotes">Quotes</div><div class="sub" data-v="sales" data-sf="orders">Orders</div><div class="sub" data-v="sales" data-sf="invoices">Invoices</div></div>
     <div class="nav" data-g="products" data-v="products"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7l9-4 9 4-9 4-9-4z"/><path d="M3 7v10l9 4 9-4V7"/><path d="M12 11v10"/></svg>Products<span class="pill">1.6k</span></div>
@@ -404,6 +407,15 @@ input.nqqty{width:74px;text-align:right;border:1px solid var(--line);border-radi
       <!-- QUOTE DETAIL -->
       <section class="view" id="v-quote"><div id="quoteDetail"></div></section>
 
+      <!-- LEADS -->
+      <section class="view" id="v-leads">
+        <div class="tiles" id="leadTiles"></div>
+        <div class="card"><h3>Website enquiries</h3><div class="sub" id="leadSub">Quote requests submitted from your product pages · click a lead to open it</div>
+          <div class="filterbar" id="leadFilter" style="margin:10px 0 4px"></div>
+          <table><thead><tr><th>Received</th><th>Name</th><th>Enquiry</th><th class="num">Qty</th><th>Source</th><th>Status</th></tr></thead><tbody id="leadTable"></tbody></table>
+          <div class="note">Website enquiries land here first. Open one and use “Convert to quote” to raise a priced quote from it.</div></div>
+      </section>
+
       <!-- PRODUCTS -->
       <section class="view" id="v-products">
         <div class="filterbar" id="pfilter"></div>
@@ -437,6 +449,7 @@ const D = {
   feeds:[{name:'Premier Collection',sub:'Promotional · 440 products',n:'440'},{name:'PromoBrands',sub:'Promotional · 862 products',n:'862'}],
   domains:[{k:'Promotional',n:1302,c:'#f01a9a'},{k:'Print',n:285,c:'#43b7ff'}],
   months:[['Jul',3],['Aug',5],['Sep',4],['Oct',7],['Nov',6],['Dec',4],['Jan',8],['Feb',6],['Mar',9],['Apr',7],['May',11],['Jun',8]],
+  leads:[],
   orgs:[
     {id:'org1',name:'Sanctuary Church',abn:'—',suburb:'Mons QLD 4556',notes:'A-frames, bow banners and event signage. Quotes QU-001013, QU-001014, QU-001018; order AP-001013 (invoice INV-000010 issued).'},
     {id:'org2',name:'Tunnel Ridge Ranch',abn:'—',suburb:'QLD',notes:'Event flyers and print. James Norman accepted QU-001011; order AP-001012 shipped, invoice INV-000009 paid. Delivery to 61 Kowald Road.'},
@@ -537,7 +550,7 @@ const contactsOfOrg=id=>D.contacts.filter(c=>c.orgId===id);
 const quotesOfContact=n=>D.quotes.filter(q=>q.contact===n);
 const quotesOfOrg=id=>D.quotes.filter(q=>orgOfQuote(q)===id);
 const STAGES=['quote','order','invoice','paid'];
-const titles={dash:['Dashboard',"Here's how the business is tracking today."],contacts:['Contacts','Everything about a customer in one place.'],orgs:['Organisations','Companies you sell to, and the people at each.'],sales:['Quotes & Orders','Your pipeline from request to fulfilment.'],quote:['Quote','Line items, status and the convert flow.'],products:['Products','Every product you sell, priced live.'],suppliers:['Suppliers','Your supply, and how each feeds in.'],supplier:['Supplier','Trade access, pricing and how it feeds in.'],templates:['Templates','Reusable artwork and document templates.']};
+const titles={dash:['Dashboard',"Here's how the business is tracking today."],contacts:['Contacts','Everything about a customer in one place.'],leads:['Leads','Website enquiries from your product pages.'],orgs:['Organisations','Companies you sell to, and the people at each.'],sales:['Quotes & Orders','Your pipeline from request to fulfilment.'],quote:['Quote','Line items, status and the convert flow.'],products:['Products','Every product you sell, priced live.'],suppliers:['Suppliers','Your supply, and how each feeds in.'],supplier:['Supplier','Trade access, pricing and how it feeds in.'],templates:['Templates','Reusable artwork and document templates.']};
 
 /* ---------- Navigation ---------- */
 function go(v){
@@ -1386,7 +1399,7 @@ async function nqSave(send){
 /* ---------- Live data from Supabase ---------- */
 const SUP_COUNT={PREMIER:440,PROMOBRANDS:862};
 async function refreshFromSupabase(sb){
-  const [orgs,cons,qs,qis,ords,oi,invs,sup] = await Promise.all([
+  const [orgs,cons,qs,qis,ords,oi,invs,sup,lds] = await Promise.all([
     sb.from('organisations').select('*').order('name'),
     sb.from('contacts').select('*').order('archived',{ascending:true}).order('name'),
     sb.from('quotes').select('*').eq('archived',false).order('created_at',{ascending:false}),
@@ -1394,7 +1407,8 @@ async function refreshFromSupabase(sb){
     sb.from('orders').select('*').order('created_at',{ascending:false}),
     sb.from('order_items').select('order_id,price_inc_cents'),
     sb.from('invoices').select('*'),
-    sb.from('suppliers').select('*').eq('active',true).order('name')
+    sb.from('suppliers').select('*').eq('active',true).order('name'),
+    sb.from('leads').select('*').order('created_at',{ascending:false})
   ]);
   D.orgs.length=0;
   (orgs.data||[]).forEach(o=>D.orgs.push({id:o.id,name:o.name,abn:o.abn||'—',suburb:o.suburb||'—',notes:o.notes||'—'}));
@@ -1420,14 +1434,91 @@ async function refreshFromSupabase(sb){
   (ords.data||[]).forEach(o=>{const q=(qs.data||[]).find(x=>x.converted_order_id===o.id);D.orders.push({num:o.order_number,name:o.contact_name||'—',company:o.company||null,status:o.status,total:orderTotal[o.id]||0,q:q?q.quote_number:null,track:o.tracking_number||null});});
   D.suppliers.length=0;
   (sup.data||[]).forEach(s=>{const dom=s.category_label==='Promotional Products'?'Promotional':(s.category_label==='Apparel'?'Apparel':'Print');D.suppliers.push({code:s.code,name:s.name,domain:dom,kind:s.kind==='api'?'api':'manual',n:SUP_COUNT[s.code]||0,sync:s.last_synced_at?new Date(s.last_synced_at).toLocaleDateString('en-AU'):(s.kind==='api'?'—':'Rate card'),portal:s.portal_url||'',apiBase:s.api_base_url||'—',username:s.trade_username||'',account:s.portal_notes||s.sync_notes||'',secretRef:s.secret_ref||'—',hasSecret:!!s.has_portal_secret,pricing:s.default_margin?('sell = '+s.default_margin+'× cost'):'—',notes:s.portal_notes||s.sync_notes||''});});
-  renderHero(); renderQuoteTables(); drawContacts(0); drawOrgs(0); renderSuppliers();
+  D.leads.length=0;
+  (lds.data||[]).forEach(l=>D.leads.push({
+    _id:l.id, created:l.created_at, name:l.name||l.email||'—', email:l.email||'', phone:l.phone||'',
+    company:l.company||'', category:l.category||'', product:l.source_product_code||'', qty:l.quantity||'',
+    details:l.job_details||'', artwork:l.artwork_link||'', sourceForm:l.source_form||'', sourcePage:l.source_page||'',
+    status:l.status||'new'
+  }));
+  renderHero(); renderQuoteTables(); drawContacts(0); drawOrgs(0); renderSuppliers(); renderLeads();
   const nc=document.getElementById('navContacts'); if(nc)nc.textContent=D.contacts.length;
   const no=document.getElementById('navOrgs'); if(no)no.textContent=D.orgs.length;
+}
+
+/* ---------- Leads (website enquiries) ---------- */
+window._leadFilter='all';
+window._openLeadId=null;
+const LEAD_STATUSES=['new','contacted','quoted','won','lost'];
+const leadCap=s=>(''+s).charAt(0).toUpperCase()+(''+s).slice(1);
+function leadById(id){ return (D.leads||[]).find(l=>l._id===id); }
+function leadDate(s){ if(!s)return '—'; try{ const d=new Date(s); return d.toLocaleDateString('en-AU',{day:'2-digit',month:'short'})+', '+d.toLocaleTimeString('en-AU',{hour:'2-digit',minute:'2-digit'}); }catch(_e){ return '—'; } }
+function leadEnquiry(l){ return l.product?qcPretty(l.product):(l.category||'Website enquiry'); }
+function setLeadFilter(f){ window._leadFilter=f; renderLeads(); }
+function renderLeads(){
+  const tb=document.getElementById('leadTable'); if(!tb)return;
+  const leads=D.leads||[];
+  const cnt=s=>leads.filter(l=>l.status===s).length;
+  const nl=document.getElementById('navLeads'); if(nl)nl.textContent=leads.length;
+  const tl=document.getElementById('leadTiles');
+  if(tl)tl.innerHTML=[{n:String(cnt('new')),l:'New',c:'awaiting action'},{n:String(cnt('contacted')),l:'Contacted',c:'in progress'},{n:String(cnt('quoted')),l:'Quoted',c:'quote raised'},{n:String(cnt('won')),l:'Won',c:'converted'}].map(t=>`<div class="tile"><div class="ic" style="background:var(--pink-soft)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#c9107f" stroke-width="2"><path d="M3 5h18v14H3z"/><path d="M3 7l9 6 9-6"/></svg></div><div class="n">${t.n}</div><div class="l">${t.l}</div><div class="chip flat">${t.c}</div></div>`).join('');
+  const f=window._leadFilter;
+  const fb=document.getElementById('leadFilter');
+  if(fb){const chips=[['all','All',leads.length]].concat(LEAD_STATUSES.map(s=>[s,leadCap(s),cnt(s)]));
+    fb.innerHTML=chips.map(([k,lab,n])=>`<button class="chip${f===k?' on':''}" onclick="setLeadFilter('${k}')">${lab} ${n}</button>`).join('');}
+  const shown=f==='all'?leads:leads.filter(l=>l.status===f);
+  const sub=document.getElementById('leadSub'); if(sub)sub.textContent=`${leads.length} enquir${leads.length===1?'y':'ies'} from your product pages · click a lead to open it`;
+  tb.innerHTML=shown.length?shown.map(l=>`<tr class="clk" data-l="${esc(l._id)}"><td class="mini">${leadDate(l.created)}</td><td><b>${esc(l.name)}</b><div class="mini">${esc(l.email||'')}</div></td><td>${esc(leadEnquiry(l))}</td><td class="num">${esc(l.qty||'—')}</td><td class="mini">${esc(l.sourceForm||'—')}</td><td><span class="badge b-${esc(l.status)}">${esc(l.status)}</span></td></tr>`).join(''):`<tr><td colspan="6"><div class="empty">No ${f==='all'?'':esc(f)+' '}leads yet.</div></td></tr>`;
+  tb.querySelectorAll('tr.clk[data-l]').forEach(r=>r.onclick=()=>openLead(r.dataset.l));
+}
+function openLead(id){
+  const l=leadById(id); if(!l)return;
+  window._openLeadId=id;
+  const pageLink=l.sourcePage?`<a href="${esc(l.sourcePage)}" target="_blank" rel="noopener">${esc(l.sourcePage)}</a>`:'—';
+  const art=l.artwork?`<a href="${esc(l.artwork)}" target="_blank" rel="noopener">Open artwork link ↗</a>`:'—';
+  const stbtns=LEAD_STATUSES.map(s=>`<button class="btn sm${l.status===s?' primary':''}" onclick="setLeadStatus('${esc(l._id)}','${s}')">${leadCap(s)}</button>`).join(' ');
+  md.className='modal';
+  md.innerHTML=`<div class="mh"><h3>Lead — ${esc(l.name)}</h3><div class="x" onclick="closeModal()">✕</div></div>
+   <div class="mb">
+     <div class="field two"><div class="field"><label>Email</label><div>${l.email?`<a href="mailto:${esc(l.email)}">${esc(l.email)}</a>`:'—'}</div></div><div class="field"><label>Phone</label><div>${l.phone?`<a href="tel:${esc(l.phone)}">${esc(l.phone)}</a>`:'—'}</div></div></div>
+     <div class="field two"><div class="field"><label>Product</label><div>${esc(leadEnquiry(l))}</div></div><div class="field"><label>Quantity</label><div>${esc(l.qty||'—')}</div></div></div>
+     <div class="field"><label>Job details</label><div style="white-space:pre-wrap">${esc(l.details||'—')}</div></div>
+     <div class="field"><label>Artwork</label><div>${art}</div></div>
+     <div class="field two"><div class="field"><label>Source form</label><div>${esc(l.sourceForm||'—')}</div></div><div class="field"><label>Received</label><div>${leadDate(l.created)}</div></div></div>
+     <div class="field"><label>Source page</label><div class="mini">${pageLink}</div></div>
+     <div class="field"><label>Status</label><div style="display:flex;gap:6px;flex-wrap:wrap">${stbtns}</div></div>
+   </div>
+   <div class="mf"><button class="btn" onclick="closeModal()">Close</button><button class="btn primary" onclick="leadToQuote('${esc(l._id)}')"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 5v14M5 12h14"/></svg>Convert to quote</button></div>`;
+  mb.classList.add('show');
+}
+async function setLeadStatus(id,status){
+  const l=leadById(id); if(!l)return;
+  const sb=window.CRM_SB; if(!sb){alert('Not connected — please reload and sign in.');return;}
+  const prev=l.status; l.status=status; renderLeads();
+  if(window._openLeadId===id && mb.classList.contains('show')) openLead(id);
+  try{ const r=await sb.from('leads').update({status:status}).eq('id',id); if(r.error)throw r.error; }
+  catch(e){ l.status=prev; renderLeads(); if(window._openLeadId===id && mb.classList.contains('show'))openLead(id); alert('Could not update the lead status: '+(e.message||e)); }
+}
+function leadToQuote(id){
+  const l=leadById(id); if(!l)return;
+  window._openLeadId=null;
+  closeModal();
+  newQuote();
+  const nq=window._nq;
+  nq.name=l.name||''; nq.email=l.email||''; nq.phone=l.phone||'';
+  const head=l.product?qcPretty(l.product):(l.category||'Website enquiry');
+  const desc=(head+(l.details?(' — '+l.details.replace(/\s+/g,' ').trim()):'')).slice(0,300);
+  const qty=parseInt((''+(l.qty||'')).replace(/[^0-9]/g,''),10)||1;
+  nq.items.push({n:desc,qty:qty,price:0});
+  const setv=(elid,v)=>{const e=document.getElementById(elid);if(e)e.value=v;};
+  setv('nq_name',nq.name); setv('nq_email',nq.email); setv('nq_phone',nq.phone);
+  if(typeof nqRenderLines==='function')nqRenderLines();
 }
 
 /* ---------- Init ---------- */
 renderHero();
 renderQuoteTables();
+renderLeads();
 drawContacts(0);
 drawOrgs(0);
 </script>
