@@ -395,7 +395,7 @@ input.nqqty{width:74px;text-align:right;border:1px solid var(--line);border-radi
           <div class="card" id="card-quotes"><h3>Recent quotes</h3><div class="sub" id="qsub"></div>
             <table><thead><tr><th>Quote</th><th>Customer</th><th class="num">Value</th><th>Status</th></tr></thead><tbody id="qtable2"></tbody></table></div>
           <div class="card" id="card-orders"><h3>Recent orders</h3><div class="sub" id="osub"></div>
-            <table><thead><tr><th>Order</th><th>Customer</th><th>Status</th></tr></thead><tbody id="otable"></tbody></table></div>
+            <table><thead><tr><th>Order</th><th>Customer</th><th>Status</th><th>Tracking</th></tr></thead><tbody id="otable"></tbody></table></div>
         </div>
         <div class="card" id="card-invoices" style="display:none;margin-top:16px"><h3>Invoices</h3><div class="sub" id="isub"></div>
           <table><thead><tr><th>Invoice</th><th>Quote</th><th>Customer</th><th class="num">Amount</th><th>Status</th></tr></thead><tbody id="itable"></tbody></table></div>
@@ -596,7 +596,7 @@ function renderQuoteTables(){
   document.querySelectorAll('tr.clk[data-q]').forEach(r=>r.onclick=()=>openQuote(r.dataset.q));
 
   const all=D.orders;
-  document.getElementById('otable').innerHTML=all.map(o=>`<tr${o.q?` class="clk" data-q="${o.q}"`:''}><td><b>${o.num}</b></td><td>${esc(o.name)}</td><td><span class="badge b-${o.status}">${o.status}</span></td></tr>`).join('');
+  document.getElementById('otable').innerHTML=all.map(o=>`<tr${o.q?` class="clk" data-q="${o.q}"`:''}><td><b>${o.num}</b></td><td>${esc(o.name)}</td><td><span class="badge b-${o.status}">${o.status}</span></td><td class="mini">${o.track?esc(o.track):'—'}</td></tr>`).join('');
   document.querySelectorAll('#otable tr.clk[data-q]').forEach(r=>r.onclick=()=>openQuote(r.dataset.q));
 
   const invs=D.quotes.filter(q=>q.invNum);
@@ -654,6 +654,7 @@ function openQuote(num){
   const linked=[];
   if(q.orderNum) linked.push(`<div class="row"><span>Order</span><b>${q.orderNum}</b></div>`);
   if(q.invNum) linked.push(`<div class="row"><span>Invoice</span><b>${q.invNum}</b></div>`);
+  if(q._tNumber) linked.push(`<div class="row"><span>Tracking</span><b>${esc(q._tNumber)}</b></div>`);
   const link = q.payLink || (q.invNum?('https://buy.stripe.com/aura/'+q.invNum.toLowerCase()):'');
   const payLink = link ? `<div class="paylink">${esc(link)}</div>` : '';
   right=`<div class="card side-summary"><h3>Summary</h3><div class="sub">Quote ${q.num}</div>
@@ -687,7 +688,8 @@ function openQuote(num){
         <div class="note">Prices shown include GST. Wholesale cost and supplier stay staff-only and never appear on the customer's copy.</div>
       </div>
       ${right}
-    </div>`;
+    </div>
+    ${q._orderId?shipCard(q):''}`;
   go('quote');
 }
 
@@ -1411,10 +1413,10 @@ async function refreshFromSupabase(sb){
     if(inv&&inv.status==='paid')stage='paid'; else if(inv)stage='invoice'; else if(ord)stage='order';
     let contact=q.contact_name||q.contact_email||'—';
     if(q.company){const org=D.orgs.find(o=>o.name.toLowerCase()===q.company.toLowerCase());if(org){const ppl=D.contacts.filter(c=>c.orgId===org.id);if(ppl.length&&!D.contacts.some(c=>c.name===contact))contact=ppl[0].name;}}
-    D.quotes.push({num:q.quote_number,contact,status:q.status,stage,orderNum:ord?ord.order_number:null,invNum:inv?inv.invoice_number:null,payLink:inv?inv.payment_link_url:null,items,_id:q.id,_orderId:q.converted_order_id||null,_invId:inv?inv.id:null,_invToken:inv?inv.access_token:null,_email:q.contact_email||'',_name:q.contact_name||'',_token:q.access_token||'',_valid:q.valid_until||null});
+    D.quotes.push({num:q.quote_number,contact,status:q.status,stage,orderNum:ord?ord.order_number:null,invNum:inv?inv.invoice_number:null,payLink:inv?inv.payment_link_url:null,items,_id:q.id,_orderId:q.converted_order_id||null,_invId:inv?inv.id:null,_invToken:inv?inv.access_token:null,_email:q.contact_email||'',_name:q.contact_name||'',_token:q.access_token||'',_tCarrier:ord?(ord.tracking_carrier||''):'',_tNumber:ord?(ord.tracking_number||''):'',_tUrl:ord?(ord.tracking_url||''):'',_dispatched:ord?ord.dispatched_at:null,_valid:q.valid_until||null});
   });
   D.orders.length=0;
-  (ords.data||[]).forEach(o=>{const q=(qs.data||[]).find(x=>x.converted_order_id===o.id);D.orders.push({num:o.order_number,name:o.contact_name||'—',company:o.company||null,status:o.status,total:orderTotal[o.id]||0,q:q?q.quote_number:null});});
+  (ords.data||[]).forEach(o=>{const q=(qs.data||[]).find(x=>x.converted_order_id===o.id);D.orders.push({num:o.order_number,name:o.contact_name||'—',company:o.company||null,status:o.status,total:orderTotal[o.id]||0,q:q?q.quote_number:null,track:o.tracking_number||null});});
   D.suppliers.length=0;
   (sup.data||[]).forEach(s=>{const dom=s.category_label==='Promotional Products'?'Promotional':(s.category_label==='Apparel'?'Apparel':'Print');D.suppliers.push({code:s.code,name:s.name,domain:dom,kind:s.kind==='api'?'api':'manual',n:SUP_COUNT[s.code]||0,sync:s.last_synced_at?new Date(s.last_synced_at).toLocaleDateString('en-AU'):(s.kind==='api'?'—':'Rate card'),portal:s.portal_url||'',apiBase:s.api_base_url||'—',username:s.trade_username||'',account:s.portal_notes||s.sync_notes||'',secretRef:s.secret_ref||'—',pricing:s.default_margin?('sell = '+s.default_margin+'× cost'):'—',notes:s.portal_notes||s.sync_notes||''});});
   renderHero(); renderQuoteTables(); drawContacts(0); drawOrgs(0); renderSuppliers();
@@ -1692,6 +1694,83 @@ window.openQuoteEmail=function(num){
   openEmailComposer([{name:q._name||q.contact,email:q._email,consent:true}], 'Send quote '+q.num, false);
   window._email.subject=subject; window._email.body=body; window._email._sentQuote=q._id;
   var pdf=crmPdf('quote',q); if(pdf) window._email.attachments=[{filename:'Quote-'+(q.num||'')+'.pdf',content:pdf}];
+  renderComposer();
+};
+
+/* ---------- Shipping & tracking ---------- */
+const CARRIERS=[
+  {name:'Australia Post',url:'https://auspost.com.au/mypost/track/#/details/{n}'},
+  {name:'StarTrack',url:'https://startrack.com.au/track-and-trace?consignmentNumber={n}'},
+  {name:'Sendle',url:'https://track.sendle.com/tracking?ref={n}'},
+  {name:'Aramex',url:'https://www.aramex.com.au/tools/track?l={n}'},
+  {name:'Couriers Please',url:'https://www.couriersplease.com.au/tools-track/no/{n}'},
+  {name:'TNT',url:'https://www.tnt.com/express/en_au/site/tracking.html?searchType=con&cons={n}'},
+  {name:'DHL',url:'https://www.dhl.com/au-en/home/tracking.html?tracking-id={n}'},
+  {name:'Other',url:''}
+];
+function trackingUrlFor(carrier,num){var c=CARRIERS.find(function(x){return x.name===carrier;});if(!c||!c.url||!num)return '';return c.url.replace('{n}',encodeURIComponent(num));}
+function shipCard(q){
+  var has=!!q._tNumber;
+  var linkRow=q._tUrl?'<div class="row"><span>Tracking link</span><a href="'+esc(q._tUrl)+'" target="_blank" rel="noopener">Open ›</a></div>':'';
+  var disp=q._dispatched?(' · dispatched '+new Date(q._dispatched).toLocaleDateString('en-AU')):'';
+  var canSend=has && q._email;
+  return '<div class="card" style="margin-top:16px"><div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px">'+
+    '<div><h3>Shipping &amp; tracking</h3><div class="sub">'+(has?('Tracking added'+disp):'No tracking added yet.')+'</div></div>'+
+    '<div style="display:flex;gap:8px;flex-wrap:wrap">'+
+      '<button class="btn sm" onclick="openTracking(\''+q.num+'\')">'+(has?'Edit tracking':'Add tracking')+'</button>'+
+      '<button class="btn primary sm" onclick="openTrackingEmail(\''+q.num+'\')" '+(canSend?'':'disabled')+'>Send tracking email</button>'+
+    '</div></div>'+
+    (has?('<div style="margin-top:6px"><div class="row"><span>Carrier</span><b>'+esc(q._tCarrier||'—')+'</b></div><div class="row"><span>Tracking number</span><b>'+esc(q._tNumber)+'</b></div>'+linkRow+'</div>')
+        :'<div class="note" style="margin-top:6px">As soon as the job ships, add the carrier and tracking number here, then send the customer their tracking details.</div>')+
+  '</div>';
+}
+function openTracking(num){
+  var q=D.quotes.find(function(x){return x.num===num;}); if(!q||!q._orderId)return;
+  window._trk=num;
+  md.className='modal';
+  md.innerHTML='<div class="mh"><h3>Tracking · order '+esc(q.orderNum||'')+'</h3><div class="x" onclick="closeModal()">✕</div></div>'+
+   '<div class="mb">'+
+    '<div class="field"><label>Carrier</label><select id="trk_carrier" onchange="trkAutoUrl()">'+CARRIERS.map(function(c){return '<option'+(c.name===q._tCarrier?' selected':'')+'>'+c.name+'</option>';}).join('')+'</select></div>'+
+    '<div class="field"><label>Tracking number</label><input id="trk_num" value="'+esc(q._tNumber||'')+'" placeholder="e.g. 33ABC123456789" oninput="trkAutoUrl()"></div>'+
+    '<div class="field" style="margin-bottom:0"><label>Tracking link <span class="mini">(auto-filled from carrier — edit if needed)</span></label><input id="trk_url" value="'+esc(q._tUrl||'')+'" placeholder="https://…" oninput="this.dataset.manual=\'1\'"></div>'+
+   '</div>'+
+   '<div class="mf"><button class="btn" onclick="closeModal()">Cancel</button><button class="btn primary" id="trk_save" onclick="saveTracking()">Save tracking</button></div>';
+  var u=document.getElementById('trk_url'); if(q._tUrl) u.dataset.manual='1';
+  mb.classList.add('show');
+}
+function trkAutoUrl(){var c=document.getElementById('trk_carrier').value;var n=document.getElementById('trk_num').value.trim();var u=document.getElementById('trk_url');if(!u)return;if(u.dataset.manual==='1')return;var gen=trackingUrlFor(c,n);if(gen)u.value=gen;}
+async function saveTracking(){
+  var num=window._trk;var q=D.quotes.find(function(x){return x.num===num;});if(!q||!q._orderId)return;
+  var sb=window.CRM_SB;if(!sb){alert('Not connected — please reload and sign in.');return;}
+  var carrier=document.getElementById('trk_carrier').value;
+  var tnum=document.getElementById('trk_num').value.trim();
+  var turl=document.getElementById('trk_url').value.trim();
+  var btn=document.getElementById('trk_save');if(btn){btn.disabled=true;btn.textContent='Saving…';}
+  var patch={tracking_carrier:carrier||null,tracking_number:tnum||null,tracking_url:turl||null};
+  if(tnum&&!q._dispatched)patch.dispatched_at=new Date().toISOString();
+  try{
+    var r=await sb.from('orders').update(patch).eq('id',q._orderId);
+    if(r.error)throw r.error;
+    closeModal(); await refreshFromSupabase(sb); openQuote(num);
+  }catch(e){alert('Could not save tracking: '+(e.message||e));if(btn){btn.disabled=false;btn.textContent='Save tracking';}}
+}
+window.openTrackingEmail=function(num){
+  var q=D.quotes.find(function(x){return x.num===num;}); if(!q) return;
+  if(!q._email){ alert('This order has no customer email on file, so the tracking email cannot be addressed.'); return; }
+  if(!q._tNumber){ alert('Add a tracking number first, then send the tracking email.'); return; }
+  var first=((q._name||q.contact||'').split(' ')[0])||'there';
+  var carrier=q._tCarrier||'the carrier';
+  var body='Hi '+first+',\n\n'+
+    'Good news — your order '+(q.orderNum||'')+' has been dispatched.\n\n'+
+    'Carrier: '+(q._tCarrier||'—')+'\n'+
+    'Tracking number: '+q._tNumber+'\n'+
+    (q._tUrl?('Track your delivery here:\n'+q._tUrl+'\n'):'')+'\n'+
+    'Delivery times vary by location, and '+carrier+' will update the tracking as your parcel moves. If anything looks off, or it has not arrived when you expected, just reply to this email and we will chase it up.\n\n'+
+    'Thanks again for your order.\n\n'+
+    'Kind regards,\nMurray\nAura Print & Promo\ne: admin@auraprint.com.au\nw: auraprint.com.au';
+  var subject='Your order '+(q.orderNum||'')+' has shipped — tracking inside';
+  openEmailComposer([{name:q._name||q.contact,email:q._email,consent:true}], 'Send tracking · '+(q.orderNum||q.num), false);
+  window._email.subject=subject; window._email.body=body;
   renderComposer();
 };
 </script>
