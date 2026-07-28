@@ -119,6 +119,7 @@ const FOOTER = `
       <div>
         <a class="logo" href="index.html" style="color:#fff">AURA<span>PRINT</span></a>
         <p style="color:#b8b2ab;font-size:14px;margin-top:14px">Bold print and promotional products from the Sunshine Coast, delivered Australia-wide.</p>
+        <p style="margin-top:16px;font-size:14px"><a href="art-setup.html" style="color:#fff;font-weight:700;text-decoration:underline">Preparing your artwork? Read our print-ready guide →</a></p>
         <h4 style="margin-top:24px">Print offers &amp; tips, straight to your inbox</h4>
         <div class="newsletter"><input type="email" id="nl-email" placeholder="Your email address" aria-label="Email address for newsletter"><button class="btn btn-aura" id="nl-join" style="padding:12px 22px">Join</button></div>
         <p id="nl-status" style="font-size:13px;min-height:18px;margin-top:8px"></p>

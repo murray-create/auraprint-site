@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Artwork Setup Guide | Print Ready File Specs | Aura Print & Promo</title>
-<meta name="description" content="How to supply print ready artwork: correct trim size, 3mm bleed, CMYK, 300dpi, flattened PDF. Aura Print & Promo's complete artwork setup guide.">
+<meta name="description" content="How to supply print ready artwork: 3mm bleed, CMYK colour, 300dpi, embedded fonts and outlined text, vector logos, plus tips for signage and promotional products. Aura Print & Promo's complete artwork setup guide.">
 <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="assets/aura.css?v=20260718d">
 <style>
@@ -24,16 +24,51 @@
 .callout b{color:#fff}
 .specbox{background:#fff;border:1px solid #ece6de;border-left:5px solid;border-image:var(--aura) 1;padding:18px 22px;margin:18px 0;font-size:14.5px;color:#555;border-radius:0 var(--radius) var(--radius) 0}
 .specbox b{color:#1a1a1a}
-@media(max-width:760px){.checklist{grid-template-columns:1fr}}
+.filetable{width:100%;border-collapse:collapse;margin:16px 0 8px;font-size:14px}
+.filetable th,.filetable td{text-align:left;padding:11px 14px;border-bottom:1px solid #ece6de;vertical-align:top}
+.filetable th{background:#faf7f2;color:#1a1a1a;font-size:12.5px;text-transform:uppercase;letter-spacing:.4px}
+.filetable td b{color:#1a1a1a}
+.faq details{background:#fff;border:1px solid #ece6de;border-radius:var(--radius);padding:0 20px;margin-bottom:12px}
+.faq summary{cursor:pointer;font-weight:700;color:#1a1a1a;font-size:15.5px;padding:18px 0;list-style:none}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary::after{content:"+";float:right;color:var(--aura-solid,#b5179e);font-weight:900}
+.faq details[open] summary::after{content:"−"}
+.faq details p{color:#555;font-size:14.5px;line-height:1.7;margin:0 0 18px}
+@media(max-width:760px){.checklist{grid-template-columns:1fr}.filetable{font-size:13px}.filetable th,.filetable td{padding:9px 10px}}
 </style>
 <link rel="canonical" href="https://auraprint.com.au/art-setup.html">
 <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Aura Print &amp; Promo">
 <meta property="og:title" content="Artwork Setup Guide | Print Ready File Specs | Aura Print & Promo">
-<meta property="og:description" content="How to supply print ready artwork: correct trim size, 3mm bleed, CMYK, 300dpi, flattened PDF. Aura Print & Promo's complete artwork setup guide.">
+<meta property="og:description" content="How to supply print ready artwork: 3mm bleed, CMYK colour, 300dpi, embedded fonts and outlined text, vector logos, plus tips for signage and promotional products. Aura Print & Promo's complete artwork setup guide.">
 <meta property="og:url" content="https://auraprint.com.au/art-setup.html">
 <meta property="og:image" content="https://auraprint.com.au/assets/aura-logo.png">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {"@type": "ListItem", "position": 1, "name": "Home", "item": "https://auraprint.com.au/"},
+        {"@type": "ListItem", "position": 2, "name": "Artwork Setup Guide", "item": "https://auraprint.com.au/art-setup.html"}
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {"@type": "Question", "name": "What is bleed and how much do I need?", "acceptedAnswer": {"@type": "Answer", "text": "Bleed is artwork that extends past the trim edge so cutting never leaves a white sliver. Aura Print requires 3mm bleed on every edge for print, and more for some wide format and signage products where finishing hides the edge."}},
+        {"@type": "Question", "name": "What file type should I supply for printing?", "acceptedAnswer": {"@type": "Answer", "text": "A flattened, print ready PDF is preferred for most jobs. Logos and signage are best supplied as vector files (PDF, AI, EPS or SVG) with fonts converted to outlines. Photos should be 300dpi TIFF or high quality JPEG at final size."}},
+        {"@type": "Question", "name": "Why does my artwork need to be CMYK not RGB?", "acceptedAnswer": {"@type": "Answer", "text": "Screens display colour with light (RGB) while presses print with ink (CMYK). Supplying CMYK keeps the colour you approve close to the colour you receive. RGB files are converted and can shift, especially bright blues, greens and oranges."}},
+        {"@type": "Question", "name": "What resolution do print files need?", "acceptedAnswer": {"@type": "Answer", "text": "Print needs a minimum of 300dpi at final size, and 600dpi for text heavy artwork. Large format and signage are viewed from a distance and can be supplied at 100 to 150dpi at final size."}},
+        {"@type": "Question", "name": "Do I need vector artwork for promotional products?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. Screen printing, pad printing, laser engraving and embroidery all work from clean vector line art with text outlined. A low resolution JPEG or PNG from a website is usually not suitable for branded merchandise."}},
+        {"@type": "Question", "name": "What happens if my file is not print ready?", "acceptedAnswer": {"@type": "Answer", "text": "Send it through anyway. Every job is preflight checked and you approve a digital proof before anything prints. If bleed, resolution or colour needs fixing, Aura Print will tell you before it costs you money."}}
+      ]
+    }
+  ]
+}
+</script>
 </head>
 <body>
 
@@ -66,7 +101,17 @@
     </div>
 
     <h2>Accepted file types</h2>
-    <p>We accept artwork as a <b>print ready PDF</b>. A correctly exported PDF locks in your fonts, images and colours so what you approve is what gets printed.</p>
+    <p>We accept artwork as a <b>print ready PDF</b>. A correctly exported PDF locks in your fonts, images and colours so what you approve is what gets printed. Here is what each format is best for:</p>
+    <table class="filetable">
+      <thead><tr><th>Format</th><th>Best for</th><th>How to supply</th></tr></thead>
+      <tbody>
+        <tr><td><b>PDF</b> (preferred)</td><td>Finished print files</td><td>Flattened, single page, 3mm bleed, crop marks, fonts embedded or outlined, CMYK.</td></tr>
+        <tr><td><b>AI / EPS</b></td><td>Logos, vector artwork, signage</td><td>Text converted to outlines, images embedded or supplied alongside.</td></tr>
+        <tr><td><b>SVG</b></td><td>Vector logos for promo products</td><td>Outlined text, clean paths.</td></tr>
+        <tr><td><b>TIFF</b></td><td>High quality photos and raster art</td><td>CMYK, 300dpi at final size, flattened.</td></tr>
+        <tr><td><b>JPEG / PNG</b></td><td>Photos where the quality is high enough</td><td>Only at the correct resolution for final size. Not ideal for logos or fine text.</td></tr>
+      </tbody>
+    </table>
     <p>Recommended programs for setting up print artwork:</p>
     <ul>
       <li><b>Adobe InDesign or Illustrator</b> - the industry standard for print.</li>
@@ -74,6 +119,16 @@
       <li><b>Canva</b> - fine for simple jobs without advanced finishing. Export as "PDF Print" with crop marks and bleed ticked.</li>
     </ul>
     <p>Office programs like Word and PowerPoint, and AI image generators, cannot natively produce print ready artwork. If that's all you have, send it through and we'll quote you to rebuild it properly.</p>
+
+    <h2>Vector vs raster</h2>
+    <p>Knowing the difference tells you which file to supply, and it matters most for logos.</p>
+    <p><b>Vector</b> art is built from points and paths, so it scales to any size with no loss of quality. It is the right choice for logos, type, line art and anything printed large or onto merchandise. Vector formats are AI, EPS, PDF and SVG. Ask your designer for the vector master of your logo.</p>
+    <p><b>Raster</b> art is built from pixels, so it loses quality when enlarged past its resolution. It is best for photographs and detailed images. Raster formats are JPEG, PNG, TIFF and PSD, and they must be supplied at the correct resolution for the final size.</p>
+
+    <h2>Fonts and outlines</h2>
+    <p>If we do not have the exact font in your file, your text can reflow or swap to a default. There are two safe ways to prevent that.</p>
+    <p><b>Convert text to outlines (curves).</b> In a vector program, select your text and convert it to outlines, also called curves or paths. The letters become shapes and the font is no longer needed. Do this last, after all proofreading, and keep a separate editable copy first.</p>
+    <p><b>Embed the fonts.</b> When you export a print PDF, choose settings that embed all fonts. Most press ready PDF presets do this automatically, so the type prints correctly even if we do not own the font.</p>
 
     <h2>Bleed and trim marks</h2>
     <p>Bleed is printing that extends beyond the trim edge. Commercial guillotines cut through thick stacks of stock, and a tiny amount of movement is normal. Bleed makes sure that movement never leaves a white sliver on your edge.</p>
@@ -91,12 +146,37 @@
     <h2>Resolution</h2>
     <p>Print needs a minimum of <b>300dpi</b> at the final size. Text heavy artwork is sharpest at <b>600dpi</b>. Images saved from the web are usually 72dpi - they'll look fine on your screen and fuzzy on paper. If we flag your artwork as low resolution on the proof, take it seriously.</p>
 
+    <h2>Wide format and signage</h2>
+    <p>Banners, pull up signs, A-frames, flags and posters follow the same rules, with a few extras.</p>
+    <p><b>Set up at scale.</b> Large artwork is often built at a smaller scale to keep the file manageable, for example at 10% of final size. If you do this, keep the scale consistent, tell us the scale, and make sure the image resolution still works out at full size. When in doubt, build at 100%.</p>
+    <p><b>Resolution at final size.</b> Signage is viewed from a distance, so it does not need 300dpi. Around 100 to 150dpi at final size is usually plenty. A three metre banner does not need the same detail per inch as a business card.</p>
+    <p><b>Larger safe margins.</b> Hems, pole pockets, eyelets and the curve of pull up and teardrop hardware can hide part of the edge. Keep important content well inside the trim, and where we supply a product template, design inside its guides.</p>
+    <div class="specbox"><b>Using our templates:</b> for products like bow banners and teardrop flags we provide full size templates with bleed, finished size and safe area marked. Design at 100% inside the guides, keep to CMYK, and outline your fonts before sending.</div>
+
+    <h2>Promotional products</h2>
+    <p>Pens, mugs, drink bottles, bags and apparel are branded onto objects, so they have their own needs.</p>
+    <p><b>Supply vector logo art.</b> Screen printing, pad printing, laser engraving and embroidery all work from clean vector line art with text outlined. A low resolution JPEG or PNG from a website is usually not suitable.</p>
+    <p><b>Print method affects colour and detail.</b> Each method has limits. Screen printing suits a set number of solid spot colours. Engraving and embroidery reproduce shape rather than photographic detail and gradients. We will confirm what suits your chosen product.</p>
+    <p><b>Spot colours and Pantone.</b> Many promotional methods print in spot colours rather than CMYK. If your brand has specific Pantone (PMS) codes, give them to us. Exact colour can still vary with the material, for example ink on a coloured mug or natural fabric.</p>
+
     <h2>Copyright and licensing</h2>
     <p>You must own or be licensed to use every image, logo and font in your artwork. We accept no responsibility for the copyright status of files supplied for printing - see our <a href="trade-terms.html">Terms of Trade</a>.</p>
 
     <h2>Proofing and preflight</h2>
     <p>Every job is preflight checked before production. We'll flag missing bleed, low resolution, RGB colour and other issues, and you'll receive a proof to approve before anything is printed. Production starts once your proof is approved and payment is received - so the proof stage is your moment to check everything: spelling, numbers, dates, layout and colour.</p>
 
+  </div>
+</section>
+
+<section class="pad faq" style="padding-top:0">
+  <div class="wrap" style="max-width:860px">
+    <h2 style="font-size:clamp(26px,3.4vw,40px);margin-bottom:30px">Artwork <span class="grad-text">questions</span></h2>
+    <details><summary>What is bleed and how much do I need?</summary><p>Bleed is artwork that extends past the trim edge so cutting never leaves a white sliver. We require 3mm bleed on every edge for print, and more for some wide format and signage products where finishing hides the edge.</p></details>
+    <details><summary>What file type should I supply?</summary><p>A flattened, print ready PDF is preferred for most jobs. Logos and signage are best supplied as vector files (PDF, AI, EPS or SVG) with fonts converted to outlines. Photos should be 300dpi TIFF or high quality JPEG at final size.</p></details>
+    <details><summary>Why does my artwork need to be CMYK, not RGB?</summary><p>Screens display colour with light (RGB) while presses print with ink (CMYK). Supplying CMYK keeps the colour you approve close to the colour you receive. RGB files are converted and can shift, especially bright blues, greens and oranges.</p></details>
+    <details><summary>What resolution do print files need?</summary><p>Print needs a minimum of 300dpi at final size, and 600dpi for text heavy artwork. Large format and signage are viewed from a distance and can be supplied at 100 to 150dpi at final size.</p></details>
+    <details><summary>Do I need vector artwork for promotional products?</summary><p>Yes. Screen printing, pad printing, laser engraving and embroidery all work from clean vector line art with text outlined. A low resolution JPEG or PNG from a website is usually not suitable for branded merchandise.</p></details>
+    <details><summary>What happens if my file is not print ready?</summary><p>Send it through anyway. Every job is preflight checked and you approve a digital proof before anything prints. If bleed, resolution or colour needs fixing, we will tell you before it costs you money.</p></details>
   </div>
 </section>
 
@@ -112,6 +192,6 @@
 </section>
 
 <script src="assets/config.js?v=20260710a"></script>
-<script src="assets/aura.js?v=20260718e"></script>
+<script src="assets/aura.js?v=20260728a"></script>
 </body>
 </html>

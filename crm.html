@@ -1686,6 +1686,7 @@ window.openQuoteEmail=function(num){
     'Thanks for your enquiry — your quote is ready.\n\n'+
     'View quote '+q.num+' online ('+money(qTotal(q))+' inc GST):\n'+link+'\n\n'+
     'If you’re happy with everything, just click the green Accept button on the quote page and type your name — no sign-in needed, and you can forward this email to a colleague if someone else gives the go-ahead. Once accepted we’ll send your tax invoice, and production starts as soon as payment lands and you’ve approved your artwork proof.\n\n'+
+    'Preparing your artwork? Our print-ready guide covers bleed, CMYK, resolution, fonts and file types, so your job runs smoothly first time:\nhttps://auraprint.com.au/art-setup.html\n\n'+
     (validStr?('This quote is valid until '+validStr+'. '):'')+'If anything needs adjusting — quantity, stock, finishing — just reply to this email and we’ll update it for you.\n\n'+
     'Kind regards,\nMurray\nAura Print & Promo\ne: admin@auraprint.com.au\nw: auraprint.com.au';
   openEmailComposer([{name:q._name||q.contact,email:q._email,consent:true}], 'Send quote '+q.num, false);
