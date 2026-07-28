@@ -1101,7 +1101,7 @@ function nqShapeBC(data){
   return rows;
 }
 function newQuote(preName,opts){
-  window._nq={items:[],prodSlug:'',qty:100,name:'',email:'',phone:'',orgId:(opts&&opts.orgId)||'',suburb:'',_price:null,_priceQty:0};
+  window._nq={items:[],discount:0,prodSlug:'',qty:100,name:'',email:'',phone:'',orgId:(opts&&opts.orgId)||'',suburb:'',_price:null,_priceQty:0};
   window._qc={rows:[],keys:[],sel:{},title:'',live:true};
   window._nqMode='new';window._nqEditId=null;window._nqNum=null;
   md.className='modal xwide';
@@ -1116,7 +1116,9 @@ async function openEditQuote(num){
   try{const r=await sb.from('quotes').select('*').eq('id',q._id).single();if(r.error)throw r.error;row=r.data;}
   catch(e){alert('Could not load the quote to edit: '+(e.message||e));return;}
   const org=row.company?D.orgs.find(o=>(o.name||'').toLowerCase()===row.company.toLowerCase()):null;
-  window._nq={items:q.items.map(it=>({n:it.n,qty:it.qty,price:it.price})),prodSlug:'',qty:100,name:row.contact_name||q.contact||'',email:row.contact_email||'',phone:row.contact_phone||'',orgId:org?org.id:'',suburb:row.suburb||'',_price:null,_priceQty:0,_company:row.company||''};
+  let _eDisc=0;const _eItems=[];
+  q.items.forEach(it=>{ if((it.price||0)<0 && /^discount$/i.test(String(it.n||'').trim())){ _eDisc+=-it.price; } else _eItems.push({n:it.n,qty:it.qty,price:it.price}); });
+  window._nq={items:_eItems,discount:_eDisc,prodSlug:'',qty:100,name:row.contact_name||q.contact||'',email:row.contact_email||'',phone:row.contact_phone||'',orgId:org?org.id:'',suburb:row.suburb||'',_price:null,_priceQty:0,_company:row.company||''};
   window._qc={rows:[],keys:[],sel:{},title:'',live:true};
   window._nqMode='edit';window._nqEditId=q._id;window._nqNum=num;
   md.className='modal xwide';
@@ -1171,7 +1173,11 @@ function renderNewQuote(preName,edit){
       </div>
     </div>
     <div class="mf">
-      <span style="margin-right:auto;align-self:center;font-weight:800;font-size:15px">Total (inc GST): <span id="nq_tot">$0.00</span></span>
+      <div style="margin-right:auto;align-self:center;line-height:1.45">
+        <div style="display:flex;align-items:center;gap:8px"><label style="font-weight:600;font-size:13px">Discount $</label><input id="nq_disc" type="number" min="0" step="0.01" value="${((nq.discount||0)/100).toFixed(2)}" style="width:96px" oninput="nqSetDiscount(this.value)"></div>
+        <div id="nq_discrow" style="display:none;font-size:12px;color:var(--muted);margin-top:2px">Discount applied: <b id="nq_discval">-$0.00</b></div>
+        <div style="font-weight:800;font-size:15px;margin-top:3px">Total (inc GST): <span id="nq_tot">$0.00</span></div>
+      </div>
       <button class="btn" onclick="closeModal()">Cancel</button>
       ${edit?'':`<button class="btn" id="nq_saveSend" onclick="nqSave(true)"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 2 11 13M22 2l-7 20-4-9-9-4z"/></svg>Save &amp; send</button>`}
       <button class="btn primary" id="nq_saveDraft" onclick="nqSave(false)">${edit?'Save changes':'Save as draft'}</button>
@@ -1298,9 +1304,19 @@ function nqRenderLines(){
   tb.innerHTML=nq.items.length
     ? nq.items.map((it,i)=>`<tr><td><b>${esc(it.n)}</b></td><td class="num"><input class="nqqty" type="number" min="1" value="${it.qty}" onchange="nqEditQty(${i},this.value)"></td><td class="num">${money(it.qty?Math.round(it.price/it.qty):it.price)}</td><td class="num">${money(it.price)}</td><td class="num"><button class="btn danger iconbtn sm" title="Remove line" onclick="nqRemoveLine(${i})">✕</button></td></tr>`).join('')
     : '<tr><td colspan="5"><div class="empty">No products added yet. Use the picker above to add priced lines.</div></td></tr>';
-  const total=nq.items.reduce((a,b)=>a+b.price,0);
-  const lsub=document.getElementById('nq_lsub');if(lsub)lsub.textContent=`${nq.items.length} item${nq.items.length===1?'':'s'} · ${money(total)} inc GST`;
+  const itemsTotal=nq.items.reduce((a,b)=>a+b.price,0);
+  const disc=nq.discount||0;
+  const total=itemsTotal-disc;
+  const lsub=document.getElementById('nq_lsub');if(lsub)lsub.textContent=`${nq.items.length} item${nq.items.length===1?'':'s'} · ${money(itemsTotal)} inc GST`;
+  const dr=document.getElementById('nq_discrow');if(dr)dr.style.display=disc>0?'':'none';
+  const dv=document.getElementById('nq_discval');if(dv)dv.textContent='-'+money(disc);
   const tot=document.getElementById('nq_tot');if(tot)tot.textContent=money(total);
+}
+function nqSetDiscount(v){
+  let d=Math.round(parseFloat(v||'0')*100);
+  if(!(d>=0))d=0;
+  window._nq.discount=d;
+  nqRenderLines();
 }
 function nqSearch(term){
   const box=document.getElementById('nq_sug');if(!box)return;
@@ -1361,7 +1377,12 @@ async function nqSave(send){
   const suburb=document.getElementById('nq_suburb').value.trim();
   const isEdit=window._nqMode==='edit';
   const company=org?org.name:(isEdit?(nq._company||null):null);
-  const mkItems=qid=>nq.items.map((it,idx)=>{const inc=it.price,ex=Math.round(inc/1.1);return {quote_id:qid,item_no:idx+1,description:it.n,qty:it.qty,price_inc_cents:inc,price_ex_cents:ex,gst_cents:inc-ex};});
+  const disc=nq.discount||0;
+  const mkItems=qid=>{
+    const base=nq.items.map((it,idx)=>{const inc=it.price,ex=Math.round(inc/1.1);return {quote_id:qid,item_no:idx+1,description:it.n,qty:it.qty,price_inc_cents:inc,price_ex_cents:ex,gst_cents:inc-ex};});
+    if(disc>0){const inc=-disc,ex=Math.round(inc/1.1);base.push({quote_id:qid,item_no:base.length+1,description:'Discount',qty:1,price_inc_cents:inc,price_ex_cents:ex,gst_cents:inc-ex});}
+    return base;
+  };
   const bDraft=document.getElementById('nq_saveDraft'),bSend=document.getElementById('nq_saveSend');
   const draftLabel=isEdit?'Save changes':'Save as draft';
   if(bDraft)bDraft.disabled=true;if(bSend)bSend.disabled=true;
