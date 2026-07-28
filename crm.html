@@ -740,7 +740,7 @@ function openSupplier(code){
     <div class="accessrow"><div><div class="k">Trade portal</div><div class="v">${s.portal&&s.portal!=='—'?`<a href="${esc(s.portal)}" target="_blank" rel="noopener">${esc(portalHost)}</a>`:'—'}</div></div>
       <div class="rt">${s.portal&&s.portal!=='—'?`<a class="copybtn" href="${esc(s.portal)}" target="_blank" rel="noopener" style="text-decoration:none">Open portal ↗</a><button class="copybtn" onclick="copyVal('${esc(s.portal)}')">Copy</button>`:''}</div></div>
     <div class="accessrow"><div><div class="k">Login username</div><div class="v">${esc(s.username||'—')}</div></div><div class="rt">${s.username&&s.username!=='—'?`<button class="copybtn" onclick="copyVal('${esc(s.username)}')">Copy</button>`:''}</div></div>
-    <div class="secure"><div class="lockic">${lockSvg}</div><div><div class="k" style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.04em">Password</div><div class="v">Stored in Supabase Vault${s.secretRef&&s.secretRef!=='—'?' · '+esc(s.secretRef):''}</div></div><span class="badge b-manual" style="margin-left:auto">not shown in CRM</span></div>
+    <div class="secure"><div class="lockic">${lockSvg}</div><div><div class="k" style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.04em">Password</div><div class="v">${s.hasSecret?('Stored in Supabase Vault'+(s.secretRef&&s.secretRef!=='—'?' · '+esc(s.secretRef):'')):'Not set yet — add it under Edit trade access'}</div></div><span class="badge ${s.hasSecret?'b-api':'b-manual'}" style="margin-left:auto">${s.hasSecret?'stored · never shown':'not set'}</span></div>
     <div class="accessrow"><div><div class="k">Account notes</div><div class="v" style="font-weight:500">${esc(s.account||'—')}</div></div></div>
     ${s.apiBase&&s.apiBase!=='—'?`<div class="accessrow"><div><div class="k">API base</div><div class="v">${esc(s.apiBase)}</div></div><div class="rt"><button class="copybtn" onclick="copyVal('${esc(s.apiBase)}')">Copy</button></div></div>`:''}
     <div class="secnote"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 9v4M12 17h.01"/><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/></svg>
@@ -751,7 +751,7 @@ function openSupplier(code){
     <div class="rec" style="margin-bottom:16px">
       <div class="head"><div class="bigav" style="background:var(--pink-soft);color:var(--pink-ink)">${initials(s.name)}</div>
         <div><h2>${esc(s.name)}</h2><div class="co"><span class="dom ${s.domain}">${s.domain}</span> · ${s.kind==='api'?'Live API feed':'Manual / portal'}</div></div>
-        <div class="act"><button class="btn" onclick="editAccess('${s.code}')">Edit trade access</button>${s.portal&&s.portal!=='—'?`<a class="btn primary" href="${esc(s.portal)}" target="_blank" rel="noopener" style="text-decoration:none">Open trade portal ↗</a>`:''}</div></div>
+        <div class="act"><button class="btn" onclick="editAccess('${s.code}')">Edit trade access</button>${s.hasSecret&&s.portal&&s.portal!=='—'?`<button class="btn primary" onclick="startPortalLogin('${s.code}')">Log me in ↗</button>`:(s.portal&&s.portal!=='—'?`<a class="btn primary" href="${esc(s.portal)}" target="_blank" rel="noopener" style="text-decoration:none">Open trade portal ↗</a>`:'')}</div></div>
       <div class="tabs"><div class="tab active" data-t="saccess">Trade access</div><div class="tab" data-t="soverview">Overview</div><div class="tab" data-t="sprods">Products<span class="pill">${s.n?s.n.toLocaleString():prods.length}</span></div></div>
       <div class="tabbody">
         <div class="tabpane on" data-p="saccess">${accessTab}</div>
@@ -774,10 +774,11 @@ function editAccess(code){
   md.innerHTML=`<div class="mh"><h3>Edit trade access — ${esc(s.name)}</h3><div class="x" onclick="closeModal()">✕</div></div>
     <div class="mb">
       <div class="field"><label>Trade portal URL</label><input id="s_portal" value="${esc(s.portal||'')}" placeholder="https://…"></div>
-      <div class="field two"><div class="field"><label>Login username</label><input id="s_user" value="${esc(s.username||'')}" placeholder="name@auraprint.com.au"></div><div class="field"><label>Vault secret name</label><input id="s_secret" value="${esc(s.secretRef||'')}" placeholder="e.g. EASYSIGNS_PORTAL_PW"></div></div>
+      <div class="field two"><div class="field"><label>Login username</label><input id="s_user" value="${esc(s.username||'')}" placeholder="name@auraprint.com.au"></div><div class="field"><label>Vault secret name</label><input id="s_secret" value="${esc(s.secretRef||'')}" placeholder="auto if blank (PORTAL_PW__CODE)"></div></div>
+      <div class="field"><label>Portal password ${s.hasSecret?'<span style="color:var(--muted);font-weight:400">— stored; leave blank to keep, type to replace</span>':'<span style="color:var(--muted);font-weight:400">— write-only, encrypted into Vault on save</span>'}</label><input id="s_pw" type="password" autocomplete="new-password" value="" placeholder="${s.hasSecret?'•••••••• already stored':'Enter to store securely'}"></div>
       <div class="field"><label>Account notes</label><input id="s_account" value="${esc(s.account||'')}" placeholder="Trade account, pricing level, etc."></div>
       <div class="field"><label>Notes</label><textarea id="s_notes">${esc(s.notes||'')}</textarea></div>
-      <div class="secnote"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="11" width="16" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg><div>There is no password field on purpose. Set the password as a Supabase Vault secret and reference its name above — the CRM never holds the password itself.</div></div>
+      <div class="secnote"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="11" width="16" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg><div>The password is written straight into Supabase Vault by a staff-only Edge Function. It is never saved in this table and can never be read back into the CRM — it is only used server-side to log you in.</div></div>
     </div>
     <div class="mf"><button class="btn" onclick="closeModal()">Cancel</button><button class="btn primary" onclick="saveAccess('${s.code}')">Save trade access</button></div>`;
   mb.classList.add('show');
@@ -1418,7 +1419,7 @@ async function refreshFromSupabase(sb){
   D.orders.length=0;
   (ords.data||[]).forEach(o=>{const q=(qs.data||[]).find(x=>x.converted_order_id===o.id);D.orders.push({num:o.order_number,name:o.contact_name||'—',company:o.company||null,status:o.status,total:orderTotal[o.id]||0,q:q?q.quote_number:null,track:o.tracking_number||null});});
   D.suppliers.length=0;
-  (sup.data||[]).forEach(s=>{const dom=s.category_label==='Promotional Products'?'Promotional':(s.category_label==='Apparel'?'Apparel':'Print');D.suppliers.push({code:s.code,name:s.name,domain:dom,kind:s.kind==='api'?'api':'manual',n:SUP_COUNT[s.code]||0,sync:s.last_synced_at?new Date(s.last_synced_at).toLocaleDateString('en-AU'):(s.kind==='api'?'—':'Rate card'),portal:s.portal_url||'',apiBase:s.api_base_url||'—',username:s.trade_username||'',account:s.portal_notes||s.sync_notes||'',secretRef:s.secret_ref||'—',pricing:s.default_margin?('sell = '+s.default_margin+'× cost'):'—',notes:s.portal_notes||s.sync_notes||''});});
+  (sup.data||[]).forEach(s=>{const dom=s.category_label==='Promotional Products'?'Promotional':(s.category_label==='Apparel'?'Apparel':'Print');D.suppliers.push({code:s.code,name:s.name,domain:dom,kind:s.kind==='api'?'api':'manual',n:SUP_COUNT[s.code]||0,sync:s.last_synced_at?new Date(s.last_synced_at).toLocaleDateString('en-AU'):(s.kind==='api'?'—':'Rate card'),portal:s.portal_url||'',apiBase:s.api_base_url||'—',username:s.trade_username||'',account:s.portal_notes||s.sync_notes||'',secretRef:s.secret_ref||'—',hasSecret:!!s.has_portal_secret,pricing:s.default_margin?('sell = '+s.default_margin+'× cost'):'—',notes:s.portal_notes||s.sync_notes||''});});
   renderHero(); renderQuoteTables(); drawContacts(0); drawOrgs(0); renderSuppliers();
   const nc=document.getElementById('navContacts'); if(nc)nc.textContent=D.contacts.length;
   const no=document.getElementById('navOrgs'); if(no)no.textContent=D.orgs.length;
@@ -1549,7 +1550,31 @@ drawOrgs(0);
     var patch={ portal_url:document.getElementById('s_portal').value.trim()||null, trade_username:document.getElementById('s_user').value.trim()||null, secret_ref:document.getElementById('s_secret').value.trim()||null, portal_notes:document.getElementById('s_notes').value.trim()||null };
     var res=await sb.from('suppliers').update(patch).eq('code',code);
     if(res.error){alert(res.error.message);return;}
+    var pwEl=document.getElementById('s_pw'); var pw=pwEl?pwEl.value:'';
+    if(pw){
+      try{
+        var sess=await sb.auth.getSession(); var tok=sess.data.session?sess.data.session.access_token:'';
+        var r=await fetch(window.AURA_CONFIG.supabaseUrl+'/functions/v1/portal-secret-set',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+tok},body:JSON.stringify({supplier_code:code,password:pw})});
+        var j=await r.json();
+        if(!r.ok||!j.ok){ alert('Trade access saved, but storing the password failed: '+(j.error||('HTTP '+r.status))); }
+      }catch(err){ alert('Trade access saved, but storing the password failed: '+(err.message||err)); }
+      if(pwEl)pwEl.value='';
+    }
     closeModal(); await reload(); openSupplier(code);
+  };
+
+  // Auto-login handoff: staff-gated start mints a one-time ticket, we open the
+  // portal with #auralogin=<ticket>; the bookmarklet on that page fills the form.
+  window.startPortalLogin = async function(code){
+    var sb=SB(); if(!sb) return;
+    try{
+      var sess=await sb.auth.getSession(); var tok=sess.data.session?sess.data.session.access_token:'';
+      var r=await fetch(window.AURA_CONFIG.supabaseUrl+'/functions/v1/portal-login-start',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+tok},body:JSON.stringify({supplier_code:code})});
+      var j=await r.json();
+      if(!r.ok||!j.ok){ alert('Could not start login: '+(j.error||('HTTP '+r.status))); return; }
+      var url=j.portal_url+(j.portal_url.indexOf('#')>=0?'&':'#')+'auralogin='+encodeURIComponent(j.ticket);
+      window.open(url,'_blank','noopener');
+    }catch(err){ alert('Could not start login: '+(err.message||err)); }
   };
 
   window.sendEmail = async function(){
