@@ -486,6 +486,18 @@ const EMAIL_TEMPLATES=[
    body:'Hi {first},\n\nThank you for your recent order. It was a pleasure working with you and we hope you are thrilled with the result.\n\nWe would love to help with your next project whenever you are ready.\n\nWarm regards,\nMurray\nAura Print & Promo'}
 ];
 
+/* Saved templates a staff member can attach to a quote/proof/invoice email.
+   Each entry is a file hosted on the site. Add or remove entries here as templates change.
+   url is relative to the site root (crm.html sits at the root). A template only attaches
+   successfully once its file is actually deployed at that path. */
+window.AURA_TEMPLATES = window.AURA_TEMPLATES || [
+  {id:'bb-xs',   name:'Bow Banner (Extra Small)', filename:'AuraPrint-BowBanner-ExtraSmall-Template.pdf', url:'templates/bow-banners/AuraPrint-BowBanner-ExtraSmall-Template.pdf'},
+  {id:'bb-s',    name:'Bow Banner (Small)',       filename:'AuraPrint-BowBanner-Small-Template.pdf',      url:'templates/bow-banners/AuraPrint-BowBanner-Small-Template.pdf'},
+  {id:'bb-m',    name:'Bow Banner (Medium)',      filename:'AuraPrint-BowBanner-Medium-Template.pdf',     url:'templates/bow-banners/AuraPrint-BowBanner-Medium-Template.pdf'},
+  {id:'bb-l',    name:'Bow Banner (Large)',       filename:'AuraPrint-BowBanner-Large-Template.pdf',      url:'templates/bow-banners/AuraPrint-BowBanner-Large-Template.pdf'},
+  {id:'bb-jumbo',name:'Bow Banner (Jumbo)',       filename:'AuraPrint-BowBanner-Jumbo-Template.pdf',      url:'templates/bow-banners/AuraPrint-BowBanner-Jumbo-Template.pdf'}
+];
+
 /* ---------- Helpers ---------- */
 const money=c=>'$'+(c/100).toLocaleString('en-AU',{minimumFractionDigits:2,maximumFractionDigits:2});
 const initials=s=>s.split(' ').filter(Boolean).slice(0,2).map(w=>w[0]).join('').toUpperCase();
@@ -845,8 +857,15 @@ function renderComposer(){
       <div class="field" style="margin-top:16px"><label>Start from a template</label><select id="e_tpl" onchange="applyTemplate()">${tplOpts}</select></div>
       <div class="field"><label>Subject</label><input id="e_subj" placeholder="Subject line" value="${esc(e.subject)}"></div>
       <div class="field"><label>Message</label><textarea id="e_body" style="min-height:180px" placeholder="Write your message… use {first} for the contact's first name">${esc(e.body)}</textarea></div>
-      ${e.attachments&&e.attachments.length?`<div class="rchip" style="margin-top:12px;cursor:default"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg> ${esc(e.attachments[0].filename)} attached</div>`:''}
-      <div class="note">Sends through the existing Resend <code>send-email</code> Edge Function server-side (it already accepts a <code>cc</code>). {first} is personalised per recipient at send time. The PDF is attached automatically.</div>
+      <div class="field" style="margin-top:16px"><label>Attachments</label>
+        <div id="e_attlist" style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px">${(e.attachments&&e.attachments.length)?e.attachments.map((a,i)=>`<span class="rchip" style="cursor:default"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg> ${esc(a.filename)}<span class="rx" onclick="removeAttach(${i})">✕</span></span>`).join(''):'<span class="mini" style="align-self:center">No attachments yet. The quote PDF is added automatically when you open this from a quote.</span>'}</div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+          <button class="btn sm" onclick="document.getElementById('e_file').click()"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 5v14M5 12h14"/></svg> Upload file</button>
+          <input type="file" id="e_file" style="display:none" onchange="attachUpload(this)">
+          ${(window.AURA_TEMPLATES&&window.AURA_TEMPLATES.length)?`<select id="e_tmplsel" style="border:1px solid var(--line);border-radius:11px;padding:9px 12px;font-size:13px;font-family:inherit;background:var(--soft);outline:none"><option value="">Attach a saved template…</option>${window.AURA_TEMPLATES.map(t=>`<option value="${esc(t.id)}">${esc(t.name)}</option>`).join('')}</select><button class="btn sm" onclick="attachTemplate()">Attach</button>`:''}
+        </div>
+      </div>
+      <div class="note">Sends through the existing Resend <code>send-email</code> Edge Function server-side (it already accepts a <code>cc</code> and file <code>attachments</code>). {first} is personalised per recipient at send time. The quote/invoice PDF is attached automatically; you can add your own files or a saved template above.</div>
     </div>
     <div class="mf"><button class="btn" onclick="closeComposer()">Cancel</button><button class="btn primary" onclick="sendEmail()" ${included.length?'':'disabled'}><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 2 11 13M22 2l-7 20-4-9-9-4z"/></svg>${e.marketing?`Send to ${included.length}`:'Send'}</button></div>`;
   md.querySelectorAll('.ccsug').forEach(el=>el.onclick=()=>addCc(el.dataset.email,el.dataset.name));
@@ -872,6 +891,32 @@ function addCcFromInput(){
   inp.value='';
 }
 function removeCc(i){window._email.cc.splice(i,1);syncDraft();renderComposer();}
+/* ---- Attachments: auto PDF + staff uploads + saved templates ---- */
+const MAX_ATTACH_BYTES=18*1024*1024; /* keep total comfortably under Resend's limit */
+function _emAtt(){ if(!window._email.attachments) window._email.attachments=[]; return window._email.attachments; }
+function _emAttBytes(){ return _emAtt().reduce((n,a)=>n+Math.floor((a.content||'').length*3/4),0); }
+function attachUpload(input){
+  const f=input.files&&input.files[0]; if(!f){ return; }
+  if(_emAttBytes()+f.size>MAX_ATTACH_BYTES){ alert('That would push the attachments over about 18 MB in total, which is the email limit. Please attach a smaller file.'); input.value=''; return; }
+  const r=new FileReader();
+  r.onload=function(){ const b64=String(r.result||'').split(',')[1]||''; if(!b64){ alert('Could not read that file.'); return; } _emAtt().push({filename:f.name,content:b64}); input.value=''; syncDraft(); renderComposer(); };
+  r.onerror=function(){ alert('Could not read that file.'); input.value=''; };
+  r.readAsDataURL(f);
+}
+async function attachTemplate(){
+  const sel=document.getElementById('e_tmplsel'); if(!sel||!sel.value){ return; }
+  const t=(window.AURA_TEMPLATES||[]).find(x=>x.id===sel.value); if(!t){ return; }
+  if(_emAtt().some(a=>a.filename===(t.filename||t.name))){ alert('That template is already attached.'); return; }
+  try{
+    const res=await fetch(t.url); if(!res.ok) throw new Error('HTTP '+res.status);
+    const buf=await res.arrayBuffer();
+    if(_emAttBytes()+buf.byteLength>MAX_ATTACH_BYTES){ alert('That template would push the attachments over the email size limit.'); return; }
+    const bytes=new Uint8Array(buf); let bin=''; for(let i=0;i<bytes.length;i++){ bin+=String.fromCharCode(bytes[i]); }
+    _emAtt().push({filename:t.filename||(t.name+'.pdf'),content:btoa(bin)});
+    syncDraft(); renderComposer();
+  }catch(err){ alert('That saved template is not on the site yet, so it could not be attached ('+err.message+'). Upload the template file to the site, then it will attach from here.'); }
+}
+function removeAttach(i){ _emAtt().splice(i,1); syncDraft(); renderComposer(); }
 function applyTemplate(){
   const t=EMAIL_TEMPLATES.find(x=>x.id===document.getElementById('e_tpl').value);if(!t)return;
   window._email.subject=t.subject;window._email.body=t.body;
