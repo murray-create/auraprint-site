@@ -785,14 +785,15 @@ async function loadProducts(){
         .forEach(p=>list.push({n:p.item_style||p.group_name||p.style_code,slug:p.price_slug,dom:'Promotional',sup:prettySup(p.supplier_code),from:p.lowest_price_cents||0,code:p.style_code}));
     }
     // Print/signage slugs from the public catalogue view
-    const cat=await sbPage('product_catalogue?select=product_slug,row_count,from_cents');
+    const cat=await sbPage('product_catalogue?select=product_slug,row_count,from_cents&order=product_slug');
+    const seenSlug={};
     // Supplier per print slug from the staff cost audit table (best effort)
     const supBy={};
     if(sb){try{
       (await sbAll(f=>sb.from('product_price_audit').select('product_slug,supplier').range(f,f+999)))
         .forEach(a=>{if(a.supplier&&!supBy[a.product_slug])supBy[a.product_slug]=a.supplier;});
     }catch(_e){}}
-    cat.filter(c=>!/^p[bc]-/.test(c.product_slug)).forEach(c=>list.push({n:qcPretty(c.product_slug),slug:c.product_slug,dom:'Print',sup:supBy[c.product_slug]?prettySup(supBy[c.product_slug]):'—',from:c.from_cents||0}));
+    cat.filter(c=>!/^p[bc]-/.test(c.product_slug)&&!seenSlug[c.product_slug]&&(seenSlug[c.product_slug]=1)).forEach(c=>list.push({n:qcPretty(c.product_slug),slug:c.product_slug,dom:'Print',sup:supBy[c.product_slug]?prettySup(supBy[c.product_slug]):'—',from:c.from_cents||0}));
     if(!list.some(p=>p.slug==='business-cards'))list.push({n:'Business Cards',slug:'business-cards',dom:'Print',sup:'LEP',from:0});
     list.sort((a,b)=>a.n.localeCompare(b.n));
     P.list=list;
