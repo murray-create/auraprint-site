@@ -356,6 +356,7 @@ input.nqqty{width:74px;text-align:right;border:1px solid var(--line);border-radi
       <div class="tools">
         <button class="btn"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>Support</button>
         <button class="btn primary" id="newQuoteBtn"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M12 5v14M5 12h14"/></svg>New Quote</button>
+        <button class="btn" id="newInvoiceBtn"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M12 5v14M5 12h14"/></svg>New Invoice</button>
         <div class="ico"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#403d4a" stroke-width="2"><path d="M18 8a6 6 0 1 0-12 0c0 7-3 8-3 8h18s-3-1-3-8"/><path d="M10 21a2 2 0 0 0 4 0"/></svg><span class="dot"></span></div>
         <div class="me"><div class="av">MB<span class="on"></span></div><div><b>Murray Boyton</b><span>Owner</span></div></div>
       </div>
@@ -605,6 +606,7 @@ document.querySelectorAll('.side .sub').forEach(s=>s.onclick=()=>{
   if(s.dataset.sf)setSalesFilter(s.dataset.sf);
 });
 document.getElementById('newQuoteBtn').onclick=()=>{newQuote();};
+const nib=document.getElementById('newInvoiceBtn');if(nib)nib.onclick=()=>{newInvoice();};
 
 /* ---------- Dashboard ---------- */
 function renderHero(){
@@ -1322,6 +1324,14 @@ function newQuote(preName,opts){
   renderNewQuote(preName||'',false);
   mb.classList.add('show');
 }
+/* New Invoice: same builder, but saving raises the invoice straight away (internal approval —
+   a quote record is still created underneath, since orders/invoices/payments hang off it). */
+function newInvoice(preName,opts){
+  newQuote(preName,opts);
+  window._nqMode='newinv';
+  window._nqTitle='New Invoice';
+  renderNewQuote(preName||'',false);
+}
 async function openEditQuote(num){
   const q=D.quotes.find(x=>x.num===num); if(!q)return;
   const isInvEdit=q.stage==='invoice';
@@ -1351,7 +1361,7 @@ function renderNewQuote(preName,edit){
   const pc=preName?contactByName(preName):null;
   if(pc){nq.name=pc.name;nq.email=pc.email||'';nq.phone=pc.phone||'';nq.orgId=pc.orgId||nq.orgId||'';nq.suburb=pc.suburb||'';}
   const plus='<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M12 5v14M5 12h14"/></svg>';
-  md.innerHTML=`<div class="mh"><h3>${edit?esc(window._nqTitle||('Edit quote '+(window._nqNum||''))):'New Quote'}</h3><div class="x" onclick="closeModal()">✕</div></div>
+  md.innerHTML=`<div class="mh"><h3>${edit?esc(window._nqTitle||('Edit quote '+(window._nqNum||''))):esc(window._nqTitle||'New Quote')}</h3><div class="x" onclick="closeModal()">✕</div></div>
     <div class="mb">
       <div class="sub" style="color:var(--muted);font-size:12.5px;margin:-4px 0 14px">${edit?'Update the customer details and line items below, then save your changes.':'Search a past customer to autofill, or enter a new one.'}</div>
       <div style="position:relative">
@@ -1400,8 +1410,8 @@ function renderNewQuote(preName,edit){
         <div style="font-weight:800;font-size:15px;margin-top:3px">Total (inc GST): <span id="nq_tot">$0.00</span></div>
       </div>
       <button class="btn" onclick="closeModal()">Cancel</button>
-      ${edit?'':`<button class="btn" id="nq_saveSend" onclick="nqSave(true)"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 2 11 13M22 2l-7 20-4-9-9-4z"/></svg>Save &amp; send</button>`}
-      <button class="btn primary" id="nq_saveDraft" onclick="nqSave(false)">${edit?'Save changes':'Save as draft'}</button>
+      ${(edit||window._nqMode==='newinv')?'':`<button class="btn" id="nq_saveSend" onclick="nqSave(true)"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 2 11 13M22 2l-7 20-4-9-9-4z"/></svg>Save &amp; send</button>`}
+      <button class="btn primary" id="nq_saveDraft" onclick="nqSave(false)">${edit?(window._nqMode==='editinv'?'Save invoice changes':'Save changes'):(window._nqMode==='newinv'?'Create invoice':'Save as draft')}</button>
     </div>`;
   nqInitCatalogue();
   nqRenderLines();
@@ -1651,6 +1661,17 @@ async function nqSave(send){
     const ii=await sb.from('quote_items').insert(mkItems(ins.data.id));
     if(ii.error)throw ii.error;
     const num=ins.data.quote_number;
+    if(window._nqMode==='newinv'){
+      // Raise the invoice immediately (internal approval — no customer accept step).
+      const cv=await sb.rpc('convert_quote_to_order',{p_quote_id:ins.data.id});
+      closeModal();
+      await refreshFromSupabase(sb);
+      openQuote(num);
+      if(cv.error){alert('The details were saved as quote '+num+', but the invoice could not be raised: '+cv.error.message);return;}
+      const q2=D.quotes.find(x=>x.num===num);
+      if(q2&&q2._email){ try{ openInvoiceEmail(num); }catch(_e){} }
+      return;
+    }
     closeModal();
     await refreshFromSupabase(sb);
     openQuote(num);
