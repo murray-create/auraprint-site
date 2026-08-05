@@ -352,7 +352,7 @@ input.nqqty{width:74px;text-align:right;border:1px solid var(--line);border-radi
 
   <main class="main">
     <div class="topbar">
-      <div class="search"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#f01a9a" stroke-width="2.2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4"/></svg><input placeholder="Search products, contacts, quotes…"></div>
+      <div class="search"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#f01a9a" stroke-width="2.2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4"/></svg><input id="gsearch" placeholder="Search products… (press Enter)"></div>
       <div class="tools">
         <button class="btn"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>Support</button>
         <button class="btn primary" id="newQuoteBtn"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M12 5v14M5 12h14"/></svg>New Quote</button>
@@ -419,9 +419,14 @@ input.nqqty{width:74px;text-align:right;border:1px solid var(--line);border-radi
       <!-- PRODUCTS -->
       <section class="view" id="v-products">
         <div class="filterbar" id="pfilter"></div>
-        <div class="card"><h3>Product catalogue</h3><div class="sub" id="pcount">1,587 products from 5 suppliers, priced live</div>
+        <div class="card">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap">
+            <div><h3>Product catalogue</h3><div class="sub" id="pcount">Loading live catalogue…</div></div>
+            <input id="psearch" class="nqsearch" style="max-width:320px" placeholder="Search product, slug or supplier…" autocomplete="off" oninput="prodSearch(this.value)">
+          </div>
           <table><thead><tr><th>Product</th><th>Domain</th><th>Supplier</th><th class="num">From</th></tr></thead><tbody id="ptable"></tbody></table>
-          <div class="note">Showing a sample of the live catalogue. The full list is your Products backoffice.</div></div>
+          <div id="ppag" style="display:flex;gap:10px;align-items:center;justify-content:flex-end;margin-top:10px"></div>
+          <div class="note">Click a product to review and adjust its sell prices. Price changes go live on the website straight away.</div></div>
       </section>
 
       <!-- SUPPLIERS -->
@@ -561,8 +566,26 @@ function go(v){
   document.getElementById('vtitle').textContent=titles[v][0];
   document.getElementById('vsub').textContent=titles[v][1];
   document.getElementById('pheadBtn').style.display = (v==='quote'||v==='supplier') ? 'none' : '';
+  if(v==='products')loadProducts();
   window.scrollTo(0,0);
 }
+/* Top-bar search: filters the live product catalogue */
+(function(){
+  const g=document.getElementById('gsearch');if(!g)return;
+  g.addEventListener('keydown',e=>{
+    if(e.key==='Enter'){
+      go('products');
+      const ps=document.getElementById('psearch');if(ps)ps.value=g.value;
+      prodSearch(g.value);
+    }
+  });
+  g.addEventListener('input',()=>{
+    if(document.getElementById('v-products').classList.contains('on')){
+      const ps=document.getElementById('psearch');if(ps)ps.value=g.value;
+      prodSearch(g.value);
+    }
+  });
+})();
 function setSalesFilter(sf){
   const cq=document.getElementById('card-quotes'),co=document.getElementById('card-orders'),ci=document.getElementById('card-invoices');
   if(!cq||!co||!ci)return;
@@ -650,7 +673,7 @@ function openQuote(num){
     actions=`<button class="btn" onclick="duplicateQuote('${q.num}')">Duplicate quote</button>`;
   } else if(q.stage==='quote'){
     actions+=`<button class="btn primary" onclick="openQuoteEmail('${q.num}')" ${total===0?'disabled':''}>Send quote email</button>`;
-    actions+=`<button class="btn" onclick="advance('${q.num}','order')" ${total===0?'disabled':''}>Convert to order ›</button>`;
+    actions+=`<button class="btn" onclick="convertToInvoice('${q.num}')" ${total===0?'disabled':''}>Convert to invoice ›</button>`;
     if(q.status==='sent') banner=`<div class="banner info">Sent to ${esc(q.contact)} — awaiting their approval.</div>`;
   } else if(q.stage==='order'){
     banner=`<div class="banner good">Converted to order <b>${q.orderNum}</b>. Ready to invoice.</div>`;
@@ -716,6 +739,11 @@ function advance(num,to){
   renderQuoteTables(); renderHero();
   openQuote(num);
 }
+function convertToInvoice(num){
+  const q=D.quotes.find(x=>x.num===num); if(!q) return;
+  if(!confirm('Convert '+num+' straight to an invoice without client approval?\n\nThe quote will be approved internally and a tax invoice raised, ready to email.')) return;
+  advance(num,'order'); advance(num,'invoice');
+}
 function duplicateQuote(num){
   const q=D.quotes.find(x=>x.num===num); if(!q) return;
   const copy=JSON.parse(JSON.stringify(q));
@@ -729,13 +757,176 @@ function copyLink(num){
   alert('Payment link copied:\n'+link);
 }
 
-/* ---------- Products / suppliers / templates ---------- */
+/* ---------- Products: full live catalogue, searchable, with quick price editing ---------- */
 const doms=['All','Promotional','Print'];let pf='All';
-function drawProducts(){document.getElementById('pfilter').innerHTML=doms.map(d=>`<div class="fchip${d===pf?' active':''}" data-d="${d}">${d}</div>`).join('');
- document.querySelectorAll('#pfilter .fchip').forEach(c=>c.onclick=()=>{pf=c.dataset.d;drawProducts();});
- const list=D.products.filter(p=>pf==='All'||p.dom===pf);
- document.getElementById('ptable').innerHTML=list.map(p=>`<tr><td><b>${esc(p.n)}</b></td><td><span class="dom ${p.dom}">${p.dom}</span></td><td class="mini">${p.sup}</td><td class="num">${money(p.from)}</td></tr>`).join('');}
+window._prod={list:null,loading:false,q:'',page:0,per:50};
+function prettySup(code){const m={PREMIER:'Premier',PROMOBRANDS:'PromoBrands',LEP:'LEP',EASYSIGNS:'EasySigns',CMYKHUB:'CMYKhub'};return m[String(code||'').toUpperCase()]||String(code||'');}
+async function sbAll(build){ // pages an authed supabase query past the 1000-row cap
+  let all=[],from=0;
+  for(;;){
+    const r=await build(from);
+    if(r.error)throw r.error;
+    all=all.concat(r.data||[]);
+    if(!r.data||r.data.length<1000)break;
+    from+=1000;
+  }
+  return all;
+}
+async function loadProducts(){
+  const P=window._prod;
+  if(P.list||P.loading)return;
+  P.loading=true;drawProducts();
+  try{
+    const sb=window.CRM_SB;
+    const list=[];
+    // Promo products with real names (staff catalogue, authed)
+    if(sb){
+      (await sbAll(f=>sb.from('catalogue_products').select('style_code,item_style,group_name,supplier_code,price_slug,lowest_price_cents').eq('active',true).order('style_code').range(f,f+999)))
+        .forEach(p=>list.push({n:p.item_style||p.group_name||p.style_code,slug:p.price_slug,dom:'Promotional',sup:prettySup(p.supplier_code),from:p.lowest_price_cents||0,code:p.style_code}));
+    }
+    // Print/signage slugs from the public catalogue view
+    const cat=await sbPage('product_catalogue?select=product_slug,row_count,from_cents');
+    // Supplier per print slug from the staff cost audit table (best effort)
+    const supBy={};
+    if(sb){try{
+      (await sbAll(f=>sb.from('product_price_audit').select('product_slug,supplier').range(f,f+999)))
+        .forEach(a=>{if(a.supplier&&!supBy[a.product_slug])supBy[a.product_slug]=a.supplier;});
+    }catch(_e){}}
+    cat.filter(c=>!/^p[bc]-/.test(c.product_slug)).forEach(c=>list.push({n:qcPretty(c.product_slug),slug:c.product_slug,dom:'Print',sup:supBy[c.product_slug]?prettySup(supBy[c.product_slug]):'—',from:c.from_cents||0}));
+    if(!list.some(p=>p.slug==='business-cards'))list.push({n:'Business Cards',slug:'business-cards',dom:'Print',sup:'LEP',from:0});
+    list.sort((a,b)=>a.n.localeCompare(b.n));
+    P.list=list;
+    const np=document.querySelector('.nav[data-v="products"] .pill');if(np)np.textContent=(list.length/1000).toFixed(1).replace('.0','')+'k';
+  }catch(e){console.error('catalogue load failed',e);}
+  P.loading=false;
+  drawProducts();
+}
+function drawProducts(){
+  const P=window._prod;
+  document.getElementById('pfilter').innerHTML=doms.map(d=>`<div class="fchip${d===pf?' active':''}" data-d="${d}">${d}</div>`).join('');
+  document.querySelectorAll('#pfilter .fchip').forEach(c=>c.onclick=()=>{pf=c.dataset.d;P.page=0;drawProducts();});
+  const src=P.list||D.products;
+  const q=(P.q||'').toLowerCase().trim();
+  const list=src.filter(p=>(pf==='All'||p.dom===pf)&&(!q||((p.n||'')+' '+(p.slug||'')+' '+(p.sup||'')+' '+(p.code||'')).toLowerCase().includes(q)));
+  const pages=Math.max(1,Math.ceil(list.length/P.per));
+  if(P.page>=pages)P.page=pages-1;
+  const shown=list.slice(P.page*P.per,(P.page+1)*P.per);
+  const pc=document.getElementById('pcount');
+  if(pc)pc.textContent=P.list?P.list.length.toLocaleString()+' products, priced live · '+list.length.toLocaleString()+' match'+(list.length===1?'es':'')+' · click one to adjust pricing':(P.loading?'Loading the live catalogue…':'Showing a sample — sign in to load the live catalogue.');
+  document.getElementById('ptable').innerHTML=shown.map(p=>`<tr${p.slug?` class="clk" data-slug="${esc(p.slug)}" data-n="${esc(p.n)}"`:''}><td><b>${esc(p.n)}</b></td><td><span class="dom ${p.dom}">${p.dom}</span></td><td class="mini">${esc(p.sup||'—')}</td><td class="num">${p.from?money(p.from):'—'}</td></tr>`).join('')||'<tr><td colspan="4"><div class="empty">No products match your search.</div></td></tr>';
+  document.querySelectorAll('#ptable tr.clk[data-slug]').forEach(r=>r.onclick=()=>openPriceEditor(r.dataset.slug,r.dataset.n));
+  const pg=document.getElementById('ppag');
+  if(pg)pg.innerHTML=pages>1?`<button class="btn sm" ${P.page===0?'disabled':''} onclick="prodPage(-1)">‹ Prev</button><span class="mini">Page ${P.page+1} of ${pages}</span><button class="btn sm" ${P.page>=pages-1?'disabled':''} onclick="prodPage(1)">Next ›</button>`:'';
+}
+function prodPage(d){window._prod.page+=d;drawProducts();}
+function prodSearch(v){window._prod.q=v||'';window._prod.page=0;drawProducts();}
 drawProducts();
+
+/* ---------- Quick price editor ---------- */
+window._pe=null;
+const peOptKey=o=>{o=o||{};return JSON.stringify(Object.keys(o).sort().reduce((a,k)=>(a[k]=o[k],a),{}));};
+async function openPriceEditor(slug,title){
+  const sb=window.CRM_SB;
+  if(!sb){alert('Not connected — please reload and sign in.');return;}
+  md.className='modal xwide';
+  md.innerHTML=`<div class="mh"><h3>${esc(title)} — pricing</h3><div class="x" onclick="closeModal()">✕</div></div><div class="mb"><div class="empty">Loading price rows…</div></div>`;
+  mb.classList.add('show');
+  try{
+    let rows,costBy={};
+    const bc=slug==='business-cards';
+    if(bc){
+      rows=(await sbAll(f=>sb.from('bc_prices').select('stock,sides,turnaround,finish,corners,qty,price_cents,source').neq('finish','(legacy)').order('qty').range(f,f+999)))
+        .map(x=>({options:{turnaround:BC_TMAP[x.turnaround]||x.turnaround,stock:x.stock,finish:x.finish,corners:x.corners,sides:x.sides},qty:Number(x.qty),price_cents:x.price_cents,source:x.source||'',_bckey:{stock:x.stock,sides:x.sides,turnaround:x.turnaround,finish:x.finish,corners:x.corners,qty:x.qty}}));
+    }else{
+      rows=(await sbAll(f=>sb.from('product_prices').select('id,options,qty,price_cents,source').eq('product_slug',slug).order('id').range(f,f+999)))
+        .map(x=>({id:x.id,options:x.options||{},qty:Number(x.qty),price_cents:x.price_cents,source:x.source||''}));
+      try{
+        (await sbAll(f=>sb.from('product_price_audit').select('options,qty,cost_cents').eq('product_slug',slug).range(f,f+999)))
+          .forEach(a=>{costBy[peOptKey(a.options)+'|'+a.qty]=a.cost_cents;});
+      }catch(_e){}
+    }
+    if(!rows.length){md.querySelector('.mb').innerHTML='<div class="empty">No editable price rows found for this product.</div>';return;}
+    const keySet={};rows.forEach(r=>Object.keys(r.options).forEach(k=>keySet[k]=1));
+    const keys=Object.keys(keySet).sort((a,b)=>{const ia=QCAT_ORDER.indexOf(a),ib=QCAT_ORDER.indexOf(b);return (ia<0?99:ia)-(ib<0?99:ib)||a.localeCompare(b);});
+    const sel={};keys.forEach(k=>{sel[k]=rows[0].options[k];});
+    window._pe={slug,title,rows,costBy,keys,sel,bc,hasCost:Object.keys(costBy).length>0};
+    renderPriceEditor();
+  }catch(e){md.querySelector('.mb').innerHTML='<div class="empty">Could not load prices: '+esc(e.message||String(e))+'</div>';}
+}
+function peComboRows(){
+  const pe=window._pe;
+  return pe.rows.map((r,i)=>({r,i})).filter(x=>pe.keys.every(k=>String(x.r.options[k]??'')===String(pe.sel[k]??''))).sort((a,b)=>a.r.qty-b.r.qty);
+}
+function peMarginCell(r){
+  const pe=window._pe;
+  const cost=pe.costBy[peOptKey(r.options)+'|'+r.qty];
+  if(!cost)return pe.hasCost?'<td class="num mini">—</td><td class="num mini">—</td>':'';
+  const x=r.price_cents/cost;
+  const bad=x<1.30;
+  return '<td class="num mini">'+money(cost)+'</td><td class="num" style="font-weight:700;color:'+(bad?'#d92c20':'#177245')+'">'+x.toFixed(2)+'×'+(bad?' ⚠':'')+'</td>';
+}
+function renderPriceEditor(){
+  const pe=window._pe;if(!pe)return;
+  const combo=peComboRows();
+  const selects=pe.keys.map(k=>{
+    const vals=[...new Set(pe.rows.map(r=>r.options[k]).filter(v=>v!=null))];
+    return '<div class="field" style="min-width:150px"><label>'+esc(qcLabel(k))+'</label><select onchange="peSel(\''+esc(k)+'\',this.value)">'+vals.map(v=>'<option'+(String(v)===String(pe.sel[k])?' selected':'')+'>'+esc(String(v))+'</option>').join('')+'</select></div>';
+  }).join('');
+  const costHead=pe.hasCost?'<th class="num">Cost</th><th class="num">Margin</th>':'';
+  const body=combo.length?combo.map(x=>'<tr><td class="num"><b>'+x.r.qty.toLocaleString()+'</b></td>'+ (pe.hasCost?peMarginCell(x.r):'')+'<td class="num"><input data-i="'+x.i+'" type="number" step="0.01" min="0.01" value="'+(x.r.price_cents/100).toFixed(2)+'" style="width:110px;text-align:right;border:1px solid var(--line);border-radius:8px;padding:7px 9px;font-family:inherit;font-size:13.5px" oninput="peLive(this)"></td><td class="mini">'+esc(x.r.source||'')+'</td></tr>').join(''):'<tr><td colspan="9"><div class="empty">No price rows for this combination.</div></td></tr>';
+  md.querySelector('.mb').innerHTML=
+    (pe.keys.length?'<div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px">'+selects+'</div>':'')+
+    '<table id="pe_rows"><thead><tr><th class="num">Qty</th>'+(pe.hasCost?'<th class="num">Cost</th><th class="num">Margin</th>':'')+'<th class="num">Sell (inc GST)</th><th>Source</th></tr></thead><tbody>'+body+'</tbody></table>'+
+    '<div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:14px;border-top:1px solid var(--line);padding-top:12px">'+
+      '<span class="mini">Bulk adjust every price on this product ('+pe.rows.length.toLocaleString()+' rows):</span>'+
+      '<input id="pe_pct" type="number" step="0.5" placeholder="e.g. 5 or -10" style="width:110px;border:1px solid var(--line);border-radius:8px;padding:7px 9px;font-family:inherit;font-size:13.5px">'+
+      '<span class="mini">%</span><button class="btn sm" onclick="peBulk()">Apply to whole product</button>'+
+    '</div>'+
+    '<div class="note" style="margin-top:10px">These are the live sell prices customers see on the website — saved changes apply on their next page load.'+(pe.hasCost?' Margin is sell ÷ your delivered cost; your minimum is 1.30×.':'')+'</div>';
+  const mf=md.querySelector('.mf');if(mf)mf.remove();
+  md.insertAdjacentHTML('beforeend','<div class="mf"><button class="btn" onclick="closeModal()">Close</button><button class="btn primary" onclick="peSave()">Save changes</button></div>');
+}
+window.peSel=function(k,v){window._pe.sel[k]=v;renderPriceEditor();};
+window.peLive=function(inp){
+  const pe=window._pe;const r=pe.rows[+inp.dataset.i];if(!r||!pe.hasCost)return;
+  const cost=pe.costBy[peOptKey(r.options)+'|'+r.qty];if(!cost)return;
+  const cents=Math.round(parseFloat(inp.value||'0')*100);
+  const cells=inp.closest('tr').querySelectorAll('td');
+  const x=cents/cost,bad=x<1.30;
+  if(cells[2]){cells[2].style.color=bad?'#d92c20':'#177245';cells[2].textContent=isFinite(x)?x.toFixed(2)+'×'+(bad?' ⚠':''):'—';}
+};
+window.peSave=async function(){
+  const pe=window._pe,sb=window.CRM_SB;if(!pe||!sb)return;
+  const edits=[];
+  md.querySelectorAll('#pe_rows input[data-i]').forEach(inp=>{
+    const i=+inp.dataset.i,cents=Math.round(parseFloat(inp.value||'0')*100);
+    if(isFinite(cents)&&cents>0&&cents!==pe.rows[i].price_cents)edits.push({i,cents});
+  });
+  if(!edits.length){alert('No price changes to save.');return;}
+  try{
+    for(const e of edits){
+      const row=pe.rows[e.i];let r;
+      if(pe.bc)r=await sb.from('bc_prices').update({price_cents:e.cents}).match(row._bckey);
+      else r=await sb.from('product_prices').update({price_cents:e.cents}).eq('id',row.id);
+      if(r.error)throw r.error;
+      row.price_cents=e.cents;
+    }
+  }catch(err){alert('Save failed: '+(err.message||err));return;}
+  renderPriceEditor();
+  alert(edits.length+' price'+(edits.length===1?'':'s')+' updated — live on the website now.');
+};
+window.peBulk=async function(){
+  const pe=window._pe,sb=window.CRM_SB;if(!pe||!sb)return;
+  const pct=parseFloat(document.getElementById('pe_pct').value);
+  if(!isFinite(pct)||pct===0){alert('Enter a percentage first, e.g. 5 or -10.');return;}
+  if(!confirm('Adjust ALL '+pe.rows.length.toLocaleString()+' prices for '+pe.title+' by '+pct+'%?\n\nThis changes the live website prices immediately.'))return;
+  try{
+    const r=await sb.rpc('adjust_product_prices',{p_slug:pe.slug,p_pct:pct});
+    if(r.error)throw r.error;
+    pe.rows.forEach(x=>{x.price_cents=Math.max(1,Math.round(x.price_cents*(1+pct/100)));});
+    renderPriceEditor();
+  }catch(err){alert('Bulk adjust failed: '+(err.message||err));}
+};
 
 function renderSuppliers(){
   document.getElementById('sgrid').innerHTML=D.suppliers.map(s=>`<div class="scard clk" data-code="${s.code}"><div class="sh"><div class="slogo">${initials(s.name)}</div><div><b>${esc(s.name)}</b><div class="mini" style="margin-top:3px"><span class="dom ${s.domain}">${s.domain}</span></div></div><span class="badge b-${s.kind}" style="margin-left:auto">${s.kind==='api'?'API':'Manual'}</span></div><div class="meta"><div><div class="k">Products</div>${s.n?s.n.toLocaleString():'—'}</div><div><div class="k">Last sync</div>${s.sync}</div><svg class="arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg></div></div>`).join('');
@@ -1449,7 +1640,7 @@ async function refreshFromSupabase(sb){
     if(inv&&inv.status==='paid')stage='paid'; else if(inv)stage='invoice'; else if(ord)stage='order';
     let contact=q.contact_name||q.contact_email||'—';
     if(q.company){const org=D.orgs.find(o=>o.name.toLowerCase()===q.company.toLowerCase());if(org){const ppl=D.contacts.filter(c=>c.orgId===org.id);if(ppl.length&&!D.contacts.some(c=>c.name===contact))contact=ppl[0].name;}}
-    D.quotes.push({num:q.quote_number,contact,status:q.status,stage,orderNum:ord?ord.order_number:null,invNum:inv?inv.invoice_number:null,payLink:inv?inv.payment_link_url:null,items,_id:q.id,_orderId:q.converted_order_id||null,_invId:inv?inv.id:null,_invToken:inv?inv.access_token:null,_email:q.contact_email||'',_name:q.contact_name||'',_token:q.access_token||'',_tCarrier:ord?(ord.tracking_carrier||''):'',_tNumber:ord?(ord.tracking_number||''):'',_tUrl:ord?(ord.tracking_url||''):'',_dispatched:ord?ord.dispatched_at:null,_valid:q.valid_until||null});
+    D.quotes.push({num:q.quote_number,contact,status:q.status,stage,orderNum:ord?ord.order_number:null,invNum:inv?inv.invoice_number:null,payLink:inv?inv.payment_link_url:null,items,_id:q.id,_orderId:q.converted_order_id||null,_invId:inv?inv.id:null,_invToken:inv?inv.access_token:null,_email:q.contact_email||'',_name:q.contact_name||'',_token:q.access_token||'',_accepted:!!q.accepted_by_name,_tCarrier:ord?(ord.tracking_carrier||''):'',_tNumber:ord?(ord.tracking_number||''):'',_tUrl:ord?(ord.tracking_url||''):'',_dispatched:ord?ord.dispatched_at:null,_valid:q.valid_until||null});
   });
   D.orders.length=0;
   (ords.data||[]).forEach(o=>{const q=(qs.data||[]).find(x=>x.converted_order_id===o.id);D.orders.push({num:o.order_number,name:o.contact_name||'—',company:o.company||null,status:o.status,total:orderTotal[o.id]||0,q:q?q.quote_number:null,track:o.tracking_number||null});});
@@ -1628,6 +1819,19 @@ drawOrgs(0);
     await reload(); openQuote(num);
   };
 
+  // Internal approval: convert a quote (draft or sent) straight to an invoice,
+  // skipping the customer accept step, then open the invoice email ready to send.
+  window.convertToInvoice = async function(num){
+    var sb=SB(); var q=fq(num); if(!sb||!q) return;
+    if(!confirm('Convert '+num+' straight to an invoice without client approval?\n\nThe quote will be approved internally and a tax invoice raised, ready to email.')) return;
+    try{
+      if(!q._invId){ var r=await sb.rpc('convert_quote_to_order',{p_quote_id:q._id}); if(r.error) throw r.error; }
+    }catch(e){ alert('Could not convert: '+(e.message||e)); return; }
+    await reload(); openQuote(num);
+    var q2=fq(num);
+    if(q2&&q2._email){ try{ openInvoiceEmail(num); }catch(_e){} }
+  };
+
   window.doDeleteContact = async function(i){
     var sb=SB(); var c=D.contacts[i]; if(!sb||!c) return;
     if(c._id){ var r=await sb.from('contacts').update({archived:true,archive_reason:'trashed from CRM'}).eq('id',c._id); if(r.error){alert(r.error.message);return;} }
@@ -1799,8 +2003,11 @@ window.openInvoiceEmail=function(num){
   if(bus.payid) pay+='  PayID: '+bus.payid+'\n';
   pay+='\n';
   var subject='Tax invoice '+q.invNum+' — order '+(q.orderNum||'')+' — Aura Print & Promo';
+  var opening=q._accepted
+    ? 'Thank you for completing our online approval process! Your order '+(q.orderNum||'')+' is queued for production — please note full payment is required before production begins.'
+    : 'Thank you for your order! Your order '+(q.orderNum||'')+' is queued for production — please note full payment is required before production begins.';
   var body='Hi '+first+',\n\n'+
-    'Thank you for completing our online approval process! Your order '+(q.orderNum||'')+' is queued for production — please note full payment is required before production begins.\n\n'+
+    opening+'\n\n'+
     'View your tax invoice online ('+money(qTotal(q))+' inc GST):\n'+link+'\n\n'+
     pay+
     'Bank transfers can take up to 1 business day for us to receive — if your job is urgent, email your remittance advice to admin@auraprint.com.au and we’ll release it early.\n\n'+
