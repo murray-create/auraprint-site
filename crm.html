@@ -680,7 +680,7 @@ function openQuote(num){
     actions=`<button class="btn primary" onclick="advance('${q.num}','invoice')">Create invoice ›</button>`;
   } else if(q.stage==='invoice'){
     banner=`<div class="banner info">Invoice <b>${q.invNum}</b> raised — payment link ready to send.</div>`;
-    actions=`<button class="btn primary" onclick="openInvoiceEmail('${q.num}')">Send invoice email</button><button class="btn" onclick="copyLink('${q.num}')">Copy payment link</button><button class="btn" onclick="advance('${q.num}','paid')">Mark as paid</button>`;
+    actions=`<button class="btn primary" onclick="openInvoiceEmail('${q.num}')">Send invoice email</button><button class="btn" onclick="openEditQuote('${q.num}')">Edit invoice</button><button class="btn" onclick="copyLink('${q.num}')">Copy payment link</button><button class="btn" onclick="advance('${q.num}','paid')">Mark as paid</button>`;
   } else if(q.stage==='paid'){
     banner=`<div class="banner good">Invoice <b>${q.invNum}</b> paid in full. ${money(total)} received.</div>`;
     actions=`<button class="btn" onclick="openInvoiceEmail('${q.num}')">Resend invoice email</button><button class="btn" onclick="copyLink('${q.num}')">View receipt link</button>`;
@@ -718,7 +718,7 @@ function openQuote(num){
       </div>
     </div>
     <div class="qdgrid">
-      <div class="card"><div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px"><div><h3>Line items</h3><div class="sub">${q.items.length} item${q.items.length===1?'':'s'} on this quote</div></div>${q.stage==='quote'?`<button class="btn sm" onclick="openEditQuote('${q.num}')"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg> Edit</button>`:''}</div>
+      <div class="card"><div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px"><div><h3>Line items</h3><div class="sub">${q.items.length} item${q.items.length===1?'':'s'} on this quote</div></div>${(q.stage==='quote'||q.stage==='invoice')?`<button class="btn sm" onclick="openEditQuote('${q.num}')"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg> Edit</button>`:''}</div>
         <table><thead><tr><th>Product</th><th class="num">Qty</th><th class="num">Unit</th><th class="num">Line total</th></tr></thead>
         <tbody>${q.items.map(it=>`<tr><td><b>${esc(it.n)}</b></td><td class="num">${it.qty}</td><td class="num">${money(unitOf(it))}</td><td class="num">${money(it.price)}</td></tr>`).join('')||'<tr><td colspan="4"><div class="empty">No products on this quote yet.</div></td></tr>'}</tbody></table>
         <div class="note">Prices shown include GST. Wholesale cost and supplier stay staff-only and never appear on the customer's copy.</div>
@@ -760,7 +760,7 @@ function copyLink(num){
 /* ---------- Products: full live catalogue, searchable, with quick price editing ---------- */
 const doms=['All','Promotional','Print'];let pf='All';
 window._prod={list:null,loading:false,q:'',page:0,per:50};
-function prettySup(code){const m={PREMIER:'Premier',PROMOBRANDS:'PromoBrands',LEP:'LEP',EASYSIGNS:'EasySigns',CMYKHUB:'CMYKhub'};return m[String(code||'').toUpperCase()]||String(code||'');}
+function prettySup(code){const cc=String(code||'').toUpperCase();const s=(D.suppliers||[]).find(x=>x.code===cc);if(s)return s.name;const m={PREMIER:'Premier',PROMOBRANDS:'PromoBrands',LEP:'LEP',EASYSIGNS:'EasySigns',CMYKHUB:'CMYKhub',MISTERMAGNETS:'MisterMagnets'};return m[cc]||String(code||'');}
 async function sbAll(build){ // pages an authed supabase query past the 1000-row cap
   let all=[],from=0;
   for(;;){
@@ -787,14 +787,20 @@ async function loadProducts(){
     // Print/signage slugs from the public catalogue view
     const cat=await sbPage('product_catalogue?select=product_slug,row_count,from_cents&order=product_slug');
     const seenSlug={};
-    // Supplier per print slug from the staff cost audit table (best effort)
+    // Supplier per print slug: staff mapping table first, then the cost audit table
     const supBy={};
-    if(sb){try{
-      (await sbAll(f=>sb.from('product_price_audit').select('product_slug,supplier').range(f,f+999)))
-        .forEach(a=>{if(a.supplier&&!supBy[a.product_slug])supBy[a.product_slug]=a.supplier;});
-    }catch(_e){}}
-    cat.filter(c=>!/^p[bc]-/.test(c.product_slug)&&!seenSlug[c.product_slug]&&(seenSlug[c.product_slug]=1)).forEach(c=>list.push({n:qcPretty(c.product_slug),slug:c.product_slug,dom:'Print',sup:supBy[c.product_slug]?prettySup(supBy[c.product_slug]):'—',from:c.from_cents||0}));
-    if(!list.some(p=>p.slug==='business-cards'))list.push({n:'Business Cards',slug:'business-cards',dom:'Print',sup:'LEP',from:0});
+    if(sb){
+      try{
+        (await sbAll(f=>sb.from('product_suppliers').select('product_slug,supplier_code').range(f,f+999)))
+          .forEach(a=>{if(a.supplier_code)supBy[a.product_slug]=a.supplier_code;});
+      }catch(_e){}
+      try{
+        (await sbAll(f=>sb.from('product_price_audit').select('product_slug,supplier').range(f,f+999)))
+          .forEach(a=>{if(a.supplier&&!supBy[a.product_slug])supBy[a.product_slug]=a.supplier;});
+      }catch(_e){}
+    }
+    cat.filter(c=>!/^p[bc]-/.test(c.product_slug)&&!seenSlug[c.product_slug]&&(seenSlug[c.product_slug]=1)).forEach(c=>list.push({n:qcPretty(c.product_slug),slug:c.product_slug,dom:'Print',sup:supBy[c.product_slug]?prettySup(supBy[c.product_slug]):'—',supCode:supBy[c.product_slug]||'',from:c.from_cents||0}));
+    if(!list.some(p=>p.slug==='business-cards'))list.push({n:'Business Cards',slug:'business-cards',dom:'Print',sup:supBy['business-cards']?prettySup(supBy['business-cards']):'LEP',supCode:supBy['business-cards']||'LEP',from:0});
     list.sort((a,b)=>a.n.localeCompare(b.n));
     P.list=list;
     const np=document.querySelector('.nav[data-v="products"] .pill');if(np)np.textContent=(list.length/1000).toFixed(1).replace('.0','')+'k';
@@ -850,7 +856,9 @@ async function openPriceEditor(slug,title){
     const keySet={};rows.forEach(r=>Object.keys(r.options).forEach(k=>keySet[k]=1));
     const keys=Object.keys(keySet).sort((a,b)=>{const ia=QCAT_ORDER.indexOf(a),ib=QCAT_ORDER.indexOf(b);return (ia<0?99:ia)-(ib<0?99:ib)||a.localeCompare(b);});
     const sel={};keys.forEach(k=>{sel[k]=rows[0].options[k];});
-    window._pe={slug,title,rows,costBy,keys,sel,bc,hasCost:Object.keys(costBy).length>0};
+    const entry=(window._prod.list||[]).find(p=>p.slug===slug);
+    window._pe={slug,title,rows,costBy,keys,sel,bc,hasCost:Object.keys(costBy).length>0,
+      canSetSup:!/^p[bc]-/.test(slug),supCode:entry?(entry.supCode||''):''};
     renderPriceEditor();
   }catch(e){md.querySelector('.mb').innerHTML='<div class="empty">Could not load prices: '+esc(e.message||String(e))+'</div>';}
 }
@@ -875,8 +883,9 @@ function renderPriceEditor(){
   }).join('');
   const costHead=pe.hasCost?'<th class="num">Cost</th><th class="num">Margin</th>':'';
   const body=combo.length?combo.map(x=>'<tr><td class="num"><b>'+x.r.qty.toLocaleString()+'</b></td>'+ (pe.hasCost?peMarginCell(x.r):'')+'<td class="num"><input data-i="'+x.i+'" type="number" step="0.01" min="0.01" value="'+(x.r.price_cents/100).toFixed(2)+'" style="width:110px;text-align:right;border:1px solid var(--line);border-radius:8px;padding:7px 9px;font-family:inherit;font-size:13.5px" oninput="peLive(this)"></td><td class="mini">'+esc(x.r.source||'')+'</td></tr>').join(''):'<tr><td colspan="9"><div class="empty">No price rows for this combination.</div></td></tr>';
+  const supPick=pe.canSetSup?'<div class="field" style="min-width:170px"><label>Supplier</label><select onchange="peSupplier(this.value)"><option value="">— not set —</option>'+(D.suppliers||[]).map(s=>'<option value="'+esc(s.code)+'"'+(s.code===pe.supCode?' selected':'')+'>'+esc(s.name)+'</option>').join('')+'</select></div>':'';
   md.querySelector('.mb').innerHTML=
-    (pe.keys.length?'<div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px">'+selects+'</div>':'')+
+    ((pe.keys.length||supPick)?'<div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px;align-items:flex-end">'+supPick+selects+'</div>':'')+
     '<table id="pe_rows"><thead><tr><th class="num">Qty</th>'+(pe.hasCost?'<th class="num">Cost</th><th class="num">Margin</th>':'')+'<th class="num">Sell (inc GST)</th><th>Source</th></tr></thead><tbody>'+body+'</tbody></table>'+
     '<div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:14px;border-top:1px solid var(--line);padding-top:12px">'+
       '<span class="mini">Bulk adjust every price on this product ('+pe.rows.length.toLocaleString()+' rows):</span>'+
@@ -888,6 +897,19 @@ function renderPriceEditor(){
   md.insertAdjacentHTML('beforeend','<div class="mf"><button class="btn" onclick="closeModal()">Close</button><button class="btn primary" onclick="peSave()">Save changes</button></div>');
 }
 window.peSel=function(k,v){window._pe.sel[k]=v;renderPriceEditor();};
+window.peSupplier=async function(code){
+  const pe=window._pe,sb=window.CRM_SB;if(!pe||!sb)return;
+  try{
+    let r;
+    if(code)r=await sb.from('product_suppliers').upsert({product_slug:pe.slug,supplier_code:code,updated_at:new Date().toISOString()},{onConflict:'product_slug'});
+    else r=await sb.from('product_suppliers').delete().eq('product_slug',pe.slug);
+    if(r.error)throw r.error;
+    pe.supCode=code;
+    const entry=(window._prod.list||[]).find(p=>p.slug===pe.slug);
+    if(entry){entry.supCode=code;entry.sup=code?prettySup(code):'—';}
+    drawProducts();
+  }catch(err){alert('Could not save the supplier: '+(err.message||err));renderPriceEditor();}
+};
 window.peLive=function(inp){
   const pe=window._pe;const r=pe.rows[+inp.dataset.i];if(!r||!pe.hasCost)return;
   const cost=pe.costBy[peOptKey(r.options)+'|'+r.qty];if(!cost)return;
@@ -1295,14 +1317,20 @@ function nqShapeBC(data){
 function newQuote(preName,opts){
   window._nq={items:[],discount:0,prodSlug:'',qty:100,name:'',email:'',phone:'',orgId:(opts&&opts.orgId)||'',suburb:'',_price:null,_priceQty:0};
   window._qc={rows:[],keys:[],sel:{},title:'',live:true};
-  window._nqMode='new';window._nqEditId=null;window._nqNum=null;
+  window._nqMode='new';window._nqEditId=null;window._nqNum=null;window._nqTitle=null;
   md.className='modal xwide';
   renderNewQuote(preName||'',false);
   mb.classList.add('show');
 }
 async function openEditQuote(num){
   const q=D.quotes.find(x=>x.num===num); if(!q)return;
-  if(q.stage!=='quote'){alert('This quote has been converted to an order or invoice, so its lines are locked. Duplicate it or start a new quote instead.');return;}
+  const isInvEdit=q.stage==='invoice';
+  if(q.stage!=='quote'&&!isInvEdit){
+    alert(q.stage==='paid'
+      ?'This invoice has been paid, so its lines are locked. Duplicate the quote for a new job instead.'
+      :'These lines are locked at this stage. Create the invoice first, then edit it.');
+    return;
+  }
   const sb=window.CRM_SB;if(!sb){alert('Not connected — please reload and sign in.');return;}
   let row;
   try{const r=await sb.from('quotes').select('*').eq('id',q._id).single();if(r.error)throw r.error;row=r.data;}
@@ -1312,7 +1340,8 @@ async function openEditQuote(num){
   q.items.forEach(it=>{ if((it.price||0)<0 && /^discount$/i.test(String(it.n||'').trim())){ _eDisc+=-it.price; } else _eItems.push({n:it.n,qty:it.qty,price:it.price}); });
   window._nq={items:_eItems,discount:_eDisc,prodSlug:'',qty:100,name:row.contact_name||q.contact||'',email:row.contact_email||'',phone:row.contact_phone||'',orgId:org?org.id:'',suburb:row.suburb||'',_price:null,_priceQty:0,_company:row.company||''};
   window._qc={rows:[],keys:[],sel:{},title:'',live:true};
-  window._nqMode='edit';window._nqEditId=q._id;window._nqNum=num;
+  window._nqMode=isInvEdit?'editinv':'edit';window._nqEditId=q._id;window._nqNum=num;
+  window._nqTitle=isInvEdit?('Edit invoice '+(q.invNum||'')+' — '+num):null;
   md.className='modal xwide';
   renderNewQuote('',true);
   mb.classList.add('show');
@@ -1322,7 +1351,7 @@ function renderNewQuote(preName,edit){
   const pc=preName?contactByName(preName):null;
   if(pc){nq.name=pc.name;nq.email=pc.email||'';nq.phone=pc.phone||'';nq.orgId=pc.orgId||nq.orgId||'';nq.suburb=pc.suburb||'';}
   const plus='<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M12 5v14M5 12h14"/></svg>';
-  md.innerHTML=`<div class="mh"><h3>${edit?('Edit quote '+esc(window._nqNum)):'New Quote'}</h3><div class="x" onclick="closeModal()">✕</div></div>
+  md.innerHTML=`<div class="mh"><h3>${edit?esc(window._nqTitle||('Edit quote '+(window._nqNum||''))):'New Quote'}</h3><div class="x" onclick="closeModal()">✕</div></div>
     <div class="mb">
       <div class="sub" style="color:var(--muted);font-size:12.5px;margin:-4px 0 14px">${edit?'Update the customer details and line items below, then save your changes.':'Search a past customer to autofill, or enter a new one.'}</div>
       <div style="position:relative">
@@ -1567,7 +1596,8 @@ async function nqSave(send){
   const org=orgId?orgById(orgId):null;
   const phone=document.getElementById('nq_phone').value.trim();
   const suburb=document.getElementById('nq_suburb').value.trim();
-  const isEdit=window._nqMode==='edit';
+  const isInvEdit=window._nqMode==='editinv';
+  const isEdit=window._nqMode==='edit'||isInvEdit;
   const company=org?org.name:(isEdit?(nq._company||null):null);
   const disc=nq.discount||0;
   const mkItems=qid=>{
@@ -1584,6 +1614,29 @@ async function nqSave(send){
       const eid=window._nqEditId;
       const up=await sb.from('quotes').update({contact_name:name,contact_email:email,contact_phone:phone||null,company:company,suburb:suburb||null}).eq('id',eid);
       if(up.error)throw up.error;
+      if(isInvEdit){
+        // Edit an issued (unpaid) invoice: one atomic call rewrites the quote, order and
+        // invoice lines together and recalculates the invoice totals.
+        const items=nq.items.map(it=>({description:it.n,qty:it.qty,price_inc_cents:it.price}));
+        if(disc>0)items.push({description:'Discount',qty:1,price_inc_cents:-disc});
+        const r=await sb.rpc('update_invoice_lines',{p_quote_id:eid,p_items:items});
+        if(r.error)throw r.error;
+        closeModal();
+        var linkNote='';
+        if(r.data&&r.data.link_cleared){
+          // The old Stripe link carried the old total — mint a fresh one.
+          try{
+            var sess=await sb.auth.getSession(); var tok=sess.data.session?sess.data.session.access_token:'';
+            var resp=await fetch(window.AURA_CONFIG.supabaseUrl+'/functions/v1/stripe-payment-link',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+tok},body:JSON.stringify({invoice_id:r.data.invoice_id})});
+            var j=await resp.json();
+            if(!resp.ok||j.error)linkNote='\n\nNote: the total changed, so the old payment link was removed, but a new Stripe link could not be created ('+(j.error||('HTTP '+resp.status))+').';
+          }catch(err){linkNote='\n\nNote: the total changed, so the old payment link was removed, but a new Stripe link could not be created: '+(err.message||err);}
+        }
+        await refreshFromSupabase(sb);
+        openQuote(window._nqNum);
+        alert('Invoice '+((r.data&&r.data.invoice_number)||'')+' updated ('+money((r.data&&r.data.total_inc_cents)||0)+' inc GST). Use "Send invoice email" to send the customer the revised invoice.'+linkNote);
+        return;
+      }
       const del=await sb.from('quote_items').delete().eq('quote_id',eid);
       if(del.error)throw del.error;
       const ei=await sb.from('quote_items').insert(mkItems(eid));
