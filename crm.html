@@ -134,6 +134,7 @@ tr.clk{cursor:pointer}tr.clk:hover td{background:var(--soft)}
 .b-converted,.b-approved,.b-shipped,.b-paid{background:var(--good-soft);color:var(--good)}
 .b-draft,.b-sent,.b-requested{background:#eef;color:#4a4a8a}
 .b-declined,.b-cancelled,.b-void,.b-unpaid{background:var(--bad-soft);color:var(--bad)}
+.b-sent{background:#e8f4ff;color:#1673b6}
 .b-api{background:var(--pink-soft);color:var(--pink-ink)}.b-manual{background:var(--warn-soft);color:var(--warn)}
 .b-new{background:#eef;color:#4a4a8a}.b-contacted{background:var(--warn-soft);color:var(--warn)}.b-won,.b-quoted{background:var(--good-soft);color:var(--good)}.b-lost{background:var(--bad-soft);color:var(--bad)}
 #leadFilter .chip{cursor:pointer;border:1px solid var(--line);background:#fff;color:var(--muted);margin-top:0}#leadFilter .chip.on{background:var(--pink-soft);color:var(--pink-ink);border-color:transparent}
@@ -640,7 +641,7 @@ function renderQuoteTables(){
   const invs=D.quotes.filter(q=>q.invNum);
   const itb=document.getElementById('itable');
   if(itb){
-    itb.innerHTML=invs.length?invs.map(q=>`<tr class="clk" data-q="${q.num}"><td><b>${esc(q.invNum)}</b></td><td>${q.num}</td><td>${esc(q.contact)}</td><td class="num">${money(qTotal(q))}</td><td><span class="badge b-${q.stage==='paid'?'paid':'unpaid'}">${q.stage==='paid'?'paid':'unpaid'}</span></td></tr>`).join(''):'<tr><td colspan="5"><div class="empty">No invoices raised yet.</div></td></tr>';
+    itb.innerHTML=invs.length?invs.map(q=>{const st=q.stage==='paid'?['paid','paid']:(q._invSent?['sent','sent']:['unpaid','not sent']);return `<tr class="clk" data-q="${q.num}"><td><b>${esc(q.invNum)}</b></td><td>${q.num}</td><td>${esc(q.contact)}</td><td class="num">${money(qTotal(q))}</td><td><span class="badge b-${st[0]}">${st[1]}</span></td></tr>`;}).join(''):'<tr><td colspan="5"><div class="empty">No invoices raised yet.</div></td></tr>';
     itb.querySelectorAll('tr.clk[data-q]').forEach(r=>r.onclick=()=>openQuote(r.dataset.q));
     const isub=document.getElementById('isub');if(isub)isub.textContent=`${invs.length} invoice${invs.length===1?'':'s'} · click one to open the quote`;
   }
@@ -681,8 +682,11 @@ function openQuote(num){
     banner=`<div class="banner good">Converted to order <b>${q.orderNum}</b>. Ready to invoice.</div>`;
     actions=`<button class="btn primary" onclick="advance('${q.num}','invoice')">Create invoice ›</button>`;
   } else if(q.stage==='invoice'){
-    banner=`<div class="banner info">Invoice <b>${q.invNum}</b> raised — ${q.payLink?'payment link ready to send.':'payment link not created yet.'}</div>`;
-    actions=`<button class="btn primary" onclick="openInvoiceEmail('${q.num}')">Send invoice email</button><button class="btn" onclick="openEditQuote('${q.num}')">Edit invoice</button><button class="btn" onclick="copyLink('${q.num}')">Copy payment link</button><button class="btn" onclick="advance('${q.num}','paid')">Mark as paid</button>`;
+    const sentStr=q._invSent?new Date(q._invSent).toLocaleDateString('en-AU',{day:'2-digit',month:'short'})+' '+new Date(q._invSent).toLocaleTimeString('en-AU',{hour:'2-digit',minute:'2-digit'}):'';
+    banner=q._invSent
+      ?`<div class="banner good">Invoice <b>${q.invNum}</b> emailed to ${esc(q.contact)} on ${sentStr} — awaiting payment.</div>`
+      :`<div class="banner info">Invoice <b>${q.invNum}</b> raised — ${q.payLink?'not yet sent to the customer.':'payment link not created yet.'}</div>`;
+    actions=`<button class="btn primary" onclick="openInvoiceEmail('${q.num}')">${q._invSent?'Resend invoice email':'Send invoice email'}</button><button class="btn" onclick="openEditQuote('${q.num}')">Edit invoice</button><button class="btn" onclick="copyLink('${q.num}')">Copy payment link</button><button class="btn" onclick="advance('${q.num}','paid')">Mark as paid</button>`;
   } else if(q.stage==='paid'){
     banner=`<div class="banner good">Invoice <b>${q.invNum}</b> paid in full. ${money(total)} received.</div>`;
     actions=`<button class="btn" onclick="openInvoiceEmail('${q.num}')">Resend invoice email</button><button class="btn" onclick="copyLink('${q.num}')">View receipt link</button>`;
@@ -1725,7 +1729,7 @@ async function refreshFromSupabase(sb){
     if(inv&&inv.status==='paid')stage='paid'; else if(inv)stage='invoice'; else if(ord)stage='order';
     let contact=q.contact_name||q.contact_email||'—';
     if(q.company){const org=D.orgs.find(o=>o.name.toLowerCase()===q.company.toLowerCase());if(org){const ppl=D.contacts.filter(c=>c.orgId===org.id);if(ppl.length&&!D.contacts.some(c=>c.name===contact))contact=ppl[0].name;}}
-    D.quotes.push({num:q.quote_number,contact,status:q.status,stage,orderNum:ord?ord.order_number:null,invNum:inv?inv.invoice_number:null,payLink:inv?inv.payment_link_url:null,items,_id:q.id,_orderId:q.converted_order_id||null,_invId:inv?inv.id:null,_invToken:inv?inv.access_token:null,_email:q.contact_email||'',_name:q.contact_name||'',_token:q.access_token||'',_accepted:!!q.accepted_by_name,_tCarrier:ord?(ord.tracking_carrier||''):'',_tNumber:ord?(ord.tracking_number||''):'',_tUrl:ord?(ord.tracking_url||''):'',_dispatched:ord?ord.dispatched_at:null,_valid:q.valid_until||null});
+    D.quotes.push({num:q.quote_number,contact,status:q.status,stage,orderNum:ord?ord.order_number:null,invNum:inv?inv.invoice_number:null,payLink:inv?inv.payment_link_url:null,items,_id:q.id,_orderId:q.converted_order_id||null,_invId:inv?inv.id:null,_invToken:inv?inv.access_token:null,_invSent:inv?inv.sent_at:null,_email:q.contact_email||'',_name:q.contact_name||'',_token:q.access_token||'',_accepted:!!q.accepted_by_name,_tCarrier:ord?(ord.tracking_carrier||''):'',_tNumber:ord?(ord.tracking_number||''):'',_tUrl:ord?(ord.tracking_url||''):'',_dispatched:ord?ord.dispatched_at:null,_valid:q.valid_until||null});
   });
   D.orders.length=0;
   (ords.data||[]).forEach(o=>{const q=(qs.data||[]).find(x=>x.converted_order_id===o.id);D.orders.push({num:o.order_number,name:o.contact_name||'—',company:o.company||null,status:o.status,total:orderTotal[o.id]||0,q:q?q.quote_number:null,track:o.tracking_number||null});});
@@ -2032,6 +2036,7 @@ drawOrgs(0);
     }
     if(window._email&&window._email._sentQuote){ try{ await SB().from('quotes').update({status:'sent',sent_at:new Date().toISOString()}).eq('id',window._email._sentQuote); await refreshFromSupabase(SB()); }catch(_e){} }
     if(window._email&&window._email._sentLead){ try{ var _l=leadById(window._email._sentLead); if(_l&&_l.status==='new'){ await setLeadStatus(window._email._sentLead,'contacted'); } }catch(_e){} }
+    if(window._email&&window._email._sentInvoice){ try{ await SB().from('invoices').update({sent_at:new Date().toISOString()}).eq('id',window._email._sentInvoice); await refreshFromSupabase(SB()); if(window._email._sentInvoiceNum)openQuote(window._email._sentInvoiceNum); }catch(_e){} }
     md.innerHTML='<div class="mh"><h3>'+(failed.length?'Sent with errors':'Sent')+'</h3><div class="x" onclick="closeComposer()">✕</div></div><div class="mb"><div class="sendok"><div class="tick"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg></div><h3 style="margin:0 0 4px;font-size:17px">Sent to '+sent+' recipient'+(sent===1?'':'s')+(ccList?(' · Cc '+e.cc.length):'')+'</h3><div class="mini">Sent live via Resend'+(failed.length?('. Failed: '+failed.join(', ')):'.')+'</div></div></div><div class="mf"><button class="btn primary" onclick="closeComposer()">Done</button></div>';
   };
 })();
@@ -2135,7 +2140,7 @@ window.openInvoiceEmail=function(num){
     'Kind regards,\nMurray\nAura Print & Promo\ne: admin@auraprint.com.au\nw: auraprint.com.au';
   if(!q._email){ alert('This quote has no customer email on file, so the invoice email cannot be addressed.'); return; }
   openEmailComposer([{name:q._name||q.contact,email:q._email,consent:true}], 'Send invoice '+q.invNum, false);
-  window._email.subject=subject; window._email.body=body;
+  window._email.subject=subject; window._email.body=body; window._email._sentInvoice=q._invId; window._email._sentInvoiceNum=num;
   var pdf=crmPdf('invoice',q); if(pdf) window._email.attachments=[{filename:'Invoice-'+(q.invNum||'')+'.pdf',content:pdf}];
   renderComposer();
 };
