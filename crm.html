@@ -681,7 +681,7 @@ function openQuote(num){
     banner=`<div class="banner good">Converted to order <b>${q.orderNum}</b>. Ready to invoice.</div>`;
     actions=`<button class="btn primary" onclick="advance('${q.num}','invoice')">Create invoice ›</button>`;
   } else if(q.stage==='invoice'){
-    banner=`<div class="banner info">Invoice <b>${q.invNum}</b> raised — payment link ready to send.</div>`;
+    banner=`<div class="banner info">Invoice <b>${q.invNum}</b> raised — ${q.payLink?'payment link ready to send.':'payment link not created yet.'}</div>`;
     actions=`<button class="btn primary" onclick="openInvoiceEmail('${q.num}')">Send invoice email</button><button class="btn" onclick="openEditQuote('${q.num}')">Edit invoice</button><button class="btn" onclick="copyLink('${q.num}')">Copy payment link</button><button class="btn" onclick="advance('${q.num}','paid')">Mark as paid</button>`;
   } else if(q.stage==='paid'){
     banner=`<div class="banner good">Invoice <b>${q.invNum}</b> paid in full. ${money(total)} received.</div>`;
@@ -693,8 +693,7 @@ function openQuote(num){
   if(q.orderNum) linked.push(`<div class="row"><span>Order</span><b>${q.orderNum}</b></div>`);
   if(q.invNum) linked.push(`<div class="row"><span>Invoice</span><b>${q.invNum}</b></div>`);
   if(q._tNumber) linked.push(`<div class="row"><span>Tracking</span><b>${esc(q._tNumber)}</b></div>`);
-  const link = q.payLink || (q.invNum?('https://buy.stripe.com/aura/'+q.invNum.toLowerCase()):'');
-  const payLink = link ? `<div class="paylink">${esc(link)}</div>` : '';
+  const payLink = q.payLink ? `<div class="paylink">${esc(q.payLink)}</div>` : '';
   right=`<div class="card side-summary"><h3>Summary</h3><div class="sub">Quote ${q.num}</div>
     ${q.items.map(it=>`<div class="row"><span>${esc(it.n)} × ${it.qty}</span><b>${money(it.price)}</b></div>`).join('')||'<div class="mini">No line items yet.</div>'}
     <div class="row tot"><span>Total (inc GST)</span><span>${money(total)}</span></div>
@@ -753,10 +752,20 @@ function duplicateQuote(num){
   D.quotes.unshift(copy); renderQuoteTables(); openQuote(copy.num);
 }
 function copyLink(num){
-  const q=D.quotes.find(x=>x.num===num);
-  const link=q.payLink||('https://buy.stripe.com/aura/'+(q.invNum||'').toLowerCase());
-  navigator.clipboard&&navigator.clipboard.writeText(link);
-  alert('Payment link copied:\n'+link);
+  const q=D.quotes.find(x=>x.num===num); if(!q)return;
+  if(q.payLink){
+    navigator.clipboard&&navigator.clipboard.writeText(q.payLink);
+    alert('Payment link copied:\n'+q.payLink);
+    return;
+  }
+  if(window.ensurePayLink&&q._invId){
+    ensurePayLink(num).then(()=>{
+      if(q.payLink){navigator.clipboard&&navigator.clipboard.writeText(q.payLink);alert('Payment link created and copied:\n'+q.payLink);openQuote(num);}
+      else alert('No payment link yet — Stripe could not create one. Check the invoice status and Stripe configuration.');
+    });
+    return;
+  }
+  alert('No payment link on this invoice yet.');
 }
 
 /* ---------- Products: full live catalogue, searchable, with quick price editing ---------- */
@@ -1666,8 +1675,9 @@ async function nqSave(send){
       const cv=await sb.rpc('convert_quote_to_order',{p_quote_id:ins.data.id});
       closeModal();
       await refreshFromSupabase(sb);
+      if(cv.error){openQuote(num);alert('The details were saved as quote '+num+', but the invoice could not be raised: '+cv.error.message);return;}
+      if(window.ensurePayLink)await window.ensurePayLink(num);
       openQuote(num);
-      if(cv.error){alert('The details were saved as quote '+num+', but the invoice could not be raised: '+cv.error.message);return;}
       const q2=D.quotes.find(x=>x.num===num);
       if(q2&&q2._email){ try{ openInvoiceEmail(num); }catch(_e){} }
       return;
@@ -1893,6 +1903,18 @@ drawOrgs(0);
   function fq(num){ return D.quotes.find(function(q){return q.num===num;}); }
   var NOW=function(){ return new Date().toISOString(); };
 
+  // Mint the Stripe payment link for a freshly raised invoice (no-op if one exists).
+  window.ensurePayLink=async function(num){
+    var sb=SB(); var q=fq(num);
+    if(!sb||!q||!q._invId||q.payLink)return;
+    try{
+      var sess=await sb.auth.getSession(); var tok=sess.data.session?sess.data.session.access_token:'';
+      var r=await fetch(window.AURA_CONFIG.supabaseUrl+'/functions/v1/stripe-payment-link',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+tok},body:JSON.stringify({invoice_id:q._invId})});
+      var j=await r.json();
+      if(r.ok&&j.url)q.payLink=j.url;
+    }catch(_e){}
+  };
+
   window.advance = async function(num,to){
     var sb=SB(); var q=fq(num); if(!sb||!q) return;
     try{
@@ -1908,7 +1930,9 @@ drawOrgs(0);
         var iv=await sb.from('invoices').update({status:'paid',paid_at:NOW()}).eq('id',q._invId); if(iv.error) throw iv.error;
       }
     }catch(e){ alert('Could not complete: '+(e.message||e)); return; }
-    await reload(); openQuote(num);
+    await reload();
+    if(to==='order'||to==='invoice')await window.ensurePayLink(num);
+    openQuote(num);
   };
 
   // Internal approval: convert a quote (draft or sent) straight to an invoice,
@@ -1919,7 +1943,9 @@ drawOrgs(0);
     try{
       if(!q._invId){ var r=await sb.rpc('convert_quote_to_order',{p_quote_id:q._id}); if(r.error) throw r.error; }
     }catch(e){ alert('Could not convert: '+(e.message||e)); return; }
-    await reload(); openQuote(num);
+    await reload();
+    await window.ensurePayLink(num);
+    openQuote(num);
     var q2=fq(num);
     if(q2&&q2._email){ try{ openInvoiceEmail(num); }catch(_e){} }
   };
