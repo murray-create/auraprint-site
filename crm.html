@@ -1775,9 +1775,26 @@ function openLead(id){
      <div class="field"><label>Source page</label><div class="mini">${pageLink}</div></div>
      <div class="field"><label>Status</label><div style="display:flex;gap:6px;flex-wrap:wrap">${stbtns}</div></div>
    </div>
-   <div class="mf"><button class="btn" onclick="closeModal()">Close</button><button class="btn primary" onclick="leadToQuote('${esc(l._id)}')"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 5v14M5 12h14"/></svg>Convert to quote</button></div>`;
+   <div class="mf"><button class="btn" onclick="closeModal()">Close</button>${l.email?`<button class="btn" onclick="openLeadReply('${esc(l._id)}')"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 5h18v14H3z"/><path d="M3 7l9 6 9-6"/></svg>Reply by email</button>`:''}<button class="btn primary" onclick="leadToQuote('${esc(l._id)}')"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 5v14M5 12h14"/></svg>Convert to quote</button></div>`;
   mb.classList.add('show');
 }
+/* Reply to a website enquiry from inside the CRM — uses the same composer +
+   send-email function as quotes/invoices. The customer's reply comes back to
+   admin@auraprint.com.au as normal email. */
+window.openLeadReply=function(id){
+  const l=leadById(id); if(!l||!l.email)return;
+  const first=(String(l.name||'').trim().split(' ')[0])||'there';
+  const what=leadEnquiry(l);
+  const subject='Re: your '+what+' enquiry — Aura Print & Promo';
+  const body='Hi '+first+',\n\n'+
+    'Thanks for your enquiry about '+what+(l.qty?' (qty '+l.qty+')':'')+'.\n\n'+
+    '\n\n'+
+    'Kind regards,\nMurray\nAura Print & Promo\ne: admin@auraprint.com.au\nw: auraprint.com.au';
+  closeModal();
+  openEmailComposer([{name:l.name||l.email,email:l.email,consent:true}],'Reply to '+(l.name||l.email),false);
+  window._email.subject=subject; window._email.body=body; window._email._sentLead=id;
+  renderComposer();
+};
 async function setLeadStatus(id,status){
   const l=leadById(id); if(!l)return;
   const sb=window.CRM_SB; if(!sb){alert('Not connected — please reload and sign in.');return;}
@@ -1988,6 +2005,7 @@ drawOrgs(0);
       }catch(err){ failed.push(c.email+' ('+(err.message||err)+')'); }
     }
     if(window._email&&window._email._sentQuote){ try{ await SB().from('quotes').update({status:'sent',sent_at:new Date().toISOString()}).eq('id',window._email._sentQuote); await refreshFromSupabase(SB()); }catch(_e){} }
+    if(window._email&&window._email._sentLead){ try{ var _l=leadById(window._email._sentLead); if(_l&&_l.status==='new'){ await setLeadStatus(window._email._sentLead,'contacted'); } }catch(_e){} }
     md.innerHTML='<div class="mh"><h3>'+(failed.length?'Sent with errors':'Sent')+'</h3><div class="x" onclick="closeComposer()">✕</div></div><div class="mb"><div class="sendok"><div class="tick"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg></div><h3 style="margin:0 0 4px;font-size:17px">Sent to '+sent+' recipient'+(sent===1?'':'s')+(ccList?(' · Cc '+e.cc.length):'')+'</h3><div class="mini">Sent live via Resend'+(failed.length?('. Failed: '+failed.join(', ')):'.')+'</div></div></div><div class="mf"><button class="btn primary" onclick="closeComposer()">Done</button></div>';
   };
 })();
