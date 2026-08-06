@@ -664,9 +664,11 @@ function openQuote(num){
   const si=STAGES.indexOf(q.stage);
   const stepLabels=['Quote','Order','Invoice','Paid'];
   let stepHtml='';
+  const invSentDone=q.stage==='invoice'&&!!q._invSent; // invoice emailed → step 3 counts as done
   stepLabels.forEach((lb,i)=>{
-    const cls=i<si?'done':(i===si?'cur':'');
-    stepHtml+=`<div class="step ${cls}"><span class="dot">${i<si?'✓':i+1}</span><span class="lb">${lb}</span></div>`+(i<stepLabels.length-1?`<div class="step ${i<si?'done':''}"><span class="line"></span></div>`:'');
+    const done=i<si||(i===si&&invSentDone);
+    const cls=done?'done':(i===si?'cur':'');
+    stepHtml+=`<div class="step ${cls}"><span class="dot">${done?'✓':i+1}</span><span class="lb">${lb}</span></div>`+(i<stepLabels.length-1?`<div class="step ${i<si?'done':''}"><span class="line"></span></div>`:'');
   });
 
   // action bar + right panel by stage
