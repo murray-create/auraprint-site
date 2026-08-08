@@ -211,7 +211,7 @@ tr.clk{cursor:pointer}tr.clk:hover td{background:var(--soft)}
 
 /* Quote detail */
 .qdgrid{display:grid;grid-template-columns:1fr 320px;gap:16px;align-items:start}
-.stepper{display:flex;align-items:center;gap:6px;margin:2px 0 18px}
+.stepper{display:flex;align-items:center;gap:6px;margin:2px 0 18px;flex-wrap:wrap}
 .step{display:flex;align-items:center;gap:8px}
 .step .dot{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;font-size:12px;font-weight:800;background:#f0eef4;color:var(--muted);flex:none}
 .step.done .dot{background:var(--good);color:#fff}
@@ -662,14 +662,25 @@ function openQuote(num){
   const q=D.quotes.find(x=>x.num===num); if(!q) return;
   const c=contactByName(q.contact); const org=orgById(orgOfQuote(q));
   const total=qTotal(q);
-  const si=STAGES.indexOf(q.stage);
-  const stepLabels=['Quote','Order','Invoice','Paid'];
+  // Full customer journey: Quote → Order → Invoice → Paid → In Production → Dispatched → Google Review.
+  const hasOrder=q.stage==='order'||q.stage==='invoice'||q.stage==='paid';
+  const inProd=['in_production','shipped','completed'].indexOf(q._ordStatus)>-1||!!q._dispatched;
+  const stepLabels=['Quote','Order','Invoice','Paid','In Production','Dispatched','Google Review'];
+  const doneArr=[
+    q.stage!=='quote',                                        // quote accepted / converted
+    hasOrder,                                                 // order record created
+    (q.stage==='invoice'&&!!q._invSent)||q.stage==='paid',    // invoice emailed
+    q.stage==='paid',                                         // money received
+    q.stage==='paid'&&inProd,                                 // job marked in production
+    q.stage==='paid'&&!!q._dispatched,                        // tracking added / dispatched
+    q.stage==='paid'&&!!q._reviewReq                          // Google review email sent
+  ];
+  let curIdx=doneArr.indexOf(false); if(curIdx<0)curIdx=99;
   let stepHtml='';
-  const invSentDone=q.stage==='invoice'&&!!q._invSent; // invoice emailed → step 3 counts as done
   stepLabels.forEach((lb,i)=>{
-    const done=i<si||(i===si&&invSentDone);
-    const cls=done?'done':(i===si?'cur':'');
-    stepHtml+=`<div class="step ${cls}"><span class="dot">${done?'✓':i+1}</span><span class="lb">${lb}</span></div>`+(i<stepLabels.length-1?`<div class="step ${i<si?'done':''}"><span class="line"></span></div>`:'');
+    const done=doneArr[i];
+    const cls=done?'done':(i===curIdx?'cur':'');
+    stepHtml+=`<div class="step ${cls}"><span class="dot">${done?'✓':i+1}</span><span class="lb">${lb}</span></div>`+(i<stepLabels.length-1?`<div class="step ${done?'done':''}"><span class="line"></span></div>`:'');
   });
 
   // action bar + right panel by stage
@@ -691,8 +702,20 @@ function openQuote(num){
       :`<div class="banner info">Invoice <b>${q.invNum}</b> raised — ${q.payLink?'not yet sent to the customer.':'payment link not created yet.'}</div>`;
     actions=`<button class="btn primary" onclick="openInvoiceEmail('${q.num}')">${q._invSent?'Resend invoice email':'Send invoice email'}</button><button class="btn" onclick="openEditQuote('${q.num}')">Edit invoice</button><button class="btn" onclick="copyLink('${q.num}')">Copy payment link</button><button class="btn" onclick="advance('${q.num}','paid')">Mark as paid</button>`;
   } else if(q.stage==='paid'){
-    banner=`<div class="banner good">Invoice <b>${q.invNum}</b> paid in full. ${money(total)} received.</div>`;
-    actions=`<button class="btn" onclick="openInvoiceEmail('${q.num}')">Resend invoice email</button><button class="btn" onclick="copyLink('${q.num}')">View receipt link</button>`;
+    const dispStr=q._dispatched?new Date(q._dispatched).toLocaleDateString('en-AU',{day:'2-digit',month:'short'}):'';
+    if(q._reviewReq){
+      banner=`<div class="banner good">Job complete — dispatched ${dispStr} and the Google review invitation was emailed ${new Date(q._reviewReq).toLocaleDateString('en-AU',{day:'2-digit',month:'short'})}.</div>`;
+      actions=`<button class="btn" onclick="openTrackingEmail('${q.num}')">Resend tracking email</button><button class="btn" onclick="openInvoiceEmail('${q.num}')">Resend invoice email</button>`;
+    } else if(q._dispatched){
+      banner=`<div class="banner good">Order <b>${q.orderNum||''}</b> dispatched ${dispStr}. The Google review invitation emails automatically a few days after dispatch.</div>`;
+      actions=`<button class="btn primary" onclick="openTrackingEmail('${q.num}')">Send tracking email</button><button class="btn" onclick="openInvoiceEmail('${q.num}')">Resend invoice email</button>`;
+    } else if(inProd){
+      banner=`<div class="banner good">Order <b>${q.orderNum||''}</b> is in production. Add tracking below as soon as it ships.</div>`;
+      actions=`<button class="btn primary" onclick="openTracking('${q.num}')">Add tracking ›</button><button class="btn" onclick="openProductionEmail('${q.num}')">Resend production email</button><button class="btn" onclick="openInvoiceEmail('${q.num}')">Resend invoice email</button>`;
+    } else {
+      banner=`<div class="banner good">Invoice <b>${q.invNum}</b> paid in full. ${money(total)} received. Ready for production.</div>`;
+      actions=`<button class="btn primary" onclick="startProduction('${q.num}')">Start production ›</button><button class="btn" onclick="openInvoiceEmail('${q.num}')">Resend invoice email</button><button class="btn" onclick="copyLink('${q.num}')">View receipt link</button>`;
+    }
   }
 
   // right rail: linked records + summary
@@ -700,6 +723,7 @@ function openQuote(num){
   if(q.orderNum) linked.push(`<div class="row"><span>Order</span><b>${q.orderNum}</b></div>`);
   if(q.invNum) linked.push(`<div class="row"><span>Invoice</span><b>${q.invNum}</b></div>`);
   if(q._tNumber) linked.push(`<div class="row"><span>Tracking</span><b>${esc(q._tNumber)}</b></div>`);
+  if(q._reviewReq) linked.push(`<div class="row"><span>Review asked</span><b>${new Date(q._reviewReq).toLocaleDateString('en-AU',{day:'2-digit',month:'short'})}</b></div>`);
   const payLink = q.payLink ? `<div class="paylink">${esc(q.payLink)}</div>` : '';
   right=`<div class="card side-summary"><h3>Summary</h3><div class="sub">Quote ${q.num}</div>
     ${q.items.map(it=>`<div class="row"><span>${esc(it.n)} × ${it.qty}</span><b>${money(it.price)}</b></div>`).join('')||'<div class="mini">No line items yet.</div>'}
@@ -1732,7 +1756,7 @@ async function refreshFromSupabase(sb){
     if(inv&&inv.status==='paid')stage='paid'; else if(inv)stage='invoice'; else if(ord)stage='order';
     let contact=q.contact_name||q.contact_email||'—';
     if(q.company){const org=D.orgs.find(o=>o.name.toLowerCase()===q.company.toLowerCase());if(org){const ppl=D.contacts.filter(c=>c.orgId===org.id);if(ppl.length&&!D.contacts.some(c=>c.name===contact))contact=ppl[0].name;}}
-    D.quotes.push({num:q.quote_number,contact,status:q.status,stage,orderNum:ord?ord.order_number:null,invNum:inv?inv.invoice_number:null,payLink:inv?inv.payment_link_url:null,items,_id:q.id,_orderId:q.converted_order_id||null,_invId:inv?inv.id:null,_invToken:inv?inv.access_token:null,_invSent:inv?inv.sent_at:null,_invPaidAt:inv?inv.paid_at:null,_invViewedAt:inv?inv.last_viewed_at:null,_viewedAt:q.last_viewed_at||null,_decidedAt:q.decided_at||null,_acceptedBy:q.accepted_by_name||null,_created:q.created_at,_email:q.contact_email||'',_name:q.contact_name||'',_token:q.access_token||'',_accepted:!!q.accepted_by_name,_tCarrier:ord?(ord.tracking_carrier||''):'',_tNumber:ord?(ord.tracking_number||''):'',_tUrl:ord?(ord.tracking_url||''):'',_dispatched:ord?ord.dispatched_at:null,_valid:q.valid_until||null});
+    D.quotes.push({num:q.quote_number,contact,status:q.status,stage,orderNum:ord?ord.order_number:null,invNum:inv?inv.invoice_number:null,payLink:inv?inv.payment_link_url:null,items,_id:q.id,_orderId:q.converted_order_id||null,_invId:inv?inv.id:null,_invToken:inv?inv.access_token:null,_invSent:inv?inv.sent_at:null,_invPaidAt:inv?inv.paid_at:null,_invViewedAt:inv?inv.last_viewed_at:null,_viewedAt:q.last_viewed_at||null,_decidedAt:q.decided_at||null,_acceptedBy:q.accepted_by_name||null,_created:q.created_at,_email:q.contact_email||'',_name:q.contact_name||'',_token:q.access_token||'',_accepted:!!q.accepted_by_name,_tCarrier:ord?(ord.tracking_carrier||''):'',_tNumber:ord?(ord.tracking_number||''):'',_tUrl:ord?(ord.tracking_url||''):'',_dispatched:ord?ord.dispatched_at:null,_ordStatus:ord?(ord.status||''):'',_reviewReq:ord?ord.review_requested_at:null,_valid:q.valid_until||null});
   });
   D.orders.length=0;
   (ords.data||[]).forEach(o=>{const q=(qs.data||[]).find(x=>x.converted_order_id===o.id);D.orders.push({num:o.order_number,name:o.contact_name||'—',company:o.company||null,status:o.status,total:orderTotal[o.id]||0,q:q?q.quote_number:null,track:o.tracking_number||null});});
@@ -2226,6 +2250,38 @@ window.openQuoteEmail=function(num){
   renderComposer();
 };
 
+/* ---------- Production ---------- */
+window.startProduction=async function(num){
+  var q=D.quotes.find(function(x){return x.num===num;}); if(!q) return;
+  var sb=window.CRM_SB;
+  if(sb&&q._orderId){
+    try{
+      var r=await sb.from('orders').update({status:'in_production'}).eq('id',q._orderId);
+      if(r.error) throw r.error;
+      await refreshFromSupabase(sb);
+    }catch(e){ alert('Could not mark the order as in production: '+(e.message||e)); return; }
+  } else { q._ordStatus='in_production'; }
+  openQuote(num);
+  if(q._email) openProductionEmail(num);
+};
+window.openProductionEmail=function(num){
+  var q=D.quotes.find(function(x){return x.num===num;}); if(!q) return;
+  if(!q._email){ alert('This order has no customer email on file, so the production email cannot be addressed.'); return; }
+  var first=((q._name||q.contact||'').split(' ')[0])||'there';
+  var subject='Your order '+(q.orderNum||'')+' is now in production — Aura Print & Promo';
+  var body='Hi '+first+',\n\n'+
+    'Great news — payment has been received and your order '+(q.orderNum||'')+' is now in production.\n\n'+
+    'What happens next:\n'+
+    '  1. We print and finish your job.\n'+
+    '  2. The moment it is dispatched, we email you the carrier and tracking number so you can follow the delivery.\n\n'+
+    'If your delivery address or any details have changed, reply to this email straight away so we can update the job before it ships.\n\n'+
+    'Thanks again for your order.\n\n'+
+    'Kind regards,\nMurray\nAura Print & Promo\ne: admin@auraprint.com.au\nw: auraprint.com.au';
+  openEmailComposer([{name:q._name||q.contact,email:q._email,consent:true}], 'Send production update · '+(q.orderNum||q.num), false);
+  window._email.subject=subject; window._email.body=body;
+  renderComposer();
+};
+
 /* ---------- Shipping & tracking ---------- */
 const CARRIERS=[
   {name:'Australia Post',url:'https://auspost.com.au/mypost/track/#/details/{n}'},
@@ -2281,6 +2337,8 @@ async function saveTracking(){
     var r=await sb.from('orders').update(patch).eq('id',q._orderId);
     if(r.error)throw r.error;
     closeModal(); await refreshFromSupabase(sb); openQuote(num);
+    var q2=D.quotes.find(function(x){return x.num===num;});
+    if(q2&&q2._email&&q2._tNumber) openTrackingEmail(num); // keep the customer informed the moment tracking is saved
   }catch(e){alert('Could not save tracking: '+(e.message||e));if(btn){btn.disabled=false;btn.textContent='Save tracking';}}
 }
 window.openTrackingEmail=function(num){
