@@ -220,9 +220,24 @@ tr.clk{cursor:pointer}tr.clk:hover td{background:var(--soft)}
 .step.done .lb,.step.cur .lb{color:var(--ink)}
 .step .line{width:34px;height:2px;background:var(--line);border-radius:2px}
 .step.done .line{background:var(--good)}
+.step .jump{width:17px;height:17px;border-radius:50%;display:grid;place-items:center;border:1px solid var(--line);background:#fff;color:var(--muted);cursor:pointer;font-size:10px;font-weight:800;line-height:1;padding:0;flex:none;margin-left:-3px}
+.step .jump:hover{background:var(--pink);border-color:var(--pink);color:#fff}
+.step .jump[disabled]{opacity:.25;cursor:default;background:#fff;border-color:var(--line);color:var(--muted)}
 .actionbar{display:flex;gap:8px;flex-wrap:wrap;margin-top:4px}
 .side-summary .row{display:flex;justify-content:space-between;padding:7px 0;font-size:13.5px}
 .side-summary .row.tot{border-top:1px solid var(--line);margin-top:6px;padding-top:12px;font-weight:800;font-size:16px}
+/* Job economics — staff only, never rendered on a customer-facing page */
+.econ{margin-top:14px;border-top:1px solid var(--line);padding-top:12px}
+.econ .eh{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:2px}
+.econ .eh b{font-size:13.5px;font-weight:800}
+.econ .row.gp{border-top:1px dashed var(--line);margin-top:6px;padding-top:11px;font-weight:800;font-size:15px}
+.mchip{font-size:11px;font-weight:800;padding:2px 8px;border-radius:20px;margin-left:6px;vertical-align:middle}
+.mchip.hi{background:var(--good-soft);color:var(--good)}
+.mchip.mid{background:var(--warn-soft);color:var(--warn)}
+.mchip.lo{background:var(--bad-soft);color:var(--bad)}
+.esttag{font-size:9.5px;font-weight:800;text-transform:uppercase;letter-spacing:.05em;padding:2px 6px;border-radius:20px;background:var(--warn-soft);color:var(--warn);margin-left:6px;vertical-align:middle}
+.esttag.ok{background:var(--good-soft);color:var(--good)}
+.field label .mini{text-transform:none;letter-spacing:normal;font-weight:600}
 .paylink{background:var(--soft);border:1px solid var(--line);border-radius:12px;padding:12px 14px;font-size:12.5px;word-break:break-all;color:var(--ink2);margin:10px 0}
 .banner{border-radius:12px;padding:12px 15px;font-size:13px;font-weight:600;margin-bottom:14px}
 .banner.good{background:var(--good-soft);color:var(--good)}
@@ -553,6 +568,51 @@ const contactByName=n=>D.contacts.find(c=>c.name===n);
 const qTotal=q=>q.items.reduce((a,b)=>a+b.price,0);
 const unitOf=it=>it.qty?Math.round(it.price/it.qty):it.price;
 const orgOfQuote=q=>{const c=contactByName(q.contact);return c?c.orgId:null;};
+
+/* ---------- Job economics (STAFF ONLY) ----------
+   Cost lives in the staff-only job_costs table, never on order_items/quote_items,
+   because a customer can read their own order rows through the API.
+   Until a real supplier figure is entered the cost shown is an ESTIMATE, derived by
+   dividing the ex-GST sell price by the target margin multiplier in staff_config. */
+window.MARGIN_MULT = 1.52;
+const exGst = inc => Math.round(inc / 1.1);
+const supplierName = code => { const s=(D.suppliers||[]).find(x=>x.code===code); return s?s.name:(code||''); };
+function jobEcon(q){
+  const sellInc = qTotal(q);
+  const sellEx  = exGst(sellInc);
+  const jc = q._cost || null;
+  const hasFigure = !!(jc && jc.cost_ex_cents != null);
+  const costEx = hasFigure
+    ? (jc.cost_ex_cents || 0) + (jc.freight_ex_cents || 0)
+    : Math.round(sellEx / (window.MARGIN_MULT || 1.52));
+  const gp  = sellEx - costEx;
+  const pct = sellEx ? (gp / sellEx) * 100 : 0;
+  return {
+    sellInc, sellEx, costEx, gp, pct,
+    est: !(jc && jc.confirmed && hasFigure),
+    hasFigure,
+    supplier: jc ? jc.supplier_code : null,
+    supplierRef: jc ? jc.supplier_ref : '',
+    freight: jc ? (jc.freight_ex_cents || 0) : 0,
+    baseCost: hasFigure ? (jc.cost_ex_cents || 0) : costEx
+  };
+}
+const marginClass = pct => pct >= 40 ? 'hi' : (pct >= 25 ? 'mid' : 'lo');
+function econCard(q){
+  const ec = jobEcon(q);
+  const tag = ec.est ? '<span class="esttag">Est</span>' : '<span class="esttag ok">Confirmed</span>';
+  return `<div class="econ">
+    <div class="eh"><b>Job economics</b><button class="btn sm" onclick="openJobCost('${q.num}')">${ec.hasFigure?'Edit cost':'Add cost'}</button></div>
+    <div class="sub" style="margin-bottom:6px">Staff only — never shown to the customer.</div>
+    <div class="row"><span>Supplier</span><b>${ec.supplier?esc(supplierName(ec.supplier)):'—'}</b></div>
+    ${ec.supplierRef?`<div class="row"><span>Supplier ref</span><b>${esc(ec.supplierRef)}</b></div>`:''}
+    <div class="row"><span>Sell (ex GST)</span><b>${money(ec.sellEx)}</b></div>
+    <div class="row"><span>Cost (ex GST)</span><b>${money(ec.costEx)}${tag}</b></div>
+    ${ec.freight?`<div class="row"><span>— of which freight</span><b>${money(ec.freight)}</b></div>`:''}
+    <div class="row gp"><span>Gross profit</span><span>${money(ec.gp)}<span class="mchip ${marginClass(ec.pct)}">${ec.pct.toFixed(1)}%</span></span></div>
+    ${ec.est?`<div class="note" style="margin-top:8px">${ec.hasFigure?'Cost entered but not yet confirmed against a supplier invoice.':'Estimated at '+(window.MARGIN_MULT||1.52)+'× cost. Enter the supplier\'s real figure to lock the margin in.'}</div>`:''}
+  </div>`;
+}
 const orgName=q=>{const o=orgById(orgOfQuote(q));return o?o.name:'—';};
 const contactsOfOrg=id=>D.contacts.filter(c=>c.orgId===id);
 const quotesOfContact=n=>D.quotes.filter(q=>q.contact===n);
@@ -676,11 +736,17 @@ function openQuote(num){
     q.stage==='paid'&&!!q._reviewReq                          // Google review email sent
   ];
   let curIdx=doneArr.indexOf(false); if(curIdx<0)curIdx=99;
+  window._stageFlags=window._stageFlags||{}; window._stageFlags[q.num]=doneArr;
+  let reached=-1; doneArr.forEach((d,i)=>{if(d)reached=i;});
   let stepHtml='';
   stepLabels.forEach((lb,i)=>{
     const done=doneArr[i];
     const cls=done?'done':(i===curIdx?'cur':'');
-    stepHtml+=`<div class="step ${cls}"><span class="dot">${done?'✓':i+1}</span><span class="lb">${lb}</span></div>`+(i<stepLabels.length-1?`<div class="step ${done?'done':''}"><span class="line"></span></div>`:'');
+    // Silent jump: moves the job to this stage, forward or back, without emailing anyone.
+    const jump=i===reached
+      ? `<button class="jump" disabled title="The job is already here">•</button>`
+      : `<button class="jump" title="Move this job to ${lb} — records only, no email is sent" onclick="jumpStage('${q.num}',${i})">${done?'‹':'›'}</button>`;
+    stepHtml+=`<div class="step ${cls}"><span class="dot">${done?'✓':i+1}</span><span class="lb">${lb}</span>${jump}</div>`+(i<stepLabels.length-1?`<div class="step ${done?'done':''}"><span class="line"></span></div>`:'');
   });
 
   // action bar + right panel by stage
@@ -728,6 +794,7 @@ function openQuote(num){
   right=`<div class="card side-summary"><h3>Summary</h3><div class="sub">Quote ${q.num}</div>
     ${q.items.map(it=>`<div class="row"><span>${esc(it.n)} × ${it.qty}</span><b>${money(it.price)}</b></div>`).join('')||'<div class="mini">No line items yet.</div>'}
     <div class="row tot"><span>Total (inc GST)</span><span>${money(total)}</span></div>
+    ${econCard(q)}
     ${linked.length?`<div style="margin-top:14px;border-top:1px solid var(--line);padding-top:10px">${linked.join('')}</div>`:''}
     ${payLink}
     ${q.invNum?`<button class="btn primary sm" style="width:100%;justify-content:center;margin-top:6px" onclick="openInvoiceEmail('${q.num}')">Send invoice email</button>`:''}
@@ -1727,7 +1794,7 @@ async function nqSave(send){
 /* ---------- Live data from Supabase ---------- */
 const SUP_COUNT={PREMIER:440,PROMOBRANDS:862};
 async function refreshFromSupabase(sb){
-  const [orgs,cons,qs,qis,ords,oi,invs,sup,lds] = await Promise.all([
+  const [orgs,cons,qs,qis,ords,oi,invs,sup,lds,jcs,mcfg] = await Promise.all([
     sb.from('organisations').select('*').order('name'),
     sb.from('contacts').select('*').order('archived',{ascending:true}).order('name'),
     sb.from('quotes').select('*').eq('archived',false).order('created_at',{ascending:false}),
@@ -1736,8 +1803,13 @@ async function refreshFromSupabase(sb){
     sb.from('order_items').select('order_id,price_inc_cents'),
     sb.from('invoices').select('*'),
     sb.from('suppliers').select('*').eq('active',true).order('name'),
-    sb.from('leads').select('*').order('created_at',{ascending:false})
+    sb.from('leads').select('*').order('created_at',{ascending:false}),
+    sb.from('job_costs').select('*'),
+    sb.from('staff_config').select('key,value').eq('key','margin')
   ]);
+  const mrow=((mcfg&&mcfg.data)||[])[0];
+  if(mrow&&mrow.value&&mrow.value.default_multiplier) window.MARGIN_MULT=Number(mrow.value.default_multiplier)||1.52;
+  const costByQuote={}; ((jcs&&jcs.data)||[]).forEach(r=>costByQuote[r.quote_id]=r);
   D.orgs.length=0;
   (orgs.data||[]).forEach(o=>D.orgs.push({id:o.id,name:o.name,abn:o.abn||'—',suburb:o.suburb||'—',notes:o.notes||'—'}));
   D.contacts.length=0;
@@ -1756,7 +1828,7 @@ async function refreshFromSupabase(sb){
     if(inv&&inv.status==='paid')stage='paid'; else if(inv)stage='invoice'; else if(ord)stage='order';
     let contact=q.contact_name||q.contact_email||'—';
     if(q.company){const org=D.orgs.find(o=>o.name.toLowerCase()===q.company.toLowerCase());if(org){const ppl=D.contacts.filter(c=>c.orgId===org.id);if(ppl.length&&!D.contacts.some(c=>c.name===contact))contact=ppl[0].name;}}
-    D.quotes.push({num:q.quote_number,contact,status:q.status,stage,orderNum:ord?ord.order_number:null,invNum:inv?inv.invoice_number:null,payLink:inv?inv.payment_link_url:null,items,_id:q.id,_orderId:q.converted_order_id||null,_invId:inv?inv.id:null,_invToken:inv?inv.access_token:null,_invSent:inv?inv.sent_at:null,_invPaidAt:inv?inv.paid_at:null,_invViewedAt:inv?inv.last_viewed_at:null,_viewedAt:q.last_viewed_at||null,_decidedAt:q.decided_at||null,_acceptedBy:q.accepted_by_name||null,_created:q.created_at,_email:q.contact_email||'',_name:q.contact_name||'',_token:q.access_token||'',_accepted:!!q.accepted_by_name,_tCarrier:ord?(ord.tracking_carrier||''):'',_tNumber:ord?(ord.tracking_number||''):'',_tUrl:ord?(ord.tracking_url||''):'',_dispatched:ord?ord.dispatched_at:null,_ordStatus:ord?(ord.status||''):'',_reviewReq:ord?ord.review_requested_at:null,_valid:q.valid_until||null});
+    D.quotes.push({num:q.quote_number,contact,status:q.status,stage,orderNum:ord?ord.order_number:null,invNum:inv?inv.invoice_number:null,payLink:inv?inv.payment_link_url:null,items,_id:q.id,_orderId:q.converted_order_id||null,_invId:inv?inv.id:null,_invToken:inv?inv.access_token:null,_invSent:inv?inv.sent_at:null,_invPaidAt:inv?inv.paid_at:null,_invViewedAt:inv?inv.last_viewed_at:null,_viewedAt:q.last_viewed_at||null,_decidedAt:q.decided_at||null,_acceptedBy:q.accepted_by_name||null,_created:q.created_at,_email:q.contact_email||'',_name:q.contact_name||'',_token:q.access_token||'',_accepted:!!q.accepted_by_name,_tCarrier:ord?(ord.tracking_carrier||''):'',_tNumber:ord?(ord.tracking_number||''):'',_tUrl:ord?(ord.tracking_url||''):'',_dispatched:ord?ord.dispatched_at:null,_ordStatus:ord?(ord.status||''):'',_reviewReq:ord?ord.review_requested_at:null,_valid:q.valid_until||null,_cost:costByQuote[q.id]||null});
   });
   D.orders.length=0;
   (ords.data||[]).forEach(o=>{const q=(qs.data||[]).find(x=>x.converted_order_id===o.id);D.orders.push({num:o.order_number,name:o.contact_name||'—',company:o.company||null,status:o.status,total:orderTotal[o.id]||0,q:q?q.quote_number:null,track:o.tracking_number||null});});
@@ -1991,6 +2063,141 @@ drawOrgs(0);
   async function reload(){ try{ await refreshFromSupabase(SB()); }catch(e){ console.error('reload failed',e); } }
   function fq(num){ return D.quotes.find(function(q){return q.num===num;}); }
   var NOW=function(){ return new Date().toISOString(); };
+
+  /* ============ JOB COST / MARGIN (staff only) ============
+     Writes to public.job_costs, which is RLS staff-only. Nothing here is ever
+     rendered on myquote.html, invoice.html or proof.html. */
+  window.openJobCost=function(num){
+    var q=fq(num); if(!q) return;
+    var ec=jobEcon(q), jc=q._cost||{};
+    var opts='<option value="">— not chosen yet —</option>'+(D.suppliers||[]).map(function(s){
+      return '<option value="'+esc(s.code)+'"'+(jc.supplier_code===s.code?' selected':'')+'>'+esc(s.name)+'</option>';
+    }).join('');
+    var startCost=(ec.hasFigure?ec.baseCost:ec.costEx)/100;
+    md.className='modal';
+    md.innerHTML='<div class="mh"><h3>Job cost · '+esc(num)+'</h3><div class="x" onclick="closeModal()">✕</div></div>'+
+      '<div class="mb">'+
+        '<div class="field"><label>Supplier</label><select id="jc_sup">'+opts+'</select></div>'+
+        '<div class="field two" style="display:flex;gap:12px">'+
+          '<div class="field"><label>Product cost</label><input id="jc_cost" type="number" step="0.01" min="0" value="'+startCost.toFixed(2)+'" oninput="jcRecalc()"></div>'+
+          '<div class="field"><label>Entered as</label><select id="jc_basis" onchange="jcRecalc()"><option value="ex">Ex GST</option><option value="inc">Inc GST</option></select></div>'+
+        '</div>'+
+        '<div class="field"><label>Freight / delivery cost <span class="mini">(ex GST, leave 0 if the supplier bakes it in)</span></label><input id="jc_freight" type="number" step="0.01" min="0" value="'+(((jc.freight_ex_cents||0)/100).toFixed(2))+'" oninput="jcRecalc()"></div>'+
+        '<div class="field"><label>Supplier job reference <span class="mini">(optional)</span></label><input id="jc_ref" value="'+esc(jc.supplier_ref||'')+'" placeholder="e.g. CMYK-88213"></div>'+
+        '<div class="field"><label>Notes <span class="mini">(optional)</span></label><input id="jc_notes" value="'+esc(jc.notes||'')+'" placeholder="e.g. reprint at cost, includes express"></div>'+
+        '<label style="display:flex;gap:9px;align-items:flex-start;font-size:13px;font-weight:600;background:var(--soft);border-radius:12px;padding:12px 14px">'+
+          '<input type="checkbox" id="jc_conf" '+(jc.confirmed?'checked':'')+' style="margin-top:2px">'+
+          '<span>This is the real figure from the supplier invoice, not an estimate.</span></label>'+
+        '<div id="jc_preview" class="secnote" style="background:var(--soft);color:var(--ink2)"></div>'+
+      '</div>'+
+      '<div class="mf"><button class="btn" onclick="closeModal()">Cancel</button><button class="btn primary" id="jc_save" onclick="saveJobCost(\''+num+'\')">Save cost</button></div>';
+    mb.classList.add('show');
+    window._jcSellEx=ec.sellEx;
+    jcRecalc();
+  };
+  window.jcRecalc=function(){
+    var el=document.getElementById('jc_preview'); if(!el) return;
+    var basis=document.getElementById('jc_basis').value;
+    var raw=Math.round((parseFloat(document.getElementById('jc_cost').value)||0)*100);
+    var costEx=basis==='inc'?Math.round(raw/1.1):raw;
+    var fr=Math.round((parseFloat(document.getElementById('jc_freight').value)||0)*100);
+    var total=costEx+fr, sellEx=window._jcSellEx||0;
+    var gp=sellEx-total, pct=sellEx?(gp/sellEx*100):0;
+    el.innerHTML='<div><b>'+money(sellEx)+'</b> sell ex GST − <b>'+money(total)+'</b> cost ex GST = <b>'+money(gp)+'</b> gross profit <span class="mchip '+marginClass(pct)+'">'+pct.toFixed(1)+'%</span></div>';
+  };
+  window.saveJobCost=async function(num){
+    var sb=SB(); var q=fq(num); if(!sb||!q) return;
+    var basis=document.getElementById('jc_basis').value;
+    var raw=Math.round((parseFloat(document.getElementById('jc_cost').value)||0)*100);
+    var costEx=basis==='inc'?Math.round(raw/1.1):raw;
+    var btn=document.getElementById('jc_save'); if(btn){btn.disabled=true;btn.textContent='Saving…';}
+    var row={
+      quote_id:q._id,
+      order_id:q._orderId||null,
+      supplier_code:document.getElementById('jc_sup').value||null,
+      cost_ex_cents:costEx,
+      freight_ex_cents:Math.round((parseFloat(document.getElementById('jc_freight').value)||0)*100),
+      supplier_ref:document.getElementById('jc_ref').value.trim()||null,
+      notes:document.getElementById('jc_notes').value.trim()||null,
+      confirmed:document.getElementById('jc_conf').checked
+    };
+    try{
+      var r=await sb.from('job_costs').upsert(row,{onConflict:'quote_id'});
+      if(r.error) throw r.error;
+      closeModal(); await reload(); openQuote(num);
+    }catch(e){ alert('Could not save the job cost: '+(e.message||e)); if(btn){btn.disabled=false;btn.textContent='Save cost';} }
+  };
+
+  /* ============ SILENT STAGE MOVE ============
+     Every step in the journey stepper carries a small arrow. Clicking it moves the
+     job to that stage, forward or back, by stamping the underlying records only.
+     No customer email is ever sent from here. */
+  var STAGE_LABELS=['Quote','Order','Invoice','Paid','In Production','Dispatched','Google Review'];
+  function reachedIdx(num){
+    var flags=(window._stageFlags||{})[num]||[];
+    var last=-1; for(var i=0;i<flags.length;i++) if(flags[i]) last=i;
+    return last;
+  }
+  async function stageForward(sb,num,target){
+    var q=fq(num);
+    if(q.status==='draft'){ var r=await sb.from('quotes').update({status:'sent',sent_at:NOW()}).eq('id',q._id); if(r.error) throw r.error; }
+    if(target>=1 && !q._orderId){
+      var rc=await sb.rpc('convert_quote_to_order',{p_quote_id:q._id}); if(rc.error) throw rc.error;
+      await reload(); q=fq(num);
+    }
+    if(target>=2 && q._invId && !q._invSent){ var ri=await sb.from('invoices').update({sent_at:NOW()}).eq('id',q._invId); if(ri.error) throw ri.error; }
+    if(target>=3 && q._invId && !q._invPaidAt){
+      var rp=await sb.from('payments').insert({order_id:q._orderId,invoice_id:q._invId,amount_cents:qTotal(q),provider:'manual',status:'succeeded',paid_at:NOW()}); if(rp.error) throw rp.error;
+      var rv=await sb.from('invoices').update({status:'paid',paid_at:NOW()}).eq('id',q._invId); if(rv.error) throw rv.error;
+    }
+    var patch={};
+    if(target>=4) patch.status='in_production';
+    if(target>=5){ patch.status='shipped'; if(!q._dispatched) patch.dispatched_at=NOW(); }
+    if(target>=6 && !q._reviewReq) patch.review_requested_at=NOW();
+    if(Object.keys(patch).length && q._orderId){ var ro=await sb.from('orders').update(patch).eq('id',q._orderId); if(ro.error) throw ro.error; }
+  }
+  async function stageBack(sb,num,target){
+    var q=fq(num);
+    var patch={};
+    if(target<6) patch.review_requested_at=null;
+    if(target<5) patch.dispatched_at=null;
+    if(target<3 && q._invId){
+      // Never silently reverse money taken through Stripe — records would drift out of step.
+      var pays=await sb.from('payments').select('id,provider,status').eq('invoice_id',q._invId).eq('status','succeeded');
+      if(pays.error) throw pays.error;
+      if((pays.data||[]).some(function(p){return p.provider==='stripe';}))
+        throw new Error('This invoice was paid through Stripe. Refund or void it in Stripe first, then move the stage.');
+      for(var i=0;i<(pays.data||[]).length;i++){
+        var rr=await sb.from('payments').update({status:'refunded'}).eq('id',pays.data[i].id); if(rr.error) throw rr.error;
+      }
+      var rv2=await sb.from('invoices').update({status:'issued',paid_at:null}).eq('id',q._invId); if(rv2.error) throw rv2.error;
+    }
+    if(target<3) patch.paid_at=null;
+    if(target<2 && q._invId){ var rs=await sb.from('invoices').update({sent_at:null}).eq('id',q._invId); if(rs.error) throw rs.error; }
+    patch.status = target>=5 ? 'shipped' : (target>=4 ? 'in_production' : (target>=3 ? 'paid' : 'invoiced'));
+    if(q._orderId){ var ro2=await sb.from('orders').update(patch).eq('id',q._orderId); if(ro2.error) throw ro2.error; }
+  }
+  window.jumpStage=async function(num,target){
+    var sb=SB(); var q=fq(num); if(!sb||!q) return;
+    var cur=reachedIdx(num);
+    if(target===cur){ alert('This job is already at "'+STAGE_LABELS[target]+'".'); return; }
+    var fwd=target>cur;
+    if(!fwd && target<1 && q._orderId){
+      alert('Moving back past "Order" would mean deleting order '+(q.orderNum||'')+' and its invoice, which this button will not do.\n\nUse the trash icon if the whole job needs to go.');
+      return;
+    }
+    var msg=(fwd && target>=1 && !q._orderId)
+      ? 'Moving '+num+' to "'+STAGE_LABELS[target]+'" will create the order and tax invoice.\n\nNo email will be sent. Continue?'
+      : (fwd?'Move forward to':'Move back to')+' "'+STAGE_LABELS[target]+'" for '+num+'?\n\nRecords only — the customer is not emailed.';
+    if(!confirm(msg)) return;
+    try{
+      if(fwd) await stageForward(sb,num,target);
+      else await stageBack(sb,num,target);
+    }catch(e){ alert('Could not move the stage: '+(e.message||e)); await reload(); openQuote(num); return; }
+    await reload();
+    if(fwd&&target>=1) await window.ensurePayLink(num);
+    openQuote(num);
+  };
 
   // Mint the Stripe payment link for a freshly raised invoice (no-op if one exists).
   window.ensurePayLink=async function(num){
