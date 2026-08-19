@@ -55,6 +55,7 @@ body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Hel
 .search{flex:1;max-width:560px;display:flex;align-items:center;gap:10px;background:var(--card);border:1px solid var(--line);border-radius:24px;padding:10px 16px}
 .search input{border:none;outline:none;flex:1;font-size:14px;font-family:inherit;background:none}
 .tools{margin-left:auto;display:flex;align-items:center;gap:10px}
+.toolsr{display:flex;align-items:center;gap:10px}
 .btn{border:1px solid var(--line);background:var(--card);border-radius:22px;padding:9px 15px;font-weight:600;font-size:13px;cursor:pointer;color:var(--ink);display:inline-flex;gap:7px;align-items:center}
 .btn:hover{border-color:#e0dde6}
 .btn.primary{background:var(--pink);color:#fff;border:none;box-shadow:0 6px 16px rgba(230,17,155,.28)}
@@ -296,6 +297,102 @@ input.nqqty{width:74px;text-align:right;border:1px solid var(--line);border-radi
 .sendok{text-align:center;padding:16px 8px}
 .sendok .tick{width:52px;height:52px;border-radius:50%;background:var(--good-soft);color:var(--good);display:grid;place-items:center;margin:0 auto 12px}
 @media(max-width:1050px){.tiles,.hero .row{grid-template-columns:repeat(2,1fr)}.dashgrid,.g2,.split,.sgrid,.tmpl,.qdgrid{grid-template-columns:1fr}}
+
+/* ============================================================
+   RESPONSIVE — tablet + phone (added 19 Aug 2026)
+   Desktop layout above 900px is untouched.
+   ============================================================ */
+
+/* Hamburger + drawer scrim: hidden on desktop */
+#navToggle{display:none;width:40px;height:40px;border-radius:12px;border:1px solid var(--line);background:var(--card);place-items:center;cursor:pointer;flex:none;padding:0;color:var(--ink)}
+#navScrim{display:none;position:fixed;inset:0;background:rgba(17,16,24,.42);backdrop-filter:blur(2px);z-index:60}
+#navScrim.show{display:block;animation:fade .2s ease}
+
+@media(max-width:900px){
+  /* Sidebar becomes an off-canvas drawer */
+  .app{grid-template-columns:1fr}
+  .side{position:fixed;top:0;left:0;bottom:0;width:272px;max-width:84vw;height:100dvh;z-index:70;
+        transform:translateX(-101%);transition:transform .24s ease;box-shadow:0 0 40px rgba(20,10,40,.18);
+        padding:14px 12px calc(14px + env(safe-area-inset-bottom))}
+  .side.open{transform:none}
+  body.navopen{overflow:hidden}
+  #navToggle{display:grid}
+
+  /* Topbar reflows: hamburger + search + account on line 1, actions on line 2 */
+  .topbar{flex-wrap:wrap;gap:9px;padding:10px 14px}
+  #navToggle{order:0}
+  .search{order:1;flex:1 1 130px;max-width:none;padding:9px 14px;min-width:0}
+  .search input{font-size:16px}       /* 16px stops iOS zooming on focus */
+  .toolsr{order:2;margin-left:0}
+  .tools{order:3;flex:1 1 100%;margin-left:0;justify-content:flex-start;gap:8px;
+         overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+  .tools::-webkit-scrollbar{display:none}
+  .tools>*{flex:none}
+
+  /* Page chrome */
+  .wrap{padding:16px 14px 0}
+  .phead{flex-wrap:wrap;gap:10px;margin-bottom:14px}
+  .phead h1{font-size:21px}
+  .phead p{font-size:12.5px}
+  .card{padding:16px}
+  .rec .head{padding:16px;gap:12px;flex-wrap:wrap}
+  .rec .head .bigav{width:46px;height:46px;font-size:17px;border-radius:13px}
+  .rec .head h2{font-size:17px}
+  .rec .head .act{margin-left:auto}
+  .tabbody{padding:16px}
+  .tabs{padding:0 12px;flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none}
+  .tabs::-webkit-scrollbar{display:none}
+  .tab{flex:none;padding:10px 13px;font-size:13px}
+
+  /* Wide tables scroll sideways inside their card instead of squashing */
+  .card:has(table),.tabbody:has(table),.tabpane:has(table){overflow-x:auto}
+  th{padding:9px 8px}
+  td{padding:11px 8px;font-size:13px}
+  td.num,th.num{white-space:nowrap}
+
+  /* Quote detail */
+  .stepper{flex-wrap:nowrap;overflow-x:auto;padding-bottom:8px;margin-bottom:12px;scrollbar-width:none}
+  .stepper::-webkit-scrollbar{display:none}
+  .step{flex:none}
+  .step .lb{white-space:nowrap}
+  .step .line{width:22px}
+  .actionbar .btn{flex:1 1 auto;justify-content:center;min-width:140px}
+
+  /* Forms + modals become bottom sheets */
+  .kv,.field.two{grid-template-columns:1fr}
+  .modal-bg{padding:0;align-items:flex-end}
+  .modal{max-width:none!important;border-radius:20px 20px 0 0;max-height:92dvh}
+  .modal .mh,.modal .mb{padding-left:18px;padding-right:18px}
+  .modal .mf{padding:14px 18px calc(14px + env(safe-area-inset-bottom));flex-wrap:wrap}
+  .modal .mf .btn{flex:1 1 auto;justify-content:center}
+  .field input,.field select,.field textarea,.nqsearch{font-size:16px}
+
+  /* Misc panels */
+  #notifPanel{width:min(360px,calc(100vw - 26px))!important;right:-4px!important}
+  .accessrow{flex-wrap:wrap}
+  .accessrow .rt{margin-left:0;width:100%}
+  .darkp,.hero{border-radius:18px;padding:18px}
+  .bars{height:130px}
+}
+
+@media(max-width:560px){
+  .tiles{grid-template-columns:1fr 1fr;gap:10px}
+  .tile{padding:14px}
+  .tile .n{font-size:21px;margin-top:9px}
+  .hero .row{gap:10px}
+  .hcard{padding:11px 12px}
+  .hcard .n{font-size:20px}
+  /* Trim the topbar to the essentials */
+  .topbar{padding:9px 12px;gap:8px}
+  .me{padding:4px 9px 4px 4px;gap:7px}
+  .me>div:last-child{display:none}
+  #supportBtn{display:none}          /* placeholder button — not worth a phone row */
+  .search input{font-size:16px}
+  .search input::placeholder{font-size:14px}
+  .btn{padding:9px 13px}
+  .split{gap:12px}
+  .grid{gap:12px}
+}
 </style>
 <script src="assets/config.js?v=20260727crm"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -366,13 +463,18 @@ input.nqqty{width:74px;text-align:right;border:1px solid var(--line);border-radi
     <div class="nav" data-v="dash"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h8"/><path d="M18 15l3-3-3-3M21 12H9"/></svg>Log out</div></div>
   </aside>
 
+  <div id="navScrim"></div>
+
   <main class="main">
     <div class="topbar">
+      <button id="navToggle" aria-label="Menu" aria-expanded="false"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
       <div class="search"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#f01a9a" stroke-width="2.2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4"/></svg><input id="gsearch" placeholder="Search products… (press Enter)"></div>
       <div class="tools">
-        <button class="btn"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>Support</button>
+        <button class="btn" id="supportBtn"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>Support</button>
         <button class="btn primary" id="newQuoteBtn"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M12 5v14M5 12h14"/></svg>New Quote</button>
         <button class="btn" id="newInvoiceBtn"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M12 5v14M5 12h14"/></svg>New Invoice</button>
+      </div>
+      <div class="toolsr">
         <div class="ico" id="notifBell" style="cursor:pointer;position:relative"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#403d4a" stroke-width="2"><path d="M18 8a6 6 0 1 0-12 0c0 7-3 8-3 8h18s-3-1-3-8"/><path d="M10 21a2 2 0 0 0 4 0"/></svg><span class="dot" id="notifDot" style="display:none"></span>
           <div id="notifPanel" style="display:none;position:absolute;top:44px;right:0;width:360px;max-height:440px;overflow:auto;background:#fff;border:1px solid var(--line);border-radius:14px;box-shadow:0 12px 34px rgba(20,16,30,.14);z-index:60;text-align:left;cursor:default"></div></div>
         <div class="me"><div class="av">MB<span class="on"></span></div><div><b>Murray Boyton</b><span>Owner</span></div></div>
@@ -630,8 +732,32 @@ function go(v){
   document.getElementById('vsub').textContent=titles[v][1];
   document.getElementById('pheadBtn').style.display = (v==='quote'||v==='supplier') ? 'none' : '';
   if(v==='products')loadProducts();
+  closeNav();
   window.scrollTo(0,0);
 }
+
+/* ---------- Mobile nav drawer ---------- */
+function openNav(){
+  const s=document.querySelector('.side'); if(!s) return;
+  s.classList.add('open');
+  document.getElementById('navScrim').classList.add('show');
+  document.body.classList.add('navopen');
+  const t=document.getElementById('navToggle'); if(t) t.setAttribute('aria-expanded','true');
+}
+function closeNav(){
+  const s=document.querySelector('.side'); if(!s) return;
+  s.classList.remove('open');
+  const sc=document.getElementById('navScrim'); if(sc) sc.classList.remove('show');
+  document.body.classList.remove('navopen');
+  const t=document.getElementById('navToggle'); if(t) t.setAttribute('aria-expanded','false');
+}
+(function(){
+  const t=document.getElementById('navToggle'), sc=document.getElementById('navScrim');
+  if(t) t.onclick=()=>{ document.querySelector('.side').classList.contains('open') ? closeNav() : openNav(); };
+  if(sc) sc.onclick=closeNav;
+  document.addEventListener('keydown',e=>{ if(e.key==='Escape') closeNav(); });
+  window.addEventListener('resize',()=>{ if(window.innerWidth>900) closeNav(); });
+})();
 /* Top-bar search: filters the live product catalogue */
 (function(){
   const g=document.getElementById('gsearch');if(!g)return;
