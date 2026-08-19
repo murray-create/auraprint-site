@@ -138,7 +138,8 @@ tr.clk{cursor:pointer}tr.clk:hover td{background:var(--soft)}
 .b-sent{background:#e8f4ff;color:#1673b6}
 .b-api{background:var(--pink-soft);color:var(--pink-ink)}.b-manual{background:var(--warn-soft);color:var(--warn)}
 .b-new{background:#eef;color:#4a4a8a}.b-contacted{background:var(--warn-soft);color:var(--warn)}.b-won,.b-quoted{background:var(--good-soft);color:var(--good)}.b-lost{background:var(--bad-soft);color:var(--bad)}
-#leadFilter .chip{cursor:pointer;border:1px solid var(--line);background:#fff;color:var(--muted);margin-top:0}#leadFilter .chip.on{background:var(--pink-soft);color:var(--pink-ink);border-color:transparent}
+#leadFilter .chip,#quoteFilter .chip{cursor:pointer;border:1px solid var(--line);background:#fff;color:var(--muted);margin-top:0}#leadFilter .chip.on,#quoteFilter .chip.on{background:var(--pink-soft);color:var(--pink-ink);border-color:transparent}
+#quoteFilter .chip.lost.on{background:var(--bad-soft);color:var(--bad)}
 .dom{font-size:11px;font-weight:700;padding:2px 9px;border-radius:20px}
 .dom.Promotional{background:var(--pink-soft);color:var(--pink-ink)}
 .dom.Apparel{background:#efe9fe;color:#6d28d9}
@@ -516,6 +517,7 @@ input.nqqty{width:74px;text-align:right;border:1px solid var(--line);border-radi
         <div class="tiles" id="salesTiles"></div>
         <div class="grid g2" id="salesGrid">
           <div class="card" id="card-quotes"><h3>Recent quotes</h3><div class="sub" id="qsub"></div>
+            <div class="filterbar" id="quoteFilter" style="margin:10px 0 4px"></div>
             <table><thead><tr><th>Quote</th><th>Customer</th><th class="num">Value</th><th>Status</th></tr></thead><tbody id="qtable2"></tbody></table></div>
           <div class="card" id="card-orders"><h3>Recent orders</h3><div class="sub" id="osub"></div>
             <table><thead><tr><th>Order</th><th>Customer</th><th>Status</th><th>Tracking</th></tr></thead><tbody id="otable"></tbody></table></div>
@@ -815,10 +817,40 @@ document.getElementById('feeds').innerHTML=D.feeds.map(f=>`<div class="feed"><sp
 (function(){const max=Math.max(...D.months.map(m=>m[1]));document.getElementById('bars').innerHTML=D.months.map((m,i)=>`<div class="bar" title="${m[0]}: ${m[1]}"><div class="stack" style="height:${Math.round(m[1]/max*100)}%;background:${i%2?'#43b7ff':'#f01a9a'}"></div><small>${m[0]}</small></div>`).join('');})();
 
 /* ---------- Quotes tables ---------- */
+/* ---------- Lost quotes ----------
+   A lost quote keeps status 'declined' (the only "did not proceed" value the
+   quotes_status_check constraint allows). Staff-marked ones are stamped with a
+   decision_comments string starting "Lost:" so we can tell them apart from a
+   quote the customer declined through myquote.html. They stay in the database —
+   they are only filtered out of the default list, so the conversion rate below
+   still divides by every quote raised. */
+const QUOTE_FILTERS=[['active','Active'],['draft','Draft'],['sent','Sent'],['converted','Converted'],['lost','Lost'],['all','All']];
+window._quoteFilter='active';
+const isLostQuote=q=>q.status==='declined';
+const lostByStaff=q=>isLostQuote(q)&&/^Lost:/.test(q._decision||'');
+const qStatusLabel=q=>isLostQuote(q)?(lostByStaff(q)?'lost':'declined'):q.status;
+function setQuoteFilter(f){window._quoteFilter=f;renderQuoteTables();}
+function filteredQuotes(){
+  const f=window._quoteFilter,all=D.quotes;
+  if(f==='all')return all;
+  if(f==='lost')return all.filter(isLostQuote);
+  if(f==='active')return all.filter(q=>!isLostQuote(q));
+  return all.filter(q=>!isLostQuote(q)&&q.status===f);
+}
+
 function renderQuoteTables(){
-  const qrow=q=>`<tr class="clk" data-q="${q.num}"><td><b>${q.num}</b></td><td>${esc(q.contact)}</td><td class="mini">${esc(orgName(q))}</td><td class="num">${money(qTotal(q))}</td><td><span class="badge b-${q.status}">${q.status}</span></td></tr>`;
-  document.getElementById('qtable').innerHTML=D.quotes.map(qrow).join('');
-  document.getElementById('qtable2').innerHTML=D.quotes.map(q=>`<tr class="clk" data-q="${q.num}"><td><b>${q.num}</b></td><td>${esc(q.contact)}</td><td class="num">${money(qTotal(q))}</td><td><span class="badge b-${q.status}">${q.status}</span></td></tr>`).join('');
+  const shown=filteredQuotes();
+  const badge=q=>`<span class="badge b-${qStatusLabel(q)}">${qStatusLabel(q)}</span>`;
+  const qrow=q=>`<tr class="clk" data-q="${q.num}"><td><b>${q.num}</b></td><td>${esc(q.contact)}</td><td class="mini">${esc(orgName(q))}</td><td class="num">${money(qTotal(q))}</td><td>${badge(q)}</td></tr>`;
+  const noneRow=n=>`<tr><td colspan="${n}"><div class="empty">No ${window._quoteFilter==='all'?'':esc(window._quoteFilter)+' '}quotes to show.</div></td></tr>`;
+  document.getElementById('qtable').innerHTML=shown.length?shown.map(qrow).join(''):noneRow(5);
+  document.getElementById('qtable2').innerHTML=shown.length?shown.map(q=>`<tr class="clk" data-q="${q.num}"><td><b>${q.num}</b></td><td>${esc(q.contact)}</td><td class="num">${money(qTotal(q))}</td><td>${badge(q)}</td></tr>`).join(''):noneRow(4);
+  const lostN=D.quotes.filter(isLostQuote).length;
+  const fb=document.getElementById('quoteFilter');
+  if(fb){
+    const countFor=k=>k==='all'?D.quotes.length:(k==='lost'?lostN:(k==='active'?D.quotes.length-lostN:D.quotes.filter(q=>!isLostQuote(q)&&q.status===k).length));
+    fb.innerHTML=QUOTE_FILTERS.map(([k,lab])=>`<button class="chip${k==='lost'?' lost':''}${window._quoteFilter===k?' on':''}" onclick="setQuoteFilter('${k}')">${lab} ${countFor(k)}</button>`).join('');
+  }
   document.querySelectorAll('tr.clk[data-q]').forEach(r=>r.onclick=()=>openQuote(r.dataset.q));
 
   const all=D.orders;
@@ -828,19 +860,21 @@ function renderQuoteTables(){
   const invs=D.quotes.filter(q=>q.invNum);
   const itb=document.getElementById('itable');
   if(itb){
-    itb.innerHTML=invs.length?invs.map(q=>{const st=q.stage==='paid'?['paid','paid']:(q._invSent?['sent','sent']:['unpaid','not sent']);return `<tr class="clk" data-q="${q.num}"><td><b>${esc(q.invNum)}</b></td><td>${q.num}</td><td>${esc(q.contact)}</td><td class="num">${money(qTotal(q))}</td><td><span class="badge b-${st[0]}">${st[1]}</span></td></tr>`;}).join(''):'<tr><td colspan="5"><div class="empty">No invoices raised yet.</div></td></tr>';
+    itb.innerHTML=invs.length?invs.map(q=>{const st=q._invStatus==='void'?['void','void']:(q.stage==='paid'?['paid','paid']:(q._invSent?['sent','sent']:['unpaid','not sent']));return `<tr class="clk" data-q="${q.num}"><td><b>${esc(q.invNum)}</b></td><td>${q.num}</td><td>${esc(q.contact)}</td><td class="num">${money(qTotal(q))}</td><td><span class="badge b-${st[0]}">${st[1]}</span></td></tr>`;}).join(''):'<tr><td colspan="5"><div class="empty">No invoices raised yet.</div></td></tr>';
     itb.querySelectorAll('tr.clk[data-q]').forEach(r=>r.onclick=()=>openQuote(r.dataset.q));
     const isub=document.getElementById('isub');if(isub)isub.textContent=`${invs.length} invoice${invs.length===1?'':'s'} · click one to open the quote`;
   }
 
   const conv=D.quotes.filter(q=>q.status==='converted').length;
   const active=all.filter(o=>o.status!=='cancelled').length;
-  document.getElementById('qsub').textContent=`${D.quotes.length} quotes · ${conv} converted · click one to open`;
+  const liveN=D.quotes.length-lostN;
+  document.getElementById('qsub').textContent=`${liveN} live quote${liveN===1?'':'s'} · ${conv} converted${lostN?' · '+lostN+' lost':''} · click one to open`;
   document.getElementById('osub').textContent=`${all.length} orders · ${active} active`;
 
   const invoiced=D.quotes.filter(q=>q.stage==='paid').reduce((a,q)=>a+qTotal(q),0);
-  const rate=Math.round(conv/D.quotes.length*100);
-  document.getElementById('salesTiles').innerHTML=[{n:String(D.quotes.length),l:'Quotes',c:conv+' converted'},{n:String(all.length),l:'Orders',c:active+' active'},{n:money(invoiced),l:'Invoiced (paid)',c:'this period'},{n:rate+'%',l:'Conversion',c:'quotes → orders'}].map(t=>`<div class="tile"><div class="ic" style="background:var(--pink-soft)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#c9107f" stroke-width="2"><path d="M4 19V5M4 19h16M8 15l3-4 3 2 4-6"/></svg></div><div class="n">${t.n}</div><div class="l">${t.l}</div><div class="chip flat">${t.c}</div></div>`).join('');
+  // Conversion rate deliberately divides by EVERY quote raised, lost ones included.
+  const rate=D.quotes.length?Math.round(conv/D.quotes.length*100):0;
+  document.getElementById('salesTiles').innerHTML=[{n:String(liveN),l:'Quotes',c:conv+' converted'},{n:String(all.length),l:'Orders',c:active+' active'},{n:money(invoiced),l:'Invoiced (paid)',c:'this period'},{n:rate+'%',l:'Conversion',c:'quotes → orders'}].map(t=>`<div class="tile"><div class="ic" style="background:var(--pink-soft)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#c9107f" stroke-width="2"><path d="M4 19V5M4 19h16M8 15l3-4 3 2 4-6"/></svg></div><div class="n">${t.n}</div><div class="l">${t.l}</div><div class="chip flat">${t.c}</div></div>`).join('');
 }
 
 /* ---------- Quote detail + convert flow ---------- */
@@ -878,8 +912,13 @@ function openQuote(num){
   // action bar + right panel by stage
   let actions='', banner='', right='';
   if(q.status==='declined'){
-    banner=`<div class="banner bad">This quote was declined by the customer.</div>`;
-    actions=`<button class="btn" onclick="duplicateQuote('${q.num}')">Duplicate quote</button>`;
+    const staffLost=lostByStaff(q);
+    const why=(q._decision||'').replace(/^Lost:\s*/,'').trim();
+    const whenStr=q._decidedAt?new Date(q._decidedAt).toLocaleDateString('en-AU',{day:'2-digit',month:'short',year:'numeric'}):'';
+    const lead=staffLost?`Marked lost${whenStr?' on '+whenStr:''}`:`Declined by ${esc(q.contact)}${whenStr?' on '+whenStr:''}`;
+    banner=`<div class="banner bad">${lead}${why?' — '+esc(why):''}. Hidden from the active quotes list.</div>`;
+    actions=`<button class="btn primary" onclick="reopenQuote('${q.num}')">Reopen quote</button>`
+          +`<button class="btn" onclick="duplicateQuote('${q.num}')">Duplicate quote</button>`;
   } else if(q.stage==='quote'){
     actions+=`<button class="btn primary" onclick="openQuoteEmail('${q.num}')" ${total===0?'disabled':''}>Send quote email</button>`;
     actions+=`<button class="btn" onclick="convertToInvoice('${q.num}')" ${total===0?'disabled':''}>Convert to invoice ›</button>`;
@@ -909,6 +948,10 @@ function openQuote(num){
       actions=`<button class="btn primary" onclick="startProduction('${q.num}')">Start production ›</button><button class="btn" onclick="openInvoiceEmail('${q.num}')">Resend invoice email</button><button class="btn" onclick="copyLink('${q.num}')">View receipt link</button>`;
     }
   }
+  // "Mark lost" is available at every stage — it cancels the linked order and
+  // voids the linked invoice too. markLost() refuses outright once real money
+  // has been taken through Stripe.
+  if(q.status!=='declined') actions+=`<button class="btn danger" onclick="markLost('${q.num}')">Mark lost</button>`;
 
   // right rail: linked records + summary
   const linked=[];
@@ -1954,7 +1997,7 @@ async function refreshFromSupabase(sb){
     if(inv&&inv.status==='paid')stage='paid'; else if(inv)stage='invoice'; else if(ord)stage='order';
     let contact=q.contact_name||q.contact_email||'—';
     if(q.company){const org=D.orgs.find(o=>o.name.toLowerCase()===q.company.toLowerCase());if(org){const ppl=D.contacts.filter(c=>c.orgId===org.id);if(ppl.length&&!D.contacts.some(c=>c.name===contact))contact=ppl[0].name;}}
-    D.quotes.push({num:q.quote_number,contact,status:q.status,stage,orderNum:ord?ord.order_number:null,invNum:inv?inv.invoice_number:null,payLink:inv?inv.payment_link_url:null,items,_id:q.id,_orderId:q.converted_order_id||null,_invId:inv?inv.id:null,_invToken:inv?inv.access_token:null,_invSent:inv?inv.sent_at:null,_invPaidAt:inv?inv.paid_at:null,_invViewedAt:inv?inv.last_viewed_at:null,_viewedAt:q.last_viewed_at||null,_decidedAt:q.decided_at||null,_acceptedBy:q.accepted_by_name||null,_created:q.created_at,_email:q.contact_email||'',_name:q.contact_name||'',_token:q.access_token||'',_accepted:!!q.accepted_by_name,_tCarrier:ord?(ord.tracking_carrier||''):'',_tNumber:ord?(ord.tracking_number||''):'',_tUrl:ord?(ord.tracking_url||''):'',_dispatched:ord?ord.dispatched_at:null,_ordStatus:ord?(ord.status||''):'',_reviewReq:ord?ord.review_requested_at:null,_valid:q.valid_until||null,_cost:costByQuote[q.id]||null});
+    D.quotes.push({num:q.quote_number,contact,status:q.status,stage,orderNum:ord?ord.order_number:null,invNum:inv?inv.invoice_number:null,payLink:inv?inv.payment_link_url:null,items,_id:q.id,_orderId:q.converted_order_id||null,_invId:inv?inv.id:null,_invToken:inv?inv.access_token:null,_invSent:inv?inv.sent_at:null,_invStatus:inv?inv.status:null,_invPaidAt:inv?inv.paid_at:null,_invViewedAt:inv?inv.last_viewed_at:null,_viewedAt:q.last_viewed_at||null,_decidedAt:q.decided_at||null,_decision:q.decision_comments||'',_sentAt:q.sent_at||null,_acceptedBy:q.accepted_by_name||null,_created:q.created_at,_email:q.contact_email||'',_name:q.contact_name||'',_token:q.access_token||'',_accepted:!!q.accepted_by_name,_tCarrier:ord?(ord.tracking_carrier||''):'',_tNumber:ord?(ord.tracking_number||''):'',_tUrl:ord?(ord.tracking_url||''):'',_dispatched:ord?ord.dispatched_at:null,_ordStatus:ord?(ord.status||''):'',_reviewReq:ord?ord.review_requested_at:null,_valid:q.valid_until||null,_cost:costByQuote[q.id]||null});
   });
   D.orders.length=0;
   (ords.data||[]).forEach(o=>{const q=(qs.data||[]).find(x=>x.converted_order_id===o.id);D.orders.push({num:o.order_number,name:o.contact_name||'—',company:o.company||null,status:o.status,total:orderTotal[o.id]||0,q:q?q.quote_number:null,track:o.tracking_number||null});});
@@ -2381,6 +2424,88 @@ drawOrgs(0);
     var sb=SB(); var q=fq(num); if(!sb||!q) return;
     if(q._id){ var r=await sb.from('quotes').update({archived:true,archive_reason:'trashed from CRM'}).eq('id',q._id); if(r.error){alert(r.error.message);return;} }
     closeModal(); await reload(); go('sales');
+  };
+
+  /* ============ MARK A QUOTE LOST ============
+     'declined' is the only "did not proceed" value quotes_status_check allows,
+     so a lost quote reuses it and is tagged in decision_comments with a leading
+     "Lost:" — that prefix is what separates a decision Murray made from one the
+     customer made on myquote.html. Nothing is deleted: the record stays so the
+     conversion rate keeps an honest denominator, and it can be reopened.
+     A linked order is cancelled and a linked invoice voided in the same pass,
+     which also stops the nightly review-request function (it skips cancelled
+     orders and requires a paid invoice). */
+  var LOST_REASONS=['Too dear','Went elsewhere','Timing did not suit','No longer needed','No response','Raised in error','Other'];
+  window.markLost=function(num){
+    var q=fq(num); if(!q) return;
+    var voids=[];
+    if(q._orderId) voids.push('cancel order <b>'+esc(q.orderNum||'')+'</b>');
+    if(q._invId) voids.push('void invoice <b>'+esc(q.invNum||'')+'</b>');
+    var note = q._invPaidAt
+      ? '<div class="secnote" style="background:var(--bad-soft);color:var(--bad)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 9v4M12 17h.01M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0Z"/></svg><div>This invoice is marked <b>paid</b>. Money has already changed hands, so this is a refund or credit note, not a lost quote. If it was paid through Stripe this will be refused.</div></div>'
+      : (voids.length?'<div class="secnote"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 9v4M12 17h.01M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0Z"/></svg><div>This will also '+voids.join(' and ')+'.</div></div>':'');
+    md.className='modal';
+    md.innerHTML='<div class="mh"><h3>Mark '+esc(num)+' lost</h3><div class="x" onclick="closeModal()">✕</div></div>'
+      +'<div class="mb">'
+      +'<p style="margin:0 0 14px;font-size:14px">The quote drops out of your active list but is kept, so you can reopen or duplicate it later. <b>The customer is not emailed.</b></p>'
+      +'<div class="field"><label>Why was it lost?</label><select id="lost_reason">'
+      +LOST_REASONS.map(function(r){return '<option>'+esc(r)+'</option>';}).join('')
+      +'</select></div>'
+      +'<div class="field"><label>Note <span class="mini">(optional — who they went with, price they got)</span></label><textarea id="lost_note" placeholder="e.g. went with a Brisbane supplier at $480"></textarea></div>'
+      +note
+      +'</div>'
+      +'<div class="mf"><button class="btn" onclick="closeModal()">Cancel</button><button class="btn danger" id="lostGo" onclick="doMarkLost(\''+esc(num)+'\')">Mark lost</button></div>';
+    mb.classList.add('show');
+  };
+
+  window.doMarkLost = async function(num){
+    var sb=SB(); var q=fq(num); if(!sb||!q) return;
+    var btn=document.getElementById('lostGo');
+    var reason=(document.getElementById('lost_reason')||{}).value||'Other';
+    var noteTxt=((document.getElementById('lost_note')||{}).value||'').trim();
+    var comment='Lost: '+reason+(noteTxt?' — '+noteTxt:'');
+    if(btn){btn.disabled=true;btn.textContent='Marking lost…';}
+    try{
+      // Money first: refuse outright if Stripe has taken a real payment.
+      if(q._invId){
+        var pays=await sb.from('payments').select('id,provider,status').eq('invoice_id',q._invId).eq('status','succeeded');
+        if(pays.error) throw pays.error;
+        var rows=pays.data||[];
+        if(rows.some(function(p){return p.provider==='stripe';}))
+          throw new Error('Invoice '+(q.invNum||'')+' was paid through Stripe. Refund it in Stripe first, then mark this quote lost.');
+        if(rows.length && !confirm('Invoice '+(q.invNum||'')+' has '+rows.length+' recorded payment'+(rows.length===1?'':'s')+'. Marking this lost will flag '+(rows.length===1?'it':'them')+' as refunded.\n\nContinue?')){
+          if(btn){btn.disabled=false;btn.textContent='Mark lost';}
+          return;
+        }
+        for(var i=0;i<rows.length;i++){
+          var rr=await sb.from('payments').update({status:'refunded'}).eq('id',rows[i].id); if(rr.error) throw rr.error;
+        }
+        var rv=await sb.from('invoices').update({status:'void',paid_at:null}).eq('id',q._invId); if(rv.error) throw rv.error;
+      }
+      if(q._orderId){ var ro=await sb.from('orders').update({status:'cancelled'}).eq('id',q._orderId); if(ro.error) throw ro.error; }
+      var rq=await sb.from('quotes').update({status:'declined',decided_at:NOW(),decision_comments:comment}).eq('id',q._id);
+      if(rq.error) throw rq.error;
+    }catch(e){
+      alert('Could not mark it lost: '+(e.message||e));
+      if(btn){btn.disabled=false;btn.textContent='Mark lost';}
+      await reload(); openQuote(num); return;
+    }
+    closeModal(); await reload(); openQuote(num);
+  };
+
+  // Undo: put the quote back where it was and un-void whatever was voided with it.
+  window.reopenQuote = async function(num){
+    var sb=SB(); var q=fq(num); if(!sb||!q) return;
+    if(!confirm('Reopen '+num+'?\n\nIt returns to your active quotes'+(q._invId?', and invoice '+(q.invNum||'')+' goes back to issued':'')+'. The customer is not emailed.')) return;
+    try{
+      // Back to where it was: converted if the order survives, otherwise sent/draft.
+      var back = q._orderId ? 'converted' : (q._sentAt ? 'sent' : 'draft');
+      var rq=await sb.from('quotes').update({status:back,decided_at:null,decision_comments:null}).eq('id',q._id);
+      if(rq.error) throw rq.error;
+      if(q._invId){ var rv=await sb.from('invoices').update({status:'issued'}).eq('id',q._invId); if(rv.error) throw rv.error; }
+      if(q._orderId){ var ro=await sb.from('orders').update({status:q._invId?'invoiced':'approved'}).eq('id',q._orderId); if(ro.error) throw ro.error; }
+    }catch(e){ alert('Could not reopen it: '+(e.message||e)); await reload(); openQuote(num); return; }
+    await reload(); openQuote(num);
   };
 
   window.saveContact = async function(idx){
