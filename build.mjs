@@ -254,7 +254,7 @@ writeFileSync('sitemap.xml',
   urls.map(u => `  <url><loc>${CANON}/${u === 'index.html' ? '' : u}</loc><lastmod>${today}</lastmod></url>`).join('\n') +
   `\n</urlset>\n`);
 writeFileSync('robots.txt',
-  `User-agent: *\nAllow: /\nDisallow: /admin.html\nDisallow: /admin-pricing.html\nSitemap: ${CANON}/sitemap.xml\n`);
+  `User-agent: *\nAllow: /\nDisallow: /admin.html\nDisallow: /crm.html\nSitemap: ${CANON}/sitemap.xml\n`);
 
 /* ---------- 404 ---------- */
 writeFileSync('404.html', `${HEAD('Page not found', "That page has moved or never existed. Head back to the catalogue - if it can be printed, we can do it.", '404.html')}

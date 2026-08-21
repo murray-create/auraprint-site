@@ -10,6 +10,10 @@
  * Usage:
  *   node tools/deploy-files.mjs assets/bc-configurator.js business-cards.html ...
  *   node tools/deploy-files.mjs --message "Wire live pricing" <files...>
+ *   node tools/deploy-files.mjs --delete old-page.html --delete other.html <files...>
+ *
+ * --delete REMOVES that path from the live repo (it does not need to exist
+ * locally). Updates and deletions ride in the SAME single commit.
  *
  * Paths are relative to prototype/ and map 1:1 to the repo root.
  */
@@ -43,14 +47,20 @@ let message = 'Deploy site update';
 const mi = args.indexOf('--message');
 if (mi !== -1) { message = args[mi + 1]; args = args.filter((_, i) => i !== mi && i !== mi + 1); }
 
+const deletes = [];
+for (let i = 0; i < args.length; i++) {
+  if (args[i] === '--delete') { deletes.push(args[i + 1]); args.splice(i, 2); i--; }
+}
+
 const files = args;
-if (!files.length) { console.error('No files given.'); process.exit(1); }
+if (!files.length && !deletes.length) { console.error('No files given.'); process.exit(1); }
 for (const f of files) {
   if (!fs.existsSync(path.resolve(ROOT, f))) { console.error(`Missing file: ${f}`); process.exit(1); }
 }
 
-console.log(`Deploying ${files.length} file(s) to ${GITHUB_USER}/${GITHUB_REPO} in one commit:`);
-files.forEach(f => console.log(`  - ${f}`));
+console.log(`Deploying ${files.length} file(s) and ${deletes.length} deletion(s) to ${GITHUB_USER}/${GITHUB_REPO} in one commit:`);
+files.forEach(f => console.log(`  + ${f}`));
+deletes.forEach(f => console.log(`  - ${f} (remove)`));
 
 const repo = await gh(API);
 const branch = repo.default_branch;
@@ -63,6 +73,10 @@ for (const f of files) {
   const content = fs.readFileSync(path.resolve(ROOT, f)).toString('base64');
   const blob = await gh(`${API}/git/blobs`, { method: 'POST', body: JSON.stringify({ content, encoding: 'base64' }) });
   tree.push({ path: f, mode: '100644', type: 'blob', sha: blob.sha });
+}
+
+for (const f of deletes) {
+  tree.push({ path: f, mode: '100644', type: 'blob', sha: null });
 }
 
 const newTree = await gh(`${API}/git/trees`, { method: 'POST', body: JSON.stringify({ base_tree: baseCommit.tree.sha, tree }) });
