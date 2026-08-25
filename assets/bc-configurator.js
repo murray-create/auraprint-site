@@ -12,8 +12,8 @@
 
   var SPEEDS = [
     { key: 'standard', label: 'Standard', cut: '3-5 business days' },
-    { key: 'nextday',  label: 'Next Day', cut: 'order by 12pm' },
-    { key: 'sameday',  label: 'Same Day', cut: 'order by 8am' }
+    { key: 'nextday',  label: 'Next Day', cut: 'paid by 12pm' },
+    { key: 'sameday',  label: 'Same Day', cut: 'paid by 8am' }
   ];
   var STOCKS = [
     { val: 'Deluxe 310gsm', label: '310gsm Deluxe Artboard', group: 'Deluxe Artboard' },
@@ -135,8 +135,8 @@
   function dispatchNote() {
     /* one shared rule, defined in aura.js, so every page says the same thing */
     if (window.AuraTurn) return window.AuraTurn.dispatchLine(sel.turnaround);
-    if (sel.turnaround === 'sameday') return '⚡ Order and approve artwork by 8am for same business day dispatch.';
-    if (sel.turnaround === 'nextday') return '⏩ Order and approve artwork by 12pm for next business day dispatch.';
+    if (sel.turnaround === 'sameday') return '⚡ Order, approve and pay by 8am for same business day dispatch.';
+    if (sel.turnaround === 'nextday') return '⏩ Order, approve and pay by 12pm for next business day dispatch.';
     return '🚚 Standard production dispatches in 3-5 business days after proof approval.';
   }
 

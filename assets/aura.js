@@ -412,8 +412,8 @@ function wireAnalytics(){
    visitor's clock, so a customer in Perth is not told the wrong cut-off. */
 const TURN_SPEEDS = {
   standard: { label:'Standard', cut:'3-5 business days' },
-  nextday:  { label:'Next Day', cut:'order by 12pm', hour:12 },
-  sameday:  { label:'Same Day', cut:'order by 8am',  hour:8  }
+  nextday:  { label:'Next Day', cut:'ordered, approved and paid by 12pm', hour:12 },
+  sameday:  { label:'Same Day', cut:'ordered, approved and paid by 8am',  hour:8  }
 };
 function brisNow(){
   try { return new Date(new Date().toLocaleString('en-US',{timeZone:'Australia/Brisbane'})); }
@@ -437,17 +437,17 @@ function dispatchLine(speed){
   const now=brisNow();
   if (speed==='sameday'){
     if (!isWeekend(now) && now.getHours()<8)
-      return '⚡ Order and approve artwork before <b>8am today</b> and it dispatches <b>today, '+fmtDay(now)+'</b>.';
+      return '⚡ Order, approve your proof and pay before <b>8am today</b> and it dispatches <b>today, '+fmtDay(now)+'</b>.';
     const d=nextOpenDay(8);
     /* on a weekend there was no cut-off today, so do not claim one passed */
     const lead = isWeekend(now) ? '' : 'Today’s 8am cut-off has passed. ';
-    return '⚡ '+lead+'Order before <b>8am '+fmtDay(d)+'</b> for dispatch that day.';
+    return '⚡ '+lead+'Order, approve and pay before <b>8am '+fmtDay(d)+'</b> for dispatch that day.';
   }
   if (speed==='nextday'){
     if (!isWeekend(now) && now.getHours()<12)
-      return '⏩ Order and approve artwork before <b>12pm today</b> for dispatch <b>'+fmtDay(addBiz(now,1))+'</b>.';
+      return '⏩ Order, approve your proof and pay before <b>12pm today</b> for dispatch <b>'+fmtDay(addBiz(now,1))+'</b>.';
     const d=nextOpenDay(12);
-    return '⏩ Order before <b>12pm '+fmtDay(d)+'</b> for dispatch <b>'+fmtDay(addBiz(d,1))+'</b>.';
+    return '⏩ Order, approve and pay before <b>12pm '+fmtDay(d)+'</b> for dispatch <b>'+fmtDay(addBiz(d,1))+'</b>.';
   }
   const start = isWeekend(now) ? addBiz(now,1) : now;
   return '🚚 Standard production dispatches in <b>3-5 business days</b>, about <b>'+fmtDay(addBiz(start,3))+' to '+fmtDay(addBiz(start,5))+'</b>.';
