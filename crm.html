@@ -404,6 +404,7 @@ input.nqqty{width:74px;text-align:right;border:1px solid var(--line);border-radi
   .grid{gap:12px}
 }
 
+.shoptag{display:inline-block;vertical-align:middle;background:linear-gradient(100deg,#7c3aed,#f01a9a);color:#fff;font-size:10.5px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;padding:3px 8px;border-radius:999px;margin-left:6px}
 /* --- Artwork & proofing card (rebuilt 25 Aug 2026) --- */
 .pfitem{border:1px solid var(--line);border-radius:10px;padding:12px 14px;margin-top:10px;background:var(--soft)}
 .pfhead{display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap;margin-bottom:6px}
@@ -873,7 +874,7 @@ function filteredQuotes(){
 function renderQuoteTables(){
   const shown=filteredQuotes();
   const badge=q=>`<span class="badge b-${qStatusLabel(q)}">${qStatusLabel(q)}</span>`;
-  const qrow=q=>`<tr class="clk" data-q="${q.num}"><td><b>${q.num}</b></td><td>${esc(q.contact)}</td><td class="mini">${esc(orgName(q))}</td><td class="num">${money(qTotal(q))}</td><td>${badge(q)}</td></tr>`;
+  const qrow=q=>`<tr class="clk" data-q="${q.num}"><td><b>${q.num}</b>${q._origin==='shop'?' <span class="shoptag">online</span>':''}</td><td>${esc(q.contact)}</td><td class="mini">${esc(orgName(q))}</td><td class="num">${money(qTotal(q))}</td><td>${badge(q)}</td></tr>`;
   const noneRow=n=>`<tr><td colspan="${n}"><div class="empty">No ${window._quoteFilter==='all'?'':esc(window._quoteFilter)+' '}quotes to show.</div></td></tr>`;
   document.getElementById('qtable').innerHTML=shown.length?shown.map(qrow).join(''):noneRow(5);
   document.getElementById('qtable2').innerHTML=shown.length?shown.map(q=>`<tr class="clk" data-q="${q.num}"><td><b>${q.num}</b></td><td>${esc(q.contact)}</td><td class="num">${money(qTotal(q))}</td><td>${badge(q)}</td></tr>`).join(''):noneRow(4);
@@ -918,7 +919,9 @@ function openQuote(num){
   // Full customer journey: Quote → Order → Invoice → Paid → In Production → Dispatched → Google Review.
   const hasOrder=q.stage==='order'||q.stage==='invoice'||q.stage==='paid';
   const inProd=['in_production','shipped','completed'].indexOf(q._ordStatus)>-1||!!q._dispatched;
-  const stepLabels=['Quote','Order','Invoice','Paid','In Production','Dispatched','Google Review'];
+  // A shop job was never quoted - the customer configured and bought it themselves.
+  const isShop=q._origin==='shop';
+  const stepLabels=[isShop?'Ordered online':'Quote','Order','Invoice','Paid','In Production','Dispatched','Google Review'];
   const doneArr=[
     q.stage!=='quote',                                        // quote accepted / converted
     hasOrder,                                                 // order record created
@@ -1018,7 +1021,7 @@ function openQuote(num){
     <div class="backlink" onclick="go('sales')"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 6l-6 6 6 6"/></svg> Back to Quotes &amp; Orders</div>
     <div class="rec" style="margin-bottom:16px">
       <div class="head"><div class="bigav" style="background:${avColor(D.contacts.indexOf(c))}">${initials(q.contact)}</div>
-        <div><h2>${q.num}</h2><div class="co">${customerLine}</div></div>
+        <div><h2>${q.num}${isShop?' <span class="shoptag">Online order</span>':''}</h2><div class="co">${customerLine}</div></div>
         <div class="act"><span class="badge b-${qStatusLabel(q)}" style="align-self:center;padding:6px 12px;font-size:12px">${qStatusLabel(q)}</span><button class="btn danger iconbtn" style="align-self:center" title="Move to trash" onclick="confirmDelete('quote','${q.num}')"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m2 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M10 11v6M14 11v6"/></svg></button></div></div>
       <div class="tabbody" style="margin-top:0">
         <div class="stepper">${stepHtml}</div>
@@ -2051,7 +2054,7 @@ async function refreshFromSupabase(sb){
     if(inv&&inv.status==='paid')stage='paid'; else if(inv)stage='invoice'; else if(ord)stage='order';
     let contact=q.contact_name||q.contact_email||'—';
     if(q.company){const org=D.orgs.find(o=>o.name.toLowerCase()===q.company.toLowerCase());if(org){const ppl=D.contacts.filter(c=>c.orgId===org.id);if(ppl.length&&!D.contacts.some(c=>c.name===contact))contact=ppl[0].name;}}
-    D.quotes.push({num:q.quote_number,contact,status:q.status,stage,orderNum:ord?ord.order_number:null,invNum:inv?inv.invoice_number:null,payLink:inv?inv.payment_link_url:null,items,_id:q.id,_orderId:q.converted_order_id||null,_invId:inv?inv.id:null,_invToken:inv?inv.access_token:null,_invSent:inv?inv.sent_at:null,_invStatus:inv?inv.status:null,_invPaidAt:inv?inv.paid_at:null,_invViewedAt:inv?inv.last_viewed_at:null,_viewedAt:q.last_viewed_at||null,_decidedAt:q.decided_at||null,_decision:q.decision_comments||'',_sentAt:q.sent_at||null,_acceptedBy:q.accepted_by_name||null,_created:q.created_at,_email:q.contact_email||'',_name:q.contact_name||'',_token:q.access_token||'',_accepted:!!q.accepted_by_name,_tCarrier:ord?(ord.tracking_carrier||''):'',_tNumber:ord?(ord.tracking_number||''):'',_tUrl:ord?(ord.tracking_url||''):'',_dispatched:ord?ord.dispatched_at:null,_ordStatus:ord?(ord.status||''):'',_reviewReq:ord?ord.review_requested_at:null,_completedAt:ord?(ord.completed_at||null):null,_valid:q.valid_until||null,_cost:costByQuote[q.id]||null,_oitems:(itemsByOrder[q.converted_order_id]||[]),_ofiles:(filesByOrder[q.converted_order_id]||[])});
+    D.quotes.push({num:q.quote_number,contact,status:q.status,stage,orderNum:ord?ord.order_number:null,invNum:inv?inv.invoice_number:null,payLink:inv?inv.payment_link_url:null,items,_id:q.id,_orderId:q.converted_order_id||null,_invId:inv?inv.id:null,_invToken:inv?inv.access_token:null,_invSent:inv?inv.sent_at:null,_invStatus:inv?inv.status:null,_invPaidAt:inv?inv.paid_at:null,_invViewedAt:inv?inv.last_viewed_at:null,_viewedAt:q.last_viewed_at||null,_decidedAt:q.decided_at||null,_decision:q.decision_comments||'',_sentAt:q.sent_at||null,_acceptedBy:q.accepted_by_name||null,_created:q.created_at,_email:q.contact_email||'',_name:q.contact_name||'',_token:q.access_token||'',_accepted:!!q.accepted_by_name,_tCarrier:ord?(ord.tracking_carrier||''):'',_tNumber:ord?(ord.tracking_number||''):'',_tUrl:ord?(ord.tracking_url||''):'',_dispatched:ord?ord.dispatched_at:null,_ordStatus:ord?(ord.status||''):'',_reviewReq:ord?ord.review_requested_at:null,_completedAt:ord?(ord.completed_at||null):null,_valid:q.valid_until||null,_origin:q.origin||'staff',_cost:costByQuote[q.id]||null,_oitems:(itemsByOrder[q.converted_order_id]||[]),_ofiles:(filesByOrder[q.converted_order_id]||[])});
   });
   D.orders.length=0;
   (ords.data||[]).forEach(o=>{const q=(qs.data||[]).find(x=>x.converted_order_id===o.id);D.orders.push({num:o.order_number,name:o.contact_name||'—',company:o.company||null,status:o.status,total:orderTotal[o.id]||0,q:q?q.quote_number:null,track:o.tracking_number||null});});
