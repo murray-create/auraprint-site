@@ -115,6 +115,7 @@
     '<div id="priceNote" style="font-size:13px;color:#6f6961;margin-top:10px">Loading live pricing…</div>' +
     '<div id="dispatch" style="font-size:13px;color:#6b6560;margin-top:10px"></div>' +
     '<div style="display:flex;gap:12px;margin-top:18px;flex-wrap:wrap">' +
+      '<button class="btn btn-aura" id="cartCta" style="flex:1;min-width:220px;display:none;border:none;cursor:pointer">Add to cart →</button>' +
       '<a class="btn btn-aura" id="orderCta" href="quote.html?product=' + SLUG + '" style="flex:1;text-align:center;min-width:220px">Get a quote &amp; upload artwork →</a>' +
     '</div>' +
     (LINKS.length ? '<div id="quoteLinks" style="display:flex;gap:18px;margin-top:12px;flex-wrap:wrap">' +
@@ -126,7 +127,59 @@
 
   var priceEl = host.querySelector('#price'), noteEl = host.querySelector('#priceNote'),
       gstEl = host.querySelector('#gstLabel'), cta = host.querySelector('#orderCta'),
+      cartBtn = host.querySelector('#cartCta'),
       qtyGroup = host.querySelector('#qtyGroup');
+
+  /* ---------- Buy online ----------------------------------------------
+     The button only appears when ALL of these hold, because anything else
+     would be refused by the server and the customer would hit a dead end:
+       - the product is flagged sellable and in launch wave 1
+       - the quantity is at or under any online ceiling for it
+       - the price is an EXACT stored break, not an interpolated one
+         (the price lock matches qty exactly, so an in-between quantity
+          has no row to lock onto)                                        */
+  var PRETTY = SLUG.replace(/-/g, ' ').replace(/\b\w/g, function (m) { return m.toUpperCase(); });
+  var buyable = null;   /* {spec, qty, cents} when the current selection can be bought */
+
+  function ensureCartLib() {
+    if (window.AuraCart) return Promise.resolve(window.AuraCart);
+    return new Promise(function (res) {
+      var t = document.createElement('script');
+      t.src = 'assets/aura-cart.js?v=20260825a';
+      t.onload = function () { res(window.AuraCart); };
+      t.onerror = function () { res(null); };
+      document.head.appendChild(t);
+    });
+  }
+
+  function hideCart() { buyable = null; if (cartBtn) cartBtn.style.display = 'none'; cta.className = 'btn btn-aura'; }
+
+  async function offerCart(sel, qty, p) {
+    if (!cartBtn) return;
+    if (!p || !p.exact) { hideCart(); return; }
+    var C = await ensureCartLib();
+    if (!C || !(await C.canBuy(SLUG, qty))) { hideCart(); return; }
+
+    var spec = {};
+    axesFor(sel.style).forEach(function (a) { spec[a[0]] = sel[a[0]]; });
+
+    buyable = { spec: spec, qty: qty, cents: p.cents };
+    cartBtn.textContent = 'Add to cart · ' + '$' + Math.round(p.cents / 100).toLocaleString('en-AU');
+    cartBtn.style.display = '';
+    cta.className = 'btn btn-ghost';           /* quote becomes the secondary action */
+  }
+
+  if (cartBtn) cartBtn.addEventListener('click', async function () {
+    if (!buyable) return;
+    var C = await ensureCartLib(); if (!C) return;
+    var r = C.add({
+      slug: SLUG, name: PRETTY, qty: buyable.qty,
+      price_cents: buyable.cents, spec: buyable.spec
+    });
+    if (!r.ok) { alert(r.error); return; }
+    cartBtn.textContent = 'Added ✓';
+    setTimeout(function () { location.href = 'cart.html'; }, 450);
+  });
 
   /* Style mode: (re)draw the selected style's own option axes. */
   function renderSubAxes(styleName) {
@@ -182,6 +235,7 @@
     noteEl.innerHTML = message + ' <a href="' + quoteHref(sel, qty) + '">Get a fast quote →</a>';
     cta.href = quoteHref(sel, qty);
     updateQuoteLinks(sel, qty);
+    hideCart();
   }
 
   /* Per-unit interpolation: price any quantity from the stored breaks.
@@ -269,6 +323,7 @@
     }
     cta.href = quoteHref(sel, qty, dollars);
     updateQuoteLinks(sel, qty);
+    offerCart(sel, qty, p);
   }
 
   host.addEventListener('click', function (e) {

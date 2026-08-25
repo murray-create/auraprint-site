@@ -3,13 +3,187 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Redirecting to Quote | Aura Print &amp; Promo</title>
-<meta name="robots" content="noindex">
-<meta http-equiv="refresh" content="0; url=quote.html">
-<link rel="canonical" href="quote.html">
-<script>location.replace('quote.html' + location.search);</script>
+<title>Your Order | Aura Print &amp; Promo</title>
+<meta name="description" content="Track your Aura Print order.">
+<meta name="robots" content="noindex,nofollow">
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/aura.css?v=20260720a">
+<link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+<style>
+.okbanner{background:#e4f2ea;color:#1f7a4c;border-radius:14px;padding:20px 22px;margin-bottom:22px;display:flex;gap:14px;align-items:flex-start}
+.okbanner .tick{width:34px;height:34px;border-radius:50%;background:#1f7a4c;color:#fff;display:flex;align-items:center;justify-content:center;flex:none;font-size:18px;font-weight:700}
+.okbanner h2{font-size:20px;margin-bottom:4px}
+.steps{list-style:none;margin-top:18px}
+.steps li{display:grid;grid-template-columns:30px 1fr;gap:14px;padding:13px 0;border-bottom:1px solid #ece6de;font-size:14.5px}
+.steps li:last-child{border-bottom:none}
+.steps .dot{width:26px;height:26px;border-radius:50%;background:#f4f0ea;border:1px solid #ece6de;display:flex;align-items:center;justify-content:center;font-size:11.5px;color:#6f6960}
+.steps li.done .dot{background:#e4f2ea;border-color:#e4f2ea;color:#1f7a4c}
+.steps li.now .dot{background:linear-gradient(100deg,#7C3AED,#EC4899 55%,#F97316);color:#fff;border-color:transparent}
+.steps b{display:block}
+.steps span{color:#6f6960;font-size:13.5px}
+.linerow{display:flex;justify-content:space-between;gap:16px;padding:12px 0;border-bottom:1px solid #ece6de;font-size:14.5px}
+.linerow:last-child{border-bottom:none}
+.linerow b{font-variant-numeric:tabular-nums;white-space:nowrap}
+.bankrow{display:flex;justify-content:space-between;padding:9px 0;border-bottom:1px dashed #ece6de;font-size:15px}
+.bankrow:last-child{border-bottom:none}
+.tot{border-top:1px solid #ece6de;margin-top:8px;padding-top:14px;display:flex;justify-content:space-between;font-weight:700;font-size:17px}
+.tot b{font-family:'Archivo Black',sans-serif;font-size:24px}
+</style>
 </head>
 <body>
-<p>Redirecting to our <a href="quote.html">quote form</a>&hellip;</p>
+
+<div class="page-hero">
+  <div class="wrap">
+    <div class="crumbs"><a href="index.html">Home</a> / <b style="color:#fff">Your order</b></div>
+    <h1>YOUR <span class="grad-text">ORDER</span></h1>
+    <p id="heroSub">Looking up your order…</p>
+  </div>
+</div>
+
+<section class="pad">
+  <div class="wrap" id="wrap" style="max-width:760px"></div>
+</section>
+
+<script src="assets/config.js?v=20260825a"></script>
+<script src="assets/aura-cart.js?v=20260825a"></script>
+<script>
+(function(){
+  var C = window.AuraCart, CFG = window.AURA_CONFIG||{}, BIZ = CFG.business||{};
+  var wrap = document.getElementById('wrap'), sub = document.getElementById('heroSub');
+  var qs = new URLSearchParams(location.search);
+  var token = qs.get('t') || '';
+  var justPaid = qs.get('paid') === '1';
+
+  function shell(html){ wrap.innerHTML = html; }
+
+  if(!token){
+    /* order.html used to redirect to the quote form; keep that door open. */
+    sub.textContent = 'We could not find an order reference in that link.';
+    shell('<div class="panel" style="text-align:center;padding:40px 24px">' +
+      '<h2 style="font-size:24px;margin-bottom:10px">No order to show</h2>' +
+      '<p style="color:#6f6960;max-width:46ch;margin:0 auto 22px">Open the link from your confirmation email to track a job. ' +
+      'After something we do not sell online yet? Ask for a quote and we will come back within the hour.</p>' +
+      '<a class="btn btn-aura" href="quote.html">Get a quote &rarr;</a> ' +
+      '<a class="btn btn-ghost" href="print.html" style="margin-left:8px">Browse printing</a></div>');
+    return;
+  }
+
+  async function load(){
+    var r, d;
+    try{
+      r = await fetch(CFG.supabaseUrl + '/rest/v1/rpc/get_order_by_token', {
+        method:'POST',
+        headers:{ 'Content-Type':'application/json', apikey:CFG.supabaseKey, Authorization:'Bearer '+CFG.supabaseKey },
+        body: JSON.stringify({ p_token: token })
+      });
+      d = await r.json();
+    }catch(e){ d = null; }
+
+    if(!d || !d.order_number){
+      sub.textContent = 'That order link did not work.';
+      shell('<div class="panel" style="text-align:center;padding:40px 24px">' +
+        '<h2 style="font-size:24px;margin-bottom:10px">We could not find that order</h2>' +
+        '<p style="color:#6f6960;max-width:46ch;margin:0 auto 22px">The link may have been mistyped. ' +
+        'Email admin@auraprint.com.au and we will sort it out.</p>' +
+        '<a class="btn btn-ghost" href="index.html">Back to the site</a></div>');
+      return;
+    }
+
+    var paid = d.invoice && d.invoice.status === 'paid';
+    var inProd = ['in_production','shipped','completed'].indexOf(d.status) > -1;
+    var shipped = !!d.tracking;
+    sub.textContent = 'Order ' + d.order_number + (d.contact_name ? ' for ' + d.contact_name : '');
+
+    var banner = '';
+    if(justPaid || paid){
+      banner = '<div class="okbanner"><div class="tick">&#10003;</div><div>' +
+        '<h2>Payment received</h2>' +
+        '<p>Thanks. Your job is in the queue and we have emailed your receipt' +
+        (d.invoice ? ' and tax invoice ' + C.esc(d.invoice.invoice_number) : '') + '.</p></div></div>';
+    }
+
+    var steps = [
+      { on: true,    t:'Order placed',  s:'Order ' + d.order_number + (d.invoice ? ' · invoice ' + d.invoice.invoice_number : '') },
+      { on: paid,    t:'Payment',       s: paid ? 'Received in full' : 'Waiting on payment — nothing prints until it clears' },
+      { on: inProd,  t:'In production', s: inProd ? 'On press now' : 'Starts as soon as payment and artwork are sorted' },
+      { on: shipped, t:'Dispatched',    s: shipped ? (C.esc(d.tracking.carrier||'Courier') + ' · ' + C.esc(d.tracking.number)) : 'We email tracking the moment it leaves' }
+    ];
+    var cur = steps.findIndex(function(x){ return !x.on; });
+
+    var lines = (d.items||[]).map(function(i){
+      return '<div class="linerow"><span>' + C.esc(i.description) + ' &times; ' +
+        Number(i.qty).toLocaleString('en-AU') + '</span><b>' + C.money(i.price_inc_cents) + '</b></div>';
+    }).join('');
+
+    var payBlock = '';
+    if(!paid){
+      payBlock = '<div class="panel" style="margin-top:18px">' +
+        '<h2 style="font-size:20px;margin-bottom:4px">Still to pay</h2>' +
+        '<p style="color:#6f6960;font-size:14px;margin-bottom:14px">' + C.money(d.total_inc_cents) +
+          ' — reference <b>' + C.esc(d.order_number) + '</b></p>' +
+        (d.invoice && d.invoice.payment_link_url
+          ? '<a class="btn btn-aura" href="' + C.esc(d.invoice.payment_link_url) + '" style="width:100%;text-align:center">Pay by card &rarr;</a>'
+          : '<button class="btn btn-aura" id="payNow" style="width:100%">Pay by card &rarr;</button>') +
+        '<div style="margin-top:18px">' +
+          (BIZ.payid ? '<div class="bankrow"><span>PayID</span><b>' + C.esc(BIZ.payid) + '</b></div>' : '') +
+          '<div class="bankrow"><span>Account name</span><b>' + C.esc(BIZ.accName||'Aura Print') + '</b></div>' +
+          (BIZ.bsb ? '<div class="bankrow"><span>BSB</span><b>' + C.esc(BIZ.bsb) + '</b></div>' : '') +
+          (BIZ.acc ? '<div class="bankrow"><span>Account number</span><b>' + C.esc(BIZ.acc) + '</b></div>' : '') +
+          '<div class="bankrow"><span>Reference</span><b>' + C.esc(d.order_number) + '</b></div>' +
+        '</div></div>';
+    }
+
+    var sh = d.ship || {};
+    shell(banner +
+      '<div class="panel">' +
+        '<h2 style="font-size:20px;margin-bottom:2px">' + C.esc(d.order_number) + '</h2>' +
+        '<p style="color:#6f6960;font-size:14px">Placed ' +
+          new Date(d.placed_at).toLocaleDateString('en-AU',{day:'numeric',month:'long',year:'numeric'}) + '</p>' +
+        '<ul class="steps">' + steps.map(function(x,i){
+          return '<li class="' + (x.on ? 'done' : (i===cur ? 'now' : '')) + '">' +
+            '<span class="dot">' + (x.on ? '&#10003;' : i+1) + '</span>' +
+            '<span><b>' + x.t + '</b><span>' + x.s + '</span></span></li>';
+        }).join('') + '</ul>' +
+      '</div>' +
+
+      '<div class="panel" style="margin-top:18px">' +
+        '<h2 style="font-size:20px;margin-bottom:10px">What we are printing</h2>' + lines +
+        '<div class="tot"><span>Total (inc GST &amp; delivery)</span><b>' + C.money(d.total_inc_cents) + '</b></div>' +
+        (d.invoice ? '<p style="margin-top:14px;font-size:14px"><a href="invoice.html?t=' +
+          encodeURIComponent(d.invoice.access_token) + '">View your tax invoice &rarr;</a></p>' : '') +
+      '</div>' +
+
+      (sh.line1 ? '<div class="panel" style="margin-top:18px">' +
+        '<h2 style="font-size:20px;margin-bottom:8px">Delivering to</h2>' +
+        '<p style="font-size:15px;line-height:1.7">' + C.esc(sh.name||'') + '<br>' + C.esc(sh.line1) +
+        (sh.line2 ? '<br>' + C.esc(sh.line2) : '') + '<br>' +
+        C.esc(sh.suburb) + ' ' + C.esc(sh.state) + ' ' + C.esc(sh.postcode) + '</p></div>' : '') +
+
+      (shipped && d.tracking.url ? '<div class="panel" style="margin-top:18px">' +
+        '<h2 style="font-size:20px;margin-bottom:8px">Tracking</h2>' +
+        '<p style="font-size:15px">' + C.esc(d.tracking.carrier||'Courier') + ' &middot; <b>' + C.esc(d.tracking.number) + '</b><br>' +
+        '<a href="' + C.esc(d.tracking.url) + '" target="_blank" rel="noopener">Track this delivery &rarr;</a></p></div>' : '') +
+
+      payBlock +
+
+      '<p style="text-align:center;color:#948d83;font-size:13.5px;margin-top:24px">' +
+        'Questions about this job? Email admin@auraprint.com.au or call 1300 291 277 and quote ' + C.esc(d.order_number) + '.</p>');
+
+    var pn = document.getElementById('payNow');
+    if(pn) pn.addEventListener('click', async function(){
+      pn.disabled = true; pn.textContent = 'Opening secure payment…';
+      var res = await C.callFn('shop-pay', { order_token: token });
+      if(!res.ok){ pn.disabled=false; pn.textContent='Pay by card →'; alert(res.error); return; }
+      if(res.data.paid){ location.reload(); return; }
+      location.href = res.data.url;
+    });
+
+    if(paid) C.clearOrder();
+  }
+
+  load();
+})();
+</script>
+<script src="assets/aura.js?v=20260728c"></script>
 </body>
 </html>

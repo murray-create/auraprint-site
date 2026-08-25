@@ -153,13 +153,56 @@
              : 'That exact combination is a custom quote. Send it through and we’ll price it fast.') + '</div>' +
       '<div id="dispatch" style="font-size:13px;color:#6b6560;margin-top:8px">' + dispatchNote() + '</div>' +
       '<div style="display:flex;gap:12px;margin-top:18px;flex-wrap:wrap">' +
+        (row ? '<button class="btn btn-aura" id="cartCta" style="flex:1;min-width:220px;display:none;border:none;cursor:pointer">Add to cart &middot; ' + money(row) + '</button>' : '') +
         '<a class="btn btn-aura" id="orderCta" href="' + quoteHref() + (row ? '&price=' + Math.round(row / 100) : '') + '" style="flex:1;text-align:center;min-width:220px">Get a quote &amp; upload artwork &rarr;</a>' +
       '</div>' +
       '<p style="font-size:12.5px;color:#8a847d;margin-top:12px">Prices are read live from our current supplier rates and include GST and standard delivery. 90 x 55mm cards. You approve a digital proof before anything prints.</p>';
+    maybeShowCart(row);
+  }
+
+  /* ---------- Buy online ----------------------------------------------
+     render() rebuilds the whole panel, so the button is drawn hidden and
+     revealed only once the launch rules confirm this product is open. Fail
+     closed: if the rules cannot be read, no Buy button appears. */
+  function ensureCartLib() {
+    if (window.AuraCart) return Promise.resolve(window.AuraCart);
+    return new Promise(function (res) {
+      var t = document.createElement('script');
+      t.src = 'assets/aura-cart.js?v=20260825a';
+      t.onload = function () { res(window.AuraCart); };
+      t.onerror = function () { res(null); };
+      document.head.appendChild(t);
+    });
+  }
+
+  async function maybeShowCart(row) {
+    if (!row) return;
+    var btn = host.querySelector('#cartCta'); if (!btn) return;
+    var C = await ensureCartLib();
+    if (!C || !(await C.canBuy('business-cards', Number(sel.qty)))) return;
+    /* the panel may have re-rendered while we were waiting */
+    btn = host.querySelector('#cartCta'); if (!btn) return;
+    btn.style.display = '';
+    var q = host.querySelector('#orderCta'); if (q) q.className = 'btn btn-ghost';
+  }
+
+  async function addBcToCart(btn) {
+    var row = PRICE[key(sel)]; if (!row) return;
+    var C = await ensureCartLib(); if (!C) return;
+    var r = C.add({
+      slug: 'business-cards', name: 'Business Cards', qty: Number(sel.qty),
+      price_cents: row, stock: sel.stock, finish: sel.finish,
+      corners: sel.corners, sides: sel.sides, turnaround: sel.turnaround
+    });
+    if (!r.ok) { alert(r.error); return; }
+    btn.textContent = 'Added \u2713';
+    setTimeout(function () { location.href = 'cart.html'; }, 450);
   }
 
   // event delegation (host persists across re-renders)
   host.addEventListener('click', function (e) {
+    var cartHit = e.target.closest ? e.target.closest('#cartCta') : null;
+    if (cartHit) { addBcToCart(cartHit); return; }
     var btn = e.target.closest ? e.target.closest('.opt') : null; if (!btn) return;
     var group = btn.closest('.opts'); if (!group) return;
     var dim = group.getAttribute('data-dim'), val = btn.getAttribute('data-val');

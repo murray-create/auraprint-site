@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en-AU">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Checkout | Aura Print &amp; Promo</title>
+<meta name="description" content="Secure checkout. Pay by card, PayID or bank transfer.">
+<meta name="robots" content="noindex,nofollow">
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/aura.css?v=20260720a">
+<link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+<style>
+.rail{display:flex;gap:6px;overflow-x:auto;margin-bottom:26px;border-bottom:1px solid #ece6de}
+.rstep{display:flex;align-items:center;gap:9px;padding:14px 16px 12px;border-bottom:3px solid transparent;white-space:nowrap;font-size:14px;font-weight:600;color:#948d83}
+.rstep .n{width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11.5px;background:#ece6de;color:#6f6960;flex:none}
+.rstep.on{color:#0F0F10;border-bottom-color:#EC4899}
+.rstep.on .n{background:linear-gradient(100deg,#7C3AED,#EC4899 55%,#F97316);color:#fff}
+.rstep.done .n{background:#e4f2ea;color:#1f7a4c}
+.cogrid{display:grid;grid-template-columns:1fr 330px;gap:26px;align-items:start}
+@media(max-width:900px){.cogrid{grid-template-columns:1fr}}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media(max-width:620px){.grid2{grid-template-columns:1fr}}
+.full{grid-column:1/-1}
+.sumrow{display:flex;justify-content:space-between;padding:8px 0;font-size:14.5px;color:#6f6960}
+.sumrow b{color:#0F0F10;font-variant-numeric:tabular-nums}
+.sumrow.tot{border-top:1px solid #ece6de;margin-top:8px;padding-top:14px;font-size:16px;color:#0F0F10;font-weight:700}
+.sumrow.tot b{font-family:'Archivo Black',sans-serif;font-size:24px}
+.choice{border:2px solid #ece6de;border-radius:14px;padding:16px 18px;display:grid;grid-template-columns:22px 1fr;gap:14px;cursor:pointer;margin-bottom:12px}
+.choice:hover{border-color:#c9c1b6}
+.choice.sel{border-color:#EC4899;background:rgba(236,72,153,.045)}
+.choice.off{opacity:.45;cursor:not-allowed}
+.radio{width:20px;height:20px;border-radius:50%;border:2px solid #ece6de;margin-top:2px;position:relative;flex:none}
+.choice.sel .radio{border-color:#EC4899}
+.choice.sel .radio::after{content:"";position:absolute;inset:3px;border-radius:50%;background:linear-gradient(100deg,#7C3AED,#EC4899 55%,#F97316)}
+.choice h4{font-size:15.5px;font-family:'Inter',sans-serif;font-weight:700;letter-spacing:0;display:flex;gap:9px;align-items:center;flex-wrap:wrap}
+.choice p{font-size:13.5px;color:#6f6960;margin-top:5px}
+.pill{font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;padding:3px 9px;border-radius:6px;font-weight:700}
+.pill.fast{background:#e4f2ea;color:#1f7a4c}
+.pill.safe{background:#f8eeda;color:#9a6208}
+.artitem{border:1px solid #ece6de;border-radius:14px;padding:18px;margin-bottom:14px}
+.artitem h3{font-size:16px;font-family:'Inter',sans-serif;font-weight:700;letter-spacing:0}
+.artitem .spec{color:#6f6960;font-size:13.5px;margin:3px 0 14px}
+.drop{border:2px dashed #ece6de;border-radius:12px;padding:22px;text-align:center;background:#faf8f5}
+.drop input{display:block;margin:0 auto 8px}
+.drop .types{font-size:12px;color:#948d83;margin-top:8px;letter-spacing:.04em}
+.filed{display:flex;gap:10px;align-items:center;background:#e4f2ea;color:#1f7a4c;border-radius:10px;padding:11px 14px;font-size:14px;font-weight:600;margin-top:10px}
+.bankrow{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px dashed #ece6de;font-size:15px}
+.bankrow:last-child{border-bottom:none}
+.bankrow b{font-variant-numeric:tabular-nums}
+.notice{background:#f8eeda;color:#9a6208;border-radius:10px;padding:13px 15px;font-size:13.5px;margin-top:14px}
+.err{background:#f8e4e1;color:#a8342b;border-radius:10px;padding:13px 15px;font-size:14px;margin:14px 0;display:none}
+.terms{display:flex;gap:11px;align-items:flex-start;margin-top:20px;font-size:13.5px;color:#6f6960;cursor:pointer}
+.terms input{width:18px;height:18px;margin-top:2px;accent-color:#EC4899;flex:none}
+.busy{opacity:.6;pointer-events:none}
+</style>
+</head>
+<body>
+
+<div class="page-hero">
+  <div class="wrap">
+    <div class="crumbs"><a href="cart.html">Cart</a> / <b style="color:#fff">Checkout</b></div>
+    <h1>CHECK<span class="grad-text">OUT</span></h1>
+    <p>Payment in full before production, as per our trade terms.</p>
+  </div>
+</div>
+
+<section class="pad">
+  <div class="wrap">
+    <div class="rail" id="rail"></div>
+    <div class="err" id="err"></div>
+    <div id="body"></div>
+  </div>
+</section>
+
+<script src="assets/config.js?v=20260825a"></script>
+<script src="assets/aura-cart.js?v=20260825a"></script>
+<script>
+(function(){
+  var C = window.AuraCart, BIZ = (window.AURA_CONFIG||{}).business || {};
+  var railEl = document.getElementById('rail'),
+      bodyEl = document.getElementById('body'),
+      errEl  = document.getElementById('err');
+  var STEPS = ['Your details','Artwork','Payment'];
+  var step = 0;
+
+  function fail(msg){ errEl.textContent = msg; errEl.style.display='block'; window.scrollTo({top:0,behavior:'smooth'}); }
+  function clearErr(){ errEl.style.display='none'; }
+
+  function drawRail(){
+    railEl.innerHTML = STEPS.map(function(t,i){
+      var cls = i===step ? 'on' : (i<step ? 'done' : '');
+      return '<div class="rstep '+cls+'"><span class="n">'+(i<step?'&#10003;':i+1)+'</span>'+t+'</div>';
+    }).join('');
+  }
+
+  function summary(lines, total){
+    var ex = Math.round(total/1.1);
+    return '<div class="panel">' +
+      lines.map(function(l){
+        return '<div class="sumrow"><span>'+C.esc(l.name)+' &times; '+Number(l.qty).toLocaleString('en-AU')+'</span><b>'+C.money(l.price_cents)+'</b></div>';
+      }).join('') +
+      '<div class="sumrow"><span>GST included</span><b>'+C.money(total-ex)+'</b></div>' +
+      '<div class="sumrow"><span>Delivery</span><b>Included</b></div>' +
+      '<div class="sumrow tot"><span>Total</span><b>'+C.money(total)+'</b></div>' +
+      '<p style="font-size:12.5px;color:#948d83;margin-top:12px">ABN 75 642 501 493. A tax invoice is emailed as soon as your order is placed.</p>' +
+    '</div>';
+  }
+
+  /* ---------------- step 1: details ---------------- */
+  function renderDetails(){
+    var list = C.items();
+    if(!list.length){ location.replace('cart.html'); return; }
+    var total = C.total();
+
+    bodyEl.innerHTML =
+    '<div class="cogrid"><div class="panel">' +
+      '<h2 style="font-size:22px;margin-bottom:4px">Where is it going?</h2>' +
+      '<p style="color:#6f6960;font-size:14px;margin-bottom:18px">No account needed. We email you a link to track the job.</p>' +
+      '<div class="grid2">' +
+        '<div class="field"><label>Your name *</label><input type="text" id="f_name" required></div>' +
+        '<div class="field"><label>Business (optional)</label><input type="text" id="f_company"></div>' +
+        '<div class="field"><label>Email *</label><input type="email" id="f_email" required></div>' +
+        '<div class="field"><label>Phone</label><input type="tel" id="f_phone"></div>' +
+        '<div class="field full"><label>Street address *</label><input type="text" id="f_line1" required></div>' +
+        '<div class="field"><label>Suburb *</label><input type="text" id="f_suburb" required></div>' +
+        '<div class="field"><label>State *</label><select id="f_state">' +
+          ['QLD','NSW','VIC','SA','WA','TAS','NT','ACT'].map(function(s){return '<option>'+s+'</option>';}).join('') +
+        '</select></div>' +
+        '<div class="field"><label>Postcode *</label><input type="text" id="f_postcode" inputmode="numeric" maxlength="4" required></div>' +
+        '<div class="field"><label>Delivery notes (optional)</label><input type="text" id="f_notes" placeholder="Leave at reception"></div>' +
+      '</div>' +
+      '<label class="terms"><input type="checkbox" id="f_terms">' +
+        '<span>I have checked my artwork and agree to the <a href="trade-terms.html" target="_blank">trade terms</a> and ' +
+        '<a href="refund-policy.html" target="_blank">refund policy</a>. Custom printed work cannot be cancelled once it goes to press.</span>' +
+      '</label>' +
+      '<button class="btn btn-aura" id="place" style="width:100%;margin-top:22px">Continue to artwork &rarr;</button>' +
+    '</div>' + summary(list, total) + '</div>';
+
+    document.getElementById('place').addEventListener('click', placeOrder);
+  }
+
+  async function placeOrder(){
+    clearErr();
+    var v = function(id){ return (document.getElementById(id).value||'').trim(); };
+    if(!v('f_name') || !v('f_email')) return fail('Please enter your name and email.');
+    if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(v('f_email'))) return fail('That email address does not look right.');
+    if(!v('f_line1') || !v('f_suburb')) return fail('Please enter your full delivery address.');
+    if(!/^\d{4}$/.test(v('f_postcode'))) return fail('Please enter a valid 4-digit postcode.');
+    if(!document.getElementById('f_terms').checked) return fail('Please tick the box to accept the trade terms.');
+
+    var list = C.items();
+    var btn = document.getElementById('place');
+    btn.disabled = true; btn.textContent = 'Placing your order…';
+    document.body.classList.add('busy');
+
+    var payload = {
+      contact:{ name:v('f_name'), email:v('f_email'), phone:v('f_phone'), company:v('f_company') },
+      ship:{ line1:v('f_line1'), suburb:v('f_suburb'), state:document.getElementById('f_state').value, postcode:v('f_postcode') },
+      notes:v('f_notes'),
+      items: list.map(function(it){
+        return { product_slug:it.slug, description:it.name, qty:it.qty, spec:it.spec||{},
+                 stock:it.stock, finish:it.finish, corners:it.corners, sides:it.sides,
+                 turnaround:it.turnaround, artwork_mode:'needs_proof' };
+      })
+    };
+
+    var res = await C.callFn('shop-checkout', payload);
+    document.body.classList.remove('busy');
+    btn.disabled = false; btn.textContent = 'Continue to artwork →';
+
+    if(!res.ok) return fail(res.error);
+
+    C.setOrder({
+      order_number: res.data.order_number,
+      order_token:  res.data.order_token,
+      invoice_number: res.data.invoice_number,
+      invoice_token: res.data.invoice_token,
+      total_inc_cents: res.data.total_inc_cents,
+      email: v('f_email'),
+      lines: list.map(function(it,i){ return { item_no:i+1, name:it.name, qty:it.qty,
+                price_cents:it.price_cents, spec:C.specLine(it), uploaded:null, mode:'needs_proof' }; })
+    });
+    C.clear();
+    step = 1; draw();
+  }
+
+  /* ---------------- step 2: artwork ---------------- */
+  function renderArtwork(){
+    var o = C.order();
+    if(!o) { step=0; return draw(); }
+
+    bodyEl.innerHTML =
+    '<div class="cogrid"><div class="panel">' +
+      '<h2 style="font-size:22px;margin-bottom:4px">Your artwork</h2>' +
+      '<p style="color:#6f6960;font-size:14px;margin-bottom:18px">Order <b>'+C.esc(o.order_number)+'</b> is saved. ' +
+        'Upload a print-ready PDF for each item. Working in Canva or Word? Export as PDF &mdash; ' +
+        '<a href="art-setup.html" target="_blank">our guide shows you how</a>.</p>' +
+      o.lines.map(function(l,i){
+        return '<div class="artitem">' +
+          '<h3>'+C.esc(l.name)+'</h3><div class="spec">'+C.esc(l.spec)+' &middot; '+Number(l.qty).toLocaleString('en-AU')+'</div>' +
+          (l.uploaded
+            ? '<div class="filed">&#10003; '+C.esc(l.uploaded)+' uploaded</div>'
+            : '<div class="drop"><input type="file" accept="application/pdf" id="file_'+i+'">' +
+              '<button class="btn btn-ghost" style="padding:9px 20px;font-size:14px" data-up="'+i+'">Upload this PDF</button>' +
+              '<div class="types">PDF ONLY &middot; UP TO 50MB &middot; 3MM BLEED &middot; CMYK</div>' +
+              '<div style="font-size:13px;color:#948d83;margin-top:8px" id="msg_'+i+'"></div></div>') +
+          '<div style="margin-top:14px">' +
+            '<div class="choice '+(l.mode==='print_ready'?'sel':'')+'" data-mode="print_ready" data-i="'+i+'">' +
+              '<span class="radio"></span><div><h4>My file is print ready <span class="pill fast">Fastest</span></h4>' +
+              '<p>Goes straight to press once payment clears. You are confirming the artwork is correct, spelling included.</p></div></div>' +
+            '<div class="choice '+(l.mode==='needs_proof'?'sel':'')+'" data-mode="needs_proof" data-i="'+i+'">' +
+              '<span class="radio"></span><div><h4>Send me a proof first <span class="pill safe">Adds a step</span></h4>' +
+              '<p>We prepare a proof and email you a link. Nothing prints until you approve it.</p></div></div>' +
+          '</div>' +
+        '</div>';
+      }).join('') +
+      '<button class="btn btn-aura" id="toPay" style="width:100%;margin-top:8px">Continue to payment &rarr;</button>' +
+      '<p style="font-size:13px;color:#948d83;margin-top:12px;text-align:center">' +
+        'No artwork handy? Continue and email it to admin@auraprint.com.au quoting '+C.esc(o.order_number)+'.</p>' +
+    '</div>' + summary(o.lines, o.total_inc_cents) + '</div>';
+
+    bodyEl.querySelectorAll('[data-up]').forEach(function(b){
+      b.addEventListener('click', function(){ upload(+b.dataset.up, b); });
+    });
+    bodyEl.querySelectorAll('.choice').forEach(function(c){
+      c.addEventListener('click', function(){
+        var o2 = C.order(); o2.lines[+c.dataset.i].mode = c.dataset.mode; C.setOrder(o2); renderArtwork();
+      });
+    });
+    document.getElementById('toPay').addEventListener('click', function(){ step=2; draw(); });
+  }
+
+  async function upload(i, btn){
+    clearErr();
+    var o = C.order();
+    var input = document.getElementById('file_'+i);
+    var msg = document.getElementById('msg_'+i);
+    var f = input && input.files && input.files[0];
+    if(!f){ msg.textContent = 'Choose a PDF first.'; return; }
+    if(f.type !== 'application/pdf'){ msg.textContent = 'Artwork must be a print-ready PDF.'; return; }
+    if(f.size > 50*1024*1024){ msg.textContent = 'That file is over 50 MB. Please email it instead.'; return; }
+
+    btn.disabled = true; msg.textContent = 'Uploading…';
+
+    var sign = await C.callFn('shop-artwork', {
+      action:'sign', order_token:o.order_token, item_no:o.lines[i].item_no,
+      filename:f.name, size_bytes:f.size });
+    if(!sign.ok){ btn.disabled=false; msg.textContent=''; return fail(sign.error); }
+
+    try{
+      var put = await fetch(sign.data.upload_url, { method:'PUT', headers:{'Content-Type':'application/pdf'}, body:f });
+      if(!put.ok) throw new Error('upload ' + put.status);
+    }catch(e){
+      btn.disabled=false; msg.textContent=''; return fail('The upload did not finish. Please try again.');
+    }
+
+    var ok = await C.callFn('shop-artwork', {
+      action:'confirm', order_token:o.order_token, item_no:o.lines[i].item_no,
+      path:sign.data.path, filename:f.name, size_bytes:f.size });
+    btn.disabled = false;
+    if(!ok.ok){ msg.textContent=''; return fail(ok.error); }
+
+    o = C.order(); o.lines[i].uploaded = f.name; C.setOrder(o);
+    renderArtwork();
+  }
+
+  /* ---------------- step 3: payment ---------------- */
+  function renderPay(){
+    var o = C.order();
+    if(!o) { step=0; return draw(); }
+    var ref = o.order_number;
+
+    bodyEl.innerHTML =
+    '<div class="cogrid"><div class="panel">' +
+      '<h2 style="font-size:22px;margin-bottom:4px">Payment</h2>' +
+      '<p style="color:#6f6960;font-size:14px;margin-bottom:18px">Nothing goes to press until payment clears.</p>' +
+
+      '<div class="panel" style="padding:18px;margin-bottom:14px;border:2px solid #ece6de">' +
+        '<h4 style="font-size:16px;font-family:Inter,sans-serif;font-weight:700">Pay by card</h4>' +
+        '<p style="font-size:13.5px;color:#6f6960;margin:5px 0 14px">Visa, Mastercard, Amex, Apple Pay and Google Pay. Clears instantly and your job starts straight away.</p>' +
+        '<button class="btn btn-aura" id="payCard" style="width:100%">Pay '+C.money(o.total_inc_cents)+' by card &rarr;</button>' +
+        '<p style="font-size:12px;color:#948d83;margin-top:10px;text-align:center">Card details go straight to Stripe. Aura never sees or stores them.</p>' +
+      '</div>' +
+
+      '<div class="panel" style="padding:18px;margin-bottom:14px;border:2px solid #ece6de">' +
+        '<h4 style="font-size:16px;font-family:Inter,sans-serif;font-weight:700">PayID <span class="pill fast" style="margin-left:6px">Minutes</span></h4>' +
+        '<div style="margin-top:10px">' +
+          (BIZ.payid ? '<div class="bankrow"><span>PayID</span><b>'+C.esc(BIZ.payid)+'</b></div>' : '') +
+          '<div class="bankrow"><span>Name</span><b>'+C.esc(BIZ.accName||'Aura Print')+'</b></div>' +
+          '<div class="bankrow"><span>Amount</span><b>'+C.money(o.total_inc_cents)+'</b></div>' +
+          '<div class="bankrow"><span>Reference</span><b>'+C.esc(ref)+'</b></div>' +
+        '</div>' +
+      '</div>' +
+
+      '<div class="panel" style="padding:18px;border:2px solid #ece6de">' +
+        '<h4 style="font-size:16px;font-family:Inter,sans-serif;font-weight:700">Bank transfer <span class="pill safe" style="margin-left:6px">1&ndash;2 days</span></h4>' +
+        '<div style="margin-top:10px">' +
+          '<div class="bankrow"><span>Account name</span><b>'+C.esc(BIZ.accName||'Aura Print')+'</b></div>' +
+          (BIZ.bsb ? '<div class="bankrow"><span>BSB</span><b>'+C.esc(BIZ.bsb)+'</b></div>' : '') +
+          (BIZ.acc ? '<div class="bankrow"><span>Account number</span><b>'+C.esc(BIZ.acc)+'</b></div>' : '') +
+          '<div class="bankrow"><span>Amount</span><b>'+C.money(o.total_inc_cents)+'</b></div>' +
+          '<div class="bankrow"><span>Reference</span><b>'+C.esc(ref)+'</b></div>' +
+        '</div>' +
+        '<div class="notice">Use the reference so we can match your payment. Your order holds until the funds land, then we email you and start the job. If it is urgent, email your remittance to admin@auraprint.com.au and we will release it early.</div>' +
+      '</div>' +
+
+      '<a class="btn btn-ghost" href="order.html?t='+encodeURIComponent(o.order_token)+'" style="width:100%;text-align:center;margin-top:16px">I have paid by PayID or transfer &rarr;</a>' +
+    '</div>' + summary(o.lines, o.total_inc_cents) + '</div>';
+
+    document.getElementById('payCard').addEventListener('click', payCard);
+  }
+
+  async function payCard(){
+    clearErr();
+    var o = C.order(), btn = document.getElementById('payCard');
+    btn.disabled = true; btn.textContent = 'Opening secure payment…';
+    var res = await C.callFn('shop-pay', { order_token:o.order_token });
+    if(!res.ok){ btn.disabled=false; btn.textContent='Pay by card →'; return fail(res.error); }
+    if(res.data.paid){ location.href = 'order.html?t='+encodeURIComponent(o.order_token); return; }
+    location.href = res.data.url;
+  }
+
+  /* ---------------- router ---------------- */
+  function draw(){
+    clearErr(); drawRail();
+    if(step===0) renderDetails();
+    else if(step===1) renderArtwork();
+    else renderPay();
+    window.scrollTo({top:0,behavior:'smooth'});
+  }
+
+  /* resume a checkout that was already placed */
+  if(C.order() && !C.items().length) step = 1;
+  draw();
+})();
+</script>
+<script src="assets/aura.js?v=20260728c"></script>
+</body>
+</html>
