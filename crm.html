@@ -145,7 +145,7 @@ tr.clk{cursor:pointer}tr.clk:hover td{background:var(--soft)}
 .b-sent{background:#e8f4ff;color:#1673b6}
 .b-api{background:var(--pink-soft);color:var(--pink-ink)}.b-manual{background:var(--warn-soft);color:var(--warn)}
 .b-new{background:#eef;color:#4a4a8a}.b-contacted{background:var(--warn-soft);color:var(--warn)}.b-won,.b-quoted{background:var(--good-soft);color:var(--good)}.b-lost{background:var(--bad-soft);color:var(--bad)}
-#leadFilter .chip,#quoteFilter .chip{cursor:pointer;border:1px solid var(--line);background:#fff;color:var(--muted);margin-top:0}#leadFilter .chip.on,#quoteFilter .chip.on{background:var(--pink-soft);color:var(--pink-ink);border-color:transparent}
+#leadFilter .chip,#quoteFilter .chip,#seoFilter .chip{cursor:pointer;border:1px solid var(--line);background:#fff;color:var(--muted);margin-top:0}#leadFilter .chip.on,#quoteFilter .chip.on,#seoFilter .chip.on{background:var(--pink-soft);color:var(--pink-ink);border-color:transparent}
 #quoteFilter .chip.lost.on{background:var(--bad-soft);color:var(--bad)}
 #quoteFilter .chip.done.on{background:var(--blue-soft);color:#1877c9}
 /* Multi-line line-item descriptions: first line is the item name, the rest are specs. */
@@ -480,6 +480,7 @@ input.nqqty{width:74px;text-align:right;border:1px solid var(--line);border-radi
     <div class="nav" data-v="orgs"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 21h18"/><path d="M5 21V7l7-4 7 4v14"/><path d="M9 9h.01M15 9h.01M9 13h.01M15 13h.01M9 17h.01M15 17h.01"/></svg>Organisations<span class="pill" id="navOrgs">3</span></div>
     <div class="nav" data-v="contacts"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 4-6 8-6s8 2 8 6"/></svg>Contacts<span class="pill" id="navContacts">7</span></div>
     <div class="nav" data-v="leads"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 5h18v14H3z"/><path d="M3 7l9 6 9-6"/></svg>Leads<span class="pill" id="navLeads">0</span></div>
+    <div class="nav" data-v="search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4"/></svg>Search</div>
     <div class="nav open" data-g="sales" data-v="sales"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19V5M4 19h16M8 15l3-4 3 2 4-6"/></svg>Quotes &amp; Orders<svg class="caret" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg></div>
     <div class="subnav show" data-sub="sales"><div class="sub active" data-v="sales" data-sf="quotes">Quotes</div><div class="sub" data-v="sales" data-sf="orders">Orders</div><div class="sub" data-v="sales" data-sf="invoices">Invoices</div></div>
     <div class="nav" data-g="products" data-v="products"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7l9-4 9 4-9 4-9-4z"/><path d="M3 7v10l9 4 9-4V7"/><path d="M12 11v10"/></svg>Products<span class="pill">1.6k</span></div>
@@ -562,6 +563,21 @@ input.nqqty{width:74px;text-align:right;border:1px solid var(--line);border-radi
           <div class="filterbar" id="leadFilter" style="margin:10px 0 4px"></div>
           <table><thead><tr><th>Received</th><th>Name</th><th>Enquiry</th><th class="num">Qty</th><th>Source</th><th>Status</th></tr></thead><tbody id="leadTable"></tbody></table>
           <div class="note">Website enquiries land here first. Open one and use “Convert to quote” to raise a priced quote from it.</div></div>
+      </section>
+
+      <!-- SEARCH (Google Search Console) -->
+      <section class="view" id="v-search">
+        <div class="tiles" id="seoTiles"></div>
+        <div class="card">
+          <h3 id="seoHead">What people search to find Aura</h3>
+          <div class="sub" id="seoSub">Straight from Google Search Console.</div>
+          <div class="filterbar" id="seoFilter" style="margin:10px 0 4px"></div>
+          <div style="overflow-x:auto"><table>
+            <thead><tr><th id="seoCol1">Search term</th><th class="num">Clicks</th><th class="num">Change</th><th class="num">Shown</th><th class="num">Click rate</th><th class="num">Position</th></tr></thead>
+            <tbody id="seoTable"><tr><td colspan="6" style="padding:26px 0;color:var(--muted)">Loading from Google…</td></tr></tbody>
+          </table></div>
+          <div class="note" id="seoNote">Position is your average spot in Google&rsquo;s results. Anything sitting between 11 and 20 is stuck on page two, and lifting those is usually the cheapest win available.</div>
+        </div>
       </section>
 
       <!-- PRODUCTS -->
@@ -755,7 +771,7 @@ const contactsOfOrg=id=>D.contacts.filter(c=>c.orgId===id);
 const quotesOfContact=n=>D.quotes.filter(q=>q.contact===n);
 const quotesOfOrg=id=>D.quotes.filter(q=>orgOfQuote(q)===id);
 const STAGES=['quote','order','invoice','paid'];
-const titles={dash:['Dashboard',"Here's how the business is tracking today."],contacts:['Contacts','Everything about a customer in one place.'],leads:['Leads','Website enquiries from your product pages.'],orgs:['Organisations','Companies you sell to, and the people at each.'],sales:['Quotes & Orders','Your pipeline from request to fulfilment.'],quote:['Quote','Line items, status and the convert flow.'],products:['Products','Every product you sell, priced live.'],suppliers:['Suppliers','Your supply, and how each feeds in.'],supplier:['Supplier','Trade access, pricing and how it feeds in.'],templates:['Templates','Reusable artwork and document templates.']};
+const titles={dash:['Dashboard',"Here's how the business is tracking today."],contacts:['Contacts','Everything about a customer in one place.'],leads:['Leads','Website enquiries from your product pages.'],search:['Search','What people type into Google to find you.'],orgs:['Organisations','Companies you sell to, and the people at each.'],sales:['Quotes & Orders','Your pipeline from request to fulfilment.'],quote:['Quote','Line items, status and the convert flow.'],products:['Products','Every product you sell, priced live.'],suppliers:['Suppliers','Your supply, and how each feeds in.'],supplier:['Supplier','Trade access, pricing and how it feeds in.'],templates:['Templates','Reusable artwork and document templates.']};
 
 /* ---------- Navigation ---------- */
 function go(v){
@@ -767,6 +783,7 @@ function go(v){
   document.getElementById('vsub').textContent=titles[v][1];
   document.getElementById('pheadBtn').style.display = (v==='quote'||v==='supplier') ? 'none' : '';
   if(v==='products')loadProducts();
+  if(v==='search')loadSearch();
   closeNav();
   window.scrollTo(0,0);
 }
@@ -2063,7 +2080,7 @@ async function refreshFromSupabase(sb){
     if(inv&&inv.status==='paid')stage='paid'; else if(inv)stage='invoice'; else if(ord)stage='order';
     let contact=q.contact_name||q.contact_email||'—';
     if(q.company){const org=D.orgs.find(o=>o.name.toLowerCase()===q.company.toLowerCase());if(org){const ppl=D.contacts.filter(c=>c.orgId===org.id);if(ppl.length&&!D.contacts.some(c=>c.name===contact))contact=ppl[0].name;}}
-    D.quotes.push({num:q.quote_number,contact,status:q.status,stage,orderNum:ord?ord.order_number:null,invNum:inv?inv.invoice_number:null,payLink:inv?inv.payment_link_url:null,items,_id:q.id,_orderId:q.converted_order_id||null,_invId:inv?inv.id:null,_invToken:inv?inv.access_token:null,_invSent:inv?inv.sent_at:null,_invStatus:inv?inv.status:null,_invPaidAt:inv?inv.paid_at:null,_invViewedAt:inv?inv.last_viewed_at:null,_viewedAt:q.last_viewed_at||null,_decidedAt:q.decided_at||null,_decision:q.decision_comments||'',_sentAt:q.sent_at||null,_acceptedBy:q.accepted_by_name||null,_created:q.created_at,_email:q.contact_email||'',_name:q.contact_name||'',_token:q.access_token||'',_accepted:!!q.accepted_by_name,_tCarrier:ord?(ord.tracking_carrier||''):'',_tNumber:ord?(ord.tracking_number||''):'',_tUrl:ord?(ord.tracking_url||''):'',_dispatched:ord?ord.dispatched_at:null,_ordStatus:ord?(ord.status||''):'',_reviewReq:ord?ord.review_requested_at:null,_completedAt:ord?(ord.completed_at||null):null,_valid:q.valid_until||null,_origin:q.origin||'staff',_cost:costByQuote[q.id]||null,_oitems:(itemsByOrder[q.converted_order_id]||[]),_ofiles:(filesByOrder[q.converted_order_id]||[])});
+    D.quotes.push({num:q.quote_number,contact,status:q.status,stage,orderNum:ord?ord.order_number:null,invNum:inv?inv.invoice_number:null,payLink:inv?inv.payment_link_url:null,items,_id:q.id,_orderId:q.converted_order_id||null,_invId:inv?inv.id:null,_invToken:inv?inv.access_token:null,_invSent:inv?inv.sent_at:null,_invStatus:inv?inv.status:null,_invPaidAt:inv?inv.paid_at:null,_invViewedAt:inv?inv.last_viewed_at:null,_viewedAt:q.last_viewed_at||null,_decidedAt:q.decided_at||null,_decision:q.decision_comments||'',_sentAt:q.sent_at||null,_acceptedBy:q.accepted_by_name||null,_created:q.created_at,_email:q.contact_email||'',_name:q.contact_name||'',_token:q.access_token||'',_accepted:!!q.accepted_by_name,_tCarrier:ord?(ord.tracking_carrier||''):'',_tNumber:ord?(ord.tracking_number||''):'',_tUrl:ord?(ord.tracking_url||''):'',_dispatched:ord?ord.dispatched_at:null,_ordStatus:ord?(ord.status||''):'',_reviewReq:ord?ord.review_requested_at:null,_completedAt:ord?(ord.completed_at||null):null,_valid:q.valid_until||null,_origin:q.origin||'staff',_artLink:ord?(ord.artwork_link||''):'',_cost:costByQuote[q.id]||null,_oitems:(itemsByOrder[q.converted_order_id]||[]),_ofiles:(filesByOrder[q.converted_order_id]||[])});
   });
   D.orders.length=0;
   (ords.data||[]).forEach(o=>{const q=(qs.data||[]).find(x=>x.converted_order_id===o.id);D.orders.push({num:o.order_number,name:o.contact_name||'—',company:o.company||null,status:o.status,total:orderTotal[o.id]||0,q:q?q.quote_number:null,track:o.tracking_number||null});});
@@ -2223,6 +2240,132 @@ function leadToQuote(id){
   const setv=(elid,v)=>{const e=document.getElementById(elid);if(e)e.value=v;};
   setv('nq_name',nq.name); setv('nq_email',nq.email); setv('nq_phone',nq.phone);
   if(typeof nqRenderLines==='function')nqRenderLines();
+}
+
+/* ---------- Search (Google Search Console) ----------
+   Data comes from the gsc-report edge function, which holds the service
+   account key. Nothing Google-related is ever exposed to the browser. */
+window._seo = { mode:'queries', days:28, cache:{}, busy:false };
+
+const SEO_MODES = [
+  { k:'queries',    label:'Search terms',  col:'Search term' },
+  { k:'pages',      label:'Landing pages', col:'Page' },
+  { k:'query_page', label:'Term by page',  col:'Search term' }
+];
+const SEO_RANGES = [ {d:28,label:'Last 28 days'}, {d:90,label:'Last 90 days'} ];
+
+function seoPct(n){ return (n*100).toFixed(1) + '%'; }
+function seoShortPage(u){
+  if(!u) return '—';
+  try { return decodeURIComponent(String(u).replace(/^https?:\/\/[^\/]+\//,'') || '/'); }
+  catch(e){ return String(u); }
+}
+function seoDelta(now, was){
+  if (was === null || was === undefined) return '<span style="color:var(--muted)">new</span>';
+  const d = now - was;
+  if (d === 0) return '<span style="color:var(--muted)">—</span>';
+  const up = d > 0;
+  return '<span style="color:' + (up ? '#1a8a4a' : '#c0392b') + ';font-weight:700">' + (up ? '+' : '') + d + '</span>';
+}
+
+function seoRenderFilter(){
+  const f = document.getElementById('seoFilter');
+  if(!f) return;
+  f.innerHTML =
+    SEO_MODES.map(m => '<div class="chip' + (window._seo.mode===m.k ? ' on' : '') + '" data-seo-mode="' + m.k + '" style="cursor:pointer">' + m.label + '</div>').join('') +
+    '<span style="display:inline-block;width:14px"></span>' +
+    SEO_RANGES.map(r => '<div class="chip' + (window._seo.days===r.d ? ' on' : '') + '" data-seo-days="' + r.d + '" style="cursor:pointer">' + r.label + '</div>').join('');
+  f.querySelectorAll('[data-seo-mode]').forEach(function(el){
+    el.onclick = function(){ window._seo.mode = el.dataset.seoMode; loadSearch(); };
+  });
+  f.querySelectorAll('[data-seo-days]').forEach(function(el){
+    el.onclick = function(){ window._seo.days = Number(el.dataset.seoDays); loadSearch(); };
+  });
+}
+
+function seoMsg(html){
+  const t = document.getElementById('seoTable');
+  if(t) t.innerHTML = '<tr><td colspan="6" style="padding:26px 2px;color:var(--muted);line-height:1.6">' + html + '</td></tr>';
+}
+
+async function loadSearch(){
+  seoRenderFilter();
+  const key = window._seo.mode + ':' + window._seo.days;
+  if (window._seo.cache[key]) return seoPaint(window._seo.cache[key]);
+  if (window._seo.busy) return;
+  window._seo.busy = true;
+  seoMsg('Asking Google…');
+  document.getElementById('seoTiles').innerHTML = '';
+  try {
+    const sb = window.CRM_SB;
+    const sess = await sb.auth.getSession();
+    const tok = sess.data.session ? sess.data.session.access_token : '';
+    const r = await fetch(window.AURA_CONFIG.supabaseUrl + '/functions/v1/gsc-report', {
+      method:'POST',
+      headers:{ 'Content-Type':'application/json', 'Authorization':'Bearer ' + tok },
+      body: JSON.stringify({ mode: window._seo.mode, days: window._seo.days, limit: 200, store: true })
+    });
+    const j = await r.json();
+    if (!j.ok) {
+      seoMsg('<b>Could not load Search Console data.</b><br>' + esc(j.error || ('HTTP ' + r.status)));
+      return;
+    }
+    window._seo.cache[key] = j;
+    seoPaint(j);
+  } catch(e) {
+    seoMsg('<b>Could not reach the reporting function.</b><br>' + esc(String(e)));
+  } finally {
+    window._seo.busy = false;
+  }
+}
+
+function seoPaint(j){
+  const mode = SEO_MODES.filter(function(m){ return m.k === j.mode; })[0] || SEO_MODES[0];
+  document.getElementById('seoCol1').textContent = mode.col;
+  document.getElementById('seoSub').textContent =
+    j.period.startDate + ' to ' + j.period.endDate + ' · compared with ' + j.compared_to.startDate + ' to ' + j.compared_to.endDate +
+    ' · Google runs two to three days behind, so the newest day here is not today.';
+
+  const rows = j.rows || [];
+  const avgPos = rows.length ? (rows.reduce(function(t,r){ return t + r.position * r.impressions; }, 0) / Math.max(1, j.totals.impressions)) : 0;
+  const fresh = rows.filter(function(r){ return r.is_new; }).length;
+  const page2 = rows.filter(function(r){ return r.position > 10 && r.position <= 20; }).length;
+
+  document.getElementById('seoTiles').innerHTML = [
+    ['Clicks',            j.totals.clicks.toLocaleString(),      'People who came to the site'],
+    ['Times shown',       j.totals.impressions.toLocaleString(), 'Appearances in search results'],
+    ['Average position',  avgPos ? avgPos.toFixed(1) : '—',      'Weighted by how often you showed'],
+    [mode.k === 'pages' ? 'New pages ranking' : 'New terms', String(fresh), 'Not there last period']
+  ].map(function(t){
+    return '<div class="tile"><div class="n">' + esc(t[1]) + '</div><div class="l">' + esc(t[0]) + '</div>' +
+           '<div class="l" style="opacity:.7;margin-top:2px">' + esc(t[2]) + '</div></div>';
+  }).join('');
+
+  if (!rows.length) {
+    seoMsg('Google returned no rows for this period. If the site has only just been verified, or traffic is very low, that is normal — check again in a few days.');
+    return;
+  }
+
+  document.getElementById('seoTable').innerHTML = rows.map(function(r){
+    const first = j.mode === 'pages' ? seoShortPage(r.page)
+      : (j.mode === 'query_page'
+          ? esc(r.query || '') + '<div style="color:var(--muted);font-size:11.5px;margin-top:2px">' + esc(seoShortPage(r.page)) + '</div>'
+          : esc(r.query || ''));
+    const pos = r.position;
+    const posColour = pos <= 3 ? '#1a8a4a' : (pos <= 10 ? 'inherit' : (pos <= 20 ? '#b4610d' : 'var(--muted)'));
+    return '<tr>' +
+      '<td>' + (j.mode === 'pages' ? esc(first) : first) + '</td>' +
+      '<td class="num">' + r.clicks + '</td>' +
+      '<td class="num">' + (j.mode === 'query_page' ? '<span style="color:var(--muted)">—</span>' : seoDelta(r.clicks, r.prev_clicks)) + '</td>' +
+      '<td class="num">' + r.impressions.toLocaleString() + '</td>' +
+      '<td class="num">' + seoPct(r.ctr) + '</td>' +
+      '<td class="num" style="color:' + posColour + ';font-weight:600">' + pos.toFixed(1) + '</td>' +
+    '</tr>';
+  }).join('');
+
+  document.getElementById('seoNote').innerHTML =
+    'Position is your average spot in Google&rsquo;s results. <b>' + page2 + '</b> of these sit between 11 and 20, which means page two &mdash; lifting those is usually the cheapest win available. ' +
+    'Green is top three, amber is page two. A dated copy of every pull is saved, so this history will outlive Google&rsquo;s own 16 month limit.';
 }
 
 /* ---------- Init ---------- */
@@ -2950,6 +3093,19 @@ function proofCard(q){
   var files=q._ofiles||[];
   if(!items.length) return '';
   var art=files.filter(function(f){return f.kind==='artwork';});
+
+  /* Artwork over the 50MB upload ceiling arrives as a WeTransfer (or Drive)
+     link instead of a file, so it has to be as visible as an upload. */
+  var linkRow='';
+  if(q._artLink){
+    linkRow='<div class="pfitem" style="background:#fff7fb;border-color:#f5c2df">'+
+      '<div class="pfrow"><span class="k">Transfer link</span><span>'+
+      q._artLink.split(/\s+/).filter(Boolean).map(function(u){
+        return '<a href="'+esc(u)+'" target="_blank" rel="noopener">'+esc(u.length>58?u.slice(0,58)+'…':u)+' \u2197</a>';
+      }).join('<br>')+
+      '<div class="mini" style="margin-top:4px">Customer sent artwork too large to upload. Download it before the link expires.</div>'+
+      '</span></div></div>';
+  }
   var sent=0,approved=0;
   var rows=items.map(function(it){
     var p=latestProof(it);
@@ -2999,6 +3155,7 @@ function proofCard(q){
     '<div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px">'+
       '<div><h3>Artwork &amp; proofing</h3><div class="sub">'+esc(sub)+'</div></div>'+
     '</div>'+
+    linkRow+
     rows+
     '<div class="note" style="margin-top:10px">Upload the PDF exactly as it will print, with the trim line and 3&nbsp;mm bleed showing - that file is what the customer approves. PDF only, up to 50&nbsp;MB. Approvals record the name, time and IP address, and production stays blocked in the database until every item is approved and the order is paid.</div>'+
   '</div>';
