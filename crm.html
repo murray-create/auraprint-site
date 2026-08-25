@@ -12,6 +12,10 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
 <title>Aura CRM</title>
 <style>
 :root{
@@ -146,9 +150,10 @@ tr.clk{cursor:pointer}tr.clk:hover td{background:var(--soft)}
 #quoteFilter .chip.done.on{background:var(--blue-soft);color:#1877c9}
 /* Multi-line line-item descriptions: first line is the item name, the rest are specs. */
 .dsub{margin-top:3px;font-size:12px;line-height:1.55;color:var(--muted);font-weight:500}
-textarea.nqdesc{width:100%;min-width:190px;font:inherit;font-weight:700;line-height:1.45;border:1px solid transparent;background:transparent;border-radius:9px;padding:6px 8px;resize:vertical;color:var(--ink);outline:none}
-textarea.nqdesc:hover{border-color:var(--line)}
-textarea.nqdesc:focus{border-color:var(--pink);background:#fff;font-weight:500}
+textarea.nqdesc{width:100%;min-width:190px;font:inherit;font-weight:700;line-height:1.45;border:1px dashed var(--line);background:transparent;border-radius:9px;padding:6px 8px;resize:none;overflow:hidden;color:var(--ink);outline:none;cursor:text;transition:border-color .12s,background .12s}
+textarea.nqdesc:hover{border-color:var(--muted);background:#fff}
+textarea.nqdesc:focus{border:1px solid var(--pink);background:#fff;font-weight:500;box-shadow:0 0 0 3px var(--pink-soft)}
+.nqdesc-hint{font-size:11.5px;color:var(--muted);margin:-2px 0 8px}
 .dom{font-size:11px;font-weight:700;padding:2px 9px;border-radius:20px}
 .dom.Promotional{background:var(--pink-soft);color:var(--pink-ink)}
 .dom.Apparel{background:#efe9fe;color:#6d28d9}
@@ -1718,7 +1723,7 @@ function renderNewQuote(preName,edit){
         <button class="btn" onclick="nqAddCustom()">Add manual line</button>
       </div>
 
-      <div class="nqsec"><h4>Line items</h4><div class="sub" id="nq_lsub"></div>
+      <div class="nqsec"><h4>Line items</h4><div class="sub" id="nq_lsub"></div><div class="nqdesc-hint">Click any description below to edit it. The first line is the item name; put each spec on its own line.</div>
         <table><thead><tr><th>Product</th><th class="num">Qty</th><th class="num">Unit</th><th class="num">Line total</th><th></th></tr></thead>
         <tbody id="nq_lbody"></tbody></table>
         <div class="note">Nothing is charged here. Saving creates a real draft quote you can review, send, convert to an order and invoice.</div>
@@ -1854,14 +1859,18 @@ function nqEditDesc(i,val){
   const it=window._nq.items[i];if(!it)return;
   const d=cleanDesc(val);
   if(d)it.n=d;
-  nqRenderLines();
+  const ta=document.querySelector('#nq_lbody tr:nth-child('+(i+1)+') textarea.nqdesc');
+  if(ta){if(ta.value!==it.n)ta.value=it.n;nqAutoSize(ta);}
 }
+function nqAutoSize(el){if(!el)return;el.style.height='auto';el.style.height=(el.scrollHeight+2)+'px';}
+function nqSizeAllDesc(){document.querySelectorAll('#nq_lbody textarea.nqdesc').forEach(nqAutoSize);}
 function nqRemoveLine(i){window._nq.items.splice(i,1);nqRenderLines();}
 function nqRenderLines(){
   const nq=window._nq,tb=document.getElementById('nq_lbody');if(!tb)return;
   tb.innerHTML=nq.items.length
-    ? nq.items.map((it,i)=>`<tr><td><textarea class="nqdesc" rows="${Math.min(8,Math.max(1,descLines(it.n).length))}" title="Click to edit — the first line is the item name, the rest print underneath it" onchange="nqEditDesc(${i},this.value)">${esc(it.n)}</textarea></td><td class="num"><input class="nqqty" type="number" min="1" value="${it.qty}" onchange="nqEditQty(${i},this.value)"></td><td class="num">${money(it.qty?Math.round(it.price/it.qty):it.price)}</td><td class="num">${money(it.price)}</td><td class="num"><button class="btn danger iconbtn sm" title="Remove line" onclick="nqRemoveLine(${i})">✕</button></td></tr>`).join('')
+    ? nq.items.map((it,i)=>`<tr><td><textarea class="nqdesc" rows="1" title="Click to edit — the first line is the item name, the rest print underneath it" oninput="nqAutoSize(this)" onchange="nqEditDesc(${i},this.value)">${esc(it.n)}</textarea></td><td class="num"><input class="nqqty" type="number" min="1" value="${it.qty}" onchange="nqEditQty(${i},this.value)"></td><td class="num">${money(it.qty?Math.round(it.price/it.qty):it.price)}</td><td class="num">${money(it.price)}</td><td class="num"><button class="btn danger iconbtn sm" title="Remove line" onclick="nqRemoveLine(${i})">✕</button></td></tr>`).join('')
     : '<tr><td colspan="5"><div class="empty">No products added yet. Use the picker above to add priced lines.</div></td></tr>';
+  nqSizeAllDesc();
   const itemsTotal=nq.items.reduce((a,b)=>a+b.price,0);
   const disc=nq.discount||0;
   const total=itemsTotal-disc;
