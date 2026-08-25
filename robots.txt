@@ -2,4 +2,7 @@ User-agent: *
 Allow: /
 Disallow: /admin.html
 Disallow: /crm.html
+Disallow: /tools/
+Disallow: /data/
+
 Sitemap: https://auraprint.com.au/sitemap.xml

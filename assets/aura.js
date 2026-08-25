@@ -23,12 +23,13 @@ const HEADER = `
         <div class="mega">
           <div><h4>Cards &amp; Stationery</h4><ul><li><a href="business-cards.html">Business Cards</a></li><li><a href="nv-velvet-business-cards.html">NV Velvet Cards</a></li><li><a href="letterheads.html">Letterheads</a></li><li><a href="envelopes.html">Envelopes</a></li><li><a href="loyalty-cards.html">Loyalty Cards</a></li></ul></div>
           <div><h4>Marketing</h4><ul><li><a href="flyers.html">Flyers</a></li><li><a href="brochures.html">Brochures</a></li><li><a href="postcards.html">Postcards</a></li><li><a href="presentation-folders.html">Presentation Folders</a></li><li><a href="menus.html">Menus</a></li></ul></div>
+          <div><h4>Fast &amp; Industry</h4><ul><li><a href="same-day-printing.html">Same Day Printing</a></li><li><a href="stationery-same-day.html">Same Day Stationery</a></li><li><a href="real-estate-print-signage.html">Real Estate Print &amp; Signage</a></li><li><a href="budget-business-cards.html">Budget Business Cards</a></li><li><a href="artwork-templates.html">Artwork Templates</a></li></ul></div>
           <div><h4>Books &amp; Booklets</h4><ul><li><a href="booklets.html">Saddle Stitched Booklets</a></li><li><a href="perfect-bound-books.html">Perfect Bound Books</a></li><li><a href="invoice-books.html">Invoice Books (NCR)</a></li><li><a href="notepads.html">Notepads</a></li><li><a href="calendars.html">Calendars</a></li></ul></div>
         </div>
       </div>
       <div><a href="signage.html">Signage &amp; Display ▾</a>
         <div class="mega">
-          <div><h4>Signs</h4><ul><li><a href="corflute-signs.html">Corflute Signs</a></li><li><a href="a-frames.html">A-Frames</a></li><li><a href="posters.html">Posters</a></li><li><a href="safety-signs.html">Safety Signs</a></li></ul></div>
+          <div><h4>Signs</h4><ul><li><a href="corflute-signs.html">Corflute Signs</a></li><li><a href="a-frames.html">A-Frames</a></li><li><a href="posters.html">Posters</a></li><li><a href="safety-signs.html">Safety Signs</a></li><li><a href="construction-signs.html">Construction Signs</a></li><li><a href="acrylic-signs.html">Acrylic Signs</a></li><li><a href="aluminium-signs.html">Aluminium Signs</a></li><li><a href="foam-pvc-signs.html">Foam PVC Signs</a></li></ul></div>
           <div><h4>Banners &amp; Flags</h4><ul><li><a href="pull-up-banners.html">Pull Up Banners</a></li><li><a href="outdoor-banners.html">Outdoor Banners</a></li><li><a href="teardrop-flags.html">Teardrop Flags</a></li><li><a href="fence-mesh.html">Fence Mesh</a></li></ul></div>
           <div><h4>Events &amp; Display</h4><ul><li><a href="exhibition-displays.html">Exhibition Displays</a></li><li><a href="media-walls.html">Media Walls</a></li><li><a href="marquees.html">Marquees</a></li><li><a href="tablecloths.html">Printed Tablecloths</a></li></ul></div>
         </div>
@@ -128,7 +129,7 @@ const FOOTER = `
         <div class="newsletter"><input type="email" id="nl-email" placeholder="Your email address" aria-label="Email address for newsletter"><button class="btn btn-aura" id="nl-join" style="padding:12px 22px">Join</button></div>
         <p id="nl-status" style="font-size:13px;min-height:18px;margin-top:8px"></p>
       </div>
-      <div><h4>Products</h4><ul><li><a href="business-cards.html">Business Cards</a></li><li><a href="flyers.html">Flyers</a></li><li><a href="corflute-signs.html">Corflute Signs</a></li><li><a href="pull-up-banners.html">Pull Up Banners</a></li><li><a href="signage.html">Stickers</a></li><li><a href="promo.html">Promo Products</a></li><li><a href="promo.html">Workwear</a></li></ul></div>
+      <div><h4>Products</h4><ul><li><a href="business-cards.html">Business Cards</a></li><li><a href="flyers.html">Flyers</a></li><li><a href="corflute-signs.html">Corflute Signs</a></li><li><a href="pull-up-banners.html">Pull Up Banners</a></li><li><a href="stickers.html">Stickers</a></li><li><a href="promo.html">Promo Products</a></li><li><a href="promo.html">Workwear</a></li><li><a href="same-day-printing.html">Same Day Printing</a></li><li><a href="real-estate-print-signage.html">Real Estate Signage</a></li></ul></div>
       <div><h4>Company</h4><ul><li><a href="about.html">About</a></li><li><a href="blog.html">Blog</a></li><li><a href="art-setup.html">Artwork Setup Guide</a></li><li><a href="artwork-templates.html">Artwork Templates</a></li><li><a href="trade-terms.html">Terms of Trade</a></li><li><a href="privacy-policy.html">Privacy Policy</a></li><li><a href="refund-policy.html">Refunds &amp; Reprints</a></li></ul></div>
       <div><h4>Contact</h4><ul>
         <li>4/1 Packer Road, Baringa QLD 4551</li>
