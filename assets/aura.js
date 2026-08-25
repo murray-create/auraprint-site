@@ -439,7 +439,9 @@ function dispatchLine(speed){
     if (!isWeekend(now) && now.getHours()<8)
       return '⚡ Order and approve artwork before <b>8am today</b> and it dispatches <b>today, '+fmtDay(now)+'</b>.';
     const d=nextOpenDay(8);
-    return '⚡ Today’s 8am cut-off has passed. Order before <b>8am '+fmtDay(d)+'</b> for dispatch that day.';
+    /* on a weekend there was no cut-off today, so do not claim one passed */
+    const lead = isWeekend(now) ? '' : 'Today’s 8am cut-off has passed. ';
+    return '⚡ '+lead+'Order before <b>8am '+fmtDay(d)+'</b> for dispatch that day.';
   }
   if (speed==='nextday'){
     if (!isWeekend(now) && now.getHours()<12)
