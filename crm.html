@@ -63,6 +63,8 @@ body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Hel
 .btn.dark{background:var(--ink);color:#fff;border:none}
 .btn.ghost{background:none}
 .btn.danger{color:var(--bad);border-color:#f3caca}
+.btn.ok{color:var(--good);border-color:#bfe3cd;background:var(--good-soft)}
+.btn.ok:hover{background:var(--good);color:#fff;border-color:var(--good)}
 .btn.danger:hover{background:var(--bad-soft);border-color:var(--bad)}
 .btn.iconbtn{padding:9px 11px}
 .btn.sm{padding:7px 12px;font-size:12.5px}
@@ -135,11 +137,18 @@ tr.clk{cursor:pointer}tr.clk:hover td{background:var(--soft)}
 .b-converted,.b-approved,.b-shipped,.b-paid{background:var(--good-soft);color:var(--good)}
 .b-draft,.b-sent,.b-requested{background:#eef;color:#4a4a8a}
 .b-declined,.b-cancelled,.b-void,.b-unpaid{background:var(--bad-soft);color:var(--bad)}
+.b-completed{background:var(--blue-soft);color:#1877c9}
 .b-sent{background:#e8f4ff;color:#1673b6}
 .b-api{background:var(--pink-soft);color:var(--pink-ink)}.b-manual{background:var(--warn-soft);color:var(--warn)}
 .b-new{background:#eef;color:#4a4a8a}.b-contacted{background:var(--warn-soft);color:var(--warn)}.b-won,.b-quoted{background:var(--good-soft);color:var(--good)}.b-lost{background:var(--bad-soft);color:var(--bad)}
 #leadFilter .chip,#quoteFilter .chip{cursor:pointer;border:1px solid var(--line);background:#fff;color:var(--muted);margin-top:0}#leadFilter .chip.on,#quoteFilter .chip.on{background:var(--pink-soft);color:var(--pink-ink);border-color:transparent}
 #quoteFilter .chip.lost.on{background:var(--bad-soft);color:var(--bad)}
+#quoteFilter .chip.done.on{background:var(--blue-soft);color:#1877c9}
+/* Multi-line line-item descriptions: first line is the item name, the rest are specs. */
+.dsub{margin-top:3px;font-size:12px;line-height:1.55;color:var(--muted);font-weight:500}
+textarea.nqdesc{width:100%;min-width:190px;font:inherit;font-weight:700;line-height:1.45;border:1px solid transparent;background:transparent;border-radius:9px;padding:6px 8px;resize:vertical;color:var(--ink);outline:none}
+textarea.nqdesc:hover{border-color:var(--line)}
+textarea.nqdesc:focus{border-color:var(--pink);background:#fff;font-weight:500}
 .dom{font-size:11px;font-weight:700;padding:2px 9px;border-radius:20px}
 .dom.Promotional{background:var(--pink-soft);color:var(--pink-ink)}
 .dom.Apparel{background:#efe9fe;color:#6d28d9}
@@ -671,6 +680,13 @@ const orgById=id=>D.orgs.find(o=>o.id===id);
 const contactByName=n=>D.contacts.find(c=>c.name===n);
 const qTotal=q=>q.items.reduce((a,b)=>a+b.price,0);
 const unitOf=it=>it.qty?Math.round(it.price/it.qty):it.price;
+/* A line description may be multi-line. The first line is the item name; every
+   line after it is a spec that prints underneath it on the quote and invoice.
+   cleanDesc keeps those breaks but drops blank lines and trailing spaces. */
+const cleanDesc=v=>String(v==null?'':v).split(/\r?\n/).map(x=>x.trim()).filter(Boolean).join('\n');
+const descLines=s2=>String(s2==null?'':s2).split(/\r?\n/).map(x=>x.trim()).filter(Boolean);
+const descHead=s2=>descLines(s2)[0]||'';
+function descHtml(s2){const L=descLines(s2);if(!L.length)return '';return '<b>'+esc(L[0])+'</b>'+(L.length>1?'<div class="dsub">'+L.slice(1).map(esc).join('<br>')+'</div>':'');}
 const orgOfQuote=q=>{const c=contactByName(q.contact);return c?c.orgId:null;};
 
 /* ---------- Job economics (STAFF ONLY) ----------
@@ -824,18 +840,23 @@ document.getElementById('feeds').innerHTML=D.feeds.map(f=>`<div class="feed"><sp
    quote the customer declined through myquote.html. They stay in the database —
    they are only filtered out of the default list, so the conversion rate below
    still divides by every quote raised. */
-const QUOTE_FILTERS=[['active','Active'],['draft','Draft'],['sent','Sent'],['converted','Converted'],['lost','Lost'],['all','All']];
+const QUOTE_FILTERS=[['active','Active'],['draft','Draft'],['sent','Sent'],['converted','Converted'],['completed','Completed'],['lost','Lost'],['all','All']];
 window._quoteFilter='active';
 const isLostQuote=q=>q.status==='declined';
+/* A job is finished when staff press "Job completed": the order goes to status
+   'completed' with a completed_at stamp. Finished jobs drop out of the active
+   list the same way lost ones do, and the Completed chip brings them back. */
+const isDoneQuote=q=>q._ordStatus==='completed';
 const lostByStaff=q=>isLostQuote(q)&&/^Lost:/.test(q._decision||'');
-const qStatusLabel=q=>isLostQuote(q)?(lostByStaff(q)?'lost':'declined'):q.status;
+const qStatusLabel=q=>isLostQuote(q)?(lostByStaff(q)?'lost':'declined'):(isDoneQuote(q)?'completed':q.status);
 function setQuoteFilter(f){window._quoteFilter=f;renderQuoteTables();}
 function filteredQuotes(){
   const f=window._quoteFilter,all=D.quotes;
   if(f==='all')return all;
   if(f==='lost')return all.filter(isLostQuote);
-  if(f==='active')return all.filter(q=>!isLostQuote(q));
-  return all.filter(q=>!isLostQuote(q)&&q.status===f);
+  if(f==='completed')return all.filter(q=>!isLostQuote(q)&&isDoneQuote(q));
+  if(f==='active')return all.filter(q=>!isLostQuote(q)&&!isDoneQuote(q));
+  return all.filter(q=>!isLostQuote(q)&&!isDoneQuote(q)&&q.status===f);
 }
 
 function renderQuoteTables(){
@@ -846,10 +867,11 @@ function renderQuoteTables(){
   document.getElementById('qtable').innerHTML=shown.length?shown.map(qrow).join(''):noneRow(5);
   document.getElementById('qtable2').innerHTML=shown.length?shown.map(q=>`<tr class="clk" data-q="${q.num}"><td><b>${q.num}</b></td><td>${esc(q.contact)}</td><td class="num">${money(qTotal(q))}</td><td>${badge(q)}</td></tr>`).join(''):noneRow(4);
   const lostN=D.quotes.filter(isLostQuote).length;
+  const doneN=D.quotes.filter(q=>!isLostQuote(q)&&isDoneQuote(q)).length;
   const fb=document.getElementById('quoteFilter');
   if(fb){
-    const countFor=k=>k==='all'?D.quotes.length:(k==='lost'?lostN:(k==='active'?D.quotes.length-lostN:D.quotes.filter(q=>!isLostQuote(q)&&q.status===k).length));
-    fb.innerHTML=QUOTE_FILTERS.map(([k,lab])=>`<button class="chip${k==='lost'?' lost':''}${window._quoteFilter===k?' on':''}" onclick="setQuoteFilter('${k}')">${lab} ${countFor(k)}</button>`).join('');
+    const countFor=k=>k==='all'?D.quotes.length:(k==='lost'?lostN:(k==='completed'?doneN:(k==='active'?D.quotes.length-lostN-doneN:D.quotes.filter(q=>!isLostQuote(q)&&!isDoneQuote(q)&&q.status===k).length)));
+    fb.innerHTML=QUOTE_FILTERS.map(([k,lab])=>`<button class="chip${k==='lost'?' lost':''}${k==='completed'?' done':''}${window._quoteFilter===k?' on':''}" onclick="setQuoteFilter('${k}')">${lab} ${countFor(k)}</button>`).join('');
   }
   document.querySelectorAll('tr.clk[data-q]').forEach(r=>r.onclick=()=>openQuote(r.dataset.q));
 
@@ -866,9 +888,9 @@ function renderQuoteTables(){
   }
 
   const conv=D.quotes.filter(q=>q.status==='converted').length;
-  const active=all.filter(o=>o.status!=='cancelled').length;
-  const liveN=D.quotes.length-lostN;
-  document.getElementById('qsub').textContent=`${liveN} live quote${liveN===1?'':'s'} · ${conv} converted${lostN?' · '+lostN+' lost':''} · click one to open`;
+  const active=all.filter(o=>o.status!=='cancelled'&&o.status!=='completed').length;
+  const liveN=D.quotes.length-lostN-doneN;
+  document.getElementById('qsub').textContent=`${liveN} live quote${liveN===1?'':'s'} · ${conv} converted${doneN?' · '+doneN+' completed':''}${lostN?' · '+lostN+' lost':''} · click one to open`;
   document.getElementById('osub').textContent=`${all.length} orders · ${active} active`;
 
   const invoiced=D.quotes.filter(q=>q.stage==='paid').reduce((a,q)=>a+qTotal(q),0);
@@ -934,12 +956,19 @@ function openQuote(num){
     actions=`<button class="btn primary" onclick="openInvoiceEmail('${q.num}')">${q._invSent?'Resend invoice email':'Send invoice email'}</button><button class="btn" onclick="openEditQuote('${q.num}')">Edit invoice</button><button class="btn" onclick="copyLink('${q.num}')">Copy payment link</button><button class="btn" onclick="advance('${q.num}','paid')">Mark as paid</button>`;
   } else if(q.stage==='paid'){
     const dispStr=q._dispatched?new Date(q._dispatched).toLocaleDateString('en-AU',{day:'2-digit',month:'short'}):'';
-    if(q._reviewReq){
-      banner=`<div class="banner good">Job complete — dispatched ${dispStr} and the Google review invitation was emailed ${new Date(q._reviewReq).toLocaleDateString('en-AU',{day:'2-digit',month:'short'})}.</div>`;
-      actions=`<button class="btn" onclick="openTrackingEmail('${q.num}')">Resend tracking email</button><button class="btn" onclick="openInvoiceEmail('${q.num}')">Resend invoice email</button>`;
+    // "Job completed" only appears once the job has actually shipped, so nothing
+    // can be closed off before the customer has it.
+    const doneBtn=`<button class="btn ok" onclick="markJobDone('${q.num}')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6 9 17l-5-5"/></svg>Job completed</button>`;
+    if(isDoneQuote(q)){
+      const cStr=q._completedAt?new Date(q._completedAt).toLocaleDateString('en-AU',{day:'2-digit',month:'short',year:'numeric'}):'';
+      banner=`<div class="banner good">Job <b>${q.orderNum||q.num}</b> completed${cStr?' on '+cStr:''}. It has moved out of your active list — find it under the <b>Completed</b> filter.</div>`;
+      actions=`<button class="btn primary" onclick="reopenJob('${q.num}')">Reopen job</button><button class="btn" onclick="duplicateQuote('${q.num}')">Duplicate quote</button><button class="btn" onclick="openInvoiceEmail('${q.num}')">Resend invoice email</button>`;
+    } else if(q._reviewReq){
+      banner=`<div class="banner good">Dispatched ${dispStr} and the Google review invitation was emailed ${new Date(q._reviewReq).toLocaleDateString('en-AU',{day:'2-digit',month:'short'})}. Mark it completed to clear it off your active list.</div>`;
+      actions=doneBtn+`<button class="btn" onclick="openTrackingEmail('${q.num}')">Resend tracking email</button><button class="btn" onclick="openInvoiceEmail('${q.num}')">Resend invoice email</button>`;
     } else if(q._dispatched){
       banner=`<div class="banner good">Order <b>${q.orderNum||''}</b> dispatched ${dispStr}. The Google review invitation emails automatically a few days after dispatch.</div>`;
-      actions=`<button class="btn primary" onclick="openTrackingEmail('${q.num}')">Send tracking email</button><button class="btn" onclick="openInvoiceEmail('${q.num}')">Resend invoice email</button>`;
+      actions=`<button class="btn primary" onclick="openTrackingEmail('${q.num}')">Send tracking email</button>`+doneBtn+`<button class="btn" onclick="openInvoiceEmail('${q.num}')">Resend invoice email</button>`;
     } else if(inProd){
       banner=`<div class="banner good">Order <b>${q.orderNum||''}</b> is in production. Add tracking below as soon as it ships.</div>`;
       actions=`<button class="btn primary" onclick="openTracking('${q.num}')">Add tracking ›</button><button class="btn" onclick="openProductionEmail('${q.num}')">Resend production email</button><button class="btn" onclick="openInvoiceEmail('${q.num}')">Resend invoice email</button>`;
@@ -951,7 +980,7 @@ function openQuote(num){
   // "Mark lost" is available at every stage — it cancels the linked order and
   // voids the linked invoice too. markLost() refuses outright once real money
   // has been taken through Stripe.
-  if(q.status!=='declined') actions+=`<button class="btn danger" onclick="markLost('${q.num}')">Mark lost</button>`;
+  if(q.status!=='declined'&&!isDoneQuote(q)) actions+=`<button class="btn danger" onclick="markLost('${q.num}')">Mark lost</button>`;
 
   // right rail: linked records + summary
   const linked=[];
@@ -959,9 +988,10 @@ function openQuote(num){
   if(q.invNum) linked.push(`<div class="row"><span>Invoice</span><b>${q.invNum}</b></div>`);
   if(q._tNumber) linked.push(`<div class="row"><span>Tracking</span><b>${esc(q._tNumber)}</b></div>`);
   if(q._reviewReq) linked.push(`<div class="row"><span>Review asked</span><b>${new Date(q._reviewReq).toLocaleDateString('en-AU',{day:'2-digit',month:'short'})}</b></div>`);
+  if(q._completedAt) linked.push(`<div class="row"><span>Completed</span><b>${new Date(q._completedAt).toLocaleDateString('en-AU',{day:'2-digit',month:'short'})}</b></div>`);
   const payLink = q.payLink ? `<div class="paylink">${esc(q.payLink)}</div>` : '';
   right=`<div class="card side-summary"><h3>Summary</h3><div class="sub">Quote ${q.num}</div>
-    ${q.items.map(it=>`<div class="row"><span>${esc(it.n)} × ${it.qty}</span><b>${money(it.price)}</b></div>`).join('')||'<div class="mini">No line items yet.</div>'}
+    ${q.items.map(it=>`<div class="row"><span title="${esc(it.n)}">${esc(descHead(it.n))} × ${it.qty}</span><b>${money(it.price)}</b></div>`).join('')||'<div class="mini">No line items yet.</div>'}
     <div class="row tot"><span>Total (inc GST)</span><span>${money(total)}</span></div>
     ${econCard(q)}
     ${linked.length?`<div style="margin-top:14px;border-top:1px solid var(--line);padding-top:10px">${linked.join('')}</div>`:''}
@@ -978,7 +1008,7 @@ function openQuote(num){
     <div class="rec" style="margin-bottom:16px">
       <div class="head"><div class="bigav" style="background:${avColor(D.contacts.indexOf(c))}">${initials(q.contact)}</div>
         <div><h2>${q.num}</h2><div class="co">${customerLine}</div></div>
-        <div class="act"><span class="badge b-${q.status}" style="align-self:center;padding:6px 12px;font-size:12px">${q.status}</span><button class="btn danger iconbtn" style="align-self:center" title="Move to trash" onclick="confirmDelete('quote','${q.num}')"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m2 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M10 11v6M14 11v6"/></svg></button></div></div>
+        <div class="act"><span class="badge b-${qStatusLabel(q)}" style="align-self:center;padding:6px 12px;font-size:12px">${qStatusLabel(q)}</span><button class="btn danger iconbtn" style="align-self:center" title="Move to trash" onclick="confirmDelete('quote','${q.num}')"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m2 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M10 11v6M14 11v6"/></svg></button></div></div>
       <div class="tabbody" style="margin-top:0">
         <div class="stepper">${stepHtml}</div>
         ${banner}
@@ -988,7 +1018,7 @@ function openQuote(num){
     <div class="qdgrid">
       <div class="card"><div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px"><div><h3>Line items</h3><div class="sub">${q.items.length} item${q.items.length===1?'':'s'} on this quote</div></div>${(q.stage==='quote'||q.stage==='invoice')?`<button class="btn sm" onclick="openEditQuote('${q.num}')"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg> Edit</button>`:''}</div>
         <table><thead><tr><th>Product</th><th class="num">Qty</th><th class="num">Unit</th><th class="num">Line total</th></tr></thead>
-        <tbody>${q.items.map(it=>`<tr><td><b>${esc(it.n)}</b></td><td class="num">${it.qty}</td><td class="num">${money(unitOf(it))}</td><td class="num">${money(it.price)}</td></tr>`).join('')||'<tr><td colspan="4"><div class="empty">No products on this quote yet.</div></td></tr>'}</tbody></table>
+        <tbody>${q.items.map(it=>`<tr><td>${descHtml(it.n)}</td><td class="num">${it.qty}</td><td class="num">${money(unitOf(it))}</td><td class="num">${money(it.price)}</td></tr>`).join('')||'<tr><td colspan="4"><div class="empty">No products on this quote yet.</div></td></tr>'}</tbody></table>
         <div class="note">Prices shown include GST. Wholesale cost and supplier stay staff-only and never appear on the customer's copy.</div>
       </div>
       ${right}
@@ -1666,7 +1696,7 @@ function renderNewQuote(preName,edit){
         <button class="btn primary" id="nq_add" onclick="nqAddPriced()" disabled>${plus}Add to quote</button>
         <div class="nqdivider"><span>or add a manual line</span></div>
         <div class="nqpickrow">
-          <div class="field" style="flex:1;min-width:180px;margin-bottom:12px"><label>Description</label><input id="nq_cdesc" placeholder="e.g. Delivery, setup, custom item"></div>
+          <div class="field" style="flex:1 1 100%;min-width:220px;margin-bottom:12px"><label>Description <span class="mini" style="text-transform:none;letter-spacing:0;font-weight:500">— first line is the item name, put each spec on its own line</span></label><textarea id="nq_cdesc" rows="4" placeholder="Straight Edged Fridge Magnets&#10;Size: 297 x 420mm (A3)&#10;Material: commercial grade indoor magnet, 0.8mm&#10;Laminate: high gloss, sealed both sides&#10;Print: CMYK digital, full colour"></textarea></div>
           <div class="field" style="max-width:90px;margin-bottom:12px"><label>Qty</label><input id="nq_cqty" type="number" min="1" value="1"></div>
           <div class="field" style="max-width:140px;margin-bottom:12px"><label>Line total $</label><input id="nq_cprice" type="number" min="0" step="0.01" placeholder="0.00"></div>
         </div>
@@ -1792,7 +1822,7 @@ function nqAddPriced(){
 }
 function nqAddCustom(){
   const nq=window._nq;
-  const d=document.getElementById('nq_cdesc').value.trim();
+  const d=cleanDesc(document.getElementById('nq_cdesc').value);
   if(!d){alert('Add a description for the manual line.');return;}
   const q=parseInt(document.getElementById('nq_cqty').value,10)||1;
   const dollars=parseFloat(document.getElementById('nq_cprice').value);
@@ -1805,11 +1835,17 @@ function nqEditQty(i,val){
   const q=parseInt(val,10)||1,unit=it.qty?it.price/it.qty:it.price;
   it.qty=q;it.price=Math.round(unit*q);nqRenderLines();
 }
+function nqEditDesc(i,val){
+  const it=window._nq.items[i];if(!it)return;
+  const d=cleanDesc(val);
+  if(d)it.n=d;
+  nqRenderLines();
+}
 function nqRemoveLine(i){window._nq.items.splice(i,1);nqRenderLines();}
 function nqRenderLines(){
   const nq=window._nq,tb=document.getElementById('nq_lbody');if(!tb)return;
   tb.innerHTML=nq.items.length
-    ? nq.items.map((it,i)=>`<tr><td><b>${esc(it.n)}</b></td><td class="num"><input class="nqqty" type="number" min="1" value="${it.qty}" onchange="nqEditQty(${i},this.value)"></td><td class="num">${money(it.qty?Math.round(it.price/it.qty):it.price)}</td><td class="num">${money(it.price)}</td><td class="num"><button class="btn danger iconbtn sm" title="Remove line" onclick="nqRemoveLine(${i})">✕</button></td></tr>`).join('')
+    ? nq.items.map((it,i)=>`<tr><td><textarea class="nqdesc" rows="${Math.min(8,Math.max(1,descLines(it.n).length))}" title="Click to edit — the first line is the item name, the rest print underneath it" onchange="nqEditDesc(${i},this.value)">${esc(it.n)}</textarea></td><td class="num"><input class="nqqty" type="number" min="1" value="${it.qty}" onchange="nqEditQty(${i},this.value)"></td><td class="num">${money(it.qty?Math.round(it.price/it.qty):it.price)}</td><td class="num">${money(it.price)}</td><td class="num"><button class="btn danger iconbtn sm" title="Remove line" onclick="nqRemoveLine(${i})">✕</button></td></tr>`).join('')
     : '<tr><td colspan="5"><div class="empty">No products added yet. Use the picker above to add priced lines.</div></td></tr>';
   const itemsTotal=nq.items.reduce((a,b)=>a+b.price,0);
   const disc=nq.discount||0;
@@ -1997,7 +2033,7 @@ async function refreshFromSupabase(sb){
     if(inv&&inv.status==='paid')stage='paid'; else if(inv)stage='invoice'; else if(ord)stage='order';
     let contact=q.contact_name||q.contact_email||'—';
     if(q.company){const org=D.orgs.find(o=>o.name.toLowerCase()===q.company.toLowerCase());if(org){const ppl=D.contacts.filter(c=>c.orgId===org.id);if(ppl.length&&!D.contacts.some(c=>c.name===contact))contact=ppl[0].name;}}
-    D.quotes.push({num:q.quote_number,contact,status:q.status,stage,orderNum:ord?ord.order_number:null,invNum:inv?inv.invoice_number:null,payLink:inv?inv.payment_link_url:null,items,_id:q.id,_orderId:q.converted_order_id||null,_invId:inv?inv.id:null,_invToken:inv?inv.access_token:null,_invSent:inv?inv.sent_at:null,_invStatus:inv?inv.status:null,_invPaidAt:inv?inv.paid_at:null,_invViewedAt:inv?inv.last_viewed_at:null,_viewedAt:q.last_viewed_at||null,_decidedAt:q.decided_at||null,_decision:q.decision_comments||'',_sentAt:q.sent_at||null,_acceptedBy:q.accepted_by_name||null,_created:q.created_at,_email:q.contact_email||'',_name:q.contact_name||'',_token:q.access_token||'',_accepted:!!q.accepted_by_name,_tCarrier:ord?(ord.tracking_carrier||''):'',_tNumber:ord?(ord.tracking_number||''):'',_tUrl:ord?(ord.tracking_url||''):'',_dispatched:ord?ord.dispatched_at:null,_ordStatus:ord?(ord.status||''):'',_reviewReq:ord?ord.review_requested_at:null,_valid:q.valid_until||null,_cost:costByQuote[q.id]||null});
+    D.quotes.push({num:q.quote_number,contact,status:q.status,stage,orderNum:ord?ord.order_number:null,invNum:inv?inv.invoice_number:null,payLink:inv?inv.payment_link_url:null,items,_id:q.id,_orderId:q.converted_order_id||null,_invId:inv?inv.id:null,_invToken:inv?inv.access_token:null,_invSent:inv?inv.sent_at:null,_invStatus:inv?inv.status:null,_invPaidAt:inv?inv.paid_at:null,_invViewedAt:inv?inv.last_viewed_at:null,_viewedAt:q.last_viewed_at||null,_decidedAt:q.decided_at||null,_decision:q.decision_comments||'',_sentAt:q.sent_at||null,_acceptedBy:q.accepted_by_name||null,_created:q.created_at,_email:q.contact_email||'',_name:q.contact_name||'',_token:q.access_token||'',_accepted:!!q.accepted_by_name,_tCarrier:ord?(ord.tracking_carrier||''):'',_tNumber:ord?(ord.tracking_number||''):'',_tUrl:ord?(ord.tracking_url||''):'',_dispatched:ord?ord.dispatched_at:null,_ordStatus:ord?(ord.status||''):'',_reviewReq:ord?ord.review_requested_at:null,_completedAt:ord?(ord.completed_at||null):null,_valid:q.valid_until||null,_cost:costByQuote[q.id]||null});
   });
   D.orders.length=0;
   (ords.data||[]).forEach(o=>{const q=(qs.data||[]).find(x=>x.converted_order_id===o.id);D.orders.push({num:o.order_number,name:o.contact_name||'—',company:o.company||null,status:o.status,total:orderTotal[o.id]||0,q:q?q.quote_number:null,track:o.tracking_number||null});});
@@ -2323,6 +2359,7 @@ drawOrgs(0);
     if(target>=4) patch.status='in_production';
     if(target>=5){ patch.status='shipped'; if(!q._dispatched) patch.dispatched_at=NOW(); }
     if(target>=6 && !q._reviewReq) patch.review_requested_at=NOW();
+    if(q._completedAt) patch.completed_at=null;   // moving the stage re-opens a completed job
     if(Object.keys(patch).length && q._orderId){ var ro=await sb.from('orders').update(patch).eq('id',q._orderId); if(ro.error) throw ro.error; }
   }
   async function stageBack(sb,num,target){
@@ -2344,6 +2381,7 @@ drawOrgs(0);
     if(target<3) patch.paid_at=null;
     if(target<2 && q._invId){ var rs=await sb.from('invoices').update({sent_at:null}).eq('id',q._invId); if(rs.error) throw rs.error; }
     patch.status = target>=5 ? 'shipped' : (target>=4 ? 'in_production' : (target>=3 ? 'paid' : 'invoiced'));
+    patch.completed_at=null;   // moving the stage re-opens a completed job
     if(q._orderId){ var ro2=await sb.from('orders').update(patch).eq('id',q._orderId); if(ro2.error) throw ro2.error; }
   }
   window.jumpStage=async function(num,target){
@@ -2508,6 +2546,35 @@ drawOrgs(0);
     await reload(); openQuote(num);
   };
 
+  // Job completed: the work is out the door and the money is in, so the job stops
+  // being something to chase. The order goes to status 'completed' with a stamp,
+  // which drops the quote out of the active list — nothing is deleted or emailed.
+  window.markJobDone = async function(num){
+    var sb=SB(); var q=fq(num); if(!sb||!q) return;
+    if(!q._orderId){ alert('There is no order attached to '+num+' yet, so there is nothing to complete.'); return; }
+    var warn = q._dispatched
+      ? 'Mark '+(q.orderNum||num)+' completed?\n\nIt moves out of your active list and into the Completed filter. Nothing is deleted, the customer is not emailed, and the Google review invitation still goes out on schedule.'
+      : 'Order '+(q.orderNum||'')+' has no dispatch date yet.\n\nMark the job completed anyway? It will move out of your active list.';
+    if(!confirm(warn)) return;
+    try{
+      var r=await sb.from('orders').update({status:'completed',completed_at:new Date().toISOString()}).eq('id',q._orderId);
+      if(r.error) throw r.error;
+    }catch(e){ alert('Could not mark the job completed: '+(e.message||e)); return; }
+    await reload(); openQuote(num);
+  };
+
+  // Undo a completion: back to shipped if it went out, in production if it did not.
+  window.reopenJob = async function(num){
+    var sb=SB(); var q=fq(num); if(!sb||!q||!q._orderId) return;
+    if(!confirm('Reopen '+(q.orderNum||num)+'?\n\nIt returns to your active list. The customer is not emailed.')) return;
+    try{
+      var back = q._dispatched ? 'shipped' : 'in_production';
+      var r=await sb.from('orders').update({status:back,completed_at:null}).eq('id',q._orderId);
+      if(r.error) throw r.error;
+    }catch(e){ alert('Could not reopen the job: '+(e.message||e)); return; }
+    await reload(); openQuote(num);
+  };
+
   window.saveContact = async function(idx){
     var sb=SB();
     var name=document.getElementById('f_name').value.trim(); if(!name){alert('Please enter a name.');return;}
@@ -2619,12 +2686,27 @@ function crmPdf(kind,q){
     doc.text('DESCRIPTION', M+8, y); doc.text('QTY', W-M-190, y,{align:'right'}); doc.text('UNIT', W-M-95, y,{align:'right'}); doc.text('AMOUNT', W-M-8, y,{align:'right'});
     y+=20; doc.setTextColor(17,16,24); doc.setFont('helvetica','normal'); doc.setFontSize(9.5);
     (q.items||[]).forEach(function(it){
-      var lines=doc.splitTextToSize(String(it.n||''), W-2*M-235);
-      doc.text(lines, M+8, y);
+      // First line is the item name in bold; every line after it is a spec set
+      // slightly smaller underneath, so a long description still reads cleanly.
+      var parts=descLines(it.n);
+      var head=doc.splitTextToSize(parts[0]||'', W-2*M-235);
+      var rest=parts.length>1?doc.splitTextToSize(parts.slice(1).join('\n'), W-2*M-235):[];
+      // Long spec lists can outgrow one page, so start a new one before they run off.
+      if(y + head.length*12 + rest.length*10.5 > 748){ doc.addPage(); y=70; }
+      doc.setFont('helvetica','bold'); doc.setFontSize(9.5);
+      doc.text(head, M+8, y);
+      doc.setFont('helvetica','normal');
       doc.text(String(it.qty), W-M-190, y,{align:'right'});
       doc.text(money(unitOf(it)), W-M-95, y,{align:'right'});
       doc.text(money(it.price), W-M-8, y,{align:'right'});
-      y+=Math.max(16, lines.length*12+4);
+      var h=head.length*12;
+      if(rest.length){
+        doc.setFontSize(8.4); doc.setTextColor(110,110,122);
+        doc.text(rest, M+8, y+h+1);
+        doc.setFontSize(9.5); doc.setTextColor(17,16,24);
+        h+=rest.length*10.5+1;
+      }
+      y+=Math.max(16, h+6);
     });
     y+=8; doc.setDrawColor(230,228,233); doc.line(W-M-220,y,W-M,y); y+=18;
     var inc=qTotal(q), ex=Math.round(inc/1.1), gst=inc-ex;
