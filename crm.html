@@ -403,6 +403,17 @@ input.nqqty{width:74px;text-align:right;border:1px solid var(--line);border-radi
   .split{gap:12px}
   .grid{gap:12px}
 }
+
+/* --- Artwork & proofing card (rebuilt 25 Aug 2026) --- */
+.pfitem{border:1px solid var(--line);border-radius:10px;padding:12px 14px;margin-top:10px;background:var(--soft)}
+.pfhead{display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap;margin-bottom:6px}
+.pfhead b{font-size:14.5px}
+.pfrow{display:flex;gap:12px;padding:5px 0;font-size:13.5px;align-items:baseline;flex-wrap:wrap}
+.pfrow .k{flex:0 0 130px;color:var(--muted);font-size:12.5px}
+.pfrow>span:last-child{flex:1;min-width:200px}
+.pfrow a{color:var(--pink);cursor:pointer;font-weight:600}
+.pfrow input[type=file]{font-size:12.5px;max-width:210px}
+.pfbadge{display:inline-block;padding:2px 9px;border-radius:999px;font-size:11.5px;font-weight:700;letter-spacing:.02em}
 </style>
 <script src="assets/config.js?v=20260727crm"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -1023,6 +1034,7 @@ function openQuote(num){
       </div>
       ${right}
     </div>
+    ${q._orderId?proofCard(q):''}
     ${q._orderId?shipCard(q):''}`;
   go('quote');
 }
@@ -1999,18 +2011,21 @@ async function nqSave(send){
 /* ---------- Live data from Supabase ---------- */
 const SUP_COUNT={PREMIER:440,PROMOBRANDS:862};
 async function refreshFromSupabase(sb){
-  const [orgs,cons,qs,qis,ords,oi,invs,sup,lds,jcs,mcfg] = await Promise.all([
+  const [orgs,cons,qs,qis,ords,oi,invs,sup,lds,jcs,mcfg,ofs] = await Promise.all([
     sb.from('organisations').select('*').order('name'),
     sb.from('contacts').select('*').order('archived',{ascending:true}).order('name'),
     sb.from('quotes').select('*').eq('archived',false).order('created_at',{ascending:false}),
     sb.from('quote_items').select('*'),
     sb.from('orders').select('*').order('created_at',{ascending:false}),
-    sb.from('order_items').select('order_id,price_inc_cents'),
+    /* Line items now carry their proof history so the proofing card renders
+       without a second round trip. Proofs are versioned per item. */
+    sb.from('order_items').select('id,order_id,item_no,description,qty,status,price_inc_cents, proofs(id,version,status,sent_at,decided_at,decision_comments,approver_name,approval_token,first_viewed_at,last_viewed_at,view_count)'),
     sb.from('invoices').select('*'),
     sb.from('suppliers').select('*').eq('active',true).order('name'),
     sb.from('leads').select('*').order('created_at',{ascending:false}),
     sb.from('job_costs').select('*'),
-    sb.from('staff_config').select('key,value').eq('key','margin')
+    sb.from('staff_config').select('key,value').eq('key','margin'),
+    sb.from('order_files').select('id,order_id,order_item_id,kind,filename,size_bytes,storage_path,preflight_status,created_at').order('created_at',{ascending:false})
   ]);
   const mrow=((mcfg&&mcfg.data)||[])[0];
   if(mrow&&mrow.value&&mrow.value.default_multiplier) window.MARGIN_MULT=Number(mrow.value.default_multiplier)||1.52;
@@ -2022,6 +2037,9 @@ async function refreshFromSupabase(sb){
   const orderById={},orderTotal={},invByOrder={},itemsByQuote={};
   (ords.data||[]).forEach(o=>orderById[o.id]=o);
   (oi.data||[]).forEach(r=>orderTotal[r.order_id]=(orderTotal[r.order_id]||0)+(r.price_inc_cents||0));
+  const itemsByOrder={},filesByOrder={};
+  (oi.data||[]).forEach(r=>{(itemsByOrder[r.order_id]=itemsByOrder[r.order_id]||[]).push(r);});
+  (((ofs&&ofs.data)||[])).forEach(f=>{(filesByOrder[f.order_id]=filesByOrder[f.order_id]||[]).push(f);});
   (invs.data||[]).forEach(v=>invByOrder[v.order_id]=v);
   (qis.data||[]).forEach(it=>{(itemsByQuote[it.quote_id]=itemsByQuote[it.quote_id]||[]).push(it);});
   D.quotes.length=0;
@@ -2033,7 +2051,7 @@ async function refreshFromSupabase(sb){
     if(inv&&inv.status==='paid')stage='paid'; else if(inv)stage='invoice'; else if(ord)stage='order';
     let contact=q.contact_name||q.contact_email||'—';
     if(q.company){const org=D.orgs.find(o=>o.name.toLowerCase()===q.company.toLowerCase());if(org){const ppl=D.contacts.filter(c=>c.orgId===org.id);if(ppl.length&&!D.contacts.some(c=>c.name===contact))contact=ppl[0].name;}}
-    D.quotes.push({num:q.quote_number,contact,status:q.status,stage,orderNum:ord?ord.order_number:null,invNum:inv?inv.invoice_number:null,payLink:inv?inv.payment_link_url:null,items,_id:q.id,_orderId:q.converted_order_id||null,_invId:inv?inv.id:null,_invToken:inv?inv.access_token:null,_invSent:inv?inv.sent_at:null,_invStatus:inv?inv.status:null,_invPaidAt:inv?inv.paid_at:null,_invViewedAt:inv?inv.last_viewed_at:null,_viewedAt:q.last_viewed_at||null,_decidedAt:q.decided_at||null,_decision:q.decision_comments||'',_sentAt:q.sent_at||null,_acceptedBy:q.accepted_by_name||null,_created:q.created_at,_email:q.contact_email||'',_name:q.contact_name||'',_token:q.access_token||'',_accepted:!!q.accepted_by_name,_tCarrier:ord?(ord.tracking_carrier||''):'',_tNumber:ord?(ord.tracking_number||''):'',_tUrl:ord?(ord.tracking_url||''):'',_dispatched:ord?ord.dispatched_at:null,_ordStatus:ord?(ord.status||''):'',_reviewReq:ord?ord.review_requested_at:null,_completedAt:ord?(ord.completed_at||null):null,_valid:q.valid_until||null,_cost:costByQuote[q.id]||null});
+    D.quotes.push({num:q.quote_number,contact,status:q.status,stage,orderNum:ord?ord.order_number:null,invNum:inv?inv.invoice_number:null,payLink:inv?inv.payment_link_url:null,items,_id:q.id,_orderId:q.converted_order_id||null,_invId:inv?inv.id:null,_invToken:inv?inv.access_token:null,_invSent:inv?inv.sent_at:null,_invStatus:inv?inv.status:null,_invPaidAt:inv?inv.paid_at:null,_invViewedAt:inv?inv.last_viewed_at:null,_viewedAt:q.last_viewed_at||null,_decidedAt:q.decided_at||null,_decision:q.decision_comments||'',_sentAt:q.sent_at||null,_acceptedBy:q.accepted_by_name||null,_created:q.created_at,_email:q.contact_email||'',_name:q.contact_name||'',_token:q.access_token||'',_accepted:!!q.accepted_by_name,_tCarrier:ord?(ord.tracking_carrier||''):'',_tNumber:ord?(ord.tracking_number||''):'',_tUrl:ord?(ord.tracking_url||''):'',_dispatched:ord?ord.dispatched_at:null,_ordStatus:ord?(ord.status||''):'',_reviewReq:ord?ord.review_requested_at:null,_completedAt:ord?(ord.completed_at||null):null,_valid:q.valid_until||null,_cost:costByQuote[q.id]||null,_oitems:(itemsByOrder[q.converted_order_id]||[]),_ofiles:(filesByOrder[q.converted_order_id]||[])});
   });
   D.orders.length=0;
   (ords.data||[]).forEach(o=>{const q=(qs.data||[]).find(x=>x.converted_order_id===o.id);D.orders.push({num:o.order_number,name:o.contact_name||'—',company:o.company||null,status:o.status,total:orderTotal[o.id]||0,q:q?q.quote_number:null,track:o.tracking_number||null});});
@@ -2834,6 +2852,146 @@ const CARRIERS=[
   {name:'Other',url:''}
 ];
 function trackingUrlFor(carrier,num){var c=CARRIERS.find(function(x){return x.name===carrier;});if(!c||!c.url||!num)return '';return c.url.replace('{n}',encodeURIComponent(num));}
+
+/* ---------- Artwork & proofing ----------------------------------------
+   Rebuilt into the CRM 25 Aug 2026. The customer side (proof.html and the
+   proof-file edge function) never changed; this is the staff side that went
+   missing when admin.html was retired on 21 Aug. Proofs are versioned by a
+   database trigger, so uploading again simply supersedes the previous one. */
+function proofBase(){
+  /* GitHub Pages serves crm.html at both /crm and /crm.html - handle both. */
+  return location.origin+location.pathname.replace(/crm(\.html)?$/,'proof.html');
+}
+function latestProof(item){
+  var ps=((item&&item.proofs)||[]).slice().sort(function(a,b){return b.version-a.version;});
+  return ps[0]||null;
+}
+function pfBytes(n){ if(n==null) return ''; return n>=1048576?(n/1048576).toFixed(1)+' MB':Math.max(1,Math.round(n/1024))+' KB'; }
+function pfDate(s){ if(!s) return ''; var d=new Date(s); return d.toLocaleDateString('en-AU',{day:'2-digit',month:'short'})+' '+d.toLocaleTimeString('en-AU',{hour:'2-digit',minute:'2-digit'}); }
+function pfViewed(o){
+  if(!o||!o.first_viewed_at) return '<span class="mini">not opened yet</span>';
+  return '<span class="mini" style="color:var(--good);font-weight:700">opened '+esc(pfDate(o.first_viewed_at))+(o.view_count>1?' ('+o.view_count+'×)':'')+'</span>';
+}
+function pfBadge(st,ver){
+  var bg='#eeecf1',fg='var(--muted)',txt='no proof yet';
+  if(st==='approved'){bg='#dcfce7';fg='#15803d';txt='proof v'+ver+' approved';}
+  else if(st==='declined'){bg='#fee2e2';fg='var(--bad)';txt='proof v'+ver+' changes requested';}
+  else if(st==='sent'){bg='#fef3c7';fg='var(--warn)';txt='proof v'+ver+' awaiting approval';}
+  else if(st==='superseded'){bg='#eeecf1';fg='var(--muted)';txt='proof v'+ver+' superseded';}
+  return '<span class="pfbadge" style="background:'+bg+';color:'+fg+'">'+txt+'</span>';
+}
+
+/* Staff download. The artwork bucket is private, so we mint a signed URL that
+   expires in an hour rather than ever making a file public. */
+async function openArtwork(path,name){
+  var sb=window.CRM_SB; if(!sb){alert('Not connected - please reload and sign in.');return;}
+  var r=await sb.storage.from('artwork').createSignedUrl(path,3600);
+  if(r.error||!r.data){alert('Could not open '+(name||'that file')+': '+(r.error?r.error.message:'unknown error'));return;}
+  window.open(r.data.signedUrl,'_blank','noopener');
+}
+function copyProofLink(lk){
+  if(navigator.clipboard) navigator.clipboard.writeText(lk);
+  alert('Approval link copied:\n\n'+lk+'\n\nAnyone with this link can approve. They must type their name, and it is recorded with the time and IP address.');
+}
+
+async function sendProofFile(quoteNum,itemId,btn){
+  var msg=document.getElementById('pf_msg_'+itemId);
+  var fileEl=document.getElementById('pf_file_'+itemId);
+  var f=fileEl&&fileEl.files&&fileEl.files[0];
+  function say(t){ if(msg) msg.textContent=t; }
+  if(!f){ say('Choose a PDF first.'); return; }
+  if(f.type!=='application/pdf'){ say('Proofs must be PDF. Export the artwork as a print-ready PDF and try again.'); return; }
+  if(f.size>50*1024*1024){ say('That file is '+pfBytes(f.size)+'. The limit is 50 MB.'); return; }
+  var sb=window.CRM_SB; if(!sb){ say('Not connected - reload and sign in.'); return; }
+  var q=D.quotes.find(function(x){return x.num===quoteNum;});
+  if(!q||!q._orderId){ say('No order linked to this quote yet.'); return; }
+  var item=(q._oitems||[]).find(function(x){return x.id===itemId;});
+  if(!item){ say('Could not find that line item.'); return; }
+  if(btn) btn.disabled=true;
+  say('Uploading…');
+  try{
+    var nextV=((latestProof(item)||{}).version||0)+1;
+    var path='orders/'+q._orderId+'/proof-item'+(item.item_no||1)+'-v'+nextV+'-'+Date.now()+'.pdf';
+    var up=await sb.storage.from('artwork').upload(path,f,{contentType:'application/pdf'});
+    if(up.error) throw up.error;
+    var u=await sb.auth.getUser();
+    var fr=await sb.from('order_files').insert({
+      order_id:q._orderId, order_item_id:itemId, kind:'proof',
+      filename:f.name, mime_type:'application/pdf', size_bytes:f.size,
+      storage_path:path, uploaded_by:(u.data&&u.data.user)?u.data.user.id:null
+    }).select('id').single();
+    if(fr.error) throw fr.error;
+    say('Creating proof…');
+    var pr=await sb.from('proofs').insert({order_item_id:itemId,file_id:fr.data.id}).select('id,version').single();
+    if(pr.error) throw pr.error;
+    say('Proof v'+pr.data.version+' ready ✓ - copy the approval link and email it.');
+    await refreshFromSupabase(sb);
+    openQuote(quoteNum);
+  }catch(e){
+    say('Failed: '+(e.message||e));
+  }
+  if(btn) btn.disabled=false;
+}
+
+function proofCard(q){
+  var items=(q._oitems||[]).slice().sort(function(a,b){return (a.item_no||0)-(b.item_no||0);});
+  var files=q._ofiles||[];
+  if(!items.length) return '';
+  var art=files.filter(function(f){return f.kind==='artwork';});
+  var sent=0,approved=0;
+  var rows=items.map(function(it){
+    var p=latestProof(it);
+    if(p&&p.status==='sent') sent++;
+    if(p&&p.status==='approved') approved++;
+    var mine=art.filter(function(f){return f.order_item_id===it.id;});
+    var h='<div class="pfitem"><div class="pfhead"><b>#'+(it.item_no||1)+' '+esc(descHead(it.description||''))+'</b>'+
+          '<span>×'+(it.qty||0)+' &nbsp;'+pfBadge(p?p.status:'',p?p.version:0)+'</span></div>';
+
+    h+='<div class="pfrow"><span class="k">Customer artwork</span><span>'+
+       (mine.length
+         ? mine.map(function(f){
+             return '<a onclick="openArtwork(\''+esc(f.storage_path)+'\',\''+esc(f.filename)+'\')">'+esc(f.filename)+' ↓</a> <span class="mini">'+pfBytes(f.size_bytes)+'</span>';
+           }).join(' &nbsp;·&nbsp; ')
+         : '<span class="mini">Nothing uploaded yet. Files sent by email or as a link on the enquiry will not appear here.</span>')+
+       '</span></div>';
+
+    if(p){
+      h+='<div class="pfrow"><span class="k">Latest proof</span><span>v'+p.version+
+         (p.sent_at?' · sent '+esc(pfDate(p.sent_at)):'')+
+         (p.decided_at?' · decided '+esc(pfDate(p.decided_at))+(p.approver_name?' by <b>'+esc(p.approver_name)+'</b>':''):'')+
+         ' · '+pfViewed(p)+'</span></div>';
+      if(p.decision_comments)
+        h+='<div class="pfrow"><span class="k">Customer said</span><span style="color:var(--bad)">“'+esc(p.decision_comments)+'”</span></div>';
+      if(p.approval_token){
+        var lk=proofBase()+'?t='+p.approval_token;
+        h+='<div class="pfrow"><span class="k">Approval link</span><span>'+
+           '<a href="'+esc(lk)+'" target="_blank" rel="noopener">Open ›</a> &nbsp;'+
+           '<button class="btn sm" onclick="copyProofLink(\''+esc(lk)+'\')">Copy link</button> '+
+           '<span class="mini">no sign-in needed, safe to forward</span></span></div>';
+      }
+    }
+
+    h+='<div class="pfrow"><span class="k">'+(p?'Send a new version':'Send a proof')+'</span><span>'+
+       '<input type="file" accept="application/pdf" id="pf_file_'+it.id+'"> '+
+       '<button class="btn primary sm" onclick="sendProofFile(\''+q.num+'\',\''+it.id+'\',this)">Upload &amp; send'+(p?' v'+(p.version+1):'')+'</button> '+
+       '<span class="mini" id="pf_msg_'+it.id+'"></span></span></div></div>';
+    return h;
+  }).join('');
+
+  var sub;
+  if(approved===items.length) sub='All '+items.length+' item'+(items.length===1?'':'s')+' approved. Clear to go to production.';
+  else if(sent) sub=sent+' proof'+(sent===1?'':'s')+' with the customer, awaiting approval.';
+  else sub='No proof sent yet on this job.';
+
+  return '<div class="card" style="margin-top:16px">'+
+    '<div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px">'+
+      '<div><h3>Artwork &amp; proofing</h3><div class="sub">'+esc(sub)+'</div></div>'+
+    '</div>'+
+    rows+
+    '<div class="note" style="margin-top:10px">Upload the PDF exactly as it will print, with the trim line and 3&nbsp;mm bleed showing - that file is what the customer approves. PDF only, up to 50&nbsp;MB. Approvals record the name, time and IP address, and production stays blocked in the database until every item is approved and the order is paid.</div>'+
+  '</div>';
+}
+
 function shipCard(q){
   var has=!!q._tNumber;
   var linkRow=q._tUrl?'<div class="row"><span>Tracking link</span><a href="'+esc(q._tUrl)+'" target="_blank" rel="noopener">Open ›</a></div>':'';
