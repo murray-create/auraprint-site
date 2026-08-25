@@ -49,6 +49,8 @@
 .bankrow b{font-variant-numeric:tabular-nums}
 .notice{background:#f8eeda;color:#9a6208;border-radius:10px;padding:13px 15px;font-size:13.5px;margin-top:14px}
 .err{background:#f8e4e1;color:#a8342b;border-radius:10px;padding:13px 15px;font-size:14px;margin:14px 0;display:none}
+.bigfile{border:1.5px solid #ece6de;border-radius:14px;padding:18px;background:#faf8f5;margin-top:6px;transition:border-color .25s}
+.bigfile a{color:#7C3AED;text-decoration:underline;text-underline-offset:3px}
 .terms{display:flex;gap:11px;align-items:flex-start;margin-top:20px;font-size:13.5px;color:#6f6960;cursor:pointer}
 .terms input{width:18px;height:18px;margin-top:2px;accent-color:#EC4899;flex:none}
 .busy{opacity:.6;pointer-events:none}
@@ -214,10 +216,36 @@
           '</div>' +
         '</div>';
       }).join('') +
-      '<button class="btn btn-aura" id="toPay" style="width:100%;margin-top:8px">Continue to payment &rarr;</button>' +
+      /* Artwork over the upload ceiling. Print files routinely exceed 50MB, so
+         this is a normal path rather than an error to apologise for. */
+      '<div class="bigfile" id="bigfile">' +
+        '<h3 style="font-size:15.5px;font-family:Inter,sans-serif;font-weight:700">Artwork over 50 MB?</h3>' +
+        '<p style="font-size:13.5px;color:#6f6960;margin:6px 0 12px">' +
+          'Large format and image-heavy files often are. Send it across with ' +
+          '<a href="https://wetransfer.com" target="_blank" rel="noopener"><b>WeTransfer</b></a> ' +
+          '(free, no account needed), then paste the link here so it lands on your job.</p>' +
+        '<ol style="font-size:13.5px;color:#6f6960;margin:0 0 14px 18px;line-height:1.9">' +
+          '<li>Send to <b>admin@auraprint.com.au</b></li>' +
+          '<li>Put <b>'+C.esc(o.order_number)+'</b> in the message</li>' +
+          '<li>Copy the download link WeTransfer gives you and paste it below</li>' +
+        '</ol>' +
+        (o.artwork_link
+          ? '<div class="filed">&#10003; Transfer link saved</div>'
+          : '<div style="display:flex;gap:10px;flex-wrap:wrap">' +
+            '<input type="url" id="wtLink" placeholder="https://we.tl/…" ' +
+              'style="flex:1;min-width:200px;padding:11px 13px;border:1.5px solid #ece6de;border-radius:10px;font-size:14px">' +
+            '<button class="btn btn-ghost" id="wtSave" style="padding:10px 20px;font-size:14px">Save link</button>' +
+            '</div><div style="font-size:13px;color:#948d83;margin-top:8px" id="wtMsg"></div>') +
+        '<p style="font-size:12.5px;color:#948d83;margin-top:12px">Dropbox, Google Drive or OneDrive links work too. ' +
+          'Just make sure sharing is on so we can open it.</p>' +
+      '</div>' +
+      '<button class="btn btn-aura" id="toPay" style="width:100%;margin-top:16px">Continue to payment &rarr;</button>' +
       '<p style="font-size:13px;color:#948d83;margin-top:12px;text-align:center">' +
-        'No artwork handy? Continue and email it to admin@auraprint.com.au quoting '+C.esc(o.order_number)+'.</p>' +
+        'No artwork handy? Continue and send it later quoting '+C.esc(o.order_number)+'.</p>' +
     '</div>' + summary(o.lines, o.total_inc_cents) + '</div>';
+
+    var wtBtn = document.getElementById('wtSave');
+    if(wtBtn) wtBtn.addEventListener('click', saveTransferLink);
 
     bodyEl.querySelectorAll('[data-up]').forEach(function(b){
       b.addEventListener('click', function(){ upload(+b.dataset.up, b); });
@@ -238,7 +266,18 @@
     var f = input && input.files && input.files[0];
     if(!f){ msg.textContent = 'Choose a PDF first.'; return; }
     if(f.type !== 'application/pdf'){ msg.textContent = 'Artwork must be a print-ready PDF.'; return; }
-    if(f.size > 50*1024*1024){ msg.textContent = 'That file is over 50 MB. Please email it instead.'; return; }
+    if(f.size > 50*1024*1024){
+      /* Not an error the customer caused - route them to the transfer path. */
+      msg.innerHTML = 'That file is ' + (f.size/1048576).toFixed(0) + ' MB, over our 50 MB upload limit. ' +
+        'Send it by WeTransfer instead &mdash; see below.';
+      var bf = document.getElementById('bigfile');
+      if(bf){
+        bf.style.borderColor = '#EC4899';
+        bf.scrollIntoView({behavior:'smooth', block:'center'});
+        var li = document.getElementById('wtLink'); if(li) setTimeout(function(){ li.focus(); }, 400);
+      }
+      return;
+    }
 
     btn.disabled = true; msg.textContent = 'Uploading…';
 
@@ -261,6 +300,25 @@
     if(!ok.ok){ msg.textContent=''; return fail(ok.error); }
 
     o = C.order(); o.lines[i].uploaded = f.name; C.setOrder(o);
+    renderArtwork();
+  }
+
+  async function saveTransferLink(){
+    clearErr();
+    var o = C.order();
+    var input = document.getElementById('wtLink');
+    var msg = document.getElementById('wtMsg');
+    var btn = document.getElementById('wtSave');
+    var url = (input.value||'').trim();
+    if(!url){ msg.textContent = 'Paste the link WeTransfer gave you.'; return; }
+    if(!/^https:\/\//i.test(url)){ msg.textContent = 'Paste the full link, starting with https://'; return; }
+
+    btn.disabled = true; msg.textContent = 'Saving…';
+    var res = await C.callFn('shop-artwork', { action:'link', order_token:o.order_token, url:url });
+    btn.disabled = false;
+    if(!res.ok){ msg.textContent = ''; return fail(res.error); }
+
+    o = C.order(); o.artwork_link = url; C.setOrder(o);
     renderArtwork();
   }
 
