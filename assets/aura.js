@@ -1,4 +1,4 @@
-/* AURA PRINT & PROMO - shared components: util bar, nav, footer, chat bot */
+/* AURA PRINT & PROMO - shared components: util bar, nav, footer, analytics */
 (function(){
 const HEADER = `
 <div class="util">
@@ -271,6 +271,11 @@ function wireForms(){
           status.style.color = '#1a8a4a';
           status.innerHTML = '✓ Thanks! Your request is in — we’ll be in touch within the hour (Mon–Fri 8:30–5).';
           if (btn){ btn.textContent = '✓ Sent'; }
+          auraTrack('generate_lead', {
+            form_name: form.getAttribute('data-subject') || 'Website enquiry',
+            page_path: location.pathname,
+            stored: !!stored, emailed: !!emailed
+          });
         } else {
           status.style.color = '#c0392b';
           status.innerHTML = 'Something went wrong sending that. Please call <b>1300 291 277</b> or email <b>' + em + '</b> and we’ll sort it right away.';
@@ -324,6 +329,7 @@ function wireNewsletter(){
       if (r.ok || r.skipped){
         input.value = ''; status.style.color = '#8fd3a8'; status.textContent = '✓ You’re on the list.';
         btn.textContent = '✓';
+        auraTrack('newsletter_signup', { page_path: location.pathname });
       } else {
         status.style.color = '#f2b8a2'; status.textContent = 'That didn’t save - please try again.';
         btn.disabled = false; btn.textContent = 'Join';
@@ -334,7 +340,67 @@ function wireNewsletter(){
   input.addEventListener('keydown', function(e){ if (e.key === 'Enter') submit(); });
 }
 
+/* ---------------------------------------------------------------
+   Google Analytics 4
+   gtag.js loads ONLY when AURA_CONFIG.ga4Id is set, so clearing that
+   value switches tracking off site-wide. window.auraTrack(name, params)
+   is safe to call from any page whether analytics is on or off.
+   Events: page_view (automatic), tel_click, email_click, quote_start,
+           generate_lead, newsletter_signup.
+   --------------------------------------------------------------- */
+function auraTrack(name, params){
+  try {
+    if (typeof window.gtag === 'function') window.gtag('event', name, params || {});
+  } catch (e) {}
+}
+window.auraTrack = auraTrack;
+
+function wireAnalytics(){
+  var id = (window.AURA_CONFIG || {}).ga4Id;
+  if (!id) return;                     /* analytics switched off */
+  if (window.__auraGaLoaded) return;   /* never load gtag twice */
+  window.__auraGaLoaded = true;
+
+  window.dataLayer = window.dataLayer || [];
+  window.gtag = function(){ window.dataLayer.push(arguments); };
+  window.gtag('js', new Date());
+  window.gtag('config', id, {
+    page_title: document.title,
+    page_path: location.pathname + location.search
+  });
+
+  var s = document.createElement('script');
+  s.async = true;
+  s.src = 'https://www.googletagmanager.com/gtag/js?id=' + encodeURIComponent(id);
+  document.head.appendChild(s);
+
+  /* Delegated, so it covers the header, footer and drawer that this file
+     injects after page load, plus anything a product page adds later. */
+  document.addEventListener('click', function(e){
+    var a = e.target && e.target.closest ? e.target.closest('a[href]') : null;
+    if (!a) return;
+    var href = a.getAttribute('href') || '';
+    if (href.indexOf('tel:') === 0){
+      auraTrack('tel_click', { link_url: href, page_path: location.pathname });
+    } else if (href.indexOf('mailto:') === 0){
+      auraTrack('email_click', { link_url: href, page_path: location.pathname });
+    }
+  }, true);
+
+  /* First touch of any enquiry or quote form = intent, fired once per form. */
+  document.addEventListener('focusin', function(e){
+    var f = e.target && e.target.closest ? e.target.closest('form[data-aura-form]') : null;
+    if (!f || f.__auraStarted) return;
+    f.__auraStarted = true;
+    auraTrack('quote_start', {
+      form_name: f.getAttribute('data-subject') || 'Website enquiry',
+      page_path: location.pathname
+    });
+  });
+}
+
 document.addEventListener('DOMContentLoaded', function(){
+  wireAnalytics();
   document.body.insertAdjacentHTML('afterbegin', HEADER);
   wireForms();
   wireDrawer();
