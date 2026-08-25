@@ -11,9 +11,9 @@
   if (!host) return;
 
   var SPEEDS = [
-    { key: 'standard', label: 'Standard' },
-    { key: 'nextday',  label: 'Next Day' },
-    { key: 'sameday',  label: 'Same Day' }
+    { key: 'standard', label: 'Standard', cut: '3-5 business days' },
+    { key: 'nextday',  label: 'Next Day', cut: 'order by 12pm' },
+    { key: 'sameday',  label: 'Same Day', cut: 'order by 8am' }
   ];
   var STOCKS = [
     { val: 'Deluxe 310gsm', label: '310gsm Deluxe Artboard', group: 'Deluxe Artboard' },
@@ -97,6 +97,20 @@
     }).join('') + '</div>';
   }
 
+  /* Production speed gets its own card, because the cut-off time is the part
+     customers actually need and a bare pill cannot carry it. */
+  function speedBtns(avail) {
+    return '<div class="opts speeds" data-dim="turnaround">' + SPEEDS.filter(function (sp) {
+      return avail[sp.key];
+    }).map(function (sp) {
+      var on = sp.key === sel.turnaround ? ' on' : '';
+      return '<button type="button" class="opt speedopt' + on + '" data-val="' + sp.key + '">' +
+        '<span class="sp-name">' + sp.label + '</span>' +
+        '<span class="sp-cut">' + sp.cut + '</span>' +
+      '</button>';
+    }).join('') + '</div>';
+  }
+
   function stockSelect(avail) {
     var groups = ['Deluxe Artboard', 'Speciality', 'Loyalty'], html = '';
     groups.forEach(function (g) {
@@ -119,9 +133,11 @@
   }
 
   function dispatchNote() {
-    if (sel.turnaround === 'sameday') return '⚡ Same-day production when print-ready artwork is approved before 11am (business days).';
-    if (sel.turnaround === 'nextday') return '⏩ Next business day production once artwork is approved.';
-    return '🚚 Standard production, about 3-5 business days after proof approval, plus delivery.';
+    /* one shared rule, defined in aura.js, so every page says the same thing */
+    if (window.AuraTurn) return window.AuraTurn.dispatchLine(sel.turnaround);
+    if (sel.turnaround === 'sameday') return '⚡ Order and approve artwork by 8am for same business day dispatch.';
+    if (sel.turnaround === 'nextday') return '⏩ Order and approve artwork by 12pm for next business day dispatch.';
+    return '🚚 Standard production dispatches in 3-5 business days after proof approval.';
   }
 
   function render(locked) {
@@ -139,8 +155,8 @@
     var priceHtml = '<div class="amount grad-text" id="price">' + (row ? money(row) : 'POA') + '</div>';
 
     host.innerHTML =
-      '<div class="optlabel">Production speed</div>' +
-      optBtns('turnaround', SPEEDS.map(function (s) { return { val: s.key, label: s.label }; }), aTurn) +
+      '<div class="optlabel">Production speed <span style="text-transform:none;letter-spacing:0;font-weight:600;color:#8a847d">&mdash; when it leaves us</span></div>' +
+      speedBtns(aTurn) +
       '<div class="optlabel">Stock</div>' + stockSelect(aStock) +
       '<div class="optlabel" style="margin-top:16px">Finish</div>' + optBtns('finish', FINISHES, aFin) +
       '<div class="optlabel">Corners</div>' + optBtns('corners', CORNERS, aCor) +
@@ -152,6 +168,7 @@
         (row ? '<span style="color:#2f7d4f;font-weight:700">✓ Confirmed price.</span> Includes GST and standard delivery Australia-wide.'
              : 'That exact combination is a custom quote. Send it through and we’ll price it fast.') + '</div>' +
       '<div id="dispatch" style="font-size:13px;color:#6b6560;margin-top:8px">' + dispatchNote() + '</div>' +
+      '<div style="font-size:11.5px;line-height:1.45;color:#9a948d;margin-top:5px">Every effort is made to get your job onto the press for the dispatch shown. On the odd occasion a press or freight delay pushes it out, and we will tell you as soon as we know.</div>' +
       '<div style="display:flex;gap:12px;margin-top:18px;flex-wrap:wrap">' +
         (row ? '<button class="btn btn-aura" id="cartCta" style="flex:1;min-width:220px;display:none;border:none;cursor:pointer">Add to cart &middot; ' + money(row) + '</button>' : '') +
         '<a class="btn btn-aura" id="orderCta" href="' + quoteHref() + (row ? '&price=' + Math.round(row / 100) : '') + '" style="flex:1;text-align:center;min-width:220px">Get a quote &amp; upload artwork &rarr;</a>' +

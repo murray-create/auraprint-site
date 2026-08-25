@@ -1,4 +1,6 @@
-/* AURA PRINT & PROMO - shared components: util bar, nav, footer, analytics */
+/* AURA PRINT & PROMO - shared behaviour: mobile drawer, forms, newsletter, analytics.
+   The nav and footer MARKUP now lives in each page's HTML. The copies below are a
+   fallback for any page not yet rebuilt - keep the two in step if you edit either. */
 (function(){
 const HEADER = `
 <div class="util">
@@ -23,7 +25,7 @@ const HEADER = `
         <div class="mega">
           <div><h4>Cards &amp; Stationery</h4><ul><li><a href="business-cards.html">Business Cards</a></li><li><a href="nv-velvet-business-cards.html">NV Velvet Cards</a></li><li><a href="letterheads.html">Letterheads</a></li><li><a href="envelopes.html">Envelopes</a></li><li><a href="loyalty-cards.html">Loyalty Cards</a></li></ul></div>
           <div><h4>Marketing</h4><ul><li><a href="flyers.html">Flyers</a></li><li><a href="brochures.html">Brochures</a></li><li><a href="postcards.html">Postcards</a></li><li><a href="presentation-folders.html">Presentation Folders</a></li><li><a href="menus.html">Menus</a></li></ul></div>
-          <div><h4>Fast &amp; Industry</h4><ul><li><a href="same-day-printing.html">Same Day Printing</a></li><li><a href="stationery-same-day.html">Same Day Stationery</a></li><li><a href="real-estate-print-signage.html">Real Estate Print &amp; Signage</a></li><li><a href="budget-business-cards.html">Budget Business Cards</a></li><li><a href="artwork-templates.html">Artwork Templates</a></li></ul></div>
+          <div><h4>Fast &amp; Industry</h4><ul><li><a href="same-day-printing.html">Fast Turnaround Printing</a></li><li><a href="stationery-same-day.html">Fast Stationery</a></li><li><a href="real-estate-print-signage.html">Real Estate Print &amp; Signage</a></li><li><a href="budget-business-cards.html">Budget Business Cards</a></li><li><a href="artwork-templates.html">Artwork Templates</a></li></ul></div>
           <div><h4>Books &amp; Booklets</h4><ul><li><a href="booklets.html">Saddle Stitched Booklets</a></li><li><a href="perfect-bound-books.html">Perfect Bound Books</a></li><li><a href="invoice-books.html">Invoice Books (NCR)</a></li><li><a href="notepads.html">Notepads</a></li><li><a href="calendars.html">Calendars</a></li></ul></div>
         </div>
       </div>
@@ -129,7 +131,7 @@ const FOOTER = `
         <div class="newsletter"><input type="email" id="nl-email" placeholder="Your email address" aria-label="Email address for newsletter"><button class="btn btn-aura" id="nl-join" style="padding:12px 22px">Join</button></div>
         <p id="nl-status" style="font-size:13px;min-height:18px;margin-top:8px"></p>
       </div>
-      <div><h4>Products</h4><ul><li><a href="business-cards.html">Business Cards</a></li><li><a href="flyers.html">Flyers</a></li><li><a href="corflute-signs.html">Corflute Signs</a></li><li><a href="pull-up-banners.html">Pull Up Banners</a></li><li><a href="stickers.html">Stickers</a></li><li><a href="promo.html">Promo Products</a></li><li><a href="promo.html">Workwear</a></li><li><a href="same-day-printing.html">Same Day Printing</a></li><li><a href="real-estate-print-signage.html">Real Estate Signage</a></li></ul></div>
+      <div><h4>Products</h4><ul><li><a href="business-cards.html">Business Cards</a></li><li><a href="flyers.html">Flyers</a></li><li><a href="corflute-signs.html">Corflute Signs</a></li><li><a href="pull-up-banners.html">Pull Up Banners</a></li><li><a href="stickers.html">Stickers</a></li><li><a href="promo.html">Promo Products</a></li><li><a href="promo.html">Workwear</a></li><li><a href="same-day-printing.html">Fast Turnaround Printing</a></li><li><a href="real-estate-print-signage.html">Real Estate Signage</a></li></ul></div>
       <div><h4>Company</h4><ul><li><a href="about.html">About</a></li><li><a href="blog.html">Blog</a></li><li><a href="art-setup.html">Artwork Setup Guide</a></li><li><a href="artwork-templates.html">Artwork Templates</a></li><li><a href="trade-terms.html">Terms of Trade</a></li><li><a href="privacy-policy.html">Privacy Policy</a></li><li><a href="refund-policy.html">Refunds &amp; Reprints</a></li></ul></div>
       <div><h4>Contact</h4><ul>
         <li>4/1 Packer Road, Baringa QLD 4551</li>
@@ -400,15 +402,84 @@ function wireAnalytics(){
   });
 }
 
+/* ---------- Turnaround: one source of truth for what we promise ----------
+   Same Day  - dispatched if ordered by 8am
+   Next Day  - dispatched if ordered by 12pm
+   Standard  - dispatched in 3-5 business days
+   Fast speeds only run on selected products and specifications, so a page
+   opts in with data-aura-turnaround="sameday" | "nextday". Standard is the
+   floor and is always true. Times are worked out in Brisbane time, not the
+   visitor's clock, so a customer in Perth is not told the wrong cut-off. */
+const TURN_SPEEDS = {
+  standard: { label:'Standard', cut:'3-5 business days' },
+  nextday:  { label:'Next Day', cut:'order by 12pm', hour:12 },
+  sameday:  { label:'Same Day', cut:'order by 8am',  hour:8  }
+};
+function brisNow(){
+  try { return new Date(new Date().toLocaleString('en-US',{timeZone:'Australia/Brisbane'})); }
+  catch(e){ return new Date(); }
+}
+function isWeekend(d){ return d.getDay()===0 || d.getDay()===6; }
+function addBiz(from,n){ const d=new Date(from); while(n>0){ d.setDate(d.getDate()+1); if(!isWeekend(d)) n--; } return d; }
+function fmtDay(d){
+  const wd=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+  const mo=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  return wd[d.getDay()]+' '+d.getDate()+' '+mo[d.getMonth()];
+}
+/* the next business day whose cut-off is still ahead of us */
+function nextOpenDay(hour){
+  const now=brisNow(); let d=new Date(now);
+  if (isWeekend(d) || now.getHours()>=hour) d=addBiz(d,1);
+  return d;
+}
+/* A plain-English line for the speed the customer is looking at. */
+function dispatchLine(speed){
+  const now=brisNow();
+  if (speed==='sameday'){
+    if (!isWeekend(now) && now.getHours()<8)
+      return '⚡ Order and approve artwork before <b>8am today</b> and it dispatches <b>today, '+fmtDay(now)+'</b>.';
+    const d=nextOpenDay(8);
+    return '⚡ Today’s 8am cut-off has passed. Order before <b>8am '+fmtDay(d)+'</b> for dispatch that day.';
+  }
+  if (speed==='nextday'){
+    if (!isWeekend(now) && now.getHours()<12)
+      return '⏩ Order and approve artwork before <b>12pm today</b> for dispatch <b>'+fmtDay(addBiz(now,1))+'</b>.';
+    const d=nextOpenDay(12);
+    return '⏩ Order before <b>12pm '+fmtDay(d)+'</b> for dispatch <b>'+fmtDay(addBiz(d,1))+'</b>.';
+  }
+  const start = isWeekend(now) ? addBiz(now,1) : now;
+  return '🚚 Standard production dispatches in <b>3-5 business days</b>, about <b>'+fmtDay(addBiz(start,3))+' to '+fmtDay(addBiz(start,5))+'</b>.';
+}
+window.AuraTurn = { speeds:TURN_SPEEDS, dispatchLine:dispatchLine, fmtDay:fmtDay, addBiz:addBiz, now:brisNow };
+
+/* The bar itself is written into each page as plain HTML so crawlers read the
+   cut-offs. This only adds the live dispatch date on top of it. */
+function wireTurnaround(){
+  document.querySelectorAll('[data-aura-turnaround]').forEach(function(el){
+    const live = el.querySelector('.turn-live');
+    if (live) live.innerHTML = dispatchLine(el.getAttribute('data-aura-turnaround') || 'standard');
+  });
+}
+
 document.addEventListener('DOMContentLoaded', function(){
   wireAnalytics();
-  document.body.insertAdjacentHTML('afterbegin', HEADER);
+
+  /* The header and footer are now written into every page's HTML, so the menu
+     and the footer links exist before any JavaScript runs. Search engines and
+     the AI crawlers that do not execute scripts can finally see the whole link
+     structure of the site.
+
+     The two lines below are only a safety net. If a page has not been rebuilt
+     with the static markup yet, it still gets a menu. Once every page carries
+     it, these never fire. */
+  if (!document.querySelector('nav.main')) document.body.insertAdjacentHTML('afterbegin', HEADER);
+  if (!document.querySelector('footer'))   document.body.insertAdjacentHTML('beforeend', FOOTER);
+
   wireForms();
   wireDrawer();
-
-  document.body.insertAdjacentHTML('beforeend', FOOTER);
   fillEmails();
   wireNewsletter();
+  wireTurnaround();
 
   /* marquee helper (if page has one) */
   const m=document.getElementById('marq'); if(m) m.innerHTML+=m.innerHTML;

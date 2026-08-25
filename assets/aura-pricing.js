@@ -370,19 +370,12 @@
       });
   })();
 
-  /* Dispatch estimate: 2 clear business days, 11am cutoff, skips weekends. */
-  function isWeekend(d) { return d.getDay() === 0 || d.getDay() === 6; }
-  function addBiz(from, n) { var d = new Date(from); while (n > 0) { d.setDate(d.getDate() + 1); if (!isWeekend(d)) n--; } return d; }
-  function fmt(d) {
-    var wd = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'], mo = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-    return wd[d.getDay()] + ' ' + d.getDate() + ' ' + mo[d.getMonth()];
-  }
+  /* Dispatch estimate. These products price at Standard speed, which is
+     3-5 business days. The rule lives in aura.js so every page agrees. */
   (function () {
-    var now = new Date(), start = new Date(now), past = now.getHours() >= 11;
-    if (isWeekend(now) || past) start = addBiz(now, 1);
-    var disp = addBiz(start, 2), before = !isWeekend(now) && !past;
-    host.querySelector('#dispatch').innerHTML = '🚚 ' + (before
-      ? 'Approved artwork in before <b>11am today</b> for estimated dispatch <b>' + fmt(disp) + '</b>.'
-      : 'Estimated dispatch <b>' + fmt(disp) + '</b> (2 business days from next working day).');
+    var el = host.querySelector('#dispatch');
+    if (!el) return;
+    if (window.AuraTurn) { el.innerHTML = window.AuraTurn.dispatchLine('standard'); return; }
+    el.innerHTML = '🚚 Standard production dispatches in <b>3-5 business days</b> after proof approval.';
   })();
 })();
