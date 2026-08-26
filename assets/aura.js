@@ -10,6 +10,7 @@ const HEADER = `
       <a href="quote.html">Upload artwork</a>
     </div>
     <div class="right">
+      <a class="rv-chip" href="https://www.google.com/maps/place/Aura+Print/@-26.8026348,153.0684397,931m/data=!4m6!3m5!1s0x483114dbbb836a6d:0x3365af4aa10f35bd!8m2!3d-26.8026348!4d153.0684397!16s%2Fg%2F11y38dgflm" target="_blank" rel="noopener" aria-label="Rated 5.0 out of 5 from 12 Google reviews"><span class="rv-chip-stars" aria-hidden="true">★★★★★</span><b>5.0</b><span class="rv-chip-n">12 Google reviews</span></a>
       <span class="tag">Sunshine Coast owned. Australia-wide delivery.</span>
     </div>
   </div>
@@ -137,7 +138,7 @@ const FOOTER = `
         <li>4/1 Packer Road, Baringa QLD 4551</li>
         <li><a href="tel:1300291277">1300 291 277</a></li>
         <li><a class="email-link" data-u="admin" data-d="auraprint.com.au"></a></li>
-        <li>Mon-Fri 8:30am - 5pm</li>
+        <li>Mon-Fri 9am - 5pm</li>
         <li style="margin-top:10px"><b style="color:#fff">Need it fast? Ask about express options.</b></li>
       </ul></div>
     </div>

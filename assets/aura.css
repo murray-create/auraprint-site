@@ -260,3 +260,29 @@ body.drawer-open #aura-chat-btn,body.drawer-open #aura-chat{display:none !import
 .turn-note{font-size:12px;color:#8a847d;margin-top:6px}
 .turn-note a{font-weight:700;color:var(--violet)}
 @media(max-width:560px){.turn-item{flex:1 1 100%}}
+
+
+/* ---------- Google reviews: util-bar chip + reviews band ---------- */
+.rv-chip{display:inline-flex;align-items:center;gap:7px;white-space:nowrap}
+.rv-chip-stars{color:#F7B500;letter-spacing:1px;font-size:12px}
+.rv-chip b{font-weight:800}
+.rv-chip-n{opacity:.7}
+.rv-chip:hover{opacity:1;text-decoration:underline}
+@media(max-width:900px){.rv-chip-n{display:none}}
+@media(max-width:640px){.util .tag{display:none}}
+
+.reviews-band{padding:70px 0}
+.rv-head{display:flex;justify-content:space-between;align-items:end;gap:22px;flex-wrap:wrap;margin-bottom:30px}
+.rv-score{display:flex;align-items:baseline;gap:12px}
+.rv-score .rv-stars{color:#F7B500;font-size:22px;letter-spacing:2px}
+.rv-score b{font-family:'Archivo Black',sans-serif;font-size:38px;line-height:1}
+.rv-sub{color:#6b6560;font-size:14.5px;margin-top:6px}
+.rv-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(258px,1fr));gap:16px}
+.rv{background:#fff;border:1px solid #ece6de;border-radius:var(--radius);padding:22px 22px 18px;margin:0;display:flex;flex-direction:column;gap:14px}
+.rv blockquote{font-size:15.5px;line-height:1.55;margin:0;color:#2b2825}
+.rv blockquote:before{content:'\201C'}
+.rv blockquote:after{content:'\201D'}
+.rv figcaption{font-size:13px;color:#6b6560;margin-top:auto}
+.rv figcaption b{color:var(--ink);font-weight:700;display:block;font-size:14px}
+.rv .rv-src{display:inline-flex;align-items:center;gap:5px;margin-top:3px}
+.rv .rv-src .s{color:#F7B500;letter-spacing:1px;font-size:11px}
