@@ -165,7 +165,7 @@
       '<div class="price-box" style="margin-top:26px"><div><div class="from">Your price</div>' +
         '<div class="gst" id="gstLabel" style="font-size:13px;color:#8a847d">' + (row ? 'inc. GST &amp; delivery' : 'get a quick quote') + '</div></div>' + priceHtml + '</div>' +
       '<div id="priceNote" style="font-size:13px;color:#8a847d;margin-top:10px">' +
-        (row ? '<span style="color:#2f7d4f;font-weight:700">✓ Confirmed price.</span> Includes GST and standard delivery Australia-wide.'
+        (row ? '<b>Confirmed price.</b> Send it through and we lock it in on your quote.'
              : 'That exact combination is a custom quote. Send it through and we’ll price it fast.') + '</div>' +
       '<div id="dispatch" style="font-size:13px;color:#6b6560;margin-top:8px">' + dispatchNote() + '</div>' +
       '<div style="font-size:11.5px;line-height:1.45;color:#9a948d;margin-top:5px">Every effort is made to get your job onto the press for the dispatch shown. On the odd occasion a press or freight delay pushes it out, and we will tell you as soon as we know.</div>' +
@@ -201,6 +201,10 @@
     btn = host.querySelector('#cartCta'); if (!btn) return;
     btn.style.display = '';
     var q = host.querySelector('#orderCta'); if (q) q.className = 'btn btn-ghost';
+    /* The cart is showing, so the server will lock this exact figure onto the
+       invoice. Say that, instead of leaving a vaguer "confirmed price" line. */
+    var n = host.querySelector('#priceNote');
+    if (n) n.innerHTML = '<b>This is what you pay.</b> Your price is locked in when you check out. You approve a proof before anything prints.';
   }
 
   async function addBcToCart(btn) {

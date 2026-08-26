@@ -166,6 +166,11 @@
       })
     };
 
+    /* The server re-prices every line from the live price table and ignores
+       whatever the cart carried, so the invoice can never be driven from the
+       browser. If a supplier rate moved while the cart was sitting there, the
+       total the customer agreed to changes - never let that happen silently. */
+    var cartTotal = list.reduce(function(s,i){ return s + (i.price_cents||0); }, 0);
     var res = await C.callFn('shop-checkout', payload);
     document.body.classList.remove('busy');
     btn.disabled = false; btn.textContent = 'Continue to artwork →';
@@ -178,6 +183,8 @@
       invoice_number: res.data.invoice_number,
       invoice_token: res.data.invoice_token,
       total_inc_cents: res.data.total_inc_cents,
+      repriced: (res.data.total_inc_cents !== cartTotal)
+        ? { from: cartTotal, to: res.data.total_inc_cents } : null,
       email: v('f_email'),
       lines: list.map(function(it,i){ return { item_no:i+1, name:it.name, qty:it.qty,
                 price_cents:it.price_cents, spec:C.specLine(it), uploaded:null, mode:'needs_proof' }; })
@@ -191,7 +198,16 @@
     var o = C.order();
     if(!o) { step=0; return draw(); }
 
+    var rp = o.repriced;
     bodyEl.innerHTML =
+    (rp ? '<div style="border:2px solid #e0b400;background:#fffaf0;border-radius:12px;padding:14px 16px;margin-bottom:18px;font-size:14px;line-height:1.5">' +
+            '<b>Your total changed to ' + C.money(rp.to) + '.</b> ' +
+            'It was ' + C.money(rp.from) + ' in your cart. Our supplier rate for one of these items moved ' +
+            'while the cart was open, so we have repriced it. ' +
+            (rp.to > rp.from
+              ? 'Nothing is charged until you reach the payment step, so if you would rather not go ahead, just close this page or call us on 1300 291 277.'
+              : 'The new, lower price is what you pay.') +
+          '</div>' : '') +
     '<div class="cogrid"><div class="panel">' +
       '<h2 style="font-size:22px;margin-bottom:4px">Your artwork</h2>' +
       '<p style="color:#6f6960;font-size:14px;margin-bottom:18px">Order <b>'+C.esc(o.order_number)+'</b> is saved. ' +

@@ -154,11 +154,40 @@
 
   function hideCart() { buyable = null; if (cartBtn) cartBtn.style.display = 'none'; cta.className = 'btn btn-aura'; }
 
+  /* ONE place decides what the customer is told about the price, and it keys
+     off what they can actually DO next - never off our internal 'real' vs
+     'estimate' flag. That flag is a margin question for us and means nothing
+     to them, and using it put "Indicative price... before you pay" directly
+     above an "Add to cart - $245" button. If the cart button is showing, the
+     server locks that exact figure onto the invoice, so say so plainly. */
+  function setNote(mode, qty) {
+    if (!noteEl) return;
+    if (mode === 'buy') {
+      noteEl.innerHTML = '<b>This is what you pay.</b> Your price is locked in when you check out. You approve a proof before anything prints.';
+    } else if (mode === 'between') {
+      noteEl.innerHTML = '<b>Indicative price for ' + qty.toLocaleString() + '.</b> This quantity sits between our price breaks. We confirm the exact figure on your quote, before you pay.';
+    } else if (mode === 'cap') {
+      noteEl.innerHTML = '<b>Quoted, not ordered online.</b> Above ' + qty.toLocaleString() +
+        ' units we confirm freight first, so we send you a quote with the exact figure.';
+    } else {
+      noteEl.innerHTML = '<b>Indicative price.</b> This one is quoted rather than ordered online. We confirm the exact figure on your quote, before you pay.';
+    }
+  }
+
   async function offerCart(sel, qty, p) {
     if (!cartBtn) return;
     if (!p || !p.exact) { hideCart(); return; }
     var C = await ensureCartLib();
-    if (!C || !(await C.canBuy(SLUG, qty))) { hideCart(); return; }
+    if (!C) { hideCart(); return; }
+    if (!(await C.canBuy(SLUG, qty))) {
+      hideCart();
+      /* Say WHY when the reason is an online ceiling rather than the product
+         being quote-only. "Above 25" is something the customer can act on. */
+      var R = await C.rules(), r = R && R[SLUG];
+      if (r && r.sellable_online && r.launch_wave === 1 &&
+          r.max_online_qty != null && qty > r.max_online_qty) setNote('cap', r.max_online_qty);
+      return;
+    }
 
     var spec = {};
     axesFor(sel.style).forEach(function (a) { spec[a[0]] = sel[a[0]]; });
@@ -166,6 +195,7 @@
     buyable = { spec: spec, qty: qty, cents: p.cents };
     cartBtn.textContent = 'Add to cart · ' + '$' + Math.round(p.cents / 100).toLocaleString('en-AU');
     cartBtn.style.display = '';
+    setNote('buy', qty);
     cta.className = 'btn btn-ghost';           /* quote becomes the secondary action */
   }
 
@@ -314,13 +344,8 @@
     var dollars = Math.round(p.cents / 100); /* whole-dollar price: display and quote link match */
     gstEl.textContent = 'inc. GST & delivery';
     animateTo(dollars);
-    if (p.exact) {
-      noteEl.innerHTML = p.source === 'real'
-        ? '<span style="color:#2f7d4f;font-weight:700">✓ Confirmed price.</span> This is what you pay.'
-        : '<b>Indicative price.</b> We confirm it on your proof, before you pay.';
-    } else {
-      noteEl.innerHTML = '<b>Indicative price for ' + qty.toLocaleString() + '.</b> Worked out from our price breaks; we confirm it on your proof, before you pay.';
-    }
+    /* Provisional: offerCart() upgrades this to 'buy' if the cart appears. */
+    if (p.exact) { setNote('quote'); } else { setNote('between', qty); }
     cta.href = quoteHref(sel, qty, dollars);
     updateQuoteLinks(sel, qty);
     offerCart(sel, qty, p);

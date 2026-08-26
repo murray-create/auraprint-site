@@ -405,8 +405,8 @@ input[type=range]{accent-color:var(--magenta);height:34px}
    Missing data or feed failure -> routes to the product page, never invents
    a number. Same document.hidden guard as the configurators. */
 const HERO = {
-  'Business Cards 350gsm Matt 2S': {tbl:'bc',  f:{stock:'Matt Laminate', sides:'2S'}, spec:'90x55mm, printed 2 sides', page:'business-cards.html'},
-  'NV Velvet Business Cards':      {tbl:'bc',  f:{stock:'Velvet Soft-Touch', sides:'2S'}, spec:'450gsm Artboard, NV 2S', page:'nv-velvet-business-cards.html'},
+  'Business Cards 360gsm Matt':    {tbl:'bc',  f:{stock:'Deluxe 360gsm', finish:'Matt cello',   corners:'Square', sides:'2S'}, spec:'90x55mm, matt cello, 2 sides', page:'business-cards.html'},
+  'Velvet Business Cards':         {tbl:'bc',  f:{stock:'Deluxe 360gsm', finish:'Velvet cello', corners:'Square', sides:'2S'}, spec:'90x55mm, velvet soft-touch, 2 sides', page:'nv-velvet-business-cards.html'},
   'A5 Flyers 150gsm Gloss 2S':     {tbl:'pp',  slug:'flyers', f:{size:'A5', stock:'150gsm Gloss', sides:'Double'}, spec:'A5, printed 2 sides', page:'flyers.html'},
   'DL Brochures (A4 trifold)':     {tbl:'pp',  slug:'brochures', f:{fold:'A4 roll fold to DL (trifold)', stock:'150gsm Gloss'}, spec:'A4 roll-folded to DL, 150gsm gloss', page:'brochures.html'},
   'Corflute Signs 900x600':        {tbl:'pp',  slug:'corflute-signs', f:{size:'900x600mm', thickness:'5mm', sides:'Single'}, spec:'5mm corflute, 1 side', page:'corflute-signs.html'},
@@ -423,7 +423,7 @@ let FEED=null, FEEDFAIL=false, RULES={};
   const CFG=window.AURA_CONFIG||{};
   if(!CFG.supabaseUrl||!CFG.supabaseKey){FEEDFAIL=true;render();return;}
   const H={apikey:CFG.supabaseKey, Authorization:'Bearer '+CFG.supabaseKey};
-  const bc=fetch(CFG.supabaseUrl+'/rest/v1/bc_prices?select=stock,sides,qty,price_cents&turnaround=eq.standard',{headers:H}).then(r=>{if(!r.ok)throw 0;return r.json()});
+  const bc=fetch(CFG.supabaseUrl+'/rest/v1/bc_prices?select=stock,finish,corners,sides,qty,price_cents&turnaround=eq.standard&source=eq.real',{headers:H}).then(r=>{if(!r.ok)throw 0;return r.json()});
   const pp=fetch(CFG.supabaseUrl+'/rest/v1/product_prices?select=product_slug,options,qty,price_cents&product_slug=in.(flyers,brochures,corflute-signs,pull-up-banners)&limit=2000',{headers:H}).then(r=>{if(!r.ok)throw 0;return r.json()});
   const ru=fetch(CFG.supabaseUrl+'/rest/v1/product_online_rules?select=product_slug,sellable_online,launch_wave,max_online_qty',{headers:H}).then(r=>r.ok?r.json():[]).catch(()=>[]);
   Promise.all([bc,pp,ru]).then(([bcRows,ppRows,ruRows])=>{
@@ -455,13 +455,19 @@ function render(){
   const i=Math.min(+qty.value, feed.qtys.length-1), q=feed.qtys[i];
   qtyLabel.textContent=q.toLocaleString()+(q===1?' unit':' units');
   if(qg)qg.textContent='inc. GST & delivery';
+  /* The button must promise only what this product can actually do. Wave-1 and
+     within any online ceiling -> it can be bought; anything else is a quote. */
+  const rule=RULES[h.tbl==='bc'?'business-cards':h.slug];
+  const sellable=!!(rule&&rule.sellable_online&&rule.launch_wave===1);
+  const overCap=!!(sellable&&rule.max_online_qty&&q>rule.max_online_qty);
+  const canBuy=sellable&&!overCap;
+  qCta.textContent = canBuy ? 'Price & order this →' : 'See full pricing →';
   if(qn){
-    const rule=RULES[h.tbl==='bc'?'business-cards':h.slug];
-    const online=rule&&rule.sellable_online&&rule.launch_wave===1;
-    qn.textContent = (online&&rule.max_online_qty&&q>rule.max_online_qty)
-      ? 'Above '+rule.max_online_qty.toLocaleString()+' units we confirm freight first, so this run goes through a quick quote.'
-      : (online ? 'Live trade price. Choose your full spec on the product page.'
-                : 'Live trade price. We confirm the spec and lock it in by quote.');
+    qn.textContent = canBuy
+      ? 'This is what you pay. Choose your exact options on the next page, then check out.'
+      : (overCap
+          ? 'Above '+rule.max_online_qty.toLocaleString()+' units we confirm freight first, so this run goes through a quick quote.'
+          : 'Live price. We confirm the spec and lock it in on your quote.');
   }
   const target=Math.round(feed.prices[q]/100);
   const start=parseFloat(price.dataset.v||0);
