@@ -211,10 +211,11 @@ input[type=range]{accent-color:var(--magenta);height:34px}
       <input type="range" id="qty" min="0" max="4" step="1" value="1">
       <div class="qty-row"><span id="qtyLabel">500</span><span id="specLabel"></span></div>
       <div class="price-box" style="margin-top:22px">
-        <div><div class="from">Your price</div><div class="gst" id="qGst">inc. GST, ex. delivery</div></div>
+        <div><div class="from">Your price</div><div class="gst" id="qGst">inc. GST &amp; delivery</div></div>
         <div class="amount grad-text" id="price">$0</div>
       </div>
-      <a class="btn btn-aura" href="business-cards.html">Order this online →</a>
+      <a class="btn btn-aura" href="business-cards.html">See full pricing →</a>
+      <div id="qNote" style="margin-top:10px;font-size:12.5px;line-height:1.45;color:#777;min-height:18px"></div>
     </div>
   </div>
 </header>
@@ -407,6 +408,7 @@ const HERO = {
   'Business Cards 350gsm Matt 2S': {tbl:'bc',  f:{stock:'Matt Laminate', sides:'2S'}, spec:'90x55mm, printed 2 sides', page:'business-cards.html'},
   'NV Velvet Business Cards':      {tbl:'bc',  f:{stock:'Velvet Soft-Touch', sides:'2S'}, spec:'450gsm Artboard, NV 2S', page:'nv-velvet-business-cards.html'},
   'A5 Flyers 150gsm Gloss 2S':     {tbl:'pp',  slug:'flyers', f:{size:'A5', stock:'150gsm Gloss', sides:'Double'}, spec:'A5, printed 2 sides', page:'flyers.html'},
+  'DL Brochures (A4 trifold)':     {tbl:'pp',  slug:'brochures', f:{fold:'A4 roll fold to DL (trifold)', stock:'150gsm Gloss'}, spec:'A4 roll-folded to DL, 150gsm gloss', page:'brochures.html'},
   'Corflute Signs 900x600':        {tbl:'pp',  slug:'corflute-signs', f:{size:'900x600mm', thickness:'5mm', sides:'Single'}, spec:'5mm corflute, 1 side', page:'corflute-signs.html'},
   'Pull Up Banner 850mm':          {tbl:'pp',  slug:'pull-up-banners', f:{model:'Standard 850mm'}, spec:'850x2000mm inc. base', page:'pull-up-banners.html'},
 };
@@ -416,14 +418,16 @@ const sel=document.getElementById('prod'), qty=document.getElementById('qty'),
 Object.keys(HERO).forEach(k=>{const o=document.createElement('option');o.textContent=k;sel.appendChild(o);});
 
 /* per product: {qtys:[...], prices:{qty:cents}} filled from the live feed */
-let FEED=null, FEEDFAIL=false;
+let FEED=null, FEEDFAIL=false, RULES={};
 (function(){
   const CFG=window.AURA_CONFIG||{};
   if(!CFG.supabaseUrl||!CFG.supabaseKey){FEEDFAIL=true;render();return;}
   const H={apikey:CFG.supabaseKey, Authorization:'Bearer '+CFG.supabaseKey};
   const bc=fetch(CFG.supabaseUrl+'/rest/v1/bc_prices?select=stock,sides,qty,price_cents&turnaround=eq.standard',{headers:H}).then(r=>{if(!r.ok)throw 0;return r.json()});
-  const pp=fetch(CFG.supabaseUrl+'/rest/v1/product_prices?select=product_slug,options,qty,price_cents&product_slug=in.(flyers,corflute-signs,pull-up-banners)&limit=2000',{headers:H}).then(r=>{if(!r.ok)throw 0;return r.json()});
-  Promise.all([bc,pp]).then(([bcRows,ppRows])=>{
+  const pp=fetch(CFG.supabaseUrl+'/rest/v1/product_prices?select=product_slug,options,qty,price_cents&product_slug=in.(flyers,brochures,corflute-signs,pull-up-banners)&limit=2000',{headers:H}).then(r=>{if(!r.ok)throw 0;return r.json()});
+  const ru=fetch(CFG.supabaseUrl+'/rest/v1/product_online_rules?select=product_slug,sellable_online,launch_wave,max_online_qty',{headers:H}).then(r=>r.ok?r.json():[]).catch(()=>[]);
+  Promise.all([bc,pp,ru]).then(([bcRows,ppRows,ruRows])=>{
+    (ruRows||[]).forEach(r=>{RULES[r.product_slug]=r;});
     FEED={};
     Object.entries(HERO).forEach(([name,h])=>{
       const rows = h.tbl==='bc'
@@ -440,17 +444,25 @@ function render(){
   const h=HERO[sel.value], feed=FEED&&FEED[sel.value];
   specLabel.textContent=h.spec;
   qCta.href=h.page;
-  qCta.textContent='Price & order this →';
-  const qg=document.getElementById('qGst');
+  qCta.textContent='See full pricing →';
+  const qg=document.getElementById('qGst'), qn=document.getElementById('qNote');
   if(FEEDFAIL||!feed||!feed.qtys.length){
-    qtyLabel.textContent=''; if(qg)qg.textContent='';
+    qtyLabel.textContent=''; if(qg)qg.textContent=''; if(qn)qn.textContent='';
     price.dataset.v=0; price.textContent=FEED===null&&!FEEDFAIL?'…':'POA';
     return;
   }
   qty.max=feed.qtys.length-1;
   const i=Math.min(+qty.value, feed.qtys.length-1), q=feed.qtys[i];
-  qtyLabel.textContent=q.toLocaleString()+' units';
+  qtyLabel.textContent=q.toLocaleString()+(q===1?' unit':' units');
   if(qg)qg.textContent='inc. GST & delivery';
+  if(qn){
+    const rule=RULES[h.tbl==='bc'?'business-cards':h.slug];
+    const online=rule&&rule.sellable_online&&rule.launch_wave===1;
+    qn.textContent = (online&&rule.max_online_qty&&q>rule.max_online_qty)
+      ? 'Above '+rule.max_online_qty.toLocaleString()+' units we confirm freight first, so this run goes through a quick quote.'
+      : (online ? 'Live trade price. Choose your full spec on the product page.'
+                : 'Live trade price. We confirm the spec and lock it in by quote.');
+  }
   const target=Math.round(feed.prices[q]/100);
   const start=parseFloat(price.dataset.v||0);
   price.dataset.v=target;
