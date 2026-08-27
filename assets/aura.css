@@ -348,3 +348,26 @@ body.drawer-open #aura-chat-btn,body.drawer-open #aura-chat{display:none !import
   .prose h3{margin-top:26px}
   .ptable th,.ptable td{padding:10px 12px}
 }
+/* ---------------------------------------------------------------
+   MOBILE OVERFLOW FIX (26 Aug 2026)
+   53 of 108 live pages scrolled sideways on a 390px phone, some by
+   two thirds of the screen width. Cause: .config and .split collapse
+   to a single column under 900px, but a grid item defaults to
+   min-width:auto, so one long unbreakable option label - "Single
+   Sided Mirror Reverse", "Gloss Lamination (4 - 5 Year)" - set the
+   column's min-content width and stretched the whole grid past the
+   viewport. Every product page with a wordy option was affected.
+   min-width:0 lets the column shrink; the buttons then wrap.
+   --------------------------------------------------------------- */
+.config > *,
+.split > *{min-width:0}
+.opts{min-width:0;max-width:100%}
+.opt{white-space:normal;max-width:100%}
+.trust{min-width:0}
+.gallery{min-width:0}
+
+/* Template download chips carry an inline white-space:nowrap, and the longest
+   filenames ("Single Sided Straight Stretch Media Wall 1.5m x 2.2m") are wider
+   than a phone. An inline style beats a class selector, so this needs
+   !important. Scoped to download links only. */
+a[download]{white-space:normal !important;max-width:100%}
