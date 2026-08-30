@@ -43,6 +43,30 @@
   var startQty = parseInt(host.getAttribute('data-qty'), 10) || 0;
   var LINKS = JSON.parse(host.getAttribute('data-quote-links') || '[]');   // [{label, note}] escape hatches -> quote.html
 
+  /* GUARD AXIS ---------------------------------------------------------
+     A question asked ABOVE the priced axes that is NOT part of the price
+     key. It exists to stop a customer pricing the wrong product on this
+     page. Picking a value listed in divertOn suppresses the price entirely
+     and points them at the page that really prices their job.
+
+     Why it exists: on 30 Aug 2026 a customer read $391 off the brochure
+     calculator for a 28 page A4 document. The brochure prices cover ONE
+     sheet, printed both sides and folded. The real job was a saddle
+     stitched booklet at roughly twelve times that. The calculator had no
+     way to know, because it only asks fold and stock.
+
+       data-guard='{"label":"How many pages?",
+                    "values":[...], "default":"...",
+                    "divertOn":["More than 8 pages"],
+                    "divertTo":"booklets.html",
+                    "divertLabel":"Price it as a booklet",
+                    "divertMsg":"<b>That is a booklet.</b> ..."}'
+
+     data-scope is a plain one-liner under the price saying what the price
+     actually covers. */
+  var GUARD = JSON.parse(host.getAttribute('data-guard') || 'null');
+  var SCOPE = host.getAttribute('data-scope') || '';
+
   var GRID = null;        // key -> { qty: {cents, source} }
   var loadFailed = false;
 
@@ -95,7 +119,13 @@
     }).join('') + '</div>';
   }
 
+  var guardHtml = GUARD
+    ? '<div class="optlabel">' + GUARD.label + '</div>' +
+      optBtns('__guard', GUARD.values, GUARD.default)
+    : '';
+
   host.innerHTML =
+    guardHtml +
     (STYLES
       ? '<div class="optlabel">Style</div>' + optBtns('style', STYLES.map(function (s) { return s.name; }), STYLES[0].name) +
         '<div id="subAxes"></div>'
@@ -112,6 +142,7 @@
       '<div><div class="from">Your price</div><div class="gst" id="gstLabel">inc. GST &amp; delivery</div></div>' +
       '<div class="amount grad-text" id="price">—</div>' +
     '</div>' +
+    (SCOPE ? '<div id="scopeNote" style="font-size:13px;color:#6f6961;margin-top:10px">' + SCOPE + '</div>' : '') +
     '<div id="priceNote" style="font-size:13px;color:#6f6961;margin-top:10px">Loading live pricing…</div>' +
     '<div id="dispatch" style="font-size:13px;color:#6b6560;margin-top:10px"></div>' +
     '<div style="display:flex;gap:12px;margin-top:18px;flex-wrap:wrap">' +
@@ -129,6 +160,17 @@
       gstEl = host.querySelector('#gstLabel'), cta = host.querySelector('#orderCta'),
       cartBtn = host.querySelector('#cartCta'),
       qtyGroup = host.querySelector('#qtyGroup');
+  var CTA_LABEL = cta.textContent;
+
+  function guardVal() {
+    if (!GUARD) return null;
+    var b = host.querySelector('.opts[data-group="__guard"] .on');
+    return b ? b.dataset.val : GUARD.default;
+  }
+  function guardDiverted() {
+    var v = guardVal();
+    return !!(v && GUARD.divertOn && GUARD.divertOn.indexOf(v) >= 0);
+  }
 
   /* ---------- Buy online ----------------------------------------------
      The button only appears when ALL of these hold, because anything else
@@ -240,6 +282,7 @@
 
   function specText(sel, qty) {
     var parts = [];
+    if (GUARD) parts.push(GUARD.label.replace(/\?\s*$/, '') + ': ' + guardVal());
     if (STYLES) parts.push('Style: ' + sel.style);
     axesFor(sel.style).forEach(function (a) { parts.push(a[1] + ': ' + sel[a[0]]); });
     return parts.join(', ') + ', Qty: ' + qty;
@@ -265,6 +308,24 @@
     noteEl.innerHTML = message + ' <a href="' + quoteHref(sel, qty) + '">Get a fast quote →</a>';
     cta.href = quoteHref(sel, qty);
     updateQuoteLinks(sel, qty);
+    hideCart();
+  }
+
+  /* The customer has told us this page cannot price their job. Show no
+     number at all rather than one that is wrong, and send them to the page
+     that can. A wrong price is worse than no price. */
+  function showDivert() {
+    priceEl.dataset.v = 0;
+    priceEl.textContent = '—';
+    gstEl.textContent = '';
+    if (qtyGroup) qtyGroup.innerHTML =
+      '<span style="font-size:13px;color:#6f6961">Not priced on this page.</span>';
+    noteEl.innerHTML = GUARD.divertMsg +
+      ' <a href="' + GUARD.divertTo + '" style="font-weight:700;color:#7a4bd6">' +
+      (GUARD.divertLabel || 'See the right page') + ' &rarr;</a>';
+    cta.href = GUARD.divertTo;
+    cta.textContent = (GUARD.divertLabel || 'See the right page') + ' \u2192';
+    updateQuoteLinks(currentSel(), readQty().qty || 1);
     hideCart();
   }
 
@@ -307,6 +368,8 @@
 
   function calc() {
     var sel = currentSel();
+    if (GUARD && guardDiverted()) { showDivert(); return; }
+    if (cta.textContent !== CTA_LABEL) cta.textContent = CTA_LABEL;
     if (loadFailed) { showPoa(sel, readQty().qty || 1, 'Live pricing is unavailable right now.'); return; }
     if (!GRID) return; // still loading
 

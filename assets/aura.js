@@ -162,6 +162,68 @@ function fillEmails(){
    Any <form data-aura-form> is wired automatically. Requires AURA_CONFIG.web3formsKey.
    Free tier has no file attachments, so artwork is captured as a link/description here
    and the real upload happens once the full backend is built. */
+/* PAGE-COUNT GUARD -------------------------------------------------------
+   Every folded product price on this site covers ONE sheet. A customer who
+   writes "28 pages" into the job details is describing a stitched or bound
+   booklet, which runs on a different press and costs many times more.
+
+   This happened on 30 Aug 2026: a customer read $391 off the brochure
+   calculator, wrote "A4 but there is 28 pages" in the details, and the
+   captured price travelled through to the enquiry as if it applied. The
+   real job was about $4,800.
+
+   So: warn the customer live while they type, and on submit take the
+   captured configurator price OUT of the enquiry, so no wrong number
+   reaches the customer, the lead record or the email alert. */
+var PAGE_GUARD_MAX  = 8;
+var PAGE_GUARD_SKIP = /booklet|magazine|catalog|annual|wiro|perfect.?bound|saddle|newsletter|prospectus/i;
+
+function detectPageCount(text){
+  var max = 0, m, re = /(\d{1,4})\s*(?:pp\b|pages?\b)/gi;
+  while ((m = re.exec(text || ''))){ var n = parseInt(m[1], 10); if (n > max) max = n; }
+  return max;
+}
+
+/* Returns null when there is nothing to flag. */
+function pageGuardState(form){
+  var ta = form.querySelector('[name="job_details"], [name="message"]');
+  if (!ta) return null;
+  var text = String(ta.value || '');
+  var codeEl = form.querySelector('[name="source_product_code"]');
+  var code = codeEl ? String(codeEl.value || '') : '';
+  /* Already a multi-page product: a page count there is normal, not a mismatch. */
+  if (PAGE_GUARD_SKIP.test(code) || PAGE_GUARD_SKIP.test(text)) return null;
+  var pages = detectPageCount(text);
+  if (pages <= PAGE_GUARD_MAX) return null;
+  return { field: ta, pages: pages, hasPrice: /Price shown online:/i.test(text) };
+}
+
+/* Live notice under the job details box. Tells them before they send, so the
+   correction is not a surprise in a reply email later. */
+function wirePageGuard(form){
+  var ta = form.querySelector('[name="job_details"], [name="message"]');
+  if (!ta) return;
+  var box = document.createElement('p');
+  box.className = 'page-guard';
+  box.style.cssText = 'display:none;margin-top:9px;padding:11px 13px;border-radius:9px;' +
+    'background:#fff6e8;border:1px solid #f0cf9b;font-size:13.5px;line-height:1.55;color:#6b4a12';
+  ta.insertAdjacentElement('afterend', box);
+  var paint = function(){
+    var g = pageGuardState(form);
+    if (!g){ box.style.display = 'none'; return; }
+    box.innerHTML = '<b>Before you send this.</b> ' + g.pages + ' pages is a stitched or bound booklet, ' +
+      'not a folded sheet, so ' +
+      (g.hasPrice
+        ? 'the price shown on the product page does not apply. We have taken that figure off this enquiry and will quote the real job.'
+        : 'it is priced as a booklet rather than a brochure or flyer.') +
+      ' <a href="booklets.html" style="color:#7a4bd6;font-weight:700">See booklet pricing &rarr;</a>';
+    box.style.display = '';
+  };
+  ta.addEventListener('input', paint);
+  ta.addEventListener('change', paint);
+  paint();
+}
+
 /* Map a form's fields to the leads table columns. */
 function collectLead(form){
   var g = function(n){ var el = form.querySelector('[name="'+n+'"]'); return el ? String(el.value||'').trim() : null; };
@@ -210,6 +272,7 @@ function wireForms(){
   document.querySelectorAll('form[data-aura-form]').forEach(function(form){
     var status = form.querySelector('.form-status');
     if (!status){ status = document.createElement('p'); status.className = 'form-status'; status.style.cssText = 'margin-top:14px;font-size:14px;min-height:20px'; form.appendChild(status); }
+    wirePageGuard(form);
     form.addEventListener('submit', function(e){
       e.preventDefault();
       /* honeypot: bots fill hidden field, humans never do */
@@ -257,6 +320,16 @@ function wireForms(){
       var original = btn ? btn.textContent : '';
       if (btn){ btn.disabled = true; btn.textContent = 'Sending…'; }
       status.style.color = '#6b6560'; status.textContent = '';
+
+      /* A captured configurator price the job spec has outgrown must not
+         travel. Rewrite the field itself, because BOTH the database save and
+         the Web3Forms email read their values straight off the live form. */
+      var pg = pageGuardState(form);
+      if (pg && pg.hasPrice){
+        pg.field.value = pg.field.value.replace(/^.*Price shown online:.*$/gim,
+          'Price shown online: REMOVED by the website - the job is ' + pg.pages +
+          ' pages, which is a booklet, not a folded sheet. Needs a manual quote.');
+      }
 
       /* Primary: store the enquiry in the CRM database. */
       var dbSave = saveLead(CFG, collectLead(form));
