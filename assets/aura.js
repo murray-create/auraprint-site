@@ -175,6 +175,10 @@ function collectLead(form){
     quantity:            g('quantity'),
     job_details:         g('job_details') || g('message'),
     artwork_link:        g('artwork_link'),
+    delivery_line1:      g('delivery_line1'),
+    delivery_suburb:     g('delivery_suburb'),
+    delivery_state:      g('delivery_state'),
+    delivery_postcode:   g('delivery_postcode'),
     source_form:         page.indexOf('contact') > -1 ? 'contact' : 'quote',
     source_page:         g('source_page') || page,
     source_product_code: g('source_product_code'),
@@ -220,13 +224,19 @@ function wireForms(){
       var emailEl = form.querySelector('input[type="email"][required], input[name="email"]');
       var badEmail = emailEl && String(emailEl.value||'').trim() && !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(emailEl.value.trim());
       if (badEmail && missing.indexOf(emailEl) < 0) missing.push(emailEl);
+      /* Australian postcode: four digits, or the lead insert is rejected. */
+      var pcEl = form.querySelector('[name="delivery_postcode"]');
+      var badPc = pcEl && String(pcEl.value||'').trim() && !/^\d{4}$/.test(pcEl.value.trim());
+      if (badPc && missing.indexOf(pcEl) < 0) missing.push(pcEl);
       if (missing.length){
         missing.forEach(function(el){
           el.classList.add('input-error');
           var msg = document.createElement('span');
           msg.className = 'field-error';
           msg.style.cssText = 'display:block;margin-top:5px;font-size:12.5px;color:#c0392b;font-weight:600';
-          msg.textContent = (el === emailEl && badEmail) ? 'That email address doesn’t look right.' : 'This field is required.';
+          msg.textContent = (el === emailEl && badEmail) ? 'That email address doesn’t look right.'
+                          : (el === pcEl && badPc) ? 'Please enter a valid 4-digit postcode.'
+                          : 'This field is required.';
           el.insertAdjacentElement('afterend', msg);
         });
         status.style.color = '#c0392b';

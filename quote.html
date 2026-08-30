@@ -174,6 +174,19 @@
       <div class="field"><label>Quantity</label><input type="text" id="qQty" name="quantity" placeholder="e.g. 500"></div>
       <div class="field"><label>Tell us about the job *</label><textarea rows="4" id="qJob" name="job_details" required placeholder="Size, stock, finish, deadline - whatever you know. We'll fill the gaps."></textarea></div>
       <div class="field"><label>Artwork link (optional)</label><input type="url" name="artwork_link" placeholder="Paste a Canva, Drive or Dropbox link"><span style="display:block;margin-top:5px;font-size:12.5px;color:#8a847d">Or we'll request your files once the quote is approved.</span></div>
+      <div class="field" style="margin-bottom:6px"><label style="font-size:15px">Where are we delivering?</label><span style="display:block;margin-top:-4px;margin-bottom:2px;font-size:12.5px;color:#8a847d">We need the suburb and postcode to price freight. Street address is handy but optional.</span></div>
+      <div class="field"><label>Street address (optional)</label><input type="text" name="delivery_line1" placeholder="4/1 Packer Road"></div>
+      <div class="field"><label>Delivery suburb *</label><input type="text" name="delivery_suburb" required placeholder="Baringa"></div>
+      <div class="field two" style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+        <div class="field" style="margin-bottom:0"><label>State *</label>
+          <select name="delivery_state" required>
+            <option value="">Select…</option>
+            <option>QLD</option><option>NSW</option><option>VIC</option><option>SA</option>
+            <option>WA</option><option>TAS</option><option>NT</option><option>ACT</option>
+          </select>
+        </div>
+        <div class="field" style="margin-bottom:0"><label>Postcode *</label><input type="text" name="delivery_postcode" required inputmode="numeric" maxlength="4" pattern="[0-9]{4}" placeholder="4551"></div>
+      </div>
       <input type="hidden" name="source_product_code" id="qCode" value="">
       <input type="hidden" name="source_page" id="qSrc" value="">
       <input type="checkbox" name="botcheck" style="display:none" tabindex="-1" autocomplete="off">
@@ -253,7 +266,7 @@
 </footer>
 <!-- AURA:FOOTER end -->
 <script src="assets/config.js?v=20260720a"></script>
-<script src="assets/aura.js?v=20260825c"></script>
+<script src="assets/aura.js?v=20260830a"></script>
 <script>
 /* Pre-fill from product pages, configurators and the promo catalogue.
    Carries: ?product=SLUG&qty=&spec=&price= (configurators)

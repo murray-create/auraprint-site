@@ -1035,9 +1035,11 @@ function openQuote(num){
     ${q.invNum?`<button class="btn primary sm" style="width:100%;justify-content:center;margin-top:6px" onclick="openInvoiceEmail('${q.num}')">Send invoice email</button>`:''}
   </div>`;
 
-  const customerLine = org
+  const deliverTo = [q._street,[q._suburb,q._state,q._postcode].filter(Boolean).join(' ')].filter(Boolean).join(', ');
+  const customerLine = (org
     ? `${esc(q.contact)} · <a onclick="openOrg('${org.id}')">${esc(org.name)}</a>`
-    : `${esc(q.contact)}${c&&c.suburb?' · '+esc(c.suburb):''}`;
+    : `${esc(q.contact)}${c&&c.suburb?' · '+esc(c.suburb):''}`)
+    + (deliverTo?` · <span title="Delivery address">🚚 ${esc(deliverTo)}</span>`:'');
 
   document.getElementById('quoteDetail').innerHTML=`
     <div class="backlink" onclick="go('sales')"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 6l-6 6 6 6"/></svg> Back to Quotes &amp; Orders</div>
@@ -1660,7 +1662,7 @@ function nqShapeBC(data){
   return rows;
 }
 function newQuote(preName,opts){
-  window._nq={items:[],discount:0,prodSlug:'',qty:100,name:'',email:'',phone:'',orgId:(opts&&opts.orgId)||'',suburb:'',_price:null,_priceQty:0};
+  window._nq={items:[],discount:0,prodSlug:'',qty:100,name:'',email:'',phone:'',orgId:(opts&&opts.orgId)||'',street:'',suburb:'',state:'',postcode:'',_price:null,_priceQty:0};
   window._qc={rows:[],keys:[],sel:{},title:'',live:true};
   window._nqMode='new';window._nqEditId=null;window._nqNum=null;window._nqTitle=null;
   md.className='modal xwide';
@@ -1691,7 +1693,7 @@ async function openEditQuote(num){
   const org=row.company?D.orgs.find(o=>(o.name||'').toLowerCase()===row.company.toLowerCase()):null;
   let _eDisc=0;const _eItems=[];
   q.items.forEach(it=>{ if((it.price||0)<0 && /^discount$/i.test(String(it.n||'').trim())){ _eDisc+=-it.price; } else _eItems.push({n:it.n,qty:it.qty,price:it.price}); });
-  window._nq={items:_eItems,discount:_eDisc,prodSlug:'',qty:100,name:row.contact_name||q.contact||'',email:row.contact_email||'',phone:row.contact_phone||'',orgId:org?org.id:'',suburb:row.suburb||'',_price:null,_priceQty:0,_company:row.company||''};
+  window._nq={items:_eItems,discount:_eDisc,prodSlug:'',qty:100,name:row.contact_name||q.contact||'',email:row.contact_email||'',phone:row.contact_phone||'',orgId:org?org.id:'',street:row.street||'',suburb:row.suburb||'',state:row.state||'',postcode:row.postcode||'',_price:null,_priceQty:0,_company:row.company||''};
   window._qc={rows:[],keys:[],sel:{},title:'',live:true};
   window._nqMode=isInvEdit?'editinv':'edit';window._nqEditId=q._id;window._nqNum=num;
   window._nqTitle=isInvEdit?('Edit invoice '+(q.invNum||'')+' — '+num):null;
@@ -1720,7 +1722,9 @@ function renderNewQuote(preName,edit){
           <button type="button" class="btn sm primary" onclick="nqAddOrg()">Add organisation</button>
         </div>
       </div>
-      <div class="field" style="margin-bottom:0"><label>Suburb</label><input id="nq_suburb" value="${esc(nq.suburb)}" placeholder="Suburb, State Postcode"></div>
+      <div class="field"><label>Delivery street</label><input id="nq_street" value="${esc(nq.street||'')}" placeholder="4/1 Packer Road"></div>
+      <div class="field two"><div class="field"><label>Suburb</label><input id="nq_suburb" value="${esc(nq.suburb||'')}" placeholder="Baringa"></div><div class="field"><label>State</label><select id="nq_state">${['','QLD','NSW','VIC','SA','WA','TAS','NT','ACT'].map(v=>`<option value="${v}"${(nq.state||'')===v?' selected':''}>${v||'—'}</option>`).join('')}</select></div></div>
+      <div class="field" style="margin-bottom:0;max-width:150px"><label>Postcode</label><input id="nq_postcode" value="${esc(nq.postcode||'')}" inputmode="numeric" maxlength="4" placeholder="4551"></div>
 
       <div class="nqsec"><h4>Add a priced product</h4><div class="sub">Pick a product, choose options and quantity — the price is pulled live from your catalogue.</div>
         <div class="field"><label>Product</label><select id="nq_prod" onchange="nqSelectProduct(this.value)"><option value="">Loading catalogue…</option></select></div>
@@ -1959,6 +1963,12 @@ async function nqSave(send){
   const org=orgId?orgById(orgId):null;
   const phone=document.getElementById('nq_phone').value.trim();
   const suburb=document.getElementById('nq_suburb').value.trim();
+  const street=document.getElementById('nq_street').value.trim();
+  const stateEl=document.getElementById('nq_state');
+  const state=stateEl?stateEl.value:'';
+  const postcode=document.getElementById('nq_postcode').value.trim();
+  if(postcode&&!/^\d{4}$/.test(postcode)){alert('Postcode should be four digits, e.g. 4551.');return;}
+  const addr={street:street||null,suburb:suburb||null,state:state||null,postcode:postcode||null};
   const isInvEdit=window._nqMode==='editinv';
   const isEdit=window._nqMode==='edit'||isInvEdit;
   const company=org?org.name:(isEdit?(nq._company||null):null);
@@ -1975,7 +1985,7 @@ async function nqSave(send){
   try{
     if(isEdit){
       const eid=window._nqEditId;
-      const up=await sb.from('quotes').update({contact_name:name,contact_email:email,contact_phone:phone||null,company:company,suburb:suburb||null}).eq('id',eid);
+      const up=await sb.from('quotes').update(Object.assign({contact_name:name,contact_email:email,contact_phone:phone||null,company:company},addr)).eq('id',eid);
       if(up.error)throw up.error;
       if(isInvEdit){
         // Edit an issued (unpaid) invoice: one atomic call rewrites the quote, order and
@@ -2009,7 +2019,7 @@ async function nqSave(send){
       openQuote(window._nqNum);
       return;
     }
-    const ins=await sb.from('quotes').insert({contact_name:name,contact_email:email,contact_phone:phone||null,company:company,suburb:suburb||null}).select('id,quote_number').single();
+    const ins=await sb.from('quotes').insert(Object.assign({contact_name:name,contact_email:email,contact_phone:phone||null,company:company},addr)).select('id,quote_number').single();
     if(ins.error)throw ins.error;
     const ii=await sb.from('quote_items').insert(mkItems(ins.data.id));
     if(ii.error)throw ii.error;
@@ -2080,7 +2090,7 @@ async function refreshFromSupabase(sb){
     if(inv&&inv.status==='paid')stage='paid'; else if(inv)stage='invoice'; else if(ord)stage='order';
     let contact=q.contact_name||q.contact_email||'—';
     if(q.company){const org=D.orgs.find(o=>o.name.toLowerCase()===q.company.toLowerCase());if(org){const ppl=D.contacts.filter(c=>c.orgId===org.id);if(ppl.length&&!D.contacts.some(c=>c.name===contact))contact=ppl[0].name;}}
-    D.quotes.push({num:q.quote_number,contact,status:q.status,stage,orderNum:ord?ord.order_number:null,invNum:inv?inv.invoice_number:null,payLink:inv?inv.payment_link_url:null,items,_id:q.id,_orderId:q.converted_order_id||null,_invId:inv?inv.id:null,_invToken:inv?inv.access_token:null,_invSent:inv?inv.sent_at:null,_invStatus:inv?inv.status:null,_invPaidAt:inv?inv.paid_at:null,_invViewedAt:inv?inv.last_viewed_at:null,_viewedAt:q.last_viewed_at||null,_decidedAt:q.decided_at||null,_decision:q.decision_comments||'',_sentAt:q.sent_at||null,_acceptedBy:q.accepted_by_name||null,_created:q.created_at,_email:q.contact_email||'',_name:q.contact_name||'',_token:q.access_token||'',_accepted:!!q.accepted_by_name,_tCarrier:ord?(ord.tracking_carrier||''):'',_tNumber:ord?(ord.tracking_number||''):'',_tUrl:ord?(ord.tracking_url||''):'',_dispatched:ord?ord.dispatched_at:null,_ordStatus:ord?(ord.status||''):'',_reviewReq:ord?ord.review_requested_at:null,_completedAt:ord?(ord.completed_at||null):null,_valid:q.valid_until||null,_origin:q.origin||'staff',_artLink:ord?(ord.artwork_link||''):'',_cost:costByQuote[q.id]||null,_oitems:(itemsByOrder[q.converted_order_id]||[]),_ofiles:(filesByOrder[q.converted_order_id]||[])});
+    D.quotes.push({num:q.quote_number,contact,status:q.status,stage,orderNum:ord?ord.order_number:null,invNum:inv?inv.invoice_number:null,payLink:inv?inv.payment_link_url:null,items,_id:q.id,_orderId:q.converted_order_id||null,_invId:inv?inv.id:null,_invToken:inv?inv.access_token:null,_invSent:inv?inv.sent_at:null,_invStatus:inv?inv.status:null,_invPaidAt:inv?inv.paid_at:null,_invViewedAt:inv?inv.last_viewed_at:null,_viewedAt:q.last_viewed_at||null,_decidedAt:q.decided_at||null,_decision:q.decision_comments||'',_sentAt:q.sent_at||null,_acceptedBy:q.accepted_by_name||null,_created:q.created_at,_email:q.contact_email||'',_name:q.contact_name||'',_token:q.access_token||'',_accepted:!!q.accepted_by_name,_tCarrier:ord?(ord.tracking_carrier||''):'',_tNumber:ord?(ord.tracking_number||''):'',_tUrl:ord?(ord.tracking_url||''):'',_dispatched:ord?ord.dispatched_at:null,_ordStatus:ord?(ord.status||''):'',_reviewReq:ord?ord.review_requested_at:null,_completedAt:ord?(ord.completed_at||null):null,_valid:q.valid_until||null,_origin:q.origin||'staff',_street:q.street||'',_suburb:q.suburb||'',_state:q.state||'',_postcode:q.postcode||'',_artLink:ord?(ord.artwork_link||''):'',_cost:costByQuote[q.id]||null,_oitems:(itemsByOrder[q.converted_order_id]||[]),_ofiles:(filesByOrder[q.converted_order_id]||[])});
   });
   D.orders.length=0;
   (ords.data||[]).forEach(o=>{const q=(qs.data||[]).find(x=>x.converted_order_id===o.id);D.orders.push({num:o.order_number,name:o.contact_name||'—',company:o.company||null,status:o.status,total:orderTotal[o.id]||0,q:q?q.quote_number:null,track:o.tracking_number||null});});
@@ -2091,6 +2101,7 @@ async function refreshFromSupabase(sb){
     _id:l.id, created:l.created_at, name:l.name||l.email||'—', email:l.email||'', phone:l.phone||'',
     company:l.company||'', category:l.category||'', product:l.source_product_code||'', qty:l.quantity||'',
     details:l.job_details||'', artwork:l.artwork_link||'', sourceForm:l.source_form||'', sourcePage:l.source_page||'',
+    street:l.delivery_line1||'', suburb:l.delivery_suburb||'', state:l.delivery_state||'', postcode:l.delivery_postcode||'',
     status:l.status||'new'
   }));
   renderHero(); renderQuoteTables(); drawContacts(0); drawOrgs(0); renderSuppliers(); renderLeads();
@@ -2164,6 +2175,11 @@ const leadCap=s=>(''+s).charAt(0).toUpperCase()+(''+s).slice(1);
 function leadById(id){ return (D.leads||[]).find(l=>l._id===id); }
 function leadDate(s){ if(!s)return '—'; try{ const d=new Date(s); return d.toLocaleDateString('en-AU',{day:'2-digit',month:'short'})+', '+d.toLocaleTimeString('en-AU',{hour:'2-digit',minute:'2-digit'}); }catch(_e){ return '—'; } }
 function leadEnquiry(l){ return l.product?qcPretty(l.product):(l.category||'Website enquiry'); }
+/* Delivery address as one line — this is what freight is priced off. */
+function leadAddress(l){
+  const tail=[l.suburb,l.state,l.postcode].filter(Boolean).join(' ');
+  return [l.street,tail].filter(Boolean).join(', ')||'—';
+}
 function setLeadFilter(f){ window._leadFilter=f; renderLeads(); }
 function renderLeads(){
   const tb=document.getElementById('leadTable'); if(!tb)return;
@@ -2194,6 +2210,7 @@ function openLead(id){
      <div class="field two"><div class="field"><label>Product</label><div>${esc(leadEnquiry(l))}</div></div><div class="field"><label>Quantity</label><div>${esc(l.qty||'—')}</div></div></div>
      <div class="field"><label>Job details</label><div style="white-space:pre-wrap">${esc(l.details||'—')}</div></div>
      <div class="field"><label>Artwork</label><div>${art}</div></div>
+     <div class="field"><label>Deliver to</label><div>${esc(leadAddress(l))}</div></div>
      <div class="field two"><div class="field"><label>Source form</label><div>${esc(l.sourceForm||'—')}</div></div><div class="field"><label>Received</label><div>${leadDate(l.created)}</div></div></div>
      <div class="field"><label>Source page</label><div class="mini">${pageLink}</div></div>
      <div class="field"><label>Status</label><div style="display:flex;gap:6px;flex-wrap:wrap">${stbtns}</div></div>
@@ -2233,12 +2250,14 @@ function leadToQuote(id){
   newQuote();
   const nq=window._nq;
   nq.name=l.name||''; nq.email=l.email||''; nq.phone=l.phone||'';
+  nq.street=l.street||''; nq.suburb=l.suburb||''; nq.state=l.state||''; nq.postcode=l.postcode||'';
   const head=l.product?qcPretty(l.product):(l.category||'Website enquiry');
   const desc=(head+(l.details?(' — '+l.details.replace(/\s+/g,' ').trim()):'')).slice(0,300);
   const qty=parseInt((''+(l.qty||'')).replace(/[^0-9]/g,''),10)||1;
   nq.items.push({n:desc,qty:qty,price:0});
   const setv=(elid,v)=>{const e=document.getElementById(elid);if(e)e.value=v;};
   setv('nq_name',nq.name); setv('nq_email',nq.email); setv('nq_phone',nq.phone);
+  setv('nq_street',nq.street); setv('nq_suburb',nq.suburb); setv('nq_state',nq.state); setv('nq_postcode',nq.postcode);
   if(typeof nqRenderLines==='function')nqRenderLines();
 }
 
