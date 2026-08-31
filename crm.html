@@ -145,6 +145,11 @@ tr.clk{cursor:pointer}tr.clk:hover td{background:var(--soft)}
 .b-completed{background:var(--blue-soft);color:#1877c9}
 .b-sent{background:#e8f4ff;color:#1673b6}
 .b-api{background:var(--pink-soft);color:var(--pink-ink)}.b-manual{background:var(--warn-soft);color:var(--warn)}
+.agebadge{display:inline-block;margin-left:6px;padding:1px 7px;border-radius:999px;font-size:11px;font-weight:600;white-space:nowrap}
+.age-cool{background:#eef;color:#4a4a8a}
+.age-warm{background:var(--warn-soft);color:var(--warn)}
+.age-hot{background:var(--bad-soft);color:var(--bad)}
+.quickact{margin-left:8px;padding:2px 9px;font-size:11px;white-space:nowrap}
 .b-new{background:#eef;color:#4a4a8a}.b-contacted{background:var(--warn-soft);color:var(--warn)}.b-won,.b-quoted{background:var(--good-soft);color:var(--good)}.b-lost{background:var(--bad-soft);color:var(--bad)}
 #leadFilter .chip,#quoteFilter .chip,#seoFilter .chip{cursor:pointer;border:1px solid var(--line);background:#fff;color:var(--muted);margin-top:0}#leadFilter .chip.on,#quoteFilter .chip.on,#seoFilter .chip.on{background:var(--pink-soft);color:var(--pink-ink);border-color:transparent}
 #quoteFilter .chip.lost.on{background:var(--bad-soft);color:var(--bad)}
@@ -1665,7 +1670,7 @@ function nqShapeBC(data){
   return rows;
 }
 function newQuote(preName,opts){
-  window._nq={items:[],discount:0,prodSlug:'',qty:100,name:'',email:'',phone:'',orgId:(opts&&opts.orgId)||'',street:'',suburb:'',state:'',postcode:'',_price:null,_priceQty:0};
+  window._nq={items:[],discount:0,prodSlug:'',qty:100,name:'',email:'',phone:'',orgId:(opts&&opts.orgId)||'',leadId:(opts&&opts.leadId)||'',street:'',suburb:'',state:'',postcode:'',_price:null,_priceQty:0};
   window._qc={rows:[],keys:[],sel:{},title:'',live:true};
   window._nqMode='new';window._nqEditId=null;window._nqNum=null;window._nqTitle=null;
   md.className='modal xwide';
@@ -1696,7 +1701,7 @@ async function openEditQuote(num){
   const org=row.company?D.orgs.find(o=>(o.name||'').toLowerCase()===row.company.toLowerCase()):null;
   let _eDisc=0;const _eItems=[];
   q.items.forEach(it=>{ if((it.price||0)<0 && /^discount$/i.test(String(it.n||'').trim())){ _eDisc+=-it.price; } else _eItems.push({n:it.n,qty:it.qty,price:it.price}); });
-  window._nq={items:_eItems,discount:_eDisc,prodSlug:'',qty:100,name:row.contact_name||q.contact||'',email:row.contact_email||'',phone:row.contact_phone||'',orgId:org?org.id:'',street:row.street||'',suburb:row.suburb||'',state:row.state||'',postcode:row.postcode||'',_price:null,_priceQty:0,_company:row.company||''};
+  window._nq={items:_eItems,discount:_eDisc,prodSlug:'',qty:100,name:row.contact_name||q.contact||'',email:row.contact_email||'',phone:row.contact_phone||'',orgId:org?org.id:'',leadId:'',street:row.street||'',suburb:row.suburb||'',state:row.state||'',postcode:row.postcode||'',_price:null,_priceQty:0,_company:row.company||''};
   window._qc={rows:[],keys:[],sel:{},title:'',live:true};
   window._nqMode=isInvEdit?'editinv':'edit';window._nqEditId=q._id;window._nqNum=num;
   window._nqTitle=isInvEdit?('Edit invoice '+(q.invNum||'')+' — '+num):null;
@@ -2022,11 +2027,27 @@ async function nqSave(send){
       openQuote(window._nqNum);
       return;
     }
-    const ins=await sb.from('quotes').insert(Object.assign({contact_name:name,contact_email:email,contact_phone:phone||null,company:company},addr)).select('id,quote_number').single();
+    /* lead_id preserves the enquiry -> quote chain. Without it every quote
+       raised from a website enquiry looked like a cold staff quote, which broke
+       conversion reporting and left the lead with no visible outcome. */
+    const _leadId=(window._nq&&window._nq.leadId)||null;
+    const ins=await sb.from('quotes').insert(Object.assign({contact_name:name,contact_email:email,contact_phone:phone||null,company:company,lead_id:_leadId},addr)).select('id,quote_number').single();
     if(ins.error)throw ins.error;
     const ii=await sb.from('quote_items').insert(mkItems(ins.data.id));
     if(ii.error)throw ii.error;
     const num=ins.data.quote_number;
+    /* The lead has now been quoted, so move it on. Best effort: a failure here
+       must never lose the quote that was just saved. Won/lost are final, so
+       they are not downgraded. */
+    if(_leadId){
+      try{
+        const _l=(D.leads||[]).find(x=>x._id===_leadId);
+        if(!_l||['new','contacted'].indexOf(_l.status)>=0){
+          await sb.from('leads').update({status:'quoted'}).eq('id',_leadId).in('status',['new','contacted']);
+          if(_l)_l.status='quoted';
+        }
+      }catch(e){ console.warn('lead status not advanced',e); }
+    }
     if(window._nqMode==='newinv'){
       // Raise the invoice immediately (internal approval — no customer accept step).
       const cv=await sb.rpc('convert_quote_to_order',{p_quote_id:ins.data.id});
@@ -2105,7 +2126,7 @@ async function refreshFromSupabase(sb){
     company:l.company||'', category:l.category||'', product:l.source_product_code||'', qty:l.quantity||'',
     details:l.job_details||'', artwork:l.artwork_link||'', sourceForm:l.source_form||'', sourcePage:l.source_page||'',
     street:l.delivery_line1||'', suburb:l.delivery_suburb||'', state:l.delivery_state||'', postcode:l.delivery_postcode||'',
-    status:l.status||'new'
+    status:l.status||'new', assignedTo:l.assigned_to||''
   }));
   renderHero(); renderQuoteTables(); drawContacts(0); drawOrgs(0); renderSuppliers(); renderLeads();
   if(window.renderNotifs)try{renderNotifs();}catch(_e){}
@@ -2183,6 +2204,23 @@ function leadAddress(l){
   const tail=[l.suburb,l.state,l.postcode].filter(Boolean).join(' ');
   return [l.street,tail].filter(Boolean).join(', ')||'—';
 }
+/* Age of an open enquiry in whole days. Won/lost/spam are finished, so they
+   never show as ageing. Thirteen of the first 24 leads sat on 'new' for an
+   average of eleven days with nothing on screen to say so — this is that fix. */
+function leadAgeDays(l){
+  if(!l||!l.created)return null;
+  if(['won','lost','spam'].indexOf(l.status)>=0)return null;
+  const ms=Date.now()-new Date(l.created).getTime();
+  if(!isFinite(ms)||ms<0)return null;
+  return Math.floor(ms/86400000);
+}
+function leadAgeBadge(l){
+  const d=leadAgeDays(l);
+  if(d===null)return '';
+  const cls=d>=7?'age-hot':(d>=3?'age-warm':'age-cool');
+  const txt=d===0?'today':(d===1?'1 day':d+' days');
+  return `<span class="agebadge ${cls}" title="Enquiry received ${txt} ago">${txt}</span>`;
+}
 function setLeadFilter(f){ window._leadFilter=f; renderLeads(); }
 function renderLeads(){
   const tb=document.getElementById('leadTable'); if(!tb)return;
@@ -2197,8 +2235,15 @@ function renderLeads(){
     fb.innerHTML=chips.map(([k,lab,n])=>`<button class="chip${f===k?' on':''}" onclick="setLeadFilter('${k}')">${lab} ${n}</button>`).join('');}
   const shown=f==='all'?leads:leads.filter(l=>l.status===f);
   const sub=document.getElementById('leadSub'); if(sub)sub.textContent=`${leads.length} enquir${leads.length===1?'y':'ies'} from your product pages · click a lead to open it`;
-  tb.innerHTML=shown.length?shown.map(l=>`<tr class="clk" data-l="${esc(l._id)}"><td class="mini">${leadDate(l.created)}</td><td><b>${esc(l.name)}</b><div class="mini">${esc(l.email||'')}</div></td><td>${esc(leadEnquiry(l))}</td><td class="num">${esc(l.qty||'—')}</td><td class="mini">${esc(l.sourceForm||'—')}</td><td><span class="badge b-${esc(l.status)}">${esc(l.status)}</span></td></tr>`).join(''):`<tr><td colspan="6"><div class="empty">No ${f==='all'?'':esc(f)+' '}leads yet.</div></td></tr>`;
+  tb.innerHTML=shown.length?shown.map(l=>`<tr class="clk" data-l="${esc(l._id)}"><td class="mini">${leadDate(l.created)}${leadAgeBadge(l)}</td><td><b>${esc(l.name)}</b><div class="mini">${esc(l.email||'')}</div></td><td>${esc(leadEnquiry(l))}</td><td class="num">${esc(l.qty||'—')}</td><td class="mini">${esc(l.sourceForm||'—')}</td><td><span class="badge b-${esc(l.status)}">${esc(l.status)}</span>${l.status==='new'?`<button class="btn sm quickact" data-mark="${esc(l._id)}" title="Mark this enquiry as contacted">Mark contacted</button>`:''}</td></tr>`).join(''):`<tr><td colspan="6"><div class="empty">No ${f==='all'?'':esc(f)+' '}leads yet.</div></td></tr>`;
   tb.querySelectorAll('tr.clk[data-l]').forEach(r=>r.onclick=()=>openLead(r.dataset.l));
+  /* One click, straight from the list. Opening the modal to change a status was
+     enough friction that no lead had ever been marked contacted. The click must
+     not bubble, or the row handler above would open the lead as well. */
+  tb.querySelectorAll('button[data-mark]').forEach(b=>b.onclick=function(ev){
+    ev.stopPropagation();
+    setLeadStatus(b.dataset.mark,'contacted');
+  });
 }
 function openLead(id){
   const l=leadById(id); if(!l)return;
@@ -2241,17 +2286,29 @@ window.openLeadReply=function(id){
 async function setLeadStatus(id,status){
   const l=leadById(id); if(!l)return;
   const sb=window.CRM_SB; if(!sb){alert('Not connected — please reload and sign in.');return;}
-  const prev=l.status; l.status=status; renderLeads();
+  const prev=l.status; const prevOwner=l.assignedTo; l.status=status; renderLeads();
   if(window._openLeadId===id && mb.classList.contains('show')) openLead(id);
-  try{ const r=await sb.from('leads').update({status:status}).eq('id',id); if(r.error)throw r.error; }
+  try{
+    const patch={status:status};
+    /* Stamp the owner the first time anyone acts on a lead. assigned_to existed
+       but nothing ever wrote to it, so no lead had an owner and the dashboard
+       could not answer "what is waiting on me". */
+    if(!l.assignedTo){
+      try{ const u=await sb.auth.getUser();
+        const who=(u.data&&u.data.user&&u.data.user.email)||'';
+        if(who){ patch.assigned_to=who; l.assignedTo=who; }
+      }catch(e){ /* not fatal — the status change still matters */ }
+    }
+    const r=await sb.from('leads').update(patch).eq('id',id); if(r.error)throw r.error; }
   catch(e){ l.status=prev; renderLeads(); if(window._openLeadId===id && mb.classList.contains('show'))openLead(id); alert('Could not update the lead status: '+(e.message||e)); }
 }
 function leadToQuote(id){
   const l=leadById(id); if(!l)return;
   window._openLeadId=null;
   closeModal();
-  newQuote();
+  newQuote(null,{leadId:l._id});
   const nq=window._nq;
+  nq.leadId=l._id;
   nq.name=l.name||''; nq.email=l.email||''; nq.phone=l.phone||'';
   nq.street=l.street||''; nq.suburb=l.suburb||''; nq.state=l.state||''; nq.postcode=l.postcode||'';
   const head=l.product?qcPretty(l.product):(l.category||'Website enquiry');
