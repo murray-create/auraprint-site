@@ -22,8 +22,30 @@ window.AURA_CONFIG = {
   /* Supabase (Aura CRM database). Every enquiry is stored in the leads table.
      The publishable key below is safe to expose: it can only INSERT enquiries,
      never read them (enforced by row-level security). Staff read the leads
-     via the password-protected admin inbox. */
-  supabaseUrl: "https://pwjxkzifitybvtnrfxfi.supabase.co",
+     via the password-protected admin inbox.
+
+     supabaseUrl points at Aura's OWN api. host, not directly at supabase.co.
+     Why: school, government, hospital and large-corporate web filters block
+     unfamiliar third-party API domains. On 31 Aug 2026 that silently ate a real
+     enquiry from an Education Queensland address - the alert email arrived, the
+     CRM row never existed - and it would equally stop that customer opening
+     their quote or approving a proof, because those pages read from here too.
+     A filter sees the business's own domain instead.
+
+     api.auraprint.com.au is a Cloudflare Worker (script "aura-api", source in
+     api-proxy/ alongside this repo). It forwards to the Supabase project
+     untouched, so the publishable key and row-level security are still the only
+     things deciding what a caller may do.
+
+     supabaseFallbackUrl is the direct host, used by assets/aura.js only if the
+     proxy cannot be reached, so neither host failing alone can lose a lead. */
+  supabaseUrl: "https://api.auraprint.com.au",
+  supabaseFallbackUrl: "https://pwjxkzifitybvtnrfxfi.supabase.co",
+
+  /* Staff CRM talks to Supabase directly. Murray is not behind a customer's web
+     filter, and keeping the login on the original host means the sign-in
+     session is untouched by the proxy. */
+  supabaseDirectUrl: "https://pwjxkzifitybvtnrfxfi.supabase.co",
   supabaseKey: "sb_publishable_HYMPZZd4CPpmWktzmht7Jg_xD1C-QZ1",
 
   /* Business details printed on tax invoices (invoice.html) and the CRM PDF.
