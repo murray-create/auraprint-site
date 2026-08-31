@@ -16,6 +16,8 @@
   .topbar{display:flex;justify-content:space-between;align-items:flex-start;gap:20px}
   h1{font-family:'Archivo Black',sans-serif;font-size:38px;margin:0 0 26px;letter-spacing:-.01em}
   .brand{font-family:'Archivo Black',sans-serif;font-size:19px;text-align:right;line-height:1.1}
+  .brand::before{content:"";display:block;width:92px;height:40px;margin:0 0 9px auto;
+    background:url(assets/aura-mark.svg) no-repeat right center/contain}
   .brand span{color:var(--pink)}
   .meta{display:flex;gap:44px;flex-wrap:wrap;margin-bottom:30px}
   .meta .v{font-weight:700;font-size:15px}
@@ -52,6 +54,7 @@
   }
 </style>
 <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png"><link rel="mask-icon" href="assets/aura-mark-black.svg" color="#EC4899">
 </head>
 <body>
 <div class="toolbar" id="toolbar" style="display:none"><button onclick="window.print()">🖨 Print / Save as PDF</button></div>

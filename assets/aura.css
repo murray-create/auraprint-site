@@ -28,8 +28,17 @@ img{max-width:100%;display:block}
 /* nav */
 nav.main{position:sticky;top:0;background:rgba(250,248,245,.92);backdrop-filter:blur(10px);border-bottom:1px solid #e8e2da;z-index:100}
 nav.main .wrap{display:flex;align-items:center;gap:34px;height:74px}
-.logo{font-family:'Archivo Black',sans-serif;font-size:24px}
+/* Brand lockup: peaks mark + AURAPRINT wordmark.
+   Proportions taken from the master artwork (mark height = 1.05x cap height,
+   mark aspect 1000:436, gap = 0.74x cap height). Archivo Black cap height ~= .73em. */
+.logo{display:inline-flex;align-items:baseline;gap:0;font-family:'Archivo Black',sans-serif;font-size:24px;line-height:1;white-space:nowrap}
+.logo::before{content:"";flex:none;width:1.66em;height:.724em;margin-right:.5em;
+  background:url(aura-mark.svg) no-repeat center/contain}
 .logo span{background:var(--aura);-webkit-background-clip:text;background-clip:text;color:transparent}
+/* reversed lockup on dark ground */
+footer .logo::before,.logo-rev::before,.page-hero .logo::before,
+.logo[style*="#fff"]::before,.logo[style*="#FFF"]::before{background-image:url(aura-mark-white.svg)}
+@media(max-width:560px){.logo{font-size:21px}}
 .navlinks{display:flex;gap:28px;font-weight:600;font-size:15px;flex:1}
 .navlinks>div{position:relative;padding:26px 0;cursor:pointer}
 .navlinks>div:hover>a{color:var(--magenta)}
