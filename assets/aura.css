@@ -258,17 +258,22 @@ body.drawer-open #aura-chat-btn,body.drawer-open #aura-chat{display:none !import
 
 .turnbar{border:2px solid #ece7e0;border-left:5px solid transparent;border-radius:14px;background:#fff;padding:14px 16px;margin:14px 0 18px;background-image:linear-gradient(#fff,#fff),var(--aura);background-origin:border-box;background-clip:padding-box,border-box}
 .turn-head{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.1em;color:#777;margin-bottom:9px}
-.turn-row{display:flex;flex-wrap:wrap;gap:8px}
-.turn-item{flex:1 1 150px;border:1px solid #efeae3;border-radius:10px;padding:9px 12px;background:var(--paper)}
-.turn-item b{display:block;font-size:14px;font-weight:800;letter-spacing:-.01em}
-.turn-item span{display:block;font-size:12px;font-weight:600;color:#6b6560}
-.turn-item.fast{background:#f6f1ff;border-color:#ddd0ff}
+/* Info only. Deliberately NOT card/chip shaped: a filled, rounded, bordered
+   box here reads as a selected option (see .opt.on / .speedopt.on, same
+   #f6f1ff + violet border) and customers try to click it. Speeds are only
+   selectable where .speedopt exists. Keep this a plain spec list. */
+.turn-row{display:block;margin:0}
+.turn-item{display:flex;flex-wrap:wrap;align-items:baseline;gap:2px 14px;padding:7px 0;border:0;border-radius:0;background:none;box-shadow:none}
+.turn-item+.turn-item{border-top:1px solid #f1ece5}
+.turn-item b{display:block;font-size:14px;font-weight:800;letter-spacing:-.01em;min-width:104px}
+.turn-item span{display:block;font-size:13px;font-weight:600;color:#6b6560}
+.turn-item.fast{background:none}
 .turn-item.fast b{color:var(--violet)}
 .turn-live{font-size:13px;color:#4a4540;margin-top:10px}
 .turn-fine{font-size:11.5px;line-height:1.45;color:#9a948d;margin-top:5px}
 .turn-note{font-size:12px;color:#8a847d;margin-top:6px}
 .turn-note a{font-weight:700;color:var(--violet)}
-@media(max-width:560px){.turn-item{flex:1 1 100%}}
+@media(max-width:560px){.turn-item{gap:0 12px}.turn-item b{min-width:96px}}
 
 
 /* ---------- Google reviews: util-bar chip + reviews band ---------- */
