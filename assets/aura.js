@@ -250,20 +250,47 @@ function collectLead(form){
   return lead;
 }
 
-/* Store the enquiry in the Supabase leads table. Resolves {ok|skipped}. */
+/* Resolve a promise no later than `ms`, so a request that hangs behind a
+   corporate proxy cannot leave the customer staring at "Sending...". */
+function withTimeout(p, ms){
+  return new Promise(function(resolve){
+    var settled = false;
+    var timer = setTimeout(function(){ if(!settled){ settled = true; resolve({ ok:false, timeout:true }); } }, ms);
+    p.then(function(v){ if(!settled){ settled = true; clearTimeout(timer); resolve(v); } },
+           function(){   if(!settled){ settled = true; clearTimeout(timer); resolve({ ok:false }); } });
+  });
+}
+
+/* Store the enquiry in the Supabase leads table. Resolves {ok|skipped}.
+   Posts to Aura's own API host first and falls back to the direct Supabase
+   host. School, government, hospital and large-corporate web filters block
+   unfamiliar third-party API domains, and on 31 Aug 2026 that silently ate a
+   real enquiry: the alert email arrived, the CRM row never existed. Two hosts
+   means one filter cannot swallow a lead on its own. */
 function saveLead(CFG, lead){
   if (!CFG.supabaseUrl || !CFG.supabaseKey) return Promise.resolve({ skipped:true });
-  return fetch(CFG.supabaseUrl + '/rest/v1/leads', {
-    method: 'POST',
-    headers: {
-      'apikey':        CFG.supabaseKey,
-      'Authorization': 'Bearer ' + CFG.supabaseKey,
-      'Content-Type':  'application/json',
-      'Prefer':        'return=minimal'
-    },
-    body: JSON.stringify(lead)
-  }).then(function(r){ return { ok:r.ok, status:r.status }; })
-    .catch(function(){ return { ok:false }; });
+  var hosts = [CFG.supabaseUrl];
+  if (CFG.supabaseFallbackUrl && CFG.supabaseFallbackUrl !== CFG.supabaseUrl) hosts.push(CFG.supabaseFallbackUrl);
+  function post(i){
+    if (i >= hosts.length) return Promise.resolve({ ok:false, blocked:true });
+    return fetch(hosts[i] + '/rest/v1/leads', {
+      method: 'POST',
+      headers: {
+        'apikey':        CFG.supabaseKey,
+        'Authorization': 'Bearer ' + CFG.supabaseKey,
+        'Content-Type':  'application/json',
+        'Prefer':        'return=minimal'
+      },
+      body: JSON.stringify(lead)
+    }).then(function(r){
+      /* A 4xx is the database refusing the DATA - retrying elsewhere would only
+         be refused again. Only a server-side or transport failure is worth a
+         second host. */
+      if (!r.ok && r.status >= 500 && i + 1 < hosts.length) return post(i + 1);
+      return { ok:r.ok, status:r.status, host:hosts[i] };
+    }).catch(function(){ return post(i + 1); });
+  }
+  return post(0);
 }
 
 function wireForms(){
@@ -331,23 +358,37 @@ function wireForms(){
           ' pages, which is a booklet, not a folded sheet. Needs a manual quote.');
       }
 
-      /* Primary: store the enquiry in the CRM database. */
-      var dbSave = saveLead(CFG, collectLead(form));
-
-      /* Parallel: email alert to admin@auraprint.com.au (best effort). */
-      var mail;
+      /* Snapshot the answers NOW, before anything async, so the email always
+         carries what was actually submitted. */
+      var data = null;
       if (CFG.web3formsKey){
-        var data = new FormData(form);
+        data = new FormData(form);
         data.append('access_key', CFG.web3formsKey);
         if (!data.get('subject')) data.append('subject', (form.getAttribute('data-subject') || 'New website enquiry') + ' – Aura Print');
         data.append('from_name', 'Aura Print website');
-        mail = fetch(ENDPOINT, { method:'POST', body:data })
+      }
+
+      /* Primary: store the enquiry in the CRM database. */
+      var dbSave = withTimeout(saveLead(CFG, collectLead(form)), 8000);
+
+      /* The alert email goes out AFTER the database attempt so it can REPORT the
+         result. These two used to run in parallel, which meant a failed CRM save
+         was invisible: the customer saw a tick, admin@ got an email, and the
+         lead existed nowhere. Now every alert says whether it landed. */
+      var mail = dbSave.then(function(db){
+        if (!data) return false;
+        data.append('crm_status', (db && db.ok)
+          ? 'Saved to the CRM.'
+          : 'NOT SAVED TO THE CRM - please add this enquiry by hand. Reason: ' +
+            (db && db.timeout ? 'the database did not answer in time'
+             : db && db.blocked ? "blocked by the sender's network or browser"
+             : db && db.skipped ? 'the database is not configured'
+             : 'rejected with status ' + ((db && db.status) || 'unknown')));
+        return fetch(ENDPOINT, { method:'POST', body:data })
           .then(function(r){ return r.json(); })
           .then(function(res){ return !!res.success; })
           .catch(function(){ return false; });
-      } else {
-        mail = Promise.resolve(false);
-      }
+      });
 
       Promise.allSettled([dbSave, mail]).then(function(rs){
         var db = rs[0].value || {};

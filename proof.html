@@ -115,7 +115,13 @@
     var p = res.data;
     if (!p){ tokenError('We couldn\'t find a proof for this link. It may have been replaced by a newer version — check your latest email, or contact us.'); return; }
     tokenProofId = p.proof_id;
-    try { sb.auth.getSession().then(function(){ sb.rpc('mark_link_viewed',{p_kind:'proof',p_token:TOKEN}); }); } catch(e){}
+    /* supabase-js query builders are LAZY: sb.rpc(...) builds the request but
+    only SENDS it when something calls .then(). Without the .then() below this
+    line silently did nothing, which is why every quote, invoice and proof read
+    view_count = 0 even after customers had opened and accepted them. */
+    try { sb.auth.getSession().then(function(){
+      sb.rpc('mark_link_viewed',{p_kind:'proof',p_token:TOKEN}).then(function(){}, function(){});
+    }); } catch(e){}
     renderToken(p);
     /* fetch the PDF via the token endpoint */
     try {
