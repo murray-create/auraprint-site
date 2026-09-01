@@ -224,6 +224,20 @@ function wirePageGuard(form){
   paint();
 }
 
+/* Australian mobile check. Returns a tidy '04xx xxx xxx' string, or '' when the
+   number is a landline, a 13/1300 number, or nonsense. Mirrors smsMobile() in
+   the CRM and public.normalise_au_mobile() in the database, so a number that
+   passes here is a number the CRM can actually text. */
+function auMobile(raw){
+  if (!raw) return '';
+  var d = String(raw).replace(/[^0-9]/g, '');
+  if (d.indexOf('0011') === 0) d = d.slice(4);
+  if (/^614[0-9]{8}$/.test(d)) d = '0' + d.slice(2);
+  else if (/^4[0-9]{8}$/.test(d)) d = '0' + d;
+  if (!/^04[0-9]{8}$/.test(d)) return '';
+  return d.slice(0,4) + ' ' + d.slice(4,7) + ' ' + d.slice(7);
+}
+
 /* Map a form's fields to the leads table columns. */
 function collectLead(form){
   var g = function(n){ var el = form.querySelector('[name="'+n+'"]'); return el ? String(el.value||'').trim() : null; };
@@ -314,6 +328,12 @@ function wireForms(){
       var emailEl = form.querySelector('input[type="email"][required], input[name="email"]');
       var badEmail = emailEl && String(emailEl.value||'').trim() && !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(emailEl.value.trim());
       if (badEmail && missing.indexOf(emailEl) < 0) missing.push(emailEl);
+      /* Australian mobile on fields marked data-mobile-only. A landline here is
+         a dead end: it cannot receive the quote link by SMS, and 15 of the first
+         35 quotes had no textable number because this was never checked. */
+      var mobEl = form.querySelector('[data-mobile-only]');
+      var badMob = mobEl && String(mobEl.value||'').trim() && !auMobile(mobEl.value);
+      if (badMob && missing.indexOf(mobEl) < 0) missing.push(mobEl);
       /* Australian postcode: four digits, or the lead insert is rejected. */
       var pcEl = form.querySelector('[name="delivery_postcode"]');
       var badPc = pcEl && String(pcEl.value||'').trim() && !/^\d{4}$/.test(pcEl.value.trim());
@@ -326,6 +346,7 @@ function wireForms(){
           msg.style.cssText = 'display:block;margin-top:5px;font-size:12.5px;color:#c0392b;font-weight:600';
           msg.textContent = (el === emailEl && badEmail) ? 'That email address doesn’t look right.'
                           : (el === pcEl && badPc) ? 'Please enter a valid 4-digit postcode.'
+                          : (el === mobEl && badMob) ? 'That looks like a landline. Please give a mobile so we can text you the quote link.'
                           : 'This field is required.';
           el.insertAdjacentElement('afterend', msg);
         });
@@ -335,6 +356,10 @@ function wireForms(){
         missing[0].focus({ preventScroll:true });
         return;
       }
+
+      /* Tidy the number before anything reads it, so the CRM and the alert email
+         both get 04xx xxx xxx rather than +61 / spaces / dashes. */
+      if (mobEl){ var tidy = auMobile(mobEl.value); if (tidy) mobEl.value = tidy; }
 
       var btn = form.querySelector('button[type="submit"], button:not([type])');
       var em = 'admin' + String.fromCharCode(64) + 'auraprint.com.au';
