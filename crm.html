@@ -2247,8 +2247,26 @@ function nqEditDesc(i,val){
   const ta=document.querySelector('#nq_lbody tr:nth-child('+(i+1)+') textarea.nqdesc');
   if(ta){if(ta.value!==it.n)ta.value=it.n;nqAutoSize(ta);}
 }
-function nqAutoSize(el){if(!el)return;el.style.height='auto';el.style.height=(el.scrollHeight+2)+'px';}
-function nqSizeAllDesc(){document.querySelectorAll('#nq_lbody textarea.nqdesc').forEach(nqAutoSize);}
+function nqAutoSize(el){
+  if(!el)return;
+  el.style.height='auto';
+  /* A hidden element reports a scrollHeight of 0. Setting the height from that
+     collapsed every description to a 2px sliver, which is what happened when the
+     line items were rendered before the modal was shown. Leave it alone instead
+     and let the next pass size it properly. */
+  const h=el.scrollHeight;
+  if(!h){ el.style.height=''; return; }
+  el.style.height=(h+2)+'px';
+}
+function nqSizeAllDesc(){
+  const run=()=>document.querySelectorAll('#nq_lbody textarea.nqdesc').forEach(nqAutoSize);
+  run();
+  /* Duplicating a job and editing a quote both render the lines while the modal
+     is still hidden, so size them again on the next frame once they are on
+     screen and have a real height to measure. */
+  if(typeof requestAnimationFrame==='function') requestAnimationFrame(run);
+  setTimeout(run,60);
+}
 function nqRemoveLine(i){window._nq.items.splice(i,1);nqRenderLines();}
 function nqRenderLines(){
   const nq=window._nq,tb=document.getElementById('nq_lbody');if(!tb)return;
