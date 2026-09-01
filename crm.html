@@ -627,6 +627,7 @@ const D = {
   domains:[{k:'Promotional',n:1302,c:'#f01a9a'},{k:'Print',n:285,c:'#43b7ff'}],
   months:[['Jul',3],['Aug',5],['Sep',4],['Oct',7],['Nov',6],['Dec',4],['Jan',8],['Feb',6],['Mar',9],['Apr',7],['May',11],['Jun',8]],
   leads:[],
+  sms:[],
   orgs:[
     {id:'org1',name:'Sanctuary Church',abn:'—',suburb:'Mons QLD 4556',notes:'A-frames, bow banners and event signage. Quotes QU-001013, QU-001014, QU-001018; order AP-001013 (invoice INV-000010 issued).'},
     {id:'org2',name:'Tunnel Ridge Ranch',abn:'—',suburb:'QLD',notes:'Event flyers and print. James Norman accepted QU-001011; order AP-001012 shipped, invoice INV-000009 paid. Delivery to 61 Kowald Road.'},
@@ -1024,6 +1025,10 @@ function openQuote(num){
   // "Mark lost" is available at every stage — it cancels the linked order and
   // voids the linked invoice too. markLost() refuses outright once real money
   // has been taken through Stripe.
+  // SMS sits beside the email actions at every stage — the templates inside
+  // the composer change with the stage, so one button covers quote, invoice,
+  // payment chase and dispatch.
+  if(q._phone&&smsMobile(q._phone)) actions+=`<button class="btn" onclick="openQuoteSms('${q.num}')" title="Text ${esc(smsPretty(q._phone))}"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>Send SMS</button>`;
   if(q.status!=='declined'&&!isDoneQuote(q)) actions+=`<button class="btn danger" onclick="markLost('${q.num}')">Mark lost</button>`;
 
   // right rail: linked records + summary
@@ -1040,6 +1045,7 @@ function openQuote(num){
     ${econCard(q)}
     ${linked.length?`<div style="margin-top:14px;border-top:1px solid var(--line);padding-top:10px">${linked.join('')}</div>`:''}
     ${payLink}
+    ${smsRailCard(q)}
     ${q.invNum?`<button class="btn primary sm" style="width:100%;justify-content:center;margin-top:6px" onclick="openInvoiceEmail('${q.num}')">Send invoice email</button>`:''}
   </div>`;
 
@@ -2074,7 +2080,7 @@ async function nqSave(send){
 /* ---------- Live data from Supabase ---------- */
 const SUP_COUNT={PREMIER:440,PROMOBRANDS:862};
 async function refreshFromSupabase(sb){
-  const [orgs,cons,qs,qis,ords,oi,invs,sup,lds,jcs,mcfg,ofs] = await Promise.all([
+  const [orgs,cons,qs,qis,ords,oi,invs,sup,lds,jcs,mcfg,ofs,smsr] = await Promise.all([
     sb.from('organisations').select('*').order('name'),
     sb.from('contacts').select('*').order('archived',{ascending:true}).order('name'),
     sb.from('quotes').select('*').eq('archived',false).order('created_at',{ascending:false}),
@@ -2088,7 +2094,9 @@ async function refreshFromSupabase(sb){
     sb.from('leads').select('*').order('created_at',{ascending:false}),
     sb.from('job_costs').select('*'),
     sb.from('staff_config').select('key,value').eq('key','margin'),
-    sb.from('order_files').select('id,order_id,order_item_id,kind,filename,size_bytes,storage_path,preflight_status,created_at').order('created_at',{ascending:false})
+    sb.from('order_files').select('id,order_id,order_item_id,kind,filename,size_bytes,storage_path,preflight_status,created_at').order('created_at',{ascending:false}),
+    /* SMS history. Staff-read RLS, written only by the send-sms function. */
+    sb.from('sms_log').select('*').order('created_at',{ascending:false})
   ]);
   const mrow=((mcfg&&mcfg.data)||[])[0];
   if(mrow&&mrow.value&&mrow.value.default_multiplier) window.MARGIN_MULT=Number(mrow.value.default_multiplier)||1.52;
@@ -2114,7 +2122,7 @@ async function refreshFromSupabase(sb){
     if(inv&&inv.status==='paid')stage='paid'; else if(inv)stage='invoice'; else if(ord)stage='order';
     let contact=q.contact_name||q.contact_email||'—';
     if(q.company){const org=D.orgs.find(o=>o.name.toLowerCase()===q.company.toLowerCase());if(org){const ppl=D.contacts.filter(c=>c.orgId===org.id);if(ppl.length&&!D.contacts.some(c=>c.name===contact))contact=ppl[0].name;}}
-    D.quotes.push({num:q.quote_number,contact,status:q.status,stage,orderNum:ord?ord.order_number:null,invNum:inv?inv.invoice_number:null,payLink:inv?inv.payment_link_url:null,items,_id:q.id,_orderId:q.converted_order_id||null,_invId:inv?inv.id:null,_invToken:inv?inv.access_token:null,_invSent:inv?inv.sent_at:null,_invStatus:inv?inv.status:null,_invPaidAt:inv?inv.paid_at:null,_invViewedAt:inv?inv.last_viewed_at:null,_viewedAt:q.last_viewed_at||null,_decidedAt:q.decided_at||null,_decision:q.decision_comments||'',_sentAt:q.sent_at||null,_acceptedBy:q.accepted_by_name||null,_created:q.created_at,_email:q.contact_email||'',_name:q.contact_name||'',_token:q.access_token||'',_accepted:!!q.accepted_by_name,_tCarrier:ord?(ord.tracking_carrier||''):'',_tNumber:ord?(ord.tracking_number||''):'',_tUrl:ord?(ord.tracking_url||''):'',_dispatched:ord?ord.dispatched_at:null,_ordStatus:ord?(ord.status||''):'',_reviewReq:ord?ord.review_requested_at:null,_completedAt:ord?(ord.completed_at||null):null,_valid:q.valid_until||null,_origin:q.origin||'staff',_street:q.street||'',_suburb:q.suburb||'',_state:q.state||'',_postcode:q.postcode||'',_artLink:ord?(ord.artwork_link||''):'',_cost:costByQuote[q.id]||null,_oitems:(itemsByOrder[q.converted_order_id]||[]),_ofiles:(filesByOrder[q.converted_order_id]||[])});
+    D.quotes.push({num:q.quote_number,contact,status:q.status,stage,orderNum:ord?ord.order_number:null,invNum:inv?inv.invoice_number:null,payLink:inv?inv.payment_link_url:null,items,_id:q.id,_orderId:q.converted_order_id||null,_invId:inv?inv.id:null,_invToken:inv?inv.access_token:null,_invSent:inv?inv.sent_at:null,_invStatus:inv?inv.status:null,_invPaidAt:inv?inv.paid_at:null,_invViewedAt:inv?inv.last_viewed_at:null,_viewedAt:q.last_viewed_at||null,_decidedAt:q.decided_at||null,_decision:q.decision_comments||'',_sentAt:q.sent_at||null,_acceptedBy:q.accepted_by_name||null,_created:q.created_at,_email:q.contact_email||'',_phone:q.contact_phone||'',_name:q.contact_name||'',_token:q.access_token||'',_accepted:!!q.accepted_by_name,_tCarrier:ord?(ord.tracking_carrier||''):'',_tNumber:ord?(ord.tracking_number||''):'',_tUrl:ord?(ord.tracking_url||''):'',_dispatched:ord?ord.dispatched_at:null,_ordStatus:ord?(ord.status||''):'',_reviewReq:ord?ord.review_requested_at:null,_completedAt:ord?(ord.completed_at||null):null,_valid:q.valid_until||null,_origin:q.origin||'staff',_street:q.street||'',_suburb:q.suburb||'',_state:q.state||'',_postcode:q.postcode||'',_artLink:ord?(ord.artwork_link||''):'',_cost:costByQuote[q.id]||null,_oitems:(itemsByOrder[q.converted_order_id]||[]),_ofiles:(filesByOrder[q.converted_order_id]||[])});
   });
   D.orders.length=0;
   (ords.data||[]).forEach(o=>{const q=(qs.data||[]).find(x=>x.converted_order_id===o.id);D.orders.push({num:o.order_number,name:o.contact_name||'—',company:o.company||null,status:o.status,total:orderTotal[o.id]||0,q:q?q.quote_number:null,track:o.tracking_number||null});});
@@ -2128,6 +2136,8 @@ async function refreshFromSupabase(sb){
     street:l.delivery_line1||'', suburb:l.delivery_suburb||'', state:l.delivery_state||'', postcode:l.delivery_postcode||'',
     status:l.status||'new', assignedTo:l.assigned_to||''
   }));
+  D.sms.length=0;
+  (((smsr&&smsr.data)||[])).forEach(function(m){D.sms.push(m);});
   renderHero(); renderQuoteTables(); drawContacts(0); drawOrgs(0); renderSuppliers(); renderLeads();
   if(window.renderNotifs)try{renderNotifs();}catch(_e){}
   const nc=document.getElementById('navContacts'); if(nc)nc.textContent=D.contacts.length;
@@ -2263,7 +2273,7 @@ function openLead(id){
      <div class="field"><label>Source page</label><div class="mini">${pageLink}</div></div>
      <div class="field"><label>Status</label><div style="display:flex;gap:6px;flex-wrap:wrap">${stbtns}</div></div>
    </div>
-   <div class="mf"><button class="btn" onclick="closeModal()">Close</button>${l.email?`<button class="btn" onclick="openLeadReply('${esc(l._id)}')"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 5h18v14H3z"/><path d="M3 7l9 6 9-6"/></svg>Reply by email</button>`:''}<button class="btn primary" onclick="leadToQuote('${esc(l._id)}')"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 5v14M5 12h14"/></svg>Convert to quote</button></div>`;
+   <div class="mf"><button class="btn" onclick="closeModal()">Close</button>${l.email?`<button class="btn" onclick="openLeadReply('${esc(l._id)}')"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 5h18v14H3z"/><path d="M3 7l9 6 9-6"/></svg>Reply by email</button>`:''}${l.phone&&smsMobile(l.phone)?`<button class="btn" onclick="openLeadSms('${esc(l._id)}')"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>Send SMS</button>`:''}<button class="btn primary" onclick="leadToQuote('${esc(l._id)}')"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 5v14M5 12h14"/></svg>Convert to quote</button></div>`;
   mb.classList.add('show');
 }
 /* Reply to a website enquiry from inside the CRM — uses the same composer +
@@ -3307,5 +3317,222 @@ window.openTrackingEmail=function(num){
   renderComposer();
 };
 </script>
+<script>
+/* ---------- SMS (Mobile Message) ---------------------------------------
+   Added 1 Sep 2026. Deliberately mirrors the email composer: an editable
+   preview, then a send through the staff-gated send-sms Edge Function, which
+   is the only thing holding the API key and the only thing writing sms_log.
+   Mobile Message shortens links itself, so a long myquote/proof token URL
+   does not eat half the message. */
+const SMS_SOFT_MAX_PARTS=3;
+function smsMobile(raw){
+  if(!raw) return '';
+  var d=String(raw).replace(/[^0-9]/g,'');
+  if(d.indexOf('0011')===0) d=d.slice(4);
+  if(/^04[0-9]{8}$/.test(d)) return '61'+d.slice(1);
+  if(/^614[0-9]{8}$/.test(d)) return d;
+  if(/^4[0-9]{8}$/.test(d)) return '61'+d;
+  return '';
+}
+function smsPretty(n){ n=smsMobile(n); return n?('0'+n.slice(2,5)+' '+n.slice(5,8)+' '+n.slice(8)):''; }
+var SMS_GSM="@£$¥èéùìòÇ\nØø\rÅåΔ_ΦΓΛΩΠΨΣΘΞÆæßÉ !\"#¤%&'()*+,-./0123456789:;<=>?¡ABCDEFGHIJKLMNOPQRSTUVWXYZÄÖÑÜ§¿abcdefghijklmnopqrstuvwxyzäöñüà";
+var SMS_EXT="^{}\\[~]|€";
+function smsParts(t){
+  t=t||'';
+  var gsm=true,u=0;
+  for(var i=0;i<t.length;i++){
+    var ch=t.charAt(i);
+    if(SMS_GSM.indexOf(ch)>=0) u+=1;
+    else if(SMS_EXT.indexOf(ch)>=0) u+=2;
+    else { gsm=false; break; }
+  }
+  if(!gsm){ var L=t.length; return {parts:L<=70?1:Math.ceil(L/67), units:L, cap:(L<=70?70:67), enc:'Unicode'}; }
+  return {parts:u<=160?1:Math.ceil(u/153), units:u, cap:(u<=160?160:153), enc:'GSM'};
+}
+/* Smart quotes and dashes silently push a message into Unicode, which halves
+   the characters per part. One click cleans them out. */
+function smsPlainify(t){
+  return String(t||'')
+    .replace(/[‘’‛]/g,"'").replace(/[“”]/g,'"')
+    .replace(/[–—]/g,'-').replace(/…/g,'...')
+    .replace(/ /g,' ').replace(/•/g,'-');
+}
+
+function smsHistoryRows(f){
+  var list=(D.sms||[]).filter(function(m){
+    if(f.quote_id&&m.quote_id===f.quote_id) return true;
+    if(f.order_id&&m.order_id===f.order_id) return true;
+    if(f.lead_id&&m.lead_id===f.lead_id) return true;
+    if(f.to&&m.recipient===f.to) return true;
+    return false;
+  });
+  list.sort(function(a,b){return new Date(b.created_at)-new Date(a.created_at);});
+  return list;
+}
+function smsHistoryHtml(f,limit){
+  var list=smsHistoryRows(f).slice(0,limit||6);
+  if(!list.length) return '';
+  return '<div class="field" style="margin-top:16px"><label>Previous SMS</label>'+
+    list.map(function(m){
+      var when=new Date(m.created_at).toLocaleDateString('en-AU',{day:'2-digit',month:'short'})+' '+new Date(m.created_at).toLocaleTimeString('en-AU',{hour:'2-digit',minute:'2-digit'});
+      var bad=m.status!=='sent';
+      return '<div style="border-left:3px solid '+(bad?'#e0483a':'var(--line)')+';padding:6px 0 6px 10px;margin-bottom:8px">'+
+        '<div class="mini">'+(m.direction==='in'?'Received':'Sent')+' '+when+(bad?(' &middot; failed: '+esc(m.error||'')):'')+'</div>'+
+        '<div style="font-size:13px;white-space:pre-wrap">'+esc(m.body||'')+'</div></div>';
+    }).join('')+'</div>';
+}
+/* Compact version for the quote right rail */
+function smsRailCard(q){
+  var list=smsHistoryRows({quote_id:q._id,order_id:q._orderId,to:smsMobile(q._phone)});
+  if(!list.length) return '';
+  var last=list[0];
+  var when=new Date(last.created_at).toLocaleDateString('en-AU',{day:'2-digit',month:'short'});
+  return '<div style="margin-top:14px;border-top:1px solid var(--line);padding-top:10px">'+
+    '<div class="row"><span>SMS sent</span><b>'+list.length+'</b></div>'+
+    '<div class="mini" style="margin-top:4px">Last '+when+': '+esc((last.body||'').slice(0,70))+((last.body||'').length>70?'…':'')+'</div></div>';
+}
+
+window._sms=null;
+function openSmsComposer(o){
+  var s={heading:'Send SMS',body:'',templates:[],kind:null};
+  for(var k in o){ if(Object.prototype.hasOwnProperty.call(o,k)) s[k]=o[k]; }
+  s.to=smsMobile(o.to);
+  window._sms=s;
+  md.className='modal';
+  renderSms();
+  mb.classList.add('show');
+}
+function syncSms(){ var b=document.getElementById('s_body'); if(b&&window._sms) window._sms.body=b.value; }
+window.smsTemplate=function(i){
+  var s=window._sms; if(!s) return;
+  var t=(s.templates||[])[i]; if(!t) return;
+  s.body=t.body; s.kind=t.kind||s.kind; renderSms();
+};
+window.smsClean=function(){ var s=window._sms; if(!s) return; syncSms(); s.body=smsPlainify(s.body); renderSms(); };
+window.closeSms=function(){ window._sms=null; closeModal(); };
+function renderSms(){
+  var s=window._sms; if(!s) return;
+  var p=smsParts(s.body||'');
+  var warn=p.parts>SMS_SOFT_MAX_PARTS;
+  var uni=p.enc==='Unicode';
+  var tplBtns=(s.templates||[]).map(function(t,i){
+    return '<button class="btn sm" onclick="smsTemplate('+i+')">'+esc(t.label)+'</button>';
+  }).join(' ');
+  md.innerHTML='<div class="mh"><h3>'+esc(s.heading)+'</h3><div class="x" onclick="closeSms()">✕</div></div>'+
+   '<div class="mb">'+
+     '<div class="emailmeta"><b style="color:var(--ink)">To</b><span>'+esc(s.name||'')+' · '+esc(smsPretty(s.to))+'</span></div>'+
+     (tplBtns?'<div class="field" style="margin-top:14px"><label>Start from</label><div style="display:flex;gap:6px;flex-wrap:wrap">'+tplBtns+'</div></div>':'')+
+     '<div class="field"><label>Message</label><textarea id="s_body" style="min-height:150px" oninput="smsCount()" placeholder="Keep it short — 160 characters is one credit.">'+esc(s.body||'')+'</textarea></div>'+
+     '<div id="s_count" class="mini" style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">'+smsCountHtml(p)+
+       (uni?' <button class="btn sm" onclick="smsClean()">Fix special characters</button>':'')+'</div>'+
+     (warn?'<div class="secnote" style="background:var(--pink-soft);color:var(--pink-ink);margin-top:10px"><div>This message is '+p.parts+' parts, so it costs '+p.parts+' credits per recipient. Trimming it under '+(p.enc==='GSM'?'160':'70')+' characters makes it one.</div></div>':'')+
+     smsHistoryHtml({lead_id:s.lead_id,quote_id:s.quote_id,order_id:s.order_id,to:s.to},6)+
+     '<div class="note">Sends through the staff-gated <code>send-sms</code> Edge Function, which holds the Mobile Message API key server-side and records every send in <code>sms_log</code>. Links are shortened and click-tracked by Mobile Message automatically. Replies come back to the sending number.</div>'+
+   '</div>'+
+   '<div class="mf"><button class="btn" onclick="closeSms()">Cancel</button>'+
+     '<button class="btn primary" id="s_send" onclick="sendSms()"'+(s.to?'':' disabled')+'>'+
+     '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 2 11 13M22 2l-7 20-4-9-9-4z"/></svg>Send SMS</button></div>';
+}
+function smsCountHtml(p){
+  return '<span><b>'+p.units+'</b> characters · <b>'+p.parts+'</b> SMS credit'+(p.parts===1?'':'s')+' · '+p.enc+
+    (p.parts===1?(' · '+Math.max(0,p.cap-p.units)+' left in this part'):'')+'</span>';
+}
+window.smsCount=function(){
+  syncSms();
+  var el=document.getElementById('s_count'); if(!el) return;
+  var p=smsParts((window._sms&&window._sms.body)||'');
+  var uni=p.enc==='Unicode';
+  el.innerHTML=smsCountHtml(p)+(uni?' <button class="btn sm" onclick="smsClean()">Fix special characters</button>':'');
+};
+window.sendSms=async function(){
+  var sb=window.CRM_SB, s=window._sms;
+  if(!sb){ alert('Not connected — please reload and sign in.'); return; }
+  if(!s) return;
+  syncSms();
+  var body=(s.body||'').trim();
+  if(!body){ alert('The message is empty.'); return; }
+  if(!s.to){ alert('There is no Australian mobile number on file for this contact.'); return; }
+  var p=smsParts(body);
+  if(p.parts>SMS_SOFT_MAX_PARTS && !confirm('This message is '+p.parts+' SMS parts, so it will cost '+p.parts+' credits. Send it anyway?')) return;
+  var btn=document.getElementById('s_send');
+  if(btn){ btn.disabled=true; btn.textContent='Sending…'; }
+  try{
+    var sess=await sb.auth.getSession();
+    var tok=sess.data.session?sess.data.session.access_token:'';
+    var r=await fetch(window.AURA_CONFIG.supabaseUrl+'/functions/v1/send-sms',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','Authorization':'Bearer '+tok},
+      body:JSON.stringify({to:s.to,message:body,kind:s.kind||null,lead_id:s.lead_id||null,quote_id:s.quote_id||null,order_id:s.order_id||null,invoice_id:s.invoice_id||null})
+    });
+    var j=await r.json();
+    if(!r.ok||!j.ok) throw new Error(j.error||('HTTP '+r.status));
+    if(s.onSent){ try{ await s.onSent(j); }catch(_e){} }
+    md.innerHTML='<div class="mh"><h3>Sent</h3><div class="x" onclick="closeSms()">✕</div></div>'+
+      '<div class="mb"><div class="sendok"><div class="tick"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg></div>'+
+      '<h3 style="margin:0 0 4px;font-size:17px">SMS sent to '+esc(smsPretty(j.to||s.to))+'</h3>'+
+      '<div class="mini">'+(j.parts||p.parts)+' credit'+((j.parts||p.parts)===1?'':'s')+' · sent from '+esc(j.sender||'')+'. Any reply comes back to that number.</div>'+
+      '</div></div><div class="mf"><button class="btn primary" onclick="closeSms()">Done</button></div>';
+    try{ await refreshFromSupabase(sb); }catch(_e){}
+  }catch(err){
+    alert('The SMS did not send: '+(err.message||err));
+    if(btn){ btn.disabled=false; btn.textContent='Send SMS'; }
+  }
+};
+
+/* ---- Openers: quote/order and lead ---- */
+window.openQuoteSms=function(num){
+  var q=D.quotes.find(function(x){return x.num===num;}); if(!q) return;
+  var to=smsMobile(q._phone);
+  if(!to){ alert('This quote has no Australian mobile number on file, so it cannot be texted. Add a mobile to the quote first.'); return; }
+  var first=((q._name||q.contact||'').split(' ')[0])||'there';
+  var link='https://auraprint.com.au/myquote.html?t='+(q._token||'');
+  var invLink='https://auraprint.com.au/invoice.html?t='+(q._invToken||'');
+  var t=[];
+  t.push({label:'Quote ready',kind:'quote',body:'Hi '+first+', your quote '+q.num+' from Aura Print is ready - '+money(qTotal(q))+' inc GST. View and accept here: '+link+' Any questions just reply. Murray, Aura Print'});
+  t.push({label:'Follow up',kind:'quote_followup',body:'Hi '+first+', just following up on quote '+q.num+' from Aura Print. Happy to adjust the quantity or stock if that helps. '+link+' Murray'});
+  t.push({label:'Quick check-in',kind:'quote_followup',body:'Hi '+first+', Murray from Aura Print. Did quote '+q.num+' come through OK? Happy to talk it over if easier. '+link});
+  if(q.invNum) t.push({label:'Invoice',kind:'invoice',body:'Hi '+first+', invoice '+q.invNum+' for order '+(q.orderNum||'')+' is ready - '+money(qTotal(q))+' inc GST. View or pay here: '+invLink+' Murray, Aura Print'});
+  if(q.invNum&&!q._invPaidAt) t.push({label:'Payment reminder',kind:'payment_reminder',body:'Hi '+first+', a reminder that invoice '+q.invNum+' ('+money(qTotal(q))+' inc GST) is still outstanding. Production starts as soon as it is paid: '+invLink+' Murray, Aura Print'});
+  if(q._tNumber) t.push({label:'Dispatched',kind:'dispatch',body:'Hi '+first+', your order '+(q.orderNum||'')+' has shipped with '+(q._tCarrier||'the carrier')+'. Tracking: '+(q._tUrl||q._tNumber)+' Murray, Aura Print'});
+  openSmsComposer({
+    to:to, name:q._name||q.contact,
+    heading:'SMS · '+(q.orderNum||q.num)+' · '+(q._name||q.contact),
+    templates:t, body:t[0].body, kind:t[0].kind,
+    quote_id:q._id, order_id:q._orderId||null, invoice_id:q._invId||null,
+    onSent:async function(){
+      /* Texting a draft quote is how it gets sent, same as the email path. */
+      try{
+        if(window._sms&&window._sms.kind==='quote'&&q._id){
+          var sbx=window.CRM_SB;
+          var cur=D.quotes.find(function(x){return x.num===num;});
+          if(sbx&&cur&&cur.status==='draft'){ await sbx.from('quotes').update({status:'sent',sent_at:new Date().toISOString()}).eq('id',q._id); }
+        }
+      }catch(_e){}
+    }
+  });
+};
+window.openLeadSms=function(id){
+  var l=leadById(id); if(!l) return;
+  var to=smsMobile(l.phone);
+  if(!to){ alert('This lead has no Australian mobile number, so it cannot be texted.'); return; }
+  var first=(String(l.name||'').trim().split(' ')[0])||'there';
+  var what=(typeof leadEnquiry==='function')?leadEnquiry(l):'your enquiry';
+  var t=[
+    {label:'Acknowledge',kind:'lead_ack',body:'Hi '+first+', Murray from Aura Print. Thanks for your enquiry about '+what+' - I am putting a quote together now and will have it to you shortly.'},
+    {label:'Need a detail',kind:'lead_ack',body:'Hi '+first+', Murray from Aura Print here about your '+what+' enquiry. Quick question before I quote it: '},
+    {label:'Call attempt',kind:'lead_ack',body:'Hi '+first+', Murray from Aura Print. I just tried calling about your '+what+' enquiry. Reply here with a good time and I will call back.'}
+  ];
+  closeModal();
+  openSmsComposer({
+    to:to, name:l.name||smsPretty(to),
+    heading:'SMS · '+(l.name||smsPretty(to)),
+    templates:t, body:t[0].body, kind:'lead_ack', lead_id:l._id,
+    onSent:async function(){
+      try{ var cur=leadById(id); if(cur&&cur.status==='new'){ await setLeadStatus(id,'contacted'); } }catch(_e){}
+    }
+  });
+};
+</script>
+
 </body>
 </html>
