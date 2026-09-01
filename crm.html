@@ -2170,7 +2170,7 @@ async function refreshFromSupabase(sb){
 }
 
 /* ---------- Notification bell: live events from data already loaded ---------- */
-const NOTIF_ICONS={lead:'📥',accepted:'✅',declined:'❌',viewed:'👀',paid:'💰',overdue:'⏰'};
+const NOTIF_ICONS={lead:'📥',accepted:'✅',declined:'❌',viewed:'👀',paid:'💰',overdue:'⏰',sms:'💬',optout:'🚫'};
 function notifAgo(ts){
   const d=Date.now()-new Date(ts).getTime();
   if(d<3600e3)return Math.max(1,Math.round(d/60e3))+'m ago';
@@ -2182,6 +2182,18 @@ function buildNotifs(){
   const ev=[];
   (D.leads||[]).forEach(l=>{
     if(l.status==='new'&&l.created)ev.push({id:'lead:'+l._id,ts:l.created,type:'lead',text:'New enquiry from <b>'+esc(l.name)+'</b>'+(l.product?' — '+esc(qcPretty(l.product)):''),go:()=>{go('leads');openLead(l._id);}});
+  });
+  /* Inbound SMS. A reply that only lives in the Mobile Message inbox is a
+     reply nobody answers, so it surfaces here beside quote activity. */
+  (D.sms||[]).filter(m=>m.direction==='in').forEach(m=>{
+    const q=(D.quotes||[]).find(x=>x._id===m.quote_id||(m.order_id&&x._orderId===m.order_id));
+    const l=(D.leads||[]).find(x=>x._id===m.lead_id);
+    const who=q?q.contact:(l?l.name:smsPretty(m.recipient));
+    const isOpt=m.kind==='unsubscribe';
+    ev.push({id:'sms:'+m.id,ts:m.created_at,type:isOpt?'optout':'sms',
+      text:isOpt?('<b>'+esc(who)+'</b> opted out of SMS')
+                :('SMS reply from <b>'+esc(who)+'</b> — '+esc(String(m.body||'').slice(0,70))),
+      go:()=>{ if(q){openQuote(q.num);} else if(l){go('leads');openLead(l._id);} }});
   });
   (D.quotes||[]).forEach(q=>{
     if(q._decidedAt){
@@ -3421,9 +3433,11 @@ function smsHistoryHtml(f,limit){
   return '<div class="field" style="margin-top:16px"><label>Previous SMS</label>'+
     list.map(function(m){
       var when=new Date(m.created_at).toLocaleDateString('en-AU',{day:'2-digit',month:'short'})+' '+new Date(m.created_at).toLocaleTimeString('en-AU',{hour:'2-digit',minute:'2-digit'});
-      var bad=m.status!=='sent';
-      return '<div style="border-left:3px solid '+(bad?'#e0483a':'var(--line)')+';padding:6px 0 6px 10px;margin-bottom:8px">'+
-        '<div class="mini">'+(m.direction==='in'?'Received':'Sent')+' '+when+(bad?(' &middot; failed: '+esc(m.error||'')):'')+'</div>'+
+      var inb=m.direction==='in';
+      var bad=!inb&&m.status!=='sent';
+      var col=bad?'#e0483a':(inb?'var(--pink-ink)':'var(--line)');
+      return '<div style="border-left:3px solid '+col+';padding:6px 0 6px 10px;margin-bottom:8px'+(inb?';background:var(--pink-soft);border-radius:0 8px 8px 0':'')+'">'+
+        '<div class="mini">'+(inb?(m.kind==='unsubscribe'?'Opted out':'Reply received'):'Sent')+' '+when+(bad?(' · failed: '+esc(m.error||'')):'')+'</div>'+
         '<div style="font-size:13px;white-space:pre-wrap">'+esc(m.body||'')+'</div></div>';
     }).join('')+'</div>';
 }
@@ -3433,8 +3447,10 @@ function smsRailCard(q){
   if(!list.length) return '';
   var last=list[0];
   var when=new Date(last.created_at).toLocaleDateString('en-AU',{day:'2-digit',month:'short'});
+  var inN=list.filter(function(m){return m.direction==='in';}).length;
   return '<div style="margin-top:14px;border-top:1px solid var(--line);padding-top:10px">'+
-    '<div class="row"><span>SMS sent</span><b>'+list.length+'</b></div>'+
+    '<div class="row"><span>SMS sent</span><b>'+(list.length-inN)+'</b></div>'+
+    (inN?'<div class="row"><span>Replies</span><b>'+inN+'</b></div>':'')+
     '<div class="mini" style="margin-top:4px">Last '+when+': '+esc((last.body||'').slice(0,70))+((last.body||'').length>70?'…':'')+'</div></div>';
 }
 
