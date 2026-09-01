@@ -185,7 +185,7 @@
     if (window.AuraCart) return Promise.resolve(window.AuraCart);
     return new Promise(function (res) {
       var t = document.createElement('script');
-      t.src = 'assets/aura-cart.js?v=20260825a';
+      t.src = 'assets/aura-cart.js?v=20260901a';
       t.onload = function () { res(window.AuraCart); };
       t.onerror = function () { res(null); };
       document.head.appendChild(t);

@@ -604,6 +604,35 @@ function dispatchLine(speed){
 }
 window.AuraTurn = { speeds:TURN_SPEEDS, dispatchLine:dispatchLine, fmtDay:fmtDay, addBiz:addBiz, now:brisNow };
 
+/* ---------- cart pill on every page --------------------------------------
+   The floating cart pill lives in assets/aura-cart.js, which used to be pulled
+   in only by the pricing engine. That made the pill appear on some product
+   pages and vanish on the home page, the about page, and any product whose
+   price falls between breaks - so a customer's cart looked like it had been
+   emptied. aura.js is on every page, so it loads the library instead.
+
+   We peek at localStorage first and only fetch the script when the cart
+   actually holds something, so an empty-cart visitor pays for no extra
+   request. The peek mirrors aura-cart.js's own 7-day staleness rule; if the
+   shape is ever wrong we simply do nothing. */
+function wireCartPill(){
+  if (window.AuraCart) { window.AuraCart.badge(); return; }
+  var hasItems = false;
+  try {
+    var raw = localStorage.getItem('aura_cart_v1');
+    if (raw) {
+      var o = JSON.parse(raw);
+      var fresh = o && o.at && (Date.now() - o.at) <= 7*24*60*60*1000;
+      hasItems = !!(fresh && Array.isArray(o.items) && o.items.length);
+    }
+  } catch(e) { return; }
+  if (!hasItems) return;
+  var t = document.createElement('script');
+  t.src = 'assets/aura-cart.js?v=20260901a';
+  t.async = true;
+  document.head.appendChild(t);
+}
+
 /* The bar itself is written into each page as plain HTML so crawlers read the
    cut-offs. This only adds the live dispatch date on top of it. */
 function wireTurnaround(){
@@ -632,6 +661,7 @@ document.addEventListener('DOMContentLoaded', function(){
   fillEmails();
   wireNewsletter();
   wireTurnaround();
+  wireCartPill();
 
   /* marquee helper (if page has one) */
   const m=document.getElementById('marq'); if(m) m.innerHTML+=m.innerHTML;
