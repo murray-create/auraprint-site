@@ -108,7 +108,13 @@
         '<td>'+money(i.price_ex_cents)+'</td></tr>';
     }).join('');
 
-    var ship = [v.ship_line1, v.ship_line2, [v.ship_suburb, v.ship_state, v.ship_postcode].filter(Boolean).join(' ')].filter(Boolean);
+    /* Billing is who the invoice is addressed to; delivery is where the job went.
+       They are often the same, and get_invoice_by_token falls billing back to the
+       delivery address, so an older order with one address renders as it always did.
+       When they genuinely differ, the delivery address prints on its own line. */
+    var ship = [v.ship_line1, v.ship_line2, [v.ship_suburb, v.ship_state, v.ship_postcode].filter(Boolean).join(' ').trim()].filter(Boolean);
+    var bill = [v.bill_line1, v.bill_line2, [v.bill_suburb, v.bill_state, v.bill_postcode].filter(Boolean).join(' ').trim()].filter(Boolean);
+    var sameAddr = bill.join('|').toLowerCase() === ship.join('|').toLowerCase();
 
     var h = '<div class="page">'+
       '<div class="topbar"><h1>Tax Invoice</h1>'+
@@ -129,9 +135,10 @@
 
       '<div class="billing">'+
       '<div class="col"><div class="lbl">Bill to</div>'+
-        '<b>'+esc(v.company||v.contact_name)+'</b><br>'+
+        '<b>'+esc(v.bill_to||v.company||v.contact_name)+'</b><br>'+
         (v.company?esc(v.contact_name)+'<br>':'')+
-        esc(v.contact_email)+(ship.length?'<br>'+ship.map(esc).join('<br>'):'')+'</div>'+
+        esc(v.contact_email)+(bill.length?'<br>'+bill.map(esc).join('<br>'):'')+
+        ((!sameAddr&&ship.length)?'<div class="lbl" style="margin-top:12px">Delivered to</div>'+ship.map(esc).join('<br>'):'')+'</div>'+
       '<div class="col"><div class="lbl">Total amount</div><div>'+money(v.total_inc_cents)+'</div>'+
         '<div class="lbl" style="margin-top:12px">Amount paid</div><div>'+money(v.amount_paid_cents)+'</div></div>'+
       '<div class="col"><div class="lbl">Balance due</div><div class="balance">'+money(Math.max(balance,0))+'</div>'+
