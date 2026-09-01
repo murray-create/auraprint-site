@@ -118,6 +118,10 @@ body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Hel
 .tile .n{font-size:25px;font-weight:800;letter-spacing:-.5px;margin-top:12px}
 .tile .l{color:var(--muted);font-size:12.5px;margin-top:1px}
 .chip{font-size:11px;font-weight:700;padding:2px 9px;border-radius:20px;display:inline-flex;gap:3px;align-items:center;margin-top:9px}
+button.chip{cursor:pointer;font-family:inherit;font-size:11.5px;font-weight:700;padding:5px 12px;margin-top:0;border:1px solid var(--line);background:var(--card);color:var(--ink2);white-space:nowrap;transition:background .12s,color .12s,border-color .12s}
+button.chip:hover{background:var(--pink-soft);color:var(--pink-ink);border-color:transparent}
+button.chip:active{transform:translateY(1px)}
+button.chip[disabled]{opacity:.45;cursor:not-allowed}
 .chip.up{background:var(--good-soft);color:var(--good)}.chip.flat{background:var(--pink-soft);color:var(--pink-ink)}
 
 /* Donut / bars */
@@ -156,7 +160,7 @@ tr.clk{cursor:pointer}tr.clk:hover td{background:var(--soft)}
 .b-ready{background:var(--warn-soft);color:var(--warn)}
 .b-production{background:var(--pink-soft);color:var(--pink-ink)}
 .b-dispatched{background:var(--good-soft);color:var(--good)}
-#leadFilter .chip,#quoteFilter .chip,#seoFilter .chip{cursor:pointer;border:1px solid var(--line);background:#fff;color:var(--muted);margin-top:0}#leadFilter .chip.on,#quoteFilter .chip.on,#seoFilter .chip.on{background:var(--pink-soft);color:var(--pink-ink);border-color:transparent}
+#leadFilter .chip,#quoteFilter .chip,#seoFilter .chip,#orderFilter .chip{cursor:pointer;border:1px solid var(--line);background:#fff;color:var(--muted);margin-top:0;font-size:11px;padding:5px 11px}#leadFilter .chip.on,#quoteFilter .chip.on,#seoFilter .chip.on,#orderFilter .chip.on{background:var(--pink-soft);color:var(--pink-ink);border-color:transparent}#orderFilter .chip:hover,#leadFilter .chip:hover,#quoteFilter .chip:hover,#seoFilter .chip:hover{color:var(--ink2);border-color:#e0dde6;background:#fff}#orderFilter .chip.on:hover,#leadFilter .chip.on:hover,#quoteFilter .chip.on:hover,#seoFilter .chip.on:hover{background:var(--pink-soft);color:var(--pink-ink);border-color:transparent}
 #quoteFilter .chip.lost.on{background:var(--bad-soft);color:var(--bad)}
 #quoteFilter .chip.done.on{background:var(--blue-soft);color:#1877c9}
 /* Multi-line line-item descriptions: first line is the item name, the rest are specs. */
