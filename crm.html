@@ -3423,7 +3423,7 @@ function renderSms(){
      '<div class="emailmeta"><b style="color:var(--ink)">To</b><span>'+esc(s.name||'')+' · '+esc(smsPretty(s.to))+'</span></div>'+
      (tplBtns?'<div class="field" style="margin-top:14px"><label>Start from</label><div style="display:flex;gap:6px;flex-wrap:wrap">'+tplBtns+'</div></div>':'')+
      '<div class="field"><label>Message</label><textarea id="s_body" style="min-height:150px" oninput="smsCount()" placeholder="Keep it short — 160 characters is one credit.">'+esc(s.body||'')+'</textarea></div>'+
-     '<div id="s_count" class="mini" style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">'+smsCountHtml(p)+
+     '<div id="s_count" class="mini" style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">'+smsCountHtml(p,s.body)+
        (uni?' <button class="btn sm" onclick="smsClean()">Fix special characters</button>':'')+'</div>'+
      (warn?'<div class="secnote" style="background:var(--pink-soft);color:var(--pink-ink);margin-top:10px"><div>This message is '+p.parts+' parts, so it costs '+p.parts+' credits per recipient. Trimming it under '+(p.enc==='GSM'?'160':'70')+' characters makes it one.</div></div>':'')+
      smsHistoryHtml({lead_id:s.lead_id,quote_id:s.quote_id,order_id:s.order_id,to:s.to},6)+
@@ -3433,16 +3433,21 @@ function renderSms(){
      '<button class="btn primary" id="s_send" onclick="sendSms()"'+(s.to?'':' disabled')+'>'+
      '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 2 11 13M22 2l-7 20-4-9-9-4z"/></svg>Send SMS</button></div>';
 }
-function smsCountHtml(p){
+function smsCountHtml(p,body){
+  /* Mobile Message shortens links itself AFTER we hand the message over, so a
+     message with a URL usually bills fewer parts than this count suggests.
+     Say so rather than letting the number push you into over-trimming. */
+  var hasLink=/https?:\/\//i.test(body||'');
   return '<span><b>'+p.units+'</b> characters · <b>'+p.parts+'</b> SMS credit'+(p.parts===1?'':'s')+' · '+p.enc+
-    (p.parts===1?(' · '+Math.max(0,p.cap-p.units)+' left in this part'):'')+'</span>';
+    (p.parts===1?(' · '+Math.max(0,p.cap-p.units)+' left in this part'):'')+
+    (hasLink?' · estimate only, links are shortened at send and usually cost less':'')+'</span>';
 }
 window.smsCount=function(){
   syncSms();
   var el=document.getElementById('s_count'); if(!el) return;
   var p=smsParts((window._sms&&window._sms.body)||'');
   var uni=p.enc==='Unicode';
-  el.innerHTML=smsCountHtml(p)+(uni?' <button class="btn sm" onclick="smsClean()">Fix special characters</button>':'');
+  el.innerHTML=smsCountHtml(p,(window._sms&&window._sms.body)||'')+(uni?' <button class="btn sm" onclick="smsClean()">Fix special characters</button>':'');
 };
 window.sendSms=async function(){
   var sb=window.CRM_SB, s=window._sms;
