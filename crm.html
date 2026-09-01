@@ -669,6 +669,7 @@ const D = {
   sms:[],
   spend:{contactFy:[],orgFy:[],contactSum:[],orgSum:[]},
   addresses:[],
+  money:{paidThisFy:0,paidAll:0,owing:0,paidCount:0},
   orgs:[
     {id:'org1',name:'Sanctuary Church',abn:'—',suburb:'Mons QLD 4556',notes:'A-frames, bow banners and event signage. Quotes QU-001013, QU-001014, QU-001018; order AP-001013 (invoice INV-000010 issued).'},
     {id:'org2',name:'Tunnel Ridge Ranch',abn:'—',suburb:'QLD',notes:'Event flyers and print. James Norman accepted QU-001011; order AP-001012 shipped, invoice INV-000009 paid. Delivery to 61 Kowald Road.'},
@@ -1056,9 +1057,9 @@ const nib=document.getElementById('newInvoiceBtn');if(nib)nib.onclick=()=>{newIn
 /* ---------- Dashboard ---------- */
 function renderHero(){
   const open=D.quotes.filter(q=>q.stage==='quote'&&q.status!=='declined').length;
-  const invoiced=D.quotes.filter(q=>q.stage==='paid').reduce((a,q)=>a+qTotal(q),0);
+  const invoiced=D.money.paidThisFy;
   const prodTotal=D.domains.reduce((a,b)=>a+b.n,0);
-  const hero=[{n:prodTotal.toLocaleString(),l:'Products',s:'Print · Promotional'},{n:'5',l:'Suppliers',s:'2 live API feeds'},{n:String(open),l:'Open quotes',s:D.quotes.length+' total'},{n:money(invoiced),l:'Invoiced (paid)',s:'this period'}];
+  const hero=[{n:prodTotal.toLocaleString(),l:'Products',s:'Print · Promotional'},{n:'5',l:'Suppliers',s:'2 live API feeds'},{n:String(open),l:'Open quotes',s:D.quotes.length+' total'},{n:money(invoiced),l:'Paid this year',s:auFyLabel(thisFy())+' · '+D.money.paidCount+' invoices'}];
   document.getElementById('heroTiles').innerHTML=hero.map(h=>`<div class="hcard"><div class="n">${h.n}</div><div class="l">${h.l}</div><div class="s">${h.s}</div></div>`).join('');
 }
 document.getElementById('feeds').innerHTML=D.feeds.map(f=>`<div class="feed"><span class="fd"></span><div><b>${f.name}</b><div><span>${f.sub}</span></div></div><span class="cnt">${f.n}</span></div>`).join('');
@@ -1244,10 +1245,10 @@ function renderQuoteTables(){
   document.getElementById('qsub').textContent=`${liveN} live quote${liveN===1?'':'s'} · ${conv} converted${doneN?' · '+doneN+' completed':''}${lostN?' · '+lostN+' lost':''} · click one to open`;
   // The orders subtitle is written by renderOrderTable(), which knows the real stages.
 
-  const invoiced=D.quotes.filter(q=>q.stage==='paid').reduce((a,q)=>a+qTotal(q),0);
+  const invoiced=D.money.paidThisFy;
   // Conversion rate deliberately divides by EVERY quote raised, lost ones included.
   const rate=D.quotes.length?Math.round(conv/D.quotes.length*100):0;
-  document.getElementById('salesTiles').innerHTML=[{n:String(liveN),l:'Quotes',c:conv+' converted'},{n:String(all.length),l:'Orders',c:active+' active'},{n:money(invoiced),l:'Invoiced (paid)',c:'this period'},{n:rate+'%',l:'Conversion',c:'quotes → orders'}].map(t=>`<div class="tile"><div class="ic" style="background:var(--pink-soft)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#c9107f" stroke-width="2"><path d="M4 19V5M4 19h16M8 15l3-4 3 2 4-6"/></svg></div><div class="n">${t.n}</div><div class="l">${t.l}</div><div class="chip flat">${t.c}</div></div>`).join('');
+  document.getElementById('salesTiles').innerHTML=[{n:String(liveN),l:'Quotes',c:conv+' converted'},{n:String(all.length),l:'Orders',c:active+' active'},{n:money(invoiced),l:'Paid this year',c:auFyLabel(thisFy())},{n:rate+'%',l:'Conversion',c:'quotes → orders'}].map(t=>`<div class="tile"><div class="ic" style="background:var(--pink-soft)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#c9107f" stroke-width="2"><path d="M4 19V5M4 19h16M8 15l3-4 3 2 4-6"/></svg></div><div class="n">${t.n}</div><div class="l">${t.l}</div><div class="chip flat">${t.c}</div></div>`).join('');
 }
 
 /* ---------- Quote detail + convert flow ---------- */
@@ -2655,6 +2656,22 @@ async function refreshFromSupabase(sb){
   if(mrow&&mrow.value&&mrow.value.default_multiplier) window.MARGIN_MULT=Number(mrow.value.default_multiplier)||1.52;
   const costByQuote={}; ((jcs&&jcs.data)||[]).forEach(r=>costByQuote[r.quote_id]=r);
   D.addresses=((adrs&&adrs.data)||[]);
+  /* Money tiles are counted straight off the invoices. They used to be summed
+     from D.quotes, which only ever holds NON-ARCHIVED quotes, so any paid job
+     whose quote had been archived silently vanished from the total — AP-1500
+     ($950, Sanctuary Church) was missing from "Invoiced (paid)" for exactly that
+     reason, and the Spend tab and the dashboard disagreed by $950. */
+  (function(){
+    const rows=((invs&&invs.data)||[]);
+    const paid=rows.filter(v=>v.status==='paid');
+    const fyNow=auFyOf(new Date());
+    D.money.paidAll=paid.reduce((a,v)=>a+(v.total_inc_cents||0),0);
+    D.money.paidThisFy=paid.filter(v=>auFyOf(v.paid_at||v.issued_at)===fyNow)
+                           .reduce((a,v)=>a+(v.total_inc_cents||0),0);
+    D.money.paidCount=paid.length;
+    D.money.owing=rows.filter(v=>['issued','sent','overdue'].indexOf(v.status)>=0)
+                      .reduce((a,v)=>a+(v.total_inc_cents||0),0);
+  })();
   D.spend.contactFy=((cfy&&cfy.data)||[]);   D.spend.orgFy=((ofy&&ofy.data)||[]);
   D.spend.contactSum=((csum&&csum.data)||[]); D.spend.orgSum=((osum&&osum.data)||[]);
   D.orgs.length=0;
