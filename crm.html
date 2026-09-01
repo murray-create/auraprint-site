@@ -151,6 +151,11 @@ tr.clk{cursor:pointer}tr.clk:hover td{background:var(--soft)}
 .age-hot{background:var(--bad-soft);color:var(--bad)}
 .quickact{margin-left:8px;padding:2px 9px;font-size:11px;white-space:nowrap}
 .b-new{background:#eef;color:#4a4a8a}.b-contacted{background:var(--warn-soft);color:var(--warn)}.b-won,.b-quoted{background:var(--good-soft);color:var(--good)}.b-lost{background:var(--bad-soft);color:var(--bad)}
+/* Order stages, worked out from the records rather than the status word */
+.b-awaiting{background:var(--bad-soft);color:var(--bad)}
+.b-ready{background:var(--warn-soft);color:var(--warn)}
+.b-production{background:var(--pink-soft);color:var(--pink-ink)}
+.b-dispatched{background:var(--good-soft);color:var(--good)}
 #leadFilter .chip,#quoteFilter .chip,#seoFilter .chip{cursor:pointer;border:1px solid var(--line);background:#fff;color:var(--muted);margin-top:0}#leadFilter .chip.on,#quoteFilter .chip.on,#seoFilter .chip.on{background:var(--pink-soft);color:var(--pink-ink);border-color:transparent}
 #quoteFilter .chip.lost.on{background:var(--bad-soft);color:var(--bad)}
 #quoteFilter .chip.done.on{background:var(--blue-soft);color:#1877c9}
@@ -583,8 +588,9 @@ input.nqqty{width:74px;text-align:right;border:1px solid var(--line);border-radi
           <div class="card" id="card-quotes"><h3>Recent quotes</h3><div class="sub" id="qsub"></div>
             <div class="filterbar" id="quoteFilter" style="margin:10px 0 4px"></div>
             <table><thead><tr><th>Quote</th><th>Customer</th><th class="num">Value</th><th>Status</th></tr></thead><tbody id="qtable2"></tbody></table></div>
-          <div class="card" id="card-orders"><h3>Recent orders</h3><div class="sub" id="osub"></div>
-            <table><thead><tr><th>Order</th><th>Customer</th><th>Status</th><th>Tracking</th></tr></thead><tbody id="otable"></tbody></table></div>
+          <div class="card" id="card-orders"><h3>Orders</h3><div class="sub" id="osub"></div>
+            <div class="filterbar" id="orderFilter" style="margin:10px 0 4px"></div>
+            <table><thead><tr><th>Order</th><th>Customer</th><th class="num">Value</th><th>Stage</th><th>Waiting</th><th>Next step</th><th>Tracking</th></tr></thead><tbody id="otable"></tbody></table></div>
         </div>
         <div class="card" id="card-invoices" style="display:none;margin-top:16px"><h3>Invoices</h3><div class="sub" id="isub"></div>
           <table><thead><tr><th>Invoice</th><th>Quote</th><th>Customer</th><th class="num">Amount</th><th>Status</th><th></th></tr></thead><tbody id="itable"></tbody></table></div>
@@ -1096,6 +1102,101 @@ function filteredQuotes(){
   return all.filter(q=>!isLostQuote(q)&&!isDoneQuote(q)&&q.status===f);
 }
 
+/* ---------- Orders: what is owed to a customer right now ----------
+   Quotes is what has been offered, Invoices is what has been billed, Orders is
+   work that has been paid for and has not gone out the door.
+
+   The stage here is WORKED OUT from the records — is the invoice paid, is there
+   a dispatch date, is there a tracking number, is completed_at set — and never
+   read off orders.status. That status enum goes stale: on 1 Sep 2026 five orders
+   with tracking numbers on them still said 'in_production', because the word is
+   only written when someone presses a button and the dispatch date is written by
+   something else. Trust the records, not the word. */
+const ORDER_FILTERS=[['active','Active'],['action','Needs you'],['awaiting','Awaiting payment'],['production','In production'],['dispatched','Dispatched'],['completed','Completed'],['all','All']];
+window._orderFilter='active';
+function orderIsPaid(o){
+  return !!(o.invPaid || o.invStatus==='paid' || ['paid','in_production','shipped','completed'].indexOf(o.status)>=0);
+}
+function orderStage(o){
+  if(o.archived||o.status==='cancelled') return 'cancelled';
+  if(o.completed)                        return 'completed';
+  if(o.dispatched||o.track)              return 'dispatched';
+  if(o.invStatus==='void')               return 'cancelled';
+  if(!orderIsPaid(o))                    return 'awaiting';
+  if(o.status==='in_production')         return 'production';
+  return 'ready';
+}
+const ORDER_STAGE_LABEL={awaiting:'awaiting payment',ready:'paid, not started',production:'in production',dispatched:'dispatched',completed:'completed',cancelled:'cancelled'};
+/* The clock that matters is different at each stage: how long since you invoiced,
+   how long since they paid, how long since it shipped. */
+function orderClock(o){
+  const st=orderStage(o);
+  if(st==='awaiting')   return {since:o.invIssued||o.created, warn:7,  hot:14, what:'since invoiced'};
+  if(st==='ready')      return {since:o.invPaid||o.paid||o.created, warn:2, hot:5, what:'since paid'};
+  if(st==='production') return {since:o.invPaid||o.paid||o.created, warn:5, hot:10, what:'in production'};
+  if(st==='dispatched') return {since:o.dispatched, warn:7, hot:21, what:'since dispatch'};
+  return null;
+}
+function orderNextStep(o){
+  const st=orderStage(o);
+  if(!o.q) return '<span class="mini">—</span>';
+  if(st==='awaiting')   return `<button class="chip" onclick="event.stopPropagation();openInvoiceEmail('${o.q}')">Chase payment</button>`;
+  if(st==='ready')      return `<button class="chip" onclick="event.stopPropagation();startProduction('${o.q}')">Start production</button>`;
+  if(st==='production') return `<button class="chip" onclick="event.stopPropagation();openTracking('${o.q}')">Add tracking</button>`;
+  if(st==='dispatched') return `<button class="chip" onclick="event.stopPropagation();markJobDone('${o.q}')">Mark complete</button>`;
+  return '<span class="mini">—</span>';
+}
+/* "Needs you" is the morning list: money is in and the job has not shipped. */
+const orderNeedsYou=o=>['ready','production'].indexOf(orderStage(o))>=0;
+const orderIsLive=o=>['completed','cancelled'].indexOf(orderStage(o))<0;
+function setOrderFilter(f){window._orderFilter=f;renderOrderTable();}
+function filteredOrders(){
+  const f=window._orderFilter,all=D.orders;
+  if(f==='all')    return all;
+  if(f==='active') return all.filter(orderIsLive);
+  if(f==='action') return all.filter(orderNeedsYou);
+  return all.filter(o=>orderStage(o)===f);
+}
+function renderOrderTable(){
+  const tb=document.getElementById('otable'); if(!tb) return;
+  const rows=filteredOrders().slice().sort((a,b)=>new Date(b.created||0)-new Date(a.created||0));
+  const cell=o=>{
+    const st=orderStage(o), clk=orderClock(o);
+    let age='<span class="mini">—</span>';
+    if(clk&&clk.since){
+      const d=daysSince(clk.since);
+      const cls=d>=clk.hot?'age-hot':(d>=clk.warn?'age-warm':'age-cool');
+      age=`<span class="agebadge ${cls}" style="margin-left:0" title="${esc(clk.what)}">${d}d</span>`;
+    }
+    return `<tr${o.q?` class="clk" data-q="${o.q}"`:''}>
+      <td><b>${esc(o.num)}</b>${o.invNum?`<div class="mini">${esc(o.invNum)}</div>`:''}</td>
+      <td>${esc(o.company||o.name)}${o.company&&o.name&&o.company!==o.name?`<div class="mini">${esc(o.name)}</div>`:''}</td>
+      <td class="num">${money(o.total||o.invTotal||0)}</td>
+      <td><span class="badge b-${st}">${ORDER_STAGE_LABEL[st]||st}</span></td>
+      <td>${age}</td>
+      <td>${orderNextStep(o)}</td>
+      <td class="mini">${o.track?esc(o.track):'—'}</td></tr>`;
+  };
+  tb.innerHTML=rows.length?rows.map(cell).join('')
+    :`<tr><td colspan="7"><div class="empty">No ${window._orderFilter==='all'?'':esc((ORDER_FILTERS.find(f=>f[0]===window._orderFilter)||['',''])[1].toLowerCase())+' '}orders to show.</div></td></tr>`;
+  tb.querySelectorAll('tr.clk[data-q]').forEach(r=>r.onclick=()=>openQuote(r.dataset.q));
+
+  const fb=document.getElementById('orderFilter');
+  if(fb){
+    const countFor=k=>k==='all'?D.orders.length
+      :(k==='active'?D.orders.filter(orderIsLive).length
+      :(k==='action'?D.orders.filter(orderNeedsYou).length
+      :D.orders.filter(o=>orderStage(o)===k).length));
+    fb.innerHTML=ORDER_FILTERS.map(([k,lab])=>`<button class="chip${window._orderFilter===k?' on':''}" onclick="setOrderFilter('${k}')">${lab} ${countFor(k)}</button>`).join('');
+  }
+  const need=D.orders.filter(orderNeedsYou);
+  const owed=need.reduce((a,o)=>a+(o.total||o.invTotal||0),0);
+  const live=D.orders.filter(orderIsLive).length;
+  const sub=document.getElementById('osub');
+  if(sub) sub.textContent=need.length
+    ? `${live} live · ${need.length} paid for and not yet shipped, worth ${money(owed)} of work you owe`
+    : `${live} live order${live===1?'':'s'} · nothing paid for is waiting to ship`;
+}
 function renderQuoteTables(){
   const shown=filteredQuotes();
   const badge=q=>`<span class="badge b-${qStatusLabel(q)}">${qStatusLabel(q)}</span>`;
@@ -1123,8 +1224,7 @@ function renderQuoteTables(){
   document.querySelectorAll('tr.clk[data-q]').forEach(r=>r.onclick=()=>openQuote(r.dataset.q));
 
   const all=D.orders;
-  document.getElementById('otable').innerHTML=all.map(o=>`<tr${o.q?` class="clk" data-q="${o.q}"`:''}><td><b>${o.num}</b></td><td>${esc(o.name)}</td><td><span class="badge b-${o.status}">${o.status}</span></td><td class="mini">${o.track?esc(o.track):'—'}</td></tr>`).join('');
-  document.querySelectorAll('#otable tr.clk[data-q]').forEach(r=>r.onclick=()=>openQuote(r.dataset.q));
+  renderOrderTable();
 
   const invs=D.quotes.filter(q=>q.invNum);
   const itb=document.getElementById('itable');
@@ -1138,7 +1238,7 @@ function renderQuoteTables(){
   const active=all.filter(o=>o.status!=='cancelled'&&o.status!=='completed').length;
   const liveN=D.quotes.length-lostN-doneN;
   document.getElementById('qsub').textContent=`${liveN} live quote${liveN===1?'':'s'} · ${conv} converted${doneN?' · '+doneN+' completed':''}${lostN?' · '+lostN+' lost':''} · click one to open`;
-  document.getElementById('osub').textContent=`${all.length} orders · ${active} active`;
+  // The orders subtitle is written by renderOrderTable(), which knows the real stages.
 
   const invoiced=D.quotes.filter(q=>q.stage==='paid').reduce((a,q)=>a+qTotal(q),0);
   // Conversion rate deliberately divides by EVERY quote raised, lost ones included.
@@ -1606,7 +1706,7 @@ function drawContacts(sel){
   const _cSum=spendSummaryFor('contact',c._id);
   const ltv=_cSum?(_cSum.lifetime_inc_cents||0):qs.filter(q=>q.stage==='paid').reduce((a,q)=>a+qTotal(q),0);
   const rec=document.getElementById('rec');
-  rec.innerHTML=`<div class="head"><div class="bigav" style="background:${avColor(sel)}">${initials(c.name)}</div><div><h2>${esc(c.name)}${c.archived?' <span class="badge b-declined" style="font-size:11px;vertical-align:middle">archived</span>':''}</h2><div class="co">${c.role&&c.role!=='—'?esc(c.role)+' · ':''}${o?`<a onclick="openOrg('${o.id}')">${esc(o.name)}</a>`:esc(c.suburb||'Individual')}${c.archived&&c.archiveReason?` · ${esc(c.archiveReason)}`:''}</div></div><div class="act"><button class="btn" onclick="emailContact('${esc(c.name)}')">Email</button><button class="btn" onclick="openContactModal(${sel},null)">Edit</button><button class="btn danger iconbtn" title="Move to trash" onclick="confirmDelete('contact',${sel})"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m2 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M10 11v6M14 11v6"/></svg></button><button class="btn primary" onclick="go('sales')">New quote</button></div></div>
+  rec.innerHTML=`<div class="head"><div class="bigav" style="background:${avColor(sel)}">${initials(c.name)}</div><div><h2>${esc(c.name)}${c.archived?' <span class="badge b-declined" style="font-size:11px;vertical-align:middle">archived</span>':''}</h2><div class="co">${c.role&&c.role!=='—'?esc(c.role)+' · ':''}${o?`<a onclick="openOrg('${o.id}')">${esc(o.name)}</a>`:esc(c.suburb||'Individual')}${c.archived&&c.archiveReason?` · ${esc(c.archiveReason)}`:''}</div></div><div class="act"><button class="btn" onclick="emailContact('${esc(c.name)}')">Email</button><button class="btn" onclick="openContactModal(${sel},null)">Edit</button><button class="btn danger iconbtn" title="Move to trash" onclick="confirmDelete('contact',${sel})"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m2 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M10 11v6M14 11v6"/></svg></button><button class="btn primary" onclick="newQuoteFor(${sel})">New quote</button></div></div>
     <div class="tabs"><div class="tab active" data-t="info">Contact Information</div><div class="tab" data-t="deals">Quotes &amp; Orders<span class="pill">${qs.length}</span></div><div class="tab" data-t="inv">Invoices</div><div class="tab" data-t="spend">Spend</div><div class="tab" data-t="caddr">Addresses</div><div class="tab" data-t="notes">Notes</div></div>
     <div class="tabbody">
       <div class="tabpane on" data-p="info"><div class="kv">
@@ -1618,7 +1718,7 @@ function drawContacts(sel){
         <div class="f"><div class="k">Location</div><div class="v">${esc(o?o.suburb:(c.suburb||'—'))}</div></div>
         <div class="f"><div class="k">Marketing consent</div><div class="v">${c.consent?'Opted in':'Not opted in'}</div></div>
         <div class="f"><div class="k">Lifetime value (paid)</div><div class="v">${money(ltv)}</div></div></div></div>
-      <div class="tabpane" data-p="deals">${qs.length?`<table><thead><tr><th>Quote</th><th class="num">Value</th><th>Status</th></tr></thead><tbody>${qs.map(q=>`<tr class="clk" data-q="${q.num}"><td><b>${q.num}</b></td><td class="num">${money(qTotal(q))}</td><td><span class="badge b-${q.status}">${q.status}</span></td></tr>`).join('')}</tbody></table><div class="note">Click a quote to open it.</div>`:`<div class="empty">No quotes or orders yet — this is a new contact.<br><br><button class="btn primary" onclick="go('sales')">Create first quote</button></div>`}</div>
+      <div class="tabpane" data-p="deals">${qs.length?`<table><thead><tr><th>Quote</th><th class="num">Value</th><th>Status</th></tr></thead><tbody>${qs.map(q=>`<tr class="clk" data-q="${q.num}"><td><b>${q.num}</b></td><td class="num">${money(qTotal(q))}</td><td><span class="badge b-${q.status}">${q.status}</span></td></tr>`).join('')}</tbody></table><div class="note">Click a quote to open it.</div>`:`<div class="empty">No quotes or orders yet — this is a new contact.<br><br><button class="btn primary" onclick="newQuoteFor(${sel})">Create first quote</button></div>`}</div>
       <div class="tabpane" data-p="inv">${orders.filter(q=>q.invNum).length?`<table><thead><tr><th>Invoice</th><th>Quote</th><th class="num">Amount</th><th>Status</th></tr></thead><tbody>${orders.filter(q=>q.invNum).map(q=>`<tr class="clk" data-q="${q.num}"><td><b>${q.invNum}</b></td><td>${q.num}</td><td class="num">${money(qTotal(q))}</td><td><span class="badge b-${q.stage==='paid'?'paid':'unpaid'}">${q.stage==='paid'?'paid':'unpaid'}</span></td></tr>`).join('')}</tbody></table>`:`<div class="empty">Invoices and Stripe payment links for ${esc(c.name.split(' ')[0])} would show here.</div>`}</div>
       <div class="tabpane" data-p="spend">${spendPanel('contact',c._id,c.name)}${o?`<div class="note" style="margin-top:10px">This is ${esc(c.name)} on their own. For everything <b>${esc(o.name)}</b> spends, open <a onclick="openOrg('${o.id}')">the organisation</a>.</div>`:''}</div>
       <div class="tabpane" data-p="caddr">${o
@@ -1645,7 +1745,7 @@ function drawOrgs(sel){
   const ltv=_oSum?(_oSum.lifetime_inc_cents||0):qs.filter(q=>q.stage==='paid').reduce((a,q)=>a+qTotal(q),0);
   const pipeline=qs.filter(q=>q.stage!=='paid'&&q.status!=='declined').reduce((a,q)=>a+qTotal(q),0);
   const orec=document.getElementById('orec');
-  orec.innerHTML=`<div class="head"><div class="bigav" style="background:var(--org)">${initials(o.name)}</div><div><h2>${esc(o.name)}</h2><div class="co">${esc(o.suburb)}${o.abn&&o.abn!=='—'?' · ABN '+esc(o.abn):''}</div></div><div class="act"><button class="btn" onclick="emailOrg('${o.id}')">Email all</button><button class="btn primary" onclick="openContactModal(null,'${o.id}')">Add contact</button></div></div>
+  orec.innerHTML=`<div class="head"><div class="bigav" style="background:var(--org)">${initials(o.name)}</div><div><h2>${esc(o.name)}</h2><div class="co">${esc(o.suburb)}${o.abn&&o.abn!=='—'?' · ABN '+esc(o.abn):''}</div></div><div class="act"><button class="btn" onclick="emailOrg('${o.id}')">Email all</button><button class="btn" onclick="openContactModal(null,'${o.id}')">Add contact</button><button class="btn primary" onclick="newQuoteForOrg('${o.id}')">New quote</button></div></div>
     <div class="tabs"><div class="tab active" data-t="people">People<span class="pill">${people.length}</span></div><div class="tab" data-t="odeals">Quotes &amp; Orders<span class="pill">${qs.length}</span></div><div class="tab" data-t="ospend">Spend</div><div class="tab" data-t="oaddr">Addresses<span class="pill">${addrsOf(o.id,null).length}</span></div><div class="tab" data-t="odetail">Details</div></div>
     <div class="tabbody">
       <div class="tabpane on" data-p="people">${people.length?people.map(c=>{const i=D.contacts.indexOf(c);return `<div class="linkrow" data-ci="${i}"><div class="cav" style="background:${avColor(i)}">${initials(c.name)}</div><div><b>${esc(c.name)}</b><span>${esc(c.role||'—')} · ${esc(c.email)}</span></div><svg class="go" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg></div>`}).join(''):'<div class="empty">No contacts yet at this organisation.</div>'}<button class="btn sm" style="margin-top:6px" onclick="openContactModal(null,'${o.id}')"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M12 5v14M5 12h14"/></svg>Add another contact</button></div>
@@ -2296,6 +2396,18 @@ async function duplicateJob(num){
   if(hint)hint.innerHTML='Copied from <b>'+esc(num)+'</b>. Change anything you need — quantities, prices, either address — then save. '+
     'Nothing is created until you do, and the old job is untouched.';
 }
+/* Start a quote already filled in with a customer. renderNewQuote() reads the
+   contact by name and copies across their email, phone and organisation, and the
+   address pickers then load that customer's saved addresses. */
+function newQuoteFor(idx){
+  const c=D.contacts[idx]; if(!c){newQuote();return;}
+  newQuote(c.name,{orgId:c.orgId||''});
+}
+function newQuoteForOrg(orgId){
+  const people=contactsOfOrg(orgId).filter(c=>!c.archived);
+  if(people.length===1){ newQuote(people[0].name,{orgId:orgId}); return; }
+  newQuote('',{orgId:orgId});
+}
 function nqToggleNewOrg(){
   const b=document.getElementById('nq_neworg');if(!b)return;
   b.style.display=b.style.display==='none'?'block':'none';
@@ -2547,7 +2659,14 @@ async function refreshFromSupabase(sb){
     D.quotes.push({num:q.quote_number,contact,status:q.status,stage,orderNum:ord?ord.order_number:null,invNum:inv?inv.invoice_number:null,payLink:inv?inv.payment_link_url:null,items,_id:q.id,_orderId:q.converted_order_id||null,_invId:inv?inv.id:null,_invToken:inv?inv.access_token:null,_invSent:inv?inv.sent_at:null,_invStatus:inv?inv.status:null,_invPaidAt:inv?inv.paid_at:null,_invViewedAt:inv?inv.last_viewed_at:null,_viewedAt:q.last_viewed_at||null,_decidedAt:q.decided_at||null,_decision:q.decision_comments||'',_sentAt:q.sent_at||null,_acceptedBy:q.accepted_by_name||null,_created:q.created_at,_email:q.contact_email||'',_phone:q.contact_phone||'',_name:q.contact_name||'',_token:q.access_token||'',_accepted:!!q.accepted_by_name,_tCarrier:ord?(ord.tracking_carrier||''):'',_tNumber:ord?(ord.tracking_number||''):'',_tUrl:ord?(ord.tracking_url||''):'',_dispatched:ord?ord.dispatched_at:null,_ordStatus:ord?(ord.status||''):'',_reviewReq:ord?ord.review_requested_at:null,_completedAt:ord?(ord.completed_at||null):null,_valid:q.valid_until||null,_origin:q.origin||'staff',_contactId:q.contact_id||null,_orgId:q.organisation_id||null,_billTo:q.bill_to||'',_billStreet:q.bill_line1||'',_billSuburb:q.bill_suburb||'',_billState:q.bill_state||'',_billPostcode:q.bill_postcode||'',_shipAddrId:q.ship_address_id||null,_billAddrId:q.bill_address_id||null,_dupOf:q.duplicate_of_quote_id||null,_street:q.street||'',_suburb:q.suburb||'',_state:q.state||'',_postcode:q.postcode||'',_artLink:ord?(ord.artwork_link||''):'',_cost:costByQuote[q.id]||null,_oitems:(itemsByOrder[q.converted_order_id]||[]),_ofiles:(filesByOrder[q.converted_order_id]||[])});
   });
   D.orders.length=0;
-  (ords.data||[]).forEach(o=>{const q=(qs.data||[]).find(x=>x.converted_order_id===o.id);D.orders.push({num:o.order_number,name:o.contact_name||'—',company:o.company||null,status:o.status,total:orderTotal[o.id]||0,q:q?q.quote_number:null,track:o.tracking_number||null,_id:o.id,_repeatOf:o.repeat_of_order_id||null});});
+  (ords.data||[]).forEach(o=>{const q=(qs.data||[]).find(x=>x.converted_order_id===o.id);const _inv=invByOrder[o.id]||null;
+    D.orders.push({num:o.order_number,name:o.contact_name||'—',company:o.company||null,status:o.status,
+      total:orderTotal[o.id]||0,q:q?q.quote_number:null,track:o.tracking_number||null,_id:o.id,
+      orgId:o.organisation_id||null,created:o.created_at,paid:o.paid_at||null,
+      dispatched:o.dispatched_at||null,completed:o.completed_at||null,archived:!!o.archived,
+      invNum:_inv?_inv.invoice_number:null,invStatus:_inv?_inv.status:null,
+      invPaid:_inv?_inv.paid_at:null,invIssued:_inv?_inv.issued_at:null,
+      invTotal:_inv?_inv.total_inc_cents:0});});
   D.suppliers.length=0;
   (sup.data||[]).forEach(s=>{const dom=s.category_label==='Promotional Products'?'Promotional':(s.category_label==='Apparel'?'Apparel':'Print');D.suppliers.push({code:s.code,name:s.name,domain:dom,kind:s.kind==='api'?'api':'manual',n:SUP_COUNT[s.code]||0,sync:s.last_synced_at?new Date(s.last_synced_at).toLocaleDateString('en-AU'):(s.kind==='api'?'—':'Rate card'),portal:s.portal_url||'',apiBase:s.api_base_url||'—',username:s.trade_username||'',account:s.portal_notes||s.sync_notes||'',secretRef:s.secret_ref||'—',hasSecret:!!s.has_portal_secret,pricing:s.default_margin?('sell = '+s.default_margin+'× cost'):'—',notes:s.portal_notes||s.sync_notes||''});});
   D.leads.length=0;
