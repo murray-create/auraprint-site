@@ -883,7 +883,14 @@ document.getElementById('feeds').innerHTML=D.feeds.map(f=>`<div class="feed"><sp
    quote the customer declined through myquote.html. They stay in the database —
    they are only filtered out of the default list, so the conversion rate below
    still divides by every quote raised. */
-const QUOTE_FILTERS=[['active','Active'],['draft','Draft'],['sent','Sent'],['converted','Converted'],['completed','Completed'],['lost','Lost'],['all','All']];
+const QUOTE_FILTERS=[['active','Active'],['chase','Needs chasing'],['draft','Draft'],['sent','Sent'],['converted','Converted'],['completed','Completed'],['lost','Lost'],['all','All']];
+/* A quote is "needs chasing" once it has sat in 'sent' for 3 days with no
+   decision. sent_at is the clock; fall back to created_at for the older rows
+   that were marked sent by hand before sent_at was being stamped. */
+const CHASE_DAYS=3;
+function daysSince(ts){ if(!ts) return null; return Math.floor((Date.now()-new Date(ts).getTime())/86400000); }
+function chaseAge(q){ return daysSince(q._sentAt||q._created); }
+const needsChase=q=>!isLostQuote(q)&&!isDoneQuote(q)&&q.status==='sent'&&!q._decidedAt&&(chaseAge(q)>=CHASE_DAYS);
 window._quoteFilter='active';
 const isLostQuote=q=>q.status==='declined';
 /* A job is finished when staff press "Job completed": the order goes to status
@@ -899,13 +906,24 @@ function filteredQuotes(){
   if(f==='lost')return all.filter(isLostQuote);
   if(f==='completed')return all.filter(q=>!isLostQuote(q)&&isDoneQuote(q));
   if(f==='active')return all.filter(q=>!isLostQuote(q)&&!isDoneQuote(q));
+  if(f==='chase')return all.filter(needsChase).sort((a,b)=>chaseAge(b)-chaseAge(a));
   return all.filter(q=>!isLostQuote(q)&&!isDoneQuote(q)&&q.status===f);
 }
 
 function renderQuoteTables(){
   const shown=filteredQuotes();
   const badge=q=>`<span class="badge b-${qStatusLabel(q)}">${qStatusLabel(q)}</span>`;
-  const qrow=q=>`<tr class="clk" data-q="${q.num}"><td><b>${q.num}</b>${q._origin==='shop'?' <span class="shoptag">online</span>':''}</td><td>${esc(q.contact)}</td><td class="mini">${esc(orgName(q))}</td><td class="num">${money(qTotal(q))}</td><td>${badge(q)}</td></tr>`;
+  /* In the chase view the status cell is useless (they are all 'sent'), so it
+     carries the wait time and the one-click follow-up instead. */
+  const chaseCell=q=>{
+    const d=chaseAge(q);
+    const canSms=q._phone&&smsMobile(q._phone);
+    return `<td style="white-space:nowrap"><span class="mini">${d}d waiting</span> `+
+      (canSms?`<button class="chip" onclick="event.stopPropagation();openQuoteSms('${q.num}')">Chase by SMS</button>`
+             :`<span class="mini" title="No mobile on this quote">no mobile</span>`)+`</td>`;
+  };
+  const lastCell=q=>window._quoteFilter==='chase'?chaseCell(q):`<td>${badge(q)}</td>`;
+  const qrow=q=>`<tr class="clk" data-q="${q.num}"><td><b>${q.num}</b>${q._origin==='shop'?' <span class="shoptag">online</span>':''}</td><td>${esc(q.contact)}</td><td class="mini">${esc(orgName(q))}</td><td class="num">${money(qTotal(q))}</td>${lastCell(q)}</tr>`;
   const noneRow=n=>`<tr><td colspan="${n}"><div class="empty">No ${window._quoteFilter==='all'?'':esc(window._quoteFilter)+' '}quotes to show.</div></td></tr>`;
   document.getElementById('qtable').innerHTML=shown.length?shown.map(qrow).join(''):noneRow(5);
   document.getElementById('qtable2').innerHTML=shown.length?shown.map(q=>`<tr class="clk" data-q="${q.num}"><td><b>${q.num}</b></td><td>${esc(q.contact)}</td><td class="num">${money(qTotal(q))}</td><td>${badge(q)}</td></tr>`).join(''):noneRow(4);
@@ -913,7 +931,7 @@ function renderQuoteTables(){
   const doneN=D.quotes.filter(q=>!isLostQuote(q)&&isDoneQuote(q)).length;
   const fb=document.getElementById('quoteFilter');
   if(fb){
-    const countFor=k=>k==='all'?D.quotes.length:(k==='lost'?lostN:(k==='completed'?doneN:(k==='active'?D.quotes.length-lostN-doneN:D.quotes.filter(q=>!isLostQuote(q)&&!isDoneQuote(q)&&q.status===k).length)));
+    const countFor=k=>k==='all'?D.quotes.length:(k==='lost'?lostN:(k==='completed'?doneN:(k==='chase'?D.quotes.filter(needsChase).length:(k==='active'?D.quotes.length-lostN-doneN:D.quotes.filter(q=>!isLostQuote(q)&&!isDoneQuote(q)&&q.status===k).length))));
     fb.innerHTML=QUOTE_FILTERS.map(([k,lab])=>`<button class="chip${k==='lost'?' lost':''}${k==='completed'?' done':''}${window._quoteFilter===k?' on':''}" onclick="setQuoteFilter('${k}')">${lab} ${countFor(k)}</button>`).join('');
   }
   document.querySelectorAll('tr.clk[data-q]').forEach(r=>r.onclick=()=>openQuote(r.dataset.q));
@@ -1461,7 +1479,7 @@ function openEmailComposer(recips,heading,isBroadcast){
   renderComposer();
   mb.classList.add('show');
 }
-function syncDraft(){const s=document.getElementById('e_subj'),b=document.getElementById('e_body');if(s)window._email.subject=s.value;if(b)window._email.body=b.value;}
+function syncDraft(){const s=document.getElementById('e_subj'),b=document.getElementById('e_body');if(s)window._email.subject=s.value;if(b)window._email.body=b.value;const sm=document.getElementById('e_smsbody');if(sm)window._email._smsBody=sm.value;}
 function ccChip(c,idx){return `<span class="rchip"><span class="d" style="background:${c.color||'#8f8b99'}">${initials(c.name||c.email)}</span>${esc(c.name||c.email)}<span class="rx" onclick="removeCc(${idx})">✕</span></span>`;}
 function renderComposer(){
   const e=window._email;
@@ -1499,6 +1517,13 @@ function renderComposer(){
           ${(window.AURA_TEMPLATES&&window.AURA_TEMPLATES.length)?`<select id="e_tmplsel" style="border:1px solid var(--line);border-radius:11px;padding:9px 12px;font-size:13px;font-family:inherit;background:var(--soft);outline:none"><option value="">Attach a saved template…</option>${window.AURA_TEMPLATES.map(t=>`<option value="${esc(t.id)}">${esc(t.name)}</option>`).join('')}</select><button class="btn sm" onclick="attachTemplate()">Attach</button>`:''}
         </div>
       </div>
+      ${e._smsTo?`<div class="field" style="margin-top:16px"><label>Text message</label>
+        <label style="display:flex;gap:9px;align-items:flex-start;cursor:pointer;font-size:13.5px">
+          <input type="checkbox" id="e_sms" ${e._smsSend?'checked':''} onchange="syncDraft();window._email._smsSend=this.checked;renderComposer()" style="margin-top:3px;width:16px;height:16px;accent-color:var(--pink-ink)">
+          <span><b>Also text the link to ${esc(smsPretty(e._smsTo))}</b><div class="mini" style="margin-top:2px">Goes out straight after the email, from your Aura Print number, and the link is shortened automatically. About 2c. They can reply to it.</div></span>
+        </label>
+        ${e._smsSend?`<textarea id="e_smsbody" style="min-height:74px;margin-top:9px" oninput="window._email._smsBody=this.value">${esc(e._smsBody||'')}</textarea>`:''}
+      </div>`:''}
       <div class="note">Sends through the existing Resend <code>send-email</code> Edge Function server-side (it already accepts a <code>cc</code> and file <code>attachments</code>). {first} is personalised per recipient at send time. The quote/invoice PDF is attached automatically; you can add your own files or a saved template above.</div>
     </div>
     <div class="mf"><button class="btn" onclick="closeComposer()">Cancel</button><button class="btn primary" onclick="sendEmail()" ${included.length?'':'disabled'}><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 2 11 13M22 2l-7 20-4-9-9-4z"/></svg>${e.marketing?`Send to ${included.length}`:'Send'}</button></div>`;
@@ -2906,10 +2931,20 @@ drawOrgs(0);
         if(!r.ok||!j.ok){ failed.push(c.email+' ('+(j.error||('HTTP '+r.status))+')'); } else { sent++; }
       }catch(err){ failed.push(c.email+' ('+(err.message||err)+')'); }
     }
+    /* The SMS ride-along. Fired even if the email failed, because the text is the
+       more reliable channel and the customer still needs the link. */
+    var smsNote='';
+    if(e._smsTo&&e._smsSend&&(e._smsBody||'').trim()){
+      try{
+        var r2=await fetch(window.AURA_CONFIG.supabaseUrl+'/functions/v1/send-sms',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+tok},body:JSON.stringify({to:e._smsTo,message:(e._smsBody||'').trim(),kind:'quote',quote_id:e._smsQuote||null,order_id:e._smsOrder||null})});
+        var j2=await r2.json();
+        smsNote=(r2.ok&&j2.ok)?(' Text sent to '+smsPretty(e._smsTo)+'.'):(' The text did NOT send: '+(j2.error||('HTTP '+r2.status))+'.');
+      }catch(err2){ smsNote=' The text did NOT send: '+(err2.message||err2)+'.'; }
+    }
     if(window._email&&window._email._sentQuote){ try{ await SB().from('quotes').update({status:'sent',sent_at:new Date().toISOString()}).eq('id',window._email._sentQuote); await refreshFromSupabase(SB()); }catch(_e){} }
     if(window._email&&window._email._sentLead){ try{ var _l=leadById(window._email._sentLead); if(_l&&_l.status==='new'){ await setLeadStatus(window._email._sentLead,'contacted'); } }catch(_e){} }
     if(window._email&&window._email._sentInvoice){ try{ await SB().from('invoices').update({sent_at:new Date().toISOString()}).eq('id',window._email._sentInvoice); await refreshFromSupabase(SB()); if(window._email._sentInvoiceNum)openQuote(window._email._sentInvoiceNum); }catch(_e){} }
-    md.innerHTML='<div class="mh"><h3>'+(failed.length?'Sent with errors':'Sent')+'</h3><div class="x" onclick="closeComposer()">✕</div></div><div class="mb"><div class="sendok"><div class="tick"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg></div><h3 style="margin:0 0 4px;font-size:17px">Sent to '+sent+' recipient'+(sent===1?'':'s')+(ccList?(' · Cc '+e.cc.length):'')+'</h3><div class="mini">Sent live via Resend'+(failed.length?('. Failed: '+failed.join(', ')):'.')+'</div></div></div><div class="mf"><button class="btn primary" onclick="closeComposer()">Done</button></div>';
+    md.innerHTML='<div class="mh"><h3>'+(failed.length?'Sent with errors':'Sent')+'</h3><div class="x" onclick="closeComposer()">✕</div></div><div class="mb"><div class="sendok"><div class="tick"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg></div><h3 style="margin:0 0 4px;font-size:17px">Sent to '+sent+' recipient'+(sent===1?'':'s')+(ccList?(' · Cc '+e.cc.length):'')+'</h3><div class="mini">Sent live via Resend'+(failed.length?('. Failed: '+failed.join(', ')):'.')+smsNote+'</div></div></div><div class="mf"><button class="btn primary" onclick="closeComposer()">Done</button></div>';
   };
 })();
 </script>
@@ -3048,6 +3083,17 @@ window.openQuoteEmail=function(num){
     'Kind regards,\nMurray\nAura Print & Promo\ne: admin@auraprint.com.au\nw: auraprint.com.au';
   openEmailComposer([{name:q._name||q.contact,email:q._email,consent:true}], 'Send quote '+q.num, false);
   window._email.subject=subject; window._email.body=body; window._email._sentQuote=q._id;
+  /* SMS ride-along: email carries the PDF and the detail, the text carries the
+     link that actually gets read on a phone. Ticked by default when we hold a
+     mobile, because a follow-up that needs a second decision does not happen. */
+  var smsTo=smsMobile(q._phone);
+  if(smsTo){
+    window._email._smsTo=smsTo;
+    window._email._smsSend=true;
+    window._email._smsQuote=q._id;
+    window._email._smsOrder=q._orderId||null;
+    window._email._smsBody='Hi '+first+', your quote '+q.num+' from Aura Print is ready - '+money(qTotal(q))+' inc GST. View and accept here: '+link+' Any questions just reply. Murray, Aura Print';
+  }
   var pdf=crmPdf('quote',q); if(pdf) window._email.attachments=[{filename:'Quote-'+(q.num||'')+'.pdf',content:pdf}];
   renderComposer();
 };
