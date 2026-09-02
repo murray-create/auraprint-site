@@ -762,7 +762,14 @@ const avColor=i=>['#f01a9a','#43b7ff','#7c3aed','#0d9488','#2563eb'][((i%5)+5)%5
 const esc=s=>(s==null?'':(''+s)).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 const orgById=id=>D.orgs.find(o=>o.id===id);
 const contactByName=n=>D.contacts.find(c=>c.name===n);
-const qTotal=q=>q.items.reduce((a,b)=>a+b.price,0);
+/* Options quotes (q._mode==='options'): every line is an alternative and the
+   customer picks ONE, so the lines never add up. qTotal is the chosen line, or
+   0 until one is chosen. qValue is the display form for lists and summaries. */
+const isOpts=q=>q&&q._mode==='options';
+const chosenItem=q=>isOpts(q)&&q._chosen?q.items.find(it=>it.no===q._chosen)||null:null;
+const qTotal=q=>isOpts(q)?(chosenItem(q)?chosenItem(q).price:0):q.items.reduce((a,b)=>a+b.price,0);
+const qValue=q=>isOpts(q)&&!chosenItem(q)?`<span class="mini" title="Customer chooses one option">${q.items.length} options</span>`:money(qTotal(q));
+const qAmountText=q=>isOpts(q)&&!chosenItem(q)?q.items.length+' options to choose from':money(qTotal(q))+' inc GST';
 const unitOf=it=>it.qty?Math.round(it.price/it.qty):it.price;
 /* A line description may be multi-line. The first line is the item name; every
    line after it is a spec that prints underneath it on the quote and invoice.
@@ -1215,7 +1222,7 @@ function renderQuoteTables(){
              :`<span class="mini" title="No mobile on this quote">no mobile</span>`)+`</td>`;
   };
   const lastCell=q=>window._quoteFilter==='chase'?chaseCell(q):`<td>${badge(q)}</td>`;
-  const qrow=q=>`<tr class="clk" data-q="${q.num}"><td><b>${q.num}</b>${q._origin==='shop'?' <span class="shoptag">online</span>':''}</td><td>${esc(q.contact)}</td><td class="mini">${esc(orgName(q))}</td><td class="num">${money(qTotal(q))}</td>${lastCell(q)}</tr>`;
+  const qrow=q=>`<tr class="clk" data-q="${q.num}"><td><b>${q.num}</b>${q._origin==='shop'?' <span class="shoptag">online</span>':''}</td><td>${esc(q.contact)}</td><td class="mini">${esc(orgName(q))}</td><td class="num">${qValue(q)}</td>${lastCell(q)}</tr>`;
   const noneRow=n=>`<tr><td colspan="${n}"><div class="empty">No ${window._quoteFilter==='all'?'':esc(window._quoteFilter)+' '}quotes to show.</div></td></tr>`;
   document.getElementById('qtable').innerHTML=shown.length?shown.map(qrow).join(''):noneRow(5);
   document.getElementById('qtable2').innerHTML=shown.length?shown.map(q=>`<tr class="clk" data-q="${q.num}"><td><b>${q.num}</b></td><td>${esc(q.contact)}</td><td class="num">${money(qTotal(q))}</td><td>${badge(q)}</td></tr>`).join(''):noneRow(4);
@@ -1354,8 +1361,8 @@ function openQuote(num){
   if(q._completedAt) linked.push(`<div class="row"><span>Completed</span><b>${new Date(q._completedAt).toLocaleDateString('en-AU',{day:'2-digit',month:'short'})}</b></div>`);
   const payLink = q.payLink ? `<div class="paylink">${esc(q.payLink)}</div>` : '';
   right=`<div class="card side-summary"><h3>Summary</h3><div class="sub">Quote ${q.num}</div>
-    ${q.items.map(it=>`<div class="row"><span title="${esc(it.n)}">${esc(descHead(it.n))} × ${it.qty}</span><b>${money(it.price)}</b></div>`).join('')||'<div class="mini">No line items yet.</div>'}
-    <div class="row tot"><span>Total (inc GST)</span><span>${money(total)}</span></div>
+    ${q.items.map(it=>`<div class="row"><span title="${esc(it.n)}">${isOpts(q)?`<b>Option ${it.no}${q._chosen===it.no?' ✓':''}</b> · `:''}${esc(descHead(it.n))} × ${it.qty}</span><b>${money(it.price)}</b></div>`).join('')||'<div class="mini">No line items yet.</div>'}
+    ${isOpts(q)&&!chosenItem(q)?`<div class="row tot"><span>Customer picks one</span><span class="mini">no combined total</span></div>`:`<div class="row tot"><span>${isOpts(q)?'Chosen option (inc GST)':'Total (inc GST)'}</span><span>${money(total)}</span></div>`}
     ${econCard(q)}
     ${addrRailCard(q)}
     ${linked.length?`<div style="margin-top:14px;border-top:1px solid var(--line);padding-top:10px">${linked.join('')}</div>`:''}
@@ -1385,7 +1392,8 @@ function openQuote(num){
     <div class="qdgrid">
       <div class="card"><div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px"><div><h3>Line items</h3><div class="sub">${q.items.length} item${q.items.length===1?'':'s'} on this quote</div></div>${(q.stage==='quote'||q.stage==='invoice')?`<button class="btn sm" onclick="openEditQuote('${q.num}')"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg> Edit</button>`:''}</div>
         <table><thead><tr><th>Product</th><th class="num">Qty</th><th class="num">Unit</th><th class="num">Line total</th></tr></thead>
-        <tbody>${q.items.map(it=>`<tr><td>${descHtml(it.n)}</td><td class="num">${it.qty}</td><td class="num">${money(unitOf(it))}</td><td class="num">${money(it.price)}</td></tr>`).join('')||'<tr><td colspan="4"><div class="empty">No products on this quote yet.</div></td></tr>'}</tbody></table>
+        <tbody>${q.items.map(it=>`<tr${isOpts(q)&&q._chosen===it.no?' style="background:var(--pink-50,#fdf2f8)"':''}><td>${isOpts(q)?`<span class="badge ${q._chosen===it.no?'b-accepted':'b-draft'}" style="margin-right:6px">Option ${it.no}${q._chosen===it.no?' · chosen':''}</span>`:''}${descHtml(it.n)}</td><td class="num">${it.qty}</td><td class="num">${money(unitOf(it))}</td><td class="num">${money(it.price)}</td></tr>`).join('')||'<tr><td colspan="4"><div class="empty">No products on this quote yet.</div></td></tr>'}</tbody></table>
+        ${isOpts(q)?`<div class="note"><b>Options quote.</b> These lines are alternatives and the customer picks one, so they are not added together.${chosenItem(q)?` Option ${q._chosen} was chosen${q._acceptedBy?' by '+esc(q._acceptedBy):''}.`:(q.stage==='quote'&&q.status!=='declined'?` If the customer tells you their choice by phone or email, record it here: ${q.items.map(it=>`<button class="chip" onclick="chooseOption('${q.num}',${it.no})">Option ${it.no} · ${money(it.price)}</button>`).join(' ')}`:'')}</div>`:''}
         <div class="note">Prices shown include GST. Wholesale cost and supplier stay staff-only and never appear on the customer's copy.</div>
       </div>
       ${right}
@@ -1723,7 +1731,7 @@ function drawContacts(sel){
         <div class="f"><div class="k">Location</div><div class="v">${esc(o?o.suburb:(c.suburb||'—'))}</div></div>
         <div class="f"><div class="k">Marketing consent</div><div class="v">${c.consent?'Opted in':'Not opted in'}</div></div>
         <div class="f"><div class="k">Lifetime value (paid)</div><div class="v">${money(ltv)}</div></div></div></div>
-      <div class="tabpane" data-p="deals">${qs.length?`<table><thead><tr><th>Quote</th><th class="num">Value</th><th>Status</th></tr></thead><tbody>${qs.map(q=>`<tr class="clk" data-q="${q.num}"><td><b>${q.num}</b></td><td class="num">${money(qTotal(q))}</td><td><span class="badge b-${q.status}">${q.status}</span></td></tr>`).join('')}</tbody></table><div class="note">Click a quote to open it.</div>`:`<div class="empty">No quotes or orders yet — this is a new contact.<br><br><button class="btn primary" onclick="newQuoteFor(${sel})">Create first quote</button></div>`}</div>
+      <div class="tabpane" data-p="deals">${qs.length?`<table><thead><tr><th>Quote</th><th class="num">Value</th><th>Status</th></tr></thead><tbody>${qs.map(q=>`<tr class="clk" data-q="${q.num}"><td><b>${q.num}</b></td><td class="num">${qValue(q)}</td><td><span class="badge b-${q.status}">${q.status}</span></td></tr>`).join('')}</tbody></table><div class="note">Click a quote to open it.</div>`:`<div class="empty">No quotes or orders yet — this is a new contact.<br><br><button class="btn primary" onclick="newQuoteFor(${sel})">Create first quote</button></div>`}</div>
       <div class="tabpane" data-p="inv">${orders.filter(q=>q.invNum).length?`<table><thead><tr><th>Invoice</th><th>Quote</th><th class="num">Amount</th><th>Status</th></tr></thead><tbody>${orders.filter(q=>q.invNum).map(q=>`<tr class="clk" data-q="${q.num}"><td><b>${q.invNum}</b></td><td>${q.num}</td><td class="num">${money(qTotal(q))}</td><td><span class="badge b-${q.stage==='paid'?'paid':'unpaid'}">${q.stage==='paid'?'paid':'unpaid'}</span></td></tr>`).join('')}</tbody></table>`:`<div class="empty">Invoices and Stripe payment links for ${esc(c.name.split(' ')[0])} would show here.</div>`}</div>
       <div class="tabpane" data-p="spend">${spendPanel('contact',c._id,c.name)}${o?`<div class="note" style="margin-top:10px">This is ${esc(c.name)} on their own. For everything <b>${esc(o.name)}</b> spends, open <a onclick="openOrg('${o.id}')">the organisation</a>.</div>`:''}</div>
       <div class="tabpane" data-p="caddr">${o
@@ -2017,7 +2025,7 @@ function nqShapeBC(data){
   return rows;
 }
 function newQuote(preName,opts){
-  window._nq={items:[],discount:0,prodSlug:'',qty:100,name:'',email:'',phone:'',orgId:(opts&&opts.orgId)||'',leadId:(opts&&opts.leadId)||'',street:'',suburb:'',state:'',postcode:'',shipAddrId:'',billTo:'',billStreet:'',billSuburb:'',billState:'',billPostcode:'',billAddrId:'',dupOf:null,_price:null,_priceQty:0};
+  window._nq={items:[],discount:0,options:false,prodSlug:'',qty:100,name:'',email:'',phone:'',orgId:(opts&&opts.orgId)||'',leadId:(opts&&opts.leadId)||'',street:'',suburb:'',state:'',postcode:'',shipAddrId:'',billTo:'',billStreet:'',billSuburb:'',billState:'',billPostcode:'',billAddrId:'',dupOf:null,_price:null,_priceQty:0};
   window._qc={rows:[],keys:[],sel:{},title:'',live:true};
   window._nqMode='new';window._nqEditId=null;window._nqNum=null;window._nqTitle=null;
   md.className='modal xwide';
@@ -2048,7 +2056,7 @@ async function openEditQuote(num){
   const org=row.company?D.orgs.find(o=>(o.name||'').toLowerCase()===row.company.toLowerCase()):null;
   let _eDisc=0;const _eItems=[];
   q.items.forEach(it=>{ if((it.price||0)<0 && /^discount$/i.test(String(it.n||'').trim())){ _eDisc+=-it.price; } else _eItems.push({n:it.n,qty:it.qty,price:it.price}); });
-  window._nq={items:_eItems,discount:_eDisc,prodSlug:'',qty:100,name:row.contact_name||q.contact||'',email:row.contact_email||'',phone:row.contact_phone||'',orgId:row.organisation_id||(org?org.id:''),leadId:'',street:row.street||'',suburb:row.suburb||'',state:row.state||'',postcode:row.postcode||'',shipAddrId:row.ship_address_id||'',billTo:row.bill_to||'',billStreet:row.bill_line1||'',billSuburb:row.bill_suburb||'',billState:row.bill_state||'',billPostcode:row.bill_postcode||'',billAddrId:row.bill_address_id||'',dupOf:null,_price:null,_priceQty:0,_company:row.company||''};
+  window._nq={items:_eItems,discount:_eDisc,options:row.pricing_mode==='options',prodSlug:'',qty:100,name:row.contact_name||q.contact||'',email:row.contact_email||'',phone:row.contact_phone||'',orgId:row.organisation_id||(org?org.id:''),leadId:'',street:row.street||'',suburb:row.suburb||'',state:row.state||'',postcode:row.postcode||'',shipAddrId:row.ship_address_id||'',billTo:row.bill_to||'',billStreet:row.bill_line1||'',billSuburb:row.bill_suburb||'',billState:row.bill_state||'',billPostcode:row.bill_postcode||'',billAddrId:row.bill_address_id||'',dupOf:null,_price:null,_priceQty:0,_company:row.company||''};
   window._qc={rows:[],keys:[],sel:{},title:'',live:true};
   window._nqMode=isInvEdit?'editinv':'edit';window._nqEditId=q._id;window._nqNum=num;
   window._nqTitle=isInvEdit?('Edit invoice '+(q.invNum||'')+' — '+num):null;
@@ -2121,9 +2129,10 @@ function renderNewQuote(preName,edit){
     </div>
     <div class="mf">
       <div style="margin-right:auto;align-self:center;line-height:1.45">
-        <div style="display:flex;align-items:center;gap:8px"><label style="font-weight:600;font-size:13px">Discount $</label><input id="nq_disc" type="number" min="0" step="0.01" value="${((nq.discount||0)/100).toFixed(2)}" style="width:96px" oninput="nqSetDiscount(this.value)"></div>
+        ${(window._nqMode==='newinv'||window._nqMode==='editinv')?'':`<label style="display:flex;align-items:center;gap:8px;font-size:13px;font-weight:600;margin-bottom:6px;cursor:pointer" title="Use this when you are quoting alternatives, e.g. 250 cards or 500 cards. The customer picks one on their quote page and only that line becomes the order."><input type="checkbox" id="nq_opts" ${nq.options?'checked':''} onchange="nqSetOptions(this.checked)"> Lines are alternatives — the customer picks one</label>`}
+        <div id="nq_discwrap" style="display:${nq.options?'none':'flex'};align-items:center;gap:8px"><label style="font-weight:600;font-size:13px">Discount $</label><input id="nq_disc" type="number" min="0" step="0.01" value="${((nq.discount||0)/100).toFixed(2)}" style="width:96px" oninput="nqSetDiscount(this.value)"></div>
         <div id="nq_discrow" style="display:none;font-size:12px;color:var(--muted);margin-top:2px">Discount applied: <b id="nq_discval">-$0.00</b></div>
-        <div style="font-weight:800;font-size:15px;margin-top:3px">Total (inc GST): <span id="nq_tot">$0.00</span></div>
+        <div style="font-weight:800;font-size:15px;margin-top:3px"><span id="nq_totlbl">Total (inc GST)</span>: <span id="nq_tot">$0.00</span></div>
       </div>
       <button class="btn" onclick="closeModal()">Cancel</button>
       ${(edit||window._nqMode==='newinv')?'':`<button class="btn" id="nq_saveSend" onclick="nqSave(true)"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 2 11 13M22 2l-7 20-4-9-9-4z"/></svg>Save &amp; send</button>`}
@@ -2280,12 +2289,36 @@ function nqRenderLines(){
     : '<tr><td colspan="5"><div class="empty">No products added yet. Use the picker above to add priced lines.</div></td></tr>';
   nqSizeAllDesc();
   const itemsTotal=nq.items.reduce((a,b)=>a+b.price,0);
-  const disc=nq.discount||0;
+  const disc=nq.options?0:(nq.discount||0);
   const total=itemsTotal-disc;
-  const lsub=document.getElementById('nq_lsub');if(lsub)lsub.textContent=`${nq.items.length} item${nq.items.length===1?'':'s'} · ${money(itemsTotal)} inc GST`;
+  const lsub=document.getElementById('nq_lsub');if(lsub)lsub.textContent=nq.options
+    ?`${nq.items.length} option${nq.items.length===1?'':'s'} · customer picks one${nq.items.length?' · '+nq.items.map((it,i)=>'Option '+(i+1)+' '+money(it.price)).join(' / '):''}`
+    :`${nq.items.length} item${nq.items.length===1?'':'s'} · ${money(itemsTotal)} inc GST`;
+  const dw=document.getElementById('nq_discwrap');if(dw)dw.style.display=nq.options?'none':'flex';
   const dr=document.getElementById('nq_discrow');if(dr)dr.style.display=disc>0?'':'none';
   const dv=document.getElementById('nq_discval');if(dv)dv.textContent='-'+money(disc);
-  const tot=document.getElementById('nq_tot');if(tot)tot.textContent=money(total);
+  const tl=document.getElementById('nq_totlbl');if(tl)tl.textContent=nq.options?'Customer picks one option':'Total (inc GST)';
+  const tot=document.getElementById('nq_tot');if(tot)tot.textContent=nq.options?(nq.items.length?nq.items.map(it=>money(it.price)).join(' / '):'—'):money(total);
+  // Option badges on each line so the builder reads the same way as the customer's page.
+  if(nq.options)tb.querySelectorAll('tr').forEach((tr,i)=>{const td=tr.querySelector('td');if(td&&nq.items[i]){const b=document.createElement('div');b.className='mini';b.style.cssText='font-weight:800;color:var(--pink,#c9107f);margin-bottom:2px';b.textContent='Option '+(i+1);td.insertBefore(b,td.firstChild);}});
+}
+function nqSetOptions(on){
+  window._nq.options=!!on;
+  if(on)window._nq.discount=0;
+  const d=document.getElementById('nq_disc');if(d&&on)d.value='0.00';
+  nqRenderLines();
+}
+/* Staff record the customer's pick on an options quote (told by phone/email)
+   so it can be converted. The customer's own Accept on myquote sets it too. */
+async function chooseOption(num,no){
+  const q=D.quotes.find(x=>x.num===num); if(!q)return;
+  const it=q.items.find(x=>x.no===no); if(!it)return;
+  if(!confirm('Record that the customer chose Option '+no+' ('+money(it.price)+' inc GST) on '+num+'?'))return;
+  const sb=window.CRM_SB;if(!sb){alert('Not connected — please reload and sign in.');return;}
+  const r=await sb.from('quotes').update({chosen_item_no:no}).eq('id',q._id);
+  if(r.error){alert('Could not save the choice: '+r.error.message);return;}
+  q._chosen=no;
+  openQuote(num);
 }
 function nqSetDiscount(v){
   let d=Math.round(parseFloat(v||'0')*100);
@@ -2400,7 +2433,7 @@ async function duplicateJob(num){
     else items.push({n:it.n,qty:it.qty,price:it.price});
   });
   if(!items.length){alert('That job has no line items to copy.');return;}
-  window._nq={items:items,discount:disc,prodSlug:'',qty:100,
+  window._nq={items:items,discount:disc,options:row.pricing_mode==='options',prodSlug:'',qty:100,
     name:row.contact_name||q.contact||'',email:row.contact_email||'',phone:row.contact_phone||'',
     orgId:row.organisation_id||'',leadId:'',
     street:row.street||'',suburb:row.suburb||'',state:row.state||'',postcode:row.postcode||'',
@@ -2458,6 +2491,7 @@ async function nqSave(send){
   const email=document.getElementById('nq_email').value.trim();
   if(!email){alert('Add a customer email — a quote needs one to be addressed and sent.');return;}
   if(!nq.items.length){alert('Add at least one line item to the quote.');return;}
+  if(nq.options&&nq.items.length<2){alert('An options quote needs at least two lines for the customer to choose between. Untick "Lines are alternatives" for a single-item quote.');return;}
   const sb=window.CRM_SB;if(!sb){alert('Not connected — please reload and sign in.');return;}
   const orgId=document.getElementById('nq_org').value||'';
   const org=orgId?orgById(orgId):null;
@@ -2497,7 +2531,8 @@ async function nqSave(send){
   const isInvEdit=window._nqMode==='editinv';
   const isEdit=window._nqMode==='edit'||isInvEdit;
   const company=org?org.name:(isEdit?(nq._company||null):null);
-  const disc=nq.discount||0;
+  const disc=nq.options?0:(nq.discount||0);
+  const pricingMode=nq.options?'options':'sum';
   const mkItems=qid=>{
     const base=nq.items.map((it,idx)=>{const inc=it.price,ex=Math.round(inc/1.1);return {quote_id:qid,item_no:idx+1,description:it.n,qty:it.qty,price_inc_cents:inc,price_ex_cents:ex,gst_cents:inc-ex};});
     if(disc>0){const inc=-disc,ex=Math.round(inc/1.1);base.push({quote_id:qid,item_no:base.length+1,description:'Discount',qty:1,price_inc_cents:inc,price_ex_cents:ex,gst_cents:inc-ex});}
@@ -2542,7 +2577,7 @@ async function nqSave(send){
   try{
     if(isEdit){
       const eid=window._nqEditId;
-      const up=await sb.from('quotes').update(Object.assign({contact_name:name,contact_email:email,contact_phone:phone||null,company:company},addr)).eq('id',eid);
+      const up=await sb.from('quotes').update(Object.assign({contact_name:name,contact_email:email,contact_phone:phone||null,company:company},isInvEdit?{}:{pricing_mode:pricingMode,chosen_item_no:null},addr)).eq('id',eid);
       if(up.error)throw up.error;
       if(isInvEdit){
         // Edit an issued (unpaid) invoice: one atomic call rewrites the quote, order and
@@ -2582,7 +2617,7 @@ async function nqSave(send){
        conversion reporting and left the lead with no visible outcome. */
     const _leadId=(window._nq&&window._nq.leadId)||null;
     const _dupOf=(window._nq&&window._nq.dupOf)||null;
-    const ins=await sb.from('quotes').insert(Object.assign({contact_name:name,contact_email:email,contact_phone:phone||null,company:company,lead_id:_leadId,duplicate_of_quote_id:_dupOf},addr)).select('id,quote_number').single();
+    const ins=await sb.from('quotes').insert(Object.assign({contact_name:name,contact_email:email,contact_phone:phone||null,company:company,lead_id:_leadId,duplicate_of_quote_id:_dupOf,pricing_mode:pricingMode},addr)).select('id,quote_number').single();
     if(ins.error)throw ins.error;
     const ii=await sb.from('quote_items').insert(mkItems(ins.data.id));
     if(ii.error)throw ii.error;
@@ -2688,14 +2723,14 @@ async function refreshFromSupabase(sb){
   (qis.data||[]).forEach(it=>{(itemsByQuote[it.quote_id]=itemsByQuote[it.quote_id]||[]).push(it);});
   D.quotes.length=0;
   (qs.data||[]).forEach(q=>{
-    const items=(itemsByQuote[q.id]||[]).sort((a,b)=>(a.item_no||0)-(b.item_no||0)).map(it=>({n:it.description,qty:it.qty,price:it.price_inc_cents}));
+    const items=(itemsByQuote[q.id]||[]).sort((a,b)=>(a.item_no||0)-(b.item_no||0)).map(it=>({n:it.description,qty:it.qty,price:it.price_inc_cents,no:it.item_no}));
     const ord=q.converted_order_id?orderById[q.converted_order_id]:null;
     const inv=q.converted_order_id?invByOrder[q.converted_order_id]:null;
     let stage='quote';
     if(inv&&inv.status==='paid')stage='paid'; else if(inv)stage='invoice'; else if(ord)stage='order';
     let contact=q.contact_name||q.contact_email||'—';
     if(q.company){const org=D.orgs.find(o=>o.name.toLowerCase()===q.company.toLowerCase());if(org){const ppl=D.contacts.filter(c=>c.orgId===org.id);if(ppl.length&&!D.contacts.some(c=>c.name===contact))contact=ppl[0].name;}}
-    D.quotes.push({num:q.quote_number,contact,status:q.status,stage,orderNum:ord?ord.order_number:null,invNum:inv?inv.invoice_number:null,payLink:inv?inv.payment_link_url:null,items,_id:q.id,_orderId:q.converted_order_id||null,_invId:inv?inv.id:null,_invToken:inv?inv.access_token:null,_invSent:inv?inv.sent_at:null,_invStatus:inv?inv.status:null,_invPaidAt:inv?inv.paid_at:null,_invViewedAt:inv?inv.last_viewed_at:null,_viewedAt:q.last_viewed_at||null,_decidedAt:q.decided_at||null,_decision:q.decision_comments||'',_sentAt:q.sent_at||null,_acceptedBy:q.accepted_by_name||null,_created:q.created_at,_email:q.contact_email||'',_phone:q.contact_phone||'',_name:q.contact_name||'',_token:q.access_token||'',_accepted:!!q.accepted_by_name,_tCarrier:ord?(ord.tracking_carrier||''):'',_tNumber:ord?(ord.tracking_number||''):'',_tUrl:ord?(ord.tracking_url||''):'',_dispatched:ord?ord.dispatched_at:null,_ordStatus:ord?(ord.status||''):'',_reviewReq:ord?ord.review_requested_at:null,_completedAt:ord?(ord.completed_at||null):null,_valid:q.valid_until||null,_origin:q.origin||'staff',_contactId:q.contact_id||null,_orgId:q.organisation_id||null,_billTo:q.bill_to||'',_billStreet:q.bill_line1||'',_billSuburb:q.bill_suburb||'',_billState:q.bill_state||'',_billPostcode:q.bill_postcode||'',_shipAddrId:q.ship_address_id||null,_billAddrId:q.bill_address_id||null,_dupOf:q.duplicate_of_quote_id||null,_street:q.street||'',_suburb:q.suburb||'',_state:q.state||'',_postcode:q.postcode||'',_artLink:ord?(ord.artwork_link||''):'',_cost:costByQuote[q.id]||null,_oitems:(itemsByOrder[q.converted_order_id]||[]),_ofiles:(filesByOrder[q.converted_order_id]||[])});
+    D.quotes.push({num:q.quote_number,contact,status:q.status,stage,orderNum:ord?ord.order_number:null,invNum:inv?inv.invoice_number:null,payLink:inv?inv.payment_link_url:null,items,_id:q.id,_orderId:q.converted_order_id||null,_invId:inv?inv.id:null,_invToken:inv?inv.access_token:null,_invSent:inv?inv.sent_at:null,_invStatus:inv?inv.status:null,_invPaidAt:inv?inv.paid_at:null,_invViewedAt:inv?inv.last_viewed_at:null,_viewedAt:q.last_viewed_at||null,_decidedAt:q.decided_at||null,_decision:q.decision_comments||'',_sentAt:q.sent_at||null,_acceptedBy:q.accepted_by_name||null,_created:q.created_at,_email:q.contact_email||'',_phone:q.contact_phone||'',_name:q.contact_name||'',_token:q.access_token||'',_accepted:!!q.accepted_by_name,_tCarrier:ord?(ord.tracking_carrier||''):'',_tNumber:ord?(ord.tracking_number||''):'',_tUrl:ord?(ord.tracking_url||''):'',_dispatched:ord?ord.dispatched_at:null,_ordStatus:ord?(ord.status||''):'',_reviewReq:ord?ord.review_requested_at:null,_completedAt:ord?(ord.completed_at||null):null,_valid:q.valid_until||null,_origin:q.origin||'staff',_contactId:q.contact_id||null,_orgId:q.organisation_id||null,_billTo:q.bill_to||'',_billStreet:q.bill_line1||'',_billSuburb:q.bill_suburb||'',_billState:q.bill_state||'',_billPostcode:q.bill_postcode||'',_shipAddrId:q.ship_address_id||null,_billAddrId:q.bill_address_id||null,_dupOf:q.duplicate_of_quote_id||null,_mode:q.pricing_mode||'sum',_chosen:q.chosen_item_no||null,_street:q.street||'',_suburb:q.suburb||'',_state:q.state||'',_postcode:q.postcode||'',_artLink:ord?(ord.artwork_link||''):'',_cost:costByQuote[q.id]||null,_oitems:(itemsByOrder[q.converted_order_id]||[]),_ofiles:(filesByOrder[q.converted_order_id]||[])});
   });
   D.orders.length=0;
   (ords.data||[]).forEach(o=>{const q=(qs.data||[]).find(x=>x.converted_order_id===o.id);const _inv=invByOrder[o.id]||null;
@@ -3585,6 +3620,7 @@ function crmPdf(kind,q){
       // First line is the item name in bold; every line after it is a spec set
       // slightly smaller underneath, so a long description still reads cleanly.
       var parts=descLines(it.n);
+      if(isOpts(q)) parts=['Option '+it.no+(q._chosen===it.no?' (chosen)':'')+' — '+(parts[0]||'')].concat(parts.slice(1));
       var head=doc.splitTextToSize(parts[0]||'', W-2*M-235);
       var rest=parts.length>1?doc.splitTextToSize(parts.slice(1).join('\n'), W-2*M-235):[];
       // Long spec lists can outgrow one page, so start a new one before they run off.
@@ -3606,12 +3642,19 @@ function crmPdf(kind,q){
     });
     y+=8; doc.setDrawColor(230,228,233); doc.line(W-M-220,y,W-M,y); y+=18;
     var inc=qTotal(q), ex=Math.round(inc/1.1), gst=inc-ex;
+    if(isOpts(q)&&!chosenItem(q)){
+      doc.setFont('helvetica','bold'); doc.setFontSize(10.5); doc.setTextColor(17,16,24);
+      doc.text('Choose one option', W-M-8, y,{align:'right'}); y+=14;
+      doc.setFont('helvetica','normal'); doc.setFontSize(9); doc.setTextColor(90,90,100);
+      doc.text('The options above are alternatives — pick the one that suits and accept it online. Each price includes GST.', W-M-8, y,{align:'right'}); y+=28;
+    } else {
     doc.setFontSize(9.5); doc.setTextColor(90,90,100); doc.setFont('helvetica','normal');
     doc.text('Subtotal (ex GST)', W-M-120, y,{align:'right'}); doc.text(money(ex), W-M-8, y,{align:'right'}); y+=15;
     doc.text('GST 10%', W-M-120, y,{align:'right'}); doc.text(money(gst), W-M-8, y,{align:'right'}); y+=18;
     doc.setFont('helvetica','bold'); doc.setFontSize(12); doc.setTextColor(17,16,24);
-    doc.text('Total (inc GST)', W-M-120, y,{align:'right'}); doc.text(money(inc), W-M-8, y,{align:'right'}); y+=28;
+    doc.text(isOpts(q)?'Chosen option (inc GST)':'Total (inc GST)', W-M-120, y,{align:'right'}); doc.text(money(inc), W-M-8, y,{align:'right'}); y+=28;
     doc.setFont('helvetica','normal');
+    }
     if(kind==='invoice'){
       doc.setFont('helvetica','bold'); doc.setFontSize(10); doc.setTextColor(201,16,127); doc.text('Payment', M, y); y+=16;
       doc.setFont('helvetica','normal'); doc.setFontSize(9.5); doc.setTextColor(60,60,70);
@@ -3675,8 +3718,8 @@ window.openQuoteEmail=function(num){
   var subject='Your quote '+q.num+' — Aura Print & Promo';
   var body='Hi '+first+',\n\n'+
     'Thanks for your enquiry — your quote is ready.\n\n'+
-    'View quote '+q.num+' online ('+money(qTotal(q))+' inc GST):\n'+link+'\n\n'+
-    'If you’re happy with everything, just click the green Accept button on the quote page and type your name — no sign-in needed, and you can forward this email to a colleague if someone else gives the go-ahead. Once accepted we’ll send your tax invoice, and production starts as soon as payment lands and you’ve approved your artwork proof.\n\n'+
+    'View quote '+q.num+' online ('+qAmountText(q)+'):\n'+link+'\n\n'+
+    (isOpts(q)?'This quote gives you options — pick the one that suits on the quote page, then click the green Accept button and type your name':'If you’re happy with everything, just click the green Accept button on the quote page and type your name')+' — no sign-in needed, and you can forward this email to a colleague if someone else gives the go-ahead. Once accepted we’ll send your tax invoice, and production starts as soon as payment lands and you’ve approved your artwork proof.\n\n'+
     'Preparing your artwork? Our print-ready guide covers bleed, CMYK, resolution, fonts and file types, so your job runs smoothly first time:\nhttps://auraprint.com.au/art-setup.html\n\n'+
     (validStr?('This quote is valid until '+validStr+'. '):'')+'If anything needs adjusting — quantity, stock, finishing — just reply to this email and we’ll update it for you.\n\n'+
     'Kind regards,\nMurray\nAura Print & Promo\ne: admin@auraprint.com.au\nw: auraprint.com.au';
@@ -3691,7 +3734,7 @@ window.openQuoteEmail=function(num){
     window._email._smsSend=true;
     window._email._smsQuote=q._id;
     window._email._smsOrder=q._orderId||null;
-    window._email._smsBody='Hi '+first+', your quote '+q.num+' from Aura Print is ready - '+money(qTotal(q))+' inc GST. View and accept here: '+link+' Any questions just reply. Murray, Aura Print';
+    window._email._smsBody='Hi '+first+', your quote '+q.num+' from Aura Print is ready - '+qAmountText(q)+'. View and accept here: '+link+' Any questions just reply. Murray, Aura Print';
   }
   var pdf=crmPdf('quote',q); if(pdf) window._email.attachments=[{filename:'Quote-'+(q.num||'')+'.pdf',content:pdf}];
   renderComposer();
@@ -4142,7 +4185,7 @@ window.openQuoteSms=function(num){
   var link='https://auraprint.com.au/myquote.html?t='+(q._token||'');
   var invLink='https://auraprint.com.au/invoice.html?t='+(q._invToken||'');
   var t=[];
-  t.push({label:'Quote ready',kind:'quote',body:'Hi '+first+', your quote '+q.num+' from Aura Print is ready - '+money(qTotal(q))+' inc GST. View and accept here: '+link+' Any questions just reply. Murray, Aura Print'});
+  t.push({label:'Quote ready',kind:'quote',body:'Hi '+first+', your quote '+q.num+' from Aura Print is ready - '+qAmountText(q)+'. View and accept here: '+link+' Any questions just reply. Murray, Aura Print'});
   t.push({label:'Follow up',kind:'quote_followup',body:'Hi '+first+', just following up on quote '+q.num+' from Aura Print. Happy to adjust the quantity or stock if that helps. '+link+' Murray'});
   t.push({label:'Quick check-in',kind:'quote_followup',body:'Hi '+first+', Murray from Aura Print. Did quote '+q.num+' come through OK? Happy to talk it over if easier. '+link});
   if(q.invNum) t.push({label:'Invoice',kind:'invoice',body:'Hi '+first+', invoice '+q.invNum+' for order '+(q.orderNum||'')+' is ready - '+money(qTotal(q))+' inc GST. View or pay here: '+invLink+' Murray, Aura Print'});

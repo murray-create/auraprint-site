@@ -49,6 +49,7 @@
   .decide input,.decide textarea{width:100%;max-width:420px;padding:11px;border:2px solid var(--line);border-radius:9px;font-size:14.5px;font-family:inherit}
   .decide textarea{max-width:560px;min-height:70px}
   .btnrow{display:flex;gap:12px;flex-wrap:wrap;margin-top:14px}
+  .optrow{cursor:pointer}.optrow.on{background:#fdf2f8;outline:2px solid #e11d8a;outline-offset:-2px}.optrow input{width:18px;height:18px;accent-color:#e11d8a;vertical-align:middle;margin-right:8px}.optlbl{font-weight:900;color:#c9107f;font-size:12px;letter-spacing:.04em;text-transform:uppercase;display:block;margin-bottom:3px}.optnote{background:#fff7fb;border:1px solid #f5c6e0;border-radius:8px;padding:12px 14px;margin:0 0 16px;font-size:14px}
   .acceptbtn{background:var(--go);color:#fff;font-weight:800;font-size:15px;padding:13px 28px;border-radius:8px;border:none;cursor:pointer}
   .declinebtn{background:#efe9e1;color:#6b6560;font-weight:700;font-size:14px;padding:13px 22px;border-radius:8px;border:none;cursor:pointer}
   .msg{margin-top:12px;font-size:14px}
@@ -120,16 +121,25 @@
   }
 
   function render(q){
+    var canDecide = q.status==='sent' && !q.is_expired;
+    /* Options quote: the lines are alternatives and the customer picks ONE.
+       Nothing is added together; the total shown is the chosen option's. */
+    var isOpts = q.pricing_mode==='options';
+    var chosen = q.chosen_item_no || null;
     var itemsHtml = (q.items||[]).map(function(i){
       var unitEx = i.qty ? i.price_ex_cents / i.qty : i.price_ex_cents;
-      return '<tr><td>'+descCell(i.description)+'</td>'+
+      var lbl='';
+      if (isOpts){
+        lbl = canDecide
+          ? '<label class="optlbl"><input type="radio" name="opt" value="'+i.item_no+'"'+(chosen===i.item_no?' checked':'')+'>Option '+i.item_no+'</label>'
+          : '<span class="optlbl">Option '+i.item_no+(chosen===i.item_no?' — chosen':'')+'</span>';
+      }
+      return '<tr'+(isOpts?' class="optrow'+(chosen===i.item_no?' on':'')+'" data-opt="'+i.item_no+'"':'')+'><td>'+lbl+descCell(i.description)+'</td>'+
         '<td>'+i.qty+'</td>'+
         '<td>'+money(unitEx)+'</td>'+
         '<td>10.00%</td>'+
         '<td>'+money(i.price_ex_cents)+'</td></tr>';
     }).join('');
-
-    var canDecide = q.status==='sent' && !q.is_expired;
 
     var h = '<div class="page">'+
       '<div class="topbar"><h1>Quote</h1>'+
@@ -154,14 +164,15 @@
         (q.company?esc(q.contact_name)+'<br>':'')+
         esc(q.contact_email)+
         ((q.street||q.suburb||q.postcode)?'<br>'+esc([q.street,[q.suburb,q.state,q.postcode].filter(Boolean).join(' ')].filter(Boolean).join(', ')):'')+'</div>'+
-      '<div class="col"><div class="lbl">Total (inc GST)</div><div class="total">'+money(q.total_inc_cents)+'</div>'+statusFlag(q)+'</div>'+
+      '<div class="col"><div class="lbl">'+(isOpts?(chosen?'Chosen option (inc GST)':'Your price (inc GST)'):'Total (inc GST)')+'</div><div class="total" id="totInc">'+(isOpts&&!chosen?'<span style="font-size:18px;color:#6b6880">Choose an option below</span>':money(q.total_inc_cents))+'</div>'+statusFlag(q)+'</div>'+
       '</div>'+
+      (isOpts?'<div class="optnote"><b>This quote gives you options.</b> The lines below are alternatives, not a list — '+(canDecide?'tick the one you\'d like and the price updates. Only that option becomes your order.':'the option marked chosen is the one we\'ll produce.')+' Each price includes GST.</div>':'')+
 
       '<table><thead><tr><th>Description</th><th>Quantity</th><th>Unit price (ex)</th><th>GST</th><th>Amount (ex)</th></tr></thead>'+
       '<tbody>'+itemsHtml+'</tbody></table>'+
-      '<table class="totals"><tr><td style="width:70%"></td><td><b>Subtotal</b></td><td style="text-align:right">'+money(q.subtotal_ex_cents)+'</td></tr>'+
-      '<tr><td></td><td><b>Total GST</b></td><td style="text-align:right">'+money(q.gst_cents)+'</td></tr>'+
-      '<tr><td></td><td>Total</td><td style="text-align:right">'+money(q.total_inc_cents)+'</td></tr></table>'+
+      '<table class="totals" id="totals"'+(isOpts&&!chosen?' style="display:none"':'')+'><tr><td style="width:70%"></td><td><b>Subtotal</b></td><td style="text-align:right" id="totEx">'+money(q.subtotal_ex_cents)+'</td></tr>'+
+      '<tr><td></td><td><b>Total GST</b></td><td style="text-align:right" id="totGst">'+money(q.gst_cents)+'</td></tr>'+
+      '<tr><td></td><td>'+(isOpts?'Chosen option':'Total')+'</td><td style="text-align:right" id="totAll">'+money(q.total_inc_cents)+'</td></tr></table>'+
 
       (q.customer_notes?'<div class="notes"><div class="lbl" style="margin-bottom:6px">Notes</div>'+esc(q.customer_notes)+'</div>':'');
 
@@ -194,6 +205,32 @@
       document.getElementById('dAccept').addEventListener('click', function(){ decide('accepted', this); });
       document.getElementById('dDecline').addEventListener('click', function(){ decide('declined', this); });
     }
+    if (isOpts && canDecide){
+      window._opts = q.items||[];
+      window._chosenOpt = chosen;
+      var rows = document.querySelectorAll('tr.optrow');
+      Array.prototype.forEach.call(rows, function(tr){
+        tr.addEventListener('click', function(){ pickOption(parseInt(tr.getAttribute('data-opt'),10)); });
+      });
+      if (chosen) pickOption(chosen);
+    }
+  }
+
+  function pickOption(no){
+    var it = (window._opts||[]).filter(function(i){ return i.item_no===no; })[0];
+    if (!it) return;
+    window._chosenOpt = no;
+    Array.prototype.forEach.call(document.querySelectorAll('tr.optrow'), function(tr){
+      var on = parseInt(tr.getAttribute('data-opt'),10)===no;
+      tr.classList.toggle('on', on);
+      var r = tr.querySelector('input[type=radio]'); if (r) r.checked = on;
+    });
+    document.getElementById('totInc').textContent = money(it.price_inc_cents);
+    document.getElementById('totEx').textContent = money(it.price_ex_cents);
+    document.getElementById('totGst').textContent = money(it.gst_cents);
+    document.getElementById('totAll').textContent = money(it.price_inc_cents);
+    document.getElementById('totals').style.display = '';
+    var m = document.getElementById('dMsg'); if (m && m.className.indexOf('err')>-1){ m.className='msg'; m.textContent=''; }
   }
 
   function decide(decision, btn){
@@ -204,8 +241,13 @@
     if (!name){ msg.className = 'msg err'; msg.textContent = 'Please enter your name first.'; return; }
     if (decision==='declined' && !comments){ msg.className = 'msg err'; msg.textContent = 'Please tell us why you\'re declining so we can help.'; return; }
     if (decision==='declined' && !confirm('Decline this quote?')) return;
+    var chosenOpt = null;
+    if (window._opts && window._opts.length){
+      chosenOpt = window._chosenOpt || null;
+      if (decision==='accepted' && !chosenOpt){ msg.className = 'msg err'; msg.textContent = 'Please tick the option you\'d like first.'; return; }
+    }
     btn.disabled = true; msg.textContent = 'Sending…';
-    sb.rpc('decide_quote', { p_token: t, p_decision: decision, p_name: name, p_comments: comments||null })
+    sb.rpc('decide_quote', { p_token: t, p_decision: decision, p_name: name, p_comments: comments||null, p_chosen_item_no: chosenOpt })
       .then(function(res){
         if (res.error){ msg.className = 'msg err'; msg.textContent = res.error.message; btn.disabled = false; return; }
         /* let Aura staff know straight away (fire and forget) */
