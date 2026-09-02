@@ -2059,7 +2059,7 @@ async function openEditQuote(num){
 function renderNewQuote(preName,edit){
   const nq=window._nq;
   const pc=preName?contactByName(preName):null;
-  if(pc){nq.name=pc.name;nq.email=pc.email||'';nq.phone=pc.phone||'';nq.orgId=pc.orgId||nq.orgId||'';nq.suburb=pc.suburb||'';}
+  if(pc){nq.name=pc.name;nq.email=pc.email||'';nq.phone=(pc.phone&&pc.phone!=='—')?pc.phone:'';nq.orgId=pc.orgId||nq.orgId||'';nq.suburb=pc.suburb||'';}
   const plus='<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M12 5v14M5 12h14"/></svg>';
   md.innerHTML=`<div class="mh"><h3>${edit?esc(window._nqTitle||('Edit quote '+(window._nqNum||''))):esc(window._nqTitle||'New Quote')}</h3><div class="x" onclick="closeModal()">✕</div></div>
     <div class="mb">
