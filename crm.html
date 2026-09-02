@@ -1303,8 +1303,11 @@ function openQuote(num){
     actions=`<button class="btn primary" onclick="reopenQuote('${q.num}')">Reopen quote</button>`
           +`<button class="btn" onclick="duplicateQuote('${q.num}')">Duplicate quote</button>`;
   } else if(q.stage==='quote'){
-    actions+=`<button class="btn primary" onclick="openQuoteEmail('${q.num}')" ${total===0?'disabled':''}>Send quote email</button>`;
-    actions+=`<button class="btn" onclick="convertToInvoice('${q.num}')" ${total===0?'disabled':''}>Convert to invoice ›</button>`;
+    // An options quote has no total until the customer chooses, but it can still be
+    // sent (that is how they choose). Convert stays off until a choice is recorded.
+    const noLines=!q.items.length||(!isOpts(q)&&total===0);
+    actions+=`<button class="btn primary" onclick="openQuoteEmail('${q.num}')" ${noLines?'disabled':''}>Send quote email</button>`;
+    actions+=`<button class="btn" onclick="convertToInvoice('${q.num}')" ${(noLines||(isOpts(q)&&!chosenItem(q)))?'disabled':''} ${isOpts(q)&&!chosenItem(q)?'title="Record which option the customer chose first"':''}>Convert to invoice ›</button>`;
     if(q.status==='sent') banner=`<div class="banner info">Sent to ${esc(q.contact)} — awaiting their approval.</div>`;
   } else if(q.stage==='order'){
     banner=`<div class="banner good">Converted to order <b>${q.orderNum}</b>. Ready to invoice.</div>`;
