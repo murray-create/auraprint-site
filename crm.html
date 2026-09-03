@@ -3085,7 +3085,7 @@ window.umSave=async function(thenQuote){
   const row=umCampaignRow();
   try{
     const ins=await sb.from('um_campaigns').insert(row).select('*').single(); if(ins.error)throw ins.error;
-    window._um.camps.unshift(ins.data); umRenderCamps();
+    window._um.camps.unshift(ins.data); umRender();
     if(thenQuote){ umQuoteFrom(ins.data); }
   }catch(e){ alert('Could not save the campaign: '+(e.message||e)); }
 };
