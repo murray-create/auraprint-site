@@ -51,6 +51,23 @@ input[type=range]{accent-color:var(--magenta);height:34px}
 .step h3{font-size:19px;margin:12px 0 8px}
 .step p{font-size:14.5px;color:#6b6560}
 @media(max-width:900px){.hero .wrap,.band .wrap{grid-template-columns:1fr}.steps .grid3{grid-template-columns:1fr}}
+.feat{background:#faf8f5}
+.feat-grid{display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:22px}
+.feat-card{display:flex;flex-direction:column;gap:12px;background:#fff;border:1px solid #ece6de;border-radius:var(--radius);padding:26px;color:inherit;text-decoration:none;transition:.25s;position:relative}
+.feat-card:hover{transform:translateY(-3px);box-shadow:0 14px 34px rgba(0,0,0,.08)}
+.feat-card h3{font-size:22px;line-height:1.2;margin:0}
+.feat-card p{color:#6b6560;font-size:14.5px;margin:0}
+.feat-main{background:var(--ink);color:#fff;border:none}
+.feat-main h3{font-size:clamp(24px,2.6vw,32px)}
+.feat-badge{display:inline-block;align-self:flex-start;background:#dc1928;color:#fff;font-weight:800;font-size:11.5px;letter-spacing:.06em;text-transform:uppercase;padding:6px 11px;border-radius:999px}
+.feat-badge.alt{background:var(--aura)}
+.feat-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:6px}
+.feat-stats b{display:block;font-size:22px;background:var(--aura);-webkit-background-clip:text;background-clip:text;color:transparent}
+.feat-stats span{font-size:12.5px;color:#b8b2ab}
+.feat-link{margin-top:auto;font-weight:700;font-size:14px}
+.feat-main .feat-link{color:#fff}
+@media(max-width:900px){.feat-grid{grid-template-columns:1fr}.feat-stats{grid-template-columns:1fr 1fr 1fr}}
+@media(max-width:520px){.feat-stats{grid-template-columns:1fr}}
 </style>
 <link rel="canonical" href="https://auraprint.com.au/">
 <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
@@ -131,6 +148,7 @@ input[type=range]{accent-color:var(--magenta);height:34px}
     <button class="drawer-close" id="drawerClose" aria-label="Close menu">✕</button>
   </div>
   <nav class="drawer-nav">
+    <a class="drawer-feature" href="letterbox-distribution.html" style="display:flex;justify-content:space-between;align-items:center;gap:10px;margin:0 0 10px;padding:13px 14px;border-radius:12px;background:#dc1928;color:#fff;font-weight:800;text-decoration:none"><span>Letterbox Drops<br><small style="font-weight:600;opacity:.9">Delivered by Australia Post</small></span><span aria-hidden="true">→</span></a>
     <div class="drawer-group">
       <button class="drawer-toggle" aria-expanded="false">Print <span>▾</span></button>
       <ul class="drawer-sub" hidden>
@@ -238,8 +256,41 @@ input[type=range]{accent-color:var(--magenta);height:34px}
 </header>
 
 <div class="marquee"><div class="track" id="marq">
-  <span>Business Cards</span><span>✺</span><span>Pull Up Banners</span><span>✺</span><span>Corflute Signs</span><span>✺</span><span>Flyers</span><span>✺</span><span>Stickers</span><span>✺</span><span>Teardrop Flags</span><span>✺</span><span>Booklets</span><span>✺</span><span>Mugs & Merch</span><span>✺</span><span>Workwear</span><span>✺</span>
+  <span>Business Cards</span><span>✺</span><span>Letterbox Drops</span><span>✺</span><span>Pull Up Banners</span><span>✺</span><span>Corflute Signs</span><span>✺</span><span>Flyers</span><span>✺</span><span>Stickers</span><span>✺</span><span>Teardrop Flags</span><span>✺</span><span>Booklets</span><span>✺</span><span>Mugs & Merch</span><span>✺</span><span>Workwear</span><span>✺</span>
 </div></div>
+
+<!-- FEATURED SERVICES: fixed slots, letterbox first. Swap a card here when the focus changes; keep three. -->
+<section class="pad feat" id="featured">
+  <div class="wrap">
+    <div class="sec-head">
+      <div>
+        <h2>New: letterbox drops, <span class="grad-text">delivered by Australia Post.</span></h2>
+        <p style="color:#6b6560;margin-top:10px">Pick your suburbs, see the official letterbox count and a postage estimate on the spot. We print, bundle and lodge. Posties deliver it with the mail in a fixed week.</p>
+      </div>
+      <a class="btn btn-aura" href="letterbox-distribution.html">Plan a letterbox drop →</a>
+    </div>
+    <div class="feat-grid">
+      <a class="feat-card feat-main" href="letterbox-distribution.html">
+        <span class="feat-badge">Australia Post Unaddressed Mail · our preferred method</span>
+        <h3>Every letterbox. Every street. A week you can plan around.</h3>
+        <div class="feat-stats"><div><b>146,000+</b><span>Sunshine Coast letterboxes</span></div><div><b>40.5c</b><span>postage per DL or A5 flyer</span></div><div><b>1 quote</b><span>print + postage together</span></div></div>
+        <span class="feat-link">Choose suburbs and price it →</span>
+      </a>
+      <a class="feat-card" href="same-day-printing.html">
+        <span class="feat-badge alt">Fast turnaround</span>
+        <h3>Same day and next day printing</h3>
+        <p>Business cards, flyers and stationery. Order by 8am for same day on selected products.</p>
+        <span class="feat-link">See what qualifies →</span>
+      </a>
+      <a class="feat-card" href="real-estate-print-signage.html">
+        <span class="feat-badge alt">Industry</span>
+        <h3>Real estate print and signage</h3>
+        <p>Listing flyers, corflute signs, DL drops and open home kits, priced online.</p>
+        <span class="feat-link">Real estate range →</span>
+      </a>
+    </div>
+  </div>
+</section>
 
 <section class="pad" id="products">
   <div class="wrap">
@@ -260,7 +311,7 @@ input[type=range]{accent-color:var(--magenta);height:34px}
     <div class="cat-panel active" id="panel-print">
       <p class="cat-desc">Small format print, fulfilled through Australia's biggest trade networks. Cards, marketing material and bound books with instant online pricing.</p>
       <div class="chips">
-        <a href="business-cards.html">Business Cards</a><a href="nv-velvet-business-cards.html">NV Velvet Cards</a><a href="flyers.html">Flyers</a><a href="brochures.html">Brochures</a><a href="postcards.html">Postcards</a><a href="letterheads.html">Letterheads</a><a href="envelopes.html">Envelopes</a><a href="presentation-folders.html">Presentation Folders</a><a href="menus.html">Menus</a><a href="greeting-cards.html">Greeting Cards</a><a href="booklets.html">Booklets</a><a href="perfect-bound-books.html">Perfect Bound Books</a><a href="invoice-books.html">Invoice Books (NCR)</a><a href="notepads.html">Notepads</a><a href="calendars.html">Calendars</a><a href="loyalty-cards.html">Loyalty Cards</a>
+        <a href="business-cards.html">Business Cards</a><a href="nv-velvet-business-cards.html">NV Velvet Cards</a><a href="flyers.html">Flyers</a><a href="letterbox-distribution.html">Letterbox Drops</a><a href="brochures.html">Brochures</a><a href="postcards.html">Postcards</a><a href="letterheads.html">Letterheads</a><a href="envelopes.html">Envelopes</a><a href="presentation-folders.html">Presentation Folders</a><a href="menus.html">Menus</a><a href="greeting-cards.html">Greeting Cards</a><a href="booklets.html">Booklets</a><a href="perfect-bound-books.html">Perfect Bound Books</a><a href="invoice-books.html">Invoice Books (NCR)</a><a href="notepads.html">Notepads</a><a href="calendars.html">Calendars</a><a href="loyalty-cards.html">Loyalty Cards</a>
       </div>
       <!--GEN:print-->
       <div class="grid">
