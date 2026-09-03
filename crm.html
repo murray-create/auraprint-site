@@ -2903,12 +2903,57 @@ function openLead(id){
      <div class="field"><label>Source page</label><div class="mini">${pageLink}</div></div>
      <div class="field"><label>Status</label><div style="display:flex;gap:6px;flex-wrap:wrap">${stbtns}</div></div>
    </div>
-   <div class="mf"><button class="btn" onclick="closeModal()">Close</button>${l.email?`<button class="btn" onclick="openLeadReply('${esc(l._id)}')"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 5h18v14H3z"/><path d="M3 7l9 6 9-6"/></svg>Reply by email</button>`:''}${l.phone&&smsMobile(l.phone)?`<button class="btn" onclick="openLeadSms('${esc(l._id)}')"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>Send SMS</button>`:''}<button class="btn primary" onclick="leadToQuote('${esc(l._id)}')"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 5v14M5 12h14"/></svg>Convert to quote</button></div>`;
+   <div class="mf"><button class="btn" onclick="closeModal()">Close</button>${l.email?`<button class="btn" onclick="openLeadReply('${esc(l._id)}')"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 5h18v14H3z"/><path d="M3 7l9 6 9-6"/></svg>Reply by email</button>`:''}${l.phone&&smsMobile(l.phone)?`<button class="btn" onclick="openLeadSms('${esc(l._id)}')"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>Send SMS</button>`:''}${isLetterboxLead(l)?`<button class="btn" onclick="openLetterboxRfq('${esc(l._id)}')" title="Email every distributor the drop spec, one email each, customer details withheld"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7l9 6 9-6"/><path d="M3 5h18v14H3z"/><path d="M12 13v8"/></svg>Request supplier quotes</button>`:''}<button class="btn primary" onclick="leadToQuote('${esc(l._id)}')"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 5v14M5 12h14"/></svg>Convert to quote</button></div>`;
   mb.classList.add('show');
 }
 /* Reply to a website enquiry from inside the CRM — uses the same composer +
    send-email function as quotes/invoices. The customer's reply comes back to
    admin@auraprint.com.au as normal email. */
+/* ---------- Letterbox distribution: supplier RFQ ----------
+   A booking from letterbox-distribution.html lands as a normal lead with
+   source_product_code 'letterbox-distribution' and the whole spec in
+   job_details. "Request supplier quotes" opens the composer addressed to every
+   distributor below, one personalised email each (the send loop already does
+   that), Cc admin@ so the replies thread back here. The customer's name, email,
+   phone and business are deliberately NOT in the email: suppliers get the
+   drop spec only. Edit emails here as you confirm them with each company. */
+const LETTERBOX_SUPPLIERS=[
+  {name:'Ignition Print',                 email:'sales@ignitionprint.com.au',            note:'GPS-tracked walkers, field audits. 1800 870 535'},
+  {name:'Letterbox Distribution Services',email:'info@letterboxdistributionservices.com',note:'Shared from $109/1,000, solo from $189/1,000. 1300 110 450'},
+  {name:'Letterbox Distributors',         email:'',                                      note:'Largest SC footprint (~89,900 homes). No email on site: 1800 538 837, ask for a quotes address'},
+  {name:'Not Junk Mail',                  email:'info@notjunkmail.com.au',               note:'Local, Peregian Springs / Breeze only. Category exclusive rates'},
+  {name:'LetterboxPush',                  email:'',                                      note:'Australia Post Unaddressed Mail reseller (~18c/item + GST). Craig 0418 812 565, email withheld on site'},
+  {name:'Print Ezy',                      email:'info@printezy.com.au',                  note:'Maroochydore. Aus Post unaddressed lodgement. NOTE: also a printer, competitor; send drop spec only'}
+];
+function isLetterboxLead(l){ return /letterbox/i.test((l&&(l.product||''))+' '+(l&&(l.category||''))); }
+window.openLetterboxRfq=function(id){
+  const l=leadById(id); if(!l)return;
+  const recips=LETTERBOX_SUPPLIERS.filter(s=>s.email).map(s=>({name:s.name,email:s.email,consent:true}));
+  const missing=LETTERBOX_SUPPLIERS.filter(s=>!s.email).map(s=>s.name+' ('+s.note+')');
+  if(!recips.length){ alert('No supplier emails are set yet. Add them to LETTERBOX_SUPPLIERS in crm.html.'); return; }
+  const ref='LB-'+String(l._id||'').slice(0,6).toUpperCase();
+  const spec=(l.details||'').replace(/^LETTERBOX DISTRIBUTION BOOKING\s*/i,'').trim();
+  const reply=new Date(Date.now()+2*864e5).toLocaleDateString('en-AU',{weekday:'long',day:'numeric',month:'long'});
+  const subject='Quote request '+ref+': Sunshine Coast letterbox drop'+(l.qty?(', '+l.qty+' homes'):'');
+  const body='Hi {first},\n\n'+
+    'Aura Print & Promo is booking a letterbox drop for a Sunshine Coast client and would like your price and availability. Job reference '+ref+'.\n\n'+
+    'JOB SPEC\n'+spec+'\n\n'+
+    'PLEASE CONFIRM\n'+
+    '1. Price per 1,000 for a shared run and for a solo run (ex GST), and any minimums.\n'+
+    '2. Which of the listed suburbs you cover with your own walkers, and your letterbox count for each.\n'+
+    '3. Any suburbs or estates you cannot cover, so we can lodge the balance as Australia Post Unaddressed Mail.\n'+
+    '4. Next available run dates and how long the run takes once stock arrives.\n'+
+    '5. Proof of delivery you supply: GPS route logs, audit rate, completion report.\n'+
+    '6. Where and how the printed stock should be delivered (address, bundling, box labelling, cut-off day).\n'+
+    '7. Your re-delivery or credit policy if a section is proven missed.\n\n'+
+    'We print the item ourselves, so please quote distribution only. A reply by '+reply+' lets us confirm the booking with the client.\n\n'+
+    'Kind regards,\nMurray Boyton\nAura Print & Promo\np: 1300 291 277\ne: admin@auraprint.com.au\nw: auraprint.com.au';
+  closeModal();
+  openEmailComposer(recips,'Supplier quotes: letterbox drop '+ref,false);
+  window._email.subject=subject; window._email.body=body; window._email._letterboxLead=id;
+  renderComposer();
+  if(missing.length) setTimeout(function(){ alert('Not emailed (no address on file yet):\n\n'+missing.join('\n')+'\n\nPhone them or add their email to LETTERBOX_SUPPLIERS.'); },300);
+};
 window.openLeadReply=function(id){
   const l=leadById(id); if(!l||!l.email)return;
   const first=(String(l.name||'').trim().split(' ')[0])||'there';
