@@ -435,6 +435,12 @@ input.nqqty{width:74px;text-align:right;border:1px solid var(--line);border-radi
 .pfrow a{color:var(--pink);cursor:pointer;font-weight:600}
 .pfrow input[type=file]{font-size:12.5px;max-width:210px}
 .pfbadge{display:inline-block;padding:2px 9px;border-radius:999px;font-size:11.5px;font-weight:700;letter-spacing:.02em}
+.umsplit{display:grid;grid-template-columns:300px 1fr;gap:18px;margin-top:12px}@media(max-width:900px){.umsplit{grid-template-columns:1fr}}
+.umfound{max-height:420px;overflow:auto;border:1px solid var(--line);border-radius:11px;padding:6px;background:#fff}
+.umloc{display:flex;align-items:center;gap:8px;padding:7px 9px;border-radius:8px;font-size:13px;cursor:pointer}.umloc:hover{background:var(--soft)}.umloc.on{background:#fde8ea}.umloc input{margin:0}.umloc span{flex:1}.umloc small{color:var(--muted)}.umloc b{font-size:12px}
+.umgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:0 14px;margin-top:6px}.umgrid .field{margin-bottom:6px}.umgrid input,.umgrid select{width:100%;box-sizing:border-box}
+.umsum{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px;margin-top:12px}.umsum>div{background:var(--soft);border-radius:11px;padding:10px 12px}.umsum span{display:block;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}.umsum b{display:block;font-size:19px;margin:2px 0}.umsum small{color:var(--muted);font-size:11.5px}
+#umFilter .chip{cursor:pointer;border:1px solid var(--line);background:#fff;color:var(--muted);margin-top:0;font-size:11px;padding:5px 11px}#umFilter .chip.on{background:#fde8ea;color:#b3121f;border-color:transparent}
 </style>
 <script src="assets/config.js?v=20260831d"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -526,6 +532,7 @@ input.nqqty{width:74px;text-align:right;border:1px solid var(--line);border-radi
     <div class="nav" data-v="orgs"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 21h18"/><path d="M5 21V7l7-4 7 4v14"/><path d="M9 9h.01M15 9h.01M9 13h.01M15 13h.01M9 17h.01M15 17h.01"/></svg>Organisations<span class="pill" id="navOrgs">3</span></div>
     <div class="nav" data-v="contacts"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 4-6 8-6s8 2 8 6"/></svg>Contacts<span class="pill" id="navContacts">7</span></div>
     <div class="nav" data-v="leads"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 5h18v14H3z"/><path d="M3 7l9 6 9-6"/></svg>Leads<span class="pill" id="navLeads">0</span></div>
+    <div class="nav" data-v="letterbox"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="6" width="18" height="13" rx="2"/><path d="M3 10h18"/><path d="M8 6V4h8v2"/></svg>Letterbox</div>
     <div class="nav" data-v="search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4"/></svg>Search</div>
     <div class="nav open" data-g="sales" data-v="sales"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19V5M4 19h16M8 15l3-4 3 2 4-6"/></svg>Quotes &amp; Orders<svg class="caret" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg></div>
     <div class="subnav show" data-sub="sales"><div class="sub active" data-v="sales" data-sf="quotes">Quotes</div><div class="sub" data-v="sales" data-sf="orders">Orders</div><div class="sub" data-v="sales" data-sf="invoices">Invoices</div></div>
@@ -613,6 +620,42 @@ input.nqqty{width:74px;text-align:right;border:1px solid var(--line);border-radi
       </section>
 
       <!-- SEARCH (Google Search Console) -->
+      <!-- LETTERBOX / AUSTRALIA POST UNADDRESSED MAIL -->
+      <section class="view" id="v-letterbox">
+        <div class="tiles" id="umTiles"></div>
+        <div class="card">
+          <h3>Plan a campaign</h3>
+          <div class="sub">Australia Post Unaddressed Mail. Pick localities, set the article and week, and the postage, sell price and lodgement date work themselves out.</div>
+          <div class="umsplit">
+            <div>
+              <input id="umQ" placeholder="Find a suburb or postcode (any of Queensland)…" oninput="umSearch(this.value)" style="width:100%;border:1px solid var(--line);border-radius:11px;padding:10px 13px;font-size:13.5px;font-family:inherit;background:var(--soft);outline:none;margin-bottom:8px">
+              <div id="umFound" class="umfound"></div>
+            </div>
+            <div id="umPlan"></div>
+          </div>
+        </div>
+        <div class="card">
+          <h3>Campaigns</h3>
+          <div class="sub">Every letterbox job, from planned to delivered, with its quote.</div>
+          <div class="filterbar" id="umFilter" style="margin:10px 0 4px"></div>
+          <div style="overflow-x:auto"><table>
+            <thead><tr><th>Campaign</th><th>Status</th><th class="num">Postage</th><th class="num">Sell</th><th>Delivery week</th><th>Quote</th><th></th></tr></thead>
+            <tbody id="umCamps"></tbody>
+          </table></div>
+        </div>
+        <div class="card">
+          <h3>Rate card and data</h3>
+          <div class="sub" id="umDpStatus">Loading…</div>
+          <div style="overflow-x:auto"><table>
+            <thead><tr><th>Service</th><th>Article</th><th>Scope</th><th class="num">$ each</th><th>GST</th><th>Effective</th></tr></thead>
+            <tbody id="umRates"></tbody>
+          </table></div>
+          <div class="note">Rates are typed in from the Post Charges guide (auspost.com.au, "Post charges" PDF). Check them each 1 September and whenever Australia Post announces a change. Until the GST column says "inc GST", the planner treats a rate as ex GST and adds 10%, which is the safe way to be wrong. Delivery point counts come from Australia Post's published CSV.</div>
+          <div style="margin-top:10px"><button class="btn" onclick="umRefresh(this)">Refresh delivery points</button></div>
+        </div>
+      </section>
+
+      <!-- SEARCH -->
       <section class="view" id="v-search">
         <div class="tiles" id="seoTiles"></div>
         <div class="card">
@@ -984,7 +1027,7 @@ function spendPanel(kind,id,who){
   <div class="note">Financial years run 1 July to 30 June. These figures count money received, not invoices raised.</div>`;
 }
 const STAGES=['quote','order','invoice','paid'];
-const titles={dash:['Dashboard',"Here's how the business is tracking today."],contacts:['Contacts','Everything about a customer in one place.'],leads:['Leads','Website enquiries from your product pages.'],search:['Search','What people type into Google to find you.'],orgs:['Organisations','Companies you sell to, and the people at each.'],sales:['Quotes & Orders','Your pipeline from request to fulfilment.'],quote:['Quote','Line items, status and the convert flow.'],products:['Products','Every product you sell, priced live.'],suppliers:['Suppliers','Your supply, and how each feeds in.'],supplier:['Supplier','Trade access, pricing and how it feeds in.'],templates:['Templates','Reusable artwork and document templates.']};
+const titles={dash:['Dashboard',"Here's how the business is tracking today."],contacts:['Contacts','Everything about a customer in one place.'],leads:['Leads','Website enquiries from your product pages.'],search:['Search','What people type into Google to find you.'],letterbox:['Letterbox','Australia Post Unaddressed Mail campaigns, planned to delivered.'],orgs:['Organisations','Companies you sell to, and the people at each.'],sales:['Quotes & Orders','Your pipeline from request to fulfilment.'],quote:['Quote','Line items, status and the convert flow.'],products:['Products','Every product you sell, priced live.'],suppliers:['Suppliers','Your supply, and how each feeds in.'],supplier:['Supplier','Trade access, pricing and how it feeds in.'],templates:['Templates','Reusable artwork and document templates.']};
 
 /* ---------- Navigation ---------- */
 function go(v){
@@ -997,6 +1040,7 @@ function go(v){
   document.getElementById('pheadBtn').style.display = (v==='quote'||v==='supplier') ? 'none' : '';
   if(v==='products')loadProducts();
   if(v==='search')loadSearch();
+  if(v==='letterbox')umLoad();
   closeNav();
   window.scrollTo(0,0);
 }
@@ -2625,6 +2669,8 @@ async function nqSave(send){
     const ii=await sb.from('quote_items').insert(mkItems(ins.data.id));
     if(ii.error)throw ii.error;
     await persistAddrs(sb,ins.data.id);
+    /* Letterbox tab: tie the campaign record to the quote it just produced. */
+    if(window._nq&&window._nq.umCampaignId){ try{ await sb.from('um_campaigns').update({quote_id:ins.data.id,status:'quoted'}).eq('id',window._nq.umCampaignId); const _c=(window._um&&window._um.camps||[]).find(x=>x.id===window._nq.umCampaignId); if(_c){_c.quote_id=ins.data.id;_c.status='quoted';} }catch(_e){} }
     const num=ins.data.quote_number;
     /* The lead has now been quoted, so move it on. Best effort: a failure here
        must never lose the quote that was just saved. Won/lost are final, so
@@ -2903,12 +2949,269 @@ function openLead(id){
      <div class="field"><label>Source page</label><div class="mini">${pageLink}</div></div>
      <div class="field"><label>Status</label><div style="display:flex;gap:6px;flex-wrap:wrap">${stbtns}</div></div>
    </div>
-   <div class="mf"><button class="btn" onclick="closeModal()">Close</button>${l.email?`<button class="btn" onclick="openLeadReply('${esc(l._id)}')"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 5h18v14H3z"/><path d="M3 7l9 6 9-6"/></svg>Reply by email</button>`:''}${l.phone&&smsMobile(l.phone)?`<button class="btn" onclick="openLeadSms('${esc(l._id)}')"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>Send SMS</button>`:''}${isLetterboxLead(l)?`<button class="btn" onclick="openLetterboxRfq('${esc(l._id)}')" title="Email every distributor the drop spec, one email each, customer details withheld"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7l9 6 9-6"/><path d="M3 5h18v14H3z"/><path d="M12 13v8"/></svg>Request supplier quotes</button>`:''}<button class="btn primary" onclick="leadToQuote('${esc(l._id)}')"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 5v14M5 12h14"/></svg>Convert to quote</button></div>`;
+   <div class="mf"><button class="btn" onclick="closeModal()">Close</button>${l.email?`<button class="btn" onclick="openLeadReply('${esc(l._id)}')"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 5h18v14H3z"/><path d="M3 7l9 6 9-6"/></svg>Reply by email</button>`:''}${l.phone&&smsMobile(l.phone)?`<button class="btn" onclick="openLeadSms('${esc(l._id)}')"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>Send SMS</button>`:''}${isLetterboxLead(l)?`<button class="btn" onclick="umFromLead('${esc(l._id)}')" title="Open the Letterbox planner with this enquiry's suburbs ticked">Plan Australia Post run</button><button class="btn" onclick="openLetterboxRfq('${esc(l._id)}')" title="Email every distributor the drop spec, one email each, customer details withheld"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7l9 6 9-6"/><path d="M3 5h18v14H3z"/><path d="M12 13v8"/></svg>Request supplier quotes</button>`:''}<button class="btn primary" onclick="leadToQuote('${esc(l._id)}')"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 5v14M5 12h14"/></svg>Convert to quote</button></div>`;
   mb.classList.add('show');
 }
 /* Reply to a website enquiry from inside the CRM — uses the same composer +
    send-email function as quotes/invoices. The customer's reply comes back to
    admin@auraprint.com.au as normal email. */
+/* ---------- Letterbox / Australia Post Unaddressed Mail ----------
+   Australia Post has no API for Unaddressed Mail. What it publishes is the
+   delivery point CSV (mirrored into public.um_delivery_points by the
+   um-refresh function, monthly cron) and the rate card (public.um_rates,
+   hand-kept from the Post Charges guide). This tab turns those into a
+   campaign planner, a booking pack to paste into Campaign Targeter or UM
+   Online, and a record per campaign (public.um_campaigns) that hangs off the
+   quote/order like everything else. */
+window._um={dp:[],found:[],rates:[],camps:[],sel:{},q:'',size:'small',band:'to50',service:'standard',bus:false,buffer:1.5,margin:35,name:'',article:'DL flyer, 150gsm, double sided',printDesc:'',printDollars:0,week:'',w100:'',t100:'',filter:'all',loaded:false,extract:''};
+const UM_SC_FILTER='state=eq.QLD&or=(and(postcode.gte.4550,postcode.lte.4575),postcode.in.(4518,4519))';
+const umTitle=s=>String(s||'').toLowerCase().replace(/\b[a-z]/g,c=>c.toUpperCase());
+const umKey=r=>r.postcode+'|'+r.locality;
+function umMonday(d){ const x=new Date(d); const day=(x.getDay()+6)%7; x.setDate(x.getDate()-day); return x; }
+function umAddBiz(d,n){ const x=new Date(d); let left=Math.abs(n); const step=n<0?-1:1; while(left>0){ x.setDate(x.getDate()+step); if(x.getDay()!==0&&x.getDay()!==6) left--; } return x; }
+const umIso=d=>d?new Date(d).toISOString().slice(0,10):'';
+const umAu=d=>d?new Date(d).toLocaleDateString('en-AU',{day:'numeric',month:'short',year:'numeric'}):'—';
+function umRate(){ const u=window._um; const r=u.rates.find(x=>x.service===u.service&&x.size===u.size&&x.weight_band===u.band&&x.scope==='same_state'); return r||null; }
+function umCounts(){ const u=window._um; let res=0,bus=0; Object.keys(u.sel).forEach(k=>{const r=u.sel[k]; res+=(r.priv_st|0)+(r.priv_rsd|0); bus+=(r.bus_st|0)+(r.bus_rsd|0);}); return {res,bus,total:res+(u.bus?bus:0)}; }
+function umCalc(){
+  const u=window._um, c=umCounts(), r=umRate();
+  const qty=Math.ceil(c.total*(1+(Number(u.buffer)||0)/100));
+  const rate=r?Number(r.price):0;
+  /* Rate card GST basis is a flag on um_rates. Until Murray confirms it with
+     Australia Post we treat the printed rate as EX GST (the safe way round). */
+  const inc=r&&r.gst_inclusive===true;
+  const postageInc=Math.round(qty*rate*(inc?1:1.1)*100);            // cents inc GST
+  const sellPost=Math.round(postageInc/(1-(Number(u.margin)||0)/100)); // margin on the sale
+  const printC=Math.round((Number(u.printDollars)||0)*100);
+  const week=u.week?umMonday(u.week):null;
+  const lodge=week?umAddBiz(week,u.service==='premium'?-1:-5):null;
+  const lock=lodge?new Date(lodge.getTime()-7*864e5):null;
+  return {c,qty,rate,inc,postageInc,sellPost,printC,total:sellPost+printC,week,lodge,lock,bundles:Math.ceil(qty/100)};
+}
+async function umLoad(force){
+  const u=window._um, sb=window.CRM_SB; if(!sb) return;
+  if(u.loaded&&!force){ umRender(); return; }
+  try{
+    const [dp,rt,cp]=await Promise.all([
+      sb.from('um_delivery_points').select('postcode,locality,priv_st,priv_rsd,bus_st,bus_rsd,extract_date').or('and(postcode.gte.4550,postcode.lte.4575),postcode.in.(4518,4519)').eq('state','QLD').order('locality').limit(1000),
+      sb.from('um_rates').select('*').order('effective_from',{ascending:false}),
+      sb.from('um_campaigns').select('*').order('created_at',{ascending:false}).limit(200)
+    ]);
+    u.dp=dp.data||[]; u.extract=(u.dp[0]&&u.dp[0].extract_date)||'';
+    /* newest effective date per (service,size,band,scope) wins */
+    const seen={}; u.rates=(rt.data||[]).filter(r=>{const k=r.service+r.size+r.weight_band+r.scope; if(seen[k])return false; seen[k]=1; return true;});
+    u.camps=cp.data||[]; u.loaded=true;
+  }catch(e){ alert('Could not load the letterbox data: '+(e.message||e)); }
+  umRender();
+}
+window.umSearch=async function(q){
+  const u=window._um; u.q=q||'';
+  const ql=u.q.trim().toLowerCase();
+  u.found=u.dp.filter(r=>!ql||r.locality.toLowerCase().indexOf(ql)>-1||String(r.postcode).indexOf(ql)===0).slice(0,60);
+  /* Anything outside the Sunshine Coast set: ask the database (all of QLD). */
+  if(ql.length>=3&&u.found.length<8){
+    try{ const r=await window.CRM_SB.from('um_delivery_points').select('postcode,locality,priv_st,priv_rsd,bus_st,bus_rsd,extract_date').eq('state','QLD').or('locality.ilike.%'+ql.replace(/[%,()]/g,'')+'%,postcode.eq.'+(parseInt(ql,10)||0)).limit(40);
+      (r.data||[]).forEach(x=>{ if(!u.found.some(f=>umKey(f)===umKey(x))) u.found.push(x); });
+    }catch(_e){}
+  }
+  umRenderFound();
+};
+window.umToggle=function(key){ const u=window._um; if(u.sel[key]) delete u.sel[key]; else { const r=u.found.find(x=>umKey(x)===key)||u.dp.find(x=>umKey(x)===key); if(r) u.sel[key]=r; } umRenderFound(); umRenderPlan(); };
+window.umSet=function(k,v){ window._um[k]=(k==='bus')?!!v:v; umRenderPlan(); };
+window.umClearSel=function(){ window._um.sel={}; umRenderFound(); umRenderPlan(); };
+function umRenderFound(){
+  const u=window._um, el=document.getElementById('umFound'); if(!el) return;
+  const list=u.found.length?u.found:u.dp.slice(0,60);
+  el.innerHTML=list.map(r=>{const k=umKey(r), on=!!u.sel[k]; return `<label class="umloc ${on?'on':''}"><input type="checkbox" ${on?'checked':''} onchange="umToggle('${esc(k)}')"><span>${esc(umTitle(r.locality))} <small>${r.postcode}</small></span><b>${((r.priv_st|0)+(r.priv_rsd|0)).toLocaleString()}</b></label>`;}).join('')||'<div class="mini">No match in Queensland.</div>';
+}
+function umRenderPlan(){
+  const u=window._um, el=document.getElementById('umPlan'); if(!el) return;
+  const x=umCalc(), r=umRate();
+  const selRows=Object.values(u.sel);
+  const chips=selRows.map(s=>`<span class="rchip">${esc(umTitle(s.locality))} ${s.postcode} · ${((s.priv_st|0)+(s.priv_rsd|0)).toLocaleString()}${u.bus?' + '+((s.bus_st|0)+(s.bus_rsd|0))+' bus':''}<span class="rx" onclick="umToggle('${esc(umKey(s))}')">✕</span></span>`).join('');
+  const opt=(name,val,list)=>`<select onchange="umSet('${name}',this.value)">${list.map(o=>`<option value="${o[0]}" ${u[name]===o[0]?'selected':''}>${o[1]}</option>`).join('')}</select>`;
+  el.innerHTML=`
+    <div class="recips" style="min-height:40px">${chips||'<span class="mini" style="align-self:center">Tick suburbs on the left. Counts are Australia Post residential street + roadside delivery points that accept advertising.</span>'}${selRows.length?`<button class="btn sm" onclick="umClearSel()">Clear</button>`:''}</div>
+    <div class="umgrid">
+      <div class="field"><label>Campaign name</label><input value="${esc(u.name)}" placeholder="e.g. Smith Plumbing spring offer" onchange="umSet('name',this.value)"></div>
+      <div class="field"><label>Article</label><input value="${esc(u.article)}" placeholder="DL flyer, 150gsm, 2 sided" onchange="umSet('article',this.value)"></div>
+      <div class="field"><label>Size</label>${opt('size',u.size,[['small','Small letter (DL, A5, A6, folded A4)'],['large','Large letter (A4 flat)']])}</div>
+      <div class="field"><label>Weight</label>${opt('band',u.band,[['to50','Up to 50g'],['to100','50 to 100g']])}</div>
+      <div class="field"><label>Service</label>${opt('service',u.service,[['standard','Standard (15 business days)'],['premium','Premium (7 business days)']])}</div>
+      <div class="field"><label>Business letterboxes</label><select onchange="umSet('bus',this.value==='1')"><option value="0" ${!u.bus?'selected':''}>Residential only</option><option value="1" ${u.bus?'selected':''}>Include business points</option></select></div>
+      <div class="field"><label>Print buffer %</label><input type="number" step="0.5" min="0" value="${u.buffer}" onchange="umSet('buffer',this.value)"></div>
+      <div class="field"><label>Margin on postage %</label><input type="number" step="1" min="0" max="80" value="${u.margin}" onchange="umSet('margin',this.value)"></div>
+      <div class="field"><label>Delivery week (any day, snaps to Monday)</label><input type="date" value="${esc(u.week)}" onchange="umSet('week',this.value)"></div>
+      <div class="field"><label>Weight of 100 (g) · thickness of 100 (mm)</label><div style="display:flex;gap:8px"><input placeholder="g" value="${esc(u.w100)}" onchange="umSet('w100',this.value)"><input placeholder="mm" value="${esc(u.t100)}" onchange="umSet('t100',this.value)"></div></div>
+      <div class="field"><label>Print line (optional)</label><input value="${esc(u.printDesc)}" placeholder="e.g. 3,200 x DL flyers 150gsm gloss 2S" onchange="umSet('printDesc',this.value)"></div>
+      <div class="field"><label>Print price inc GST ($)</label><input type="number" step="0.01" min="0" value="${u.printDollars||''}" onchange="umSet('printDollars',this.value)"></div>
+    </div>
+    <div class="umsum">
+      <div><span>Letterboxes</span><b>${x.c.total.toLocaleString()}</b><small>${x.c.res.toLocaleString()} res${u.bus?' + '+x.c.bus.toLocaleString()+' bus':''}</small></div>
+      <div><span>Print qty</span><b>${x.qty.toLocaleString()}</b><small>${x.bundles} bundles of 100</small></div>
+      <div><span>Rate</span><b>${r?(x.rate*100).toFixed(1)+'c':'—'}</b><small>${r?(u.service+' · '+u.size+' · '+(x.inc?'inc GST':'treated as ex GST')):'no rate on card'}</small></div>
+      <div><span>Postage cost</span><b>${money(x.postageInc)}</b><small>inc GST, paid to Australia Post</small></div>
+      <div><span>Sell postage</span><b>${money(x.sellPost)}</b><small>${u.margin}% margin</small></div>
+      <div><span>Quote total</span><b>${money(x.total)}</b><small>${x.printC?'incl. print '+money(x.printC):'postage only'}</small></div>
+      <div><span>Delivery week</span><b>${x.week?umAu(x.week):'—'}</b><small>${x.week?'Mon '+umAu(x.week):'pick a week'}</small></div>
+      <div><span>Lodge by</span><b>${x.lodge?umAu(x.lodge):'—'}</b><small>${x.lock?'changes lock '+umAu(x.lock):''}</small></div>
+    </div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px">
+      <button class="btn" onclick="umSave(false)" ${selRows.length?'':'disabled'}>Save campaign</button>
+      <button class="btn primary" onclick="umSave(true)" ${selRows.length?'':'disabled'}>Save + create quote</button>
+      <button class="btn" onclick="umPack(null)" ${selRows.length?'':'disabled'}>Booking pack</button>
+      <a class="btn" href="https://campaigntargeter.com.au" target="_blank" rel="noopener">Campaign Targeter ↗</a>
+      <a class="btn" href="https://umonline.auspost.com.au" target="_blank" rel="noopener">UM Online ↗</a>
+    </div>`;
+}
+function umCampaignRow(){
+  const u=window._um, x=umCalc(), r=umRate();
+  const locs=Object.values(u.sel).map(s=>({postcode:s.postcode,locality:s.locality,count:(s.priv_st|0)+(s.priv_rsd|0)+(u.bus?((s.bus_st|0)+(s.bus_rsd|0)):0)}));
+  return {name:u.name||('Letterbox drop · '+locs.slice(0,3).map(l=>umTitle(l.locality)).join(', ')+(locs.length>3?' +'+(locs.length-3):'')),
+    localities:locs,include_business:!!u.bus,quantity:x.qty,article_desc:u.article||null,article_size:u.size,weight_band:u.band,
+    weight_100_g:u.w100?Number(u.w100):null,thick_100_mm:u.t100?Number(u.t100):null,service:u.service,
+    delivery_week:x.week?umIso(x.week):null,lodge_by:x.lodge?umIso(x.lodge):null,rate:r?Number(r.price):null,
+    postage_cents:x.postageInc,sell_cents:x.sellPost,print_desc:u.printDesc||null,print_cents:x.printC,status:'planned'};
+}
+function umQuoteLines(row){
+  const locs=(row.localities||[]).map(l=>umTitle(l.locality)+' '+l.postcode).join(', ');
+  const n=(row.localities||[]).reduce((a,l)=>a+(l.count|0),0);
+  const lines=[{n:'Australia Post Unaddressed Mail delivery · '+n.toLocaleString()+' letterboxes\n'+locs+'\n'+(row.service==='premium'?'Premium':'Standard')+' service'+(row.delivery_week?', delivery week commencing '+umAu(row.delivery_week):'')+'. Bundled and lodged with Australia Post by Aura.',qty:1,price:row.sell_cents}];
+  if(row.print_cents>0) lines.unshift({n:row.print_desc||('Print · '+(row.article_desc||'flyers')+' x '+row.quantity),qty:row.quantity,price:row.print_cents});
+  return lines;
+}
+window.umSave=async function(thenQuote){
+  const sb=window.CRM_SB; if(!sb){alert('Not connected — please reload and sign in.');return;}
+  const row=umCampaignRow();
+  try{
+    const ins=await sb.from('um_campaigns').insert(row).select('*').single(); if(ins.error)throw ins.error;
+    window._um.camps.unshift(ins.data); umRenderCamps();
+    if(thenQuote){ umQuoteFrom(ins.data); }
+  }catch(e){ alert('Could not save the campaign: '+(e.message||e)); }
+};
+window.umQuoteFrom=function(c){
+  if(typeof c==='string') c=window._um.camps.find(x=>x.id===c); if(!c) return;
+  newQuote(null,{});
+  const nq=window._nq; nq.umCampaignId=c.id;
+  umQuoteLines(c).forEach(l=>nq.items.push(l));
+  if(typeof nqRenderLines==='function') nqRenderLines();
+};
+window.umStatus=async function(id,status){
+  const sb=window.CRM_SB; const c=window._um.camps.find(x=>x.id===id); if(!c||!sb) return;
+  const patch={status};
+  if(status==='booked'){ const ref=prompt('Australia Post booking reference (from Campaign Targeter / UM Online):',c.booking_ref||''); if(ref===null) return; patch.booking_ref=ref; }
+  try{ const r=await sb.from('um_campaigns').update(patch).eq('id',id); if(r.error)throw r.error; Object.assign(c,patch); umRenderCamps(); }
+  catch(e){ alert('Could not update: '+(e.message||e)); }
+};
+window.umNote=async function(id){
+  const sb=window.CRM_SB; const c=window._um.camps.find(x=>x.id===id); if(!c||!sb) return;
+  const v=prompt('Notes for this campaign:',c.notes||''); if(v===null) return;
+  try{ const r=await sb.from('um_campaigns').update({notes:v}).eq('id',id); if(r.error)throw r.error; c.notes=v; umRenderCamps(); }catch(e){ alert(e.message||e); }
+};
+window.umDelete=async function(id){
+  const sb=window.CRM_SB; if(!sb) return; if(!confirm('Delete this campaign record? The quote (if any) stays.')) return;
+  try{ const r=await sb.from('um_campaigns').delete().eq('id',id); if(r.error)throw r.error; window._um.camps=window._um.camps.filter(x=>x.id!==id); umRenderCamps(); }catch(e){ alert(e.message||e); }
+};
+window.umFilter=function(f){ window._um.filter=f; umRenderCamps(); };
+function umRenderCamps(){
+  const u=window._um, el=document.getElementById('umCamps'); if(!el) return;
+  const f=u.filter, list=u.camps.filter(c=>f==='all'?c.status!=='cancelled':(f==='open'?['planned','quoted','booked','lodged'].includes(c.status):c.status===f));
+  const fb=document.getElementById('umFilter'); if(fb) fb.innerHTML=[['open','Open'],['all','All'],['planned','Planned'],['booked','Booked'],['lodged','Lodged'],['delivered','Delivered'],['cancelled','Cancelled']].map(o=>`<span class="chip ${f===o[0]?'on':''}" onclick="umFilter('${o[0]}')">${o[1]}</span>`).join('');
+  const next={planned:['booked','Mark booked'],quoted:['booked','Mark booked'],booked:['lodged','Mark lodged'],lodged:['delivered','Mark delivered']};
+  el.innerHTML=list.length?list.map(c=>{
+    const q=c.quote_id?(D.quotes||[]).find(x=>x._id===c.quote_id):null;
+    const n=(c.localities||[]).length; const nx=next[c.status];
+    return `<tr><td><b>${esc(c.name)}</b><div class="mini">${n} localit${n===1?'y':'ies'} · ${(c.quantity||0).toLocaleString()} articles · ${c.service}${c.booking_ref?' · ref '+esc(c.booking_ref):''}${c.notes?'<br>'+esc(c.notes):''}</div></td>
+      <td><span class="chip flat">${esc(c.status)}</span></td>
+      <td class="num">${money(c.postage_cents||0)}</td><td class="num">${money((c.sell_cents||0)+(c.print_cents||0))}</td>
+      <td>${umAu(c.delivery_week)}<div class="mini">lodge by ${umAu(c.lodge_by)}</div></td>
+      <td>${q?`<a href="#" onclick="openQuote('${esc(q.num)}');return false">${esc(q.num)}</a>`:`<button class="btn sm" onclick="umQuoteFrom('${c.id}')">Create quote</button>`}</td>
+      <td style="white-space:nowrap">${nx?`<button class="btn sm" onclick="umStatus('${c.id}','${nx[0]}')">${nx[1]}</button> `:''}<button class="btn sm" onclick="umPack('${c.id}')">Pack</button> <button class="btn sm" onclick="umNote('${c.id}')">Note</button> ${c.status!=='cancelled'?`<button class="btn sm" onclick="umStatus('${c.id}','cancelled')">✕</button>`:`<button class="btn sm" onclick="umDelete('${c.id}')">Delete</button>`}</td></tr>`;
+  }).join(''):'<tr><td colspan="7"><div class="empty">No campaigns yet. Plan one above and save it.</div></td></tr>';
+}
+window.umPack=function(id){
+  const u=window._um; const c=id?u.camps.find(x=>x.id===id):Object.assign(umCampaignRow(),{id:null});
+  if(!c) return;
+  const locs=(c.localities||[]);
+  const total=locs.reduce((a,l)=>a+(l.count|0),0);
+  const txt=[
+    'AUSTRALIA POST UNADDRESSED MAIL · BOOKING PACK',
+    'Campaign: '+c.name+(c.booking_ref?'   Ref: '+c.booking_ref:''),
+    'Sender: Aura Print & Promo, 4/1 Packer Road, Baringa QLD 4551. ABN 75 642 501 493. admin@auraprint.com.au, 1300 291 277',
+    '',
+    'SERVICE: '+(c.service==='premium'?'Premium':'Standard')+' · Regular (all street + roadside points'+(c.include_business?', private + business':', private only')+')',
+    'DELIVERY WEEK: '+(c.delivery_week?'week commencing Monday '+umAu(c.delivery_week):'TBC'),
+    'LODGE BY: '+(c.lodge_by?umAu(c.lodge_by):'TBC')+'   (changes lock 7 days before lodgement)',
+    '',
+    'LOCALITIES ('+locs.length+'), delivery points '+total.toLocaleString()+':',
+    ...locs.map(l=>'  '+umTitle(l.locality)+' '+l.postcode+'  '+(l.count|0).toLocaleString()),
+    '',
+    'ARTICLE: '+(c.article_desc||'')+' · '+(c.article_size==='large'?'Large letter':'Small letter')+' · '+(c.weight_band==='to100'?'50-100g':'up to 50g'),
+    'Weight of 100: '+(c.weight_100_g||'?')+' g   Thickness of 100: '+(c.thick_100_mm||'?')+' mm',
+    'QUANTITY TO PRINT: '+(c.quantity||0).toLocaleString()+'   Bundles of 100: '+Math.ceil((c.quantity||0)/100)+' (two rubber bands each, no return address on the piece)',
+    '',
+    'POSTAGE: '+(c.rate?(c.rate*100).toFixed(1)+'c each':'rate TBC')+' · '+money(c.postage_cents||0)+' inc GST',
+    '',
+    'CHECKLIST',
+    '[ ] Book in Campaign Targeter / UM Online, note the booking reference',
+    '[ ] Confirm the delivery point count matches the booking',
+    '[ ] Artwork: no names, no addresses, no return address; rectangular; within size limits',
+    '[ ] Weigh and measure a real bundle of 100 before finalising the booking',
+    '[ ] Bundle 100s, two bands, label bundles and trays as instructed',
+    '[ ] Print the Mailing Statement and lodge with it by the lodge-by date',
+    '[ ] Record lodgement date and receipt on the campaign, mark Lodged',
+    '[ ] Seed 3-6 addresses in the run and log arrival dates'
+  ].join('\n');
+  md.className='modal wide';
+  md.innerHTML=`<div class="mh"><h3>Booking pack</h3><div class="x" onclick="closeModal()">✕</div></div><div class="mb"><textarea id="umPackTxt" style="width:100%;height:420px;font-family:ui-monospace,Menlo,monospace;font-size:12.5px;border:1px solid var(--line);border-radius:10px;padding:12px">${esc(txt)}</textarea><div class="note" style="margin-top:8px">Paste into Campaign Targeter or UM Online, or keep with the job. Australia Post has no API for this, so the pack is the hand-off.</div></div><div class="mf"><button class="btn" onclick="closeModal()">Close</button><button class="btn primary" onclick="navigator.clipboard.writeText(document.getElementById('umPackTxt').value).then(()=>{this.textContent='Copied'})">Copy</button></div>`;
+  mb.classList.add('show');
+};
+window.umRateEdit=async function(id,field,val){
+  const sb=window.CRM_SB; if(!sb) return;
+  const patch={}; patch[field]=field==='price'?Number(val):(val==='yes'?true:(val==='no'?false:null));
+  try{ const r=await sb.from('um_rates').update(patch).eq('id',id); if(r.error)throw r.error; const row=window._um.rates.find(x=>x.id===id); if(row) Object.assign(row,patch); umRenderPlan(); }
+  catch(e){ alert('Could not save the rate: '+(e.message||e)); }
+};
+window.umRefresh=async function(btn){
+  const sb=window.CRM_SB; if(!sb) return; if(btn){btn.disabled=true;btn.textContent='Refreshing…';}
+  try{
+    const sess=await sb.auth.getSession(); const tok=sess.data.session?sess.data.session.access_token:'';
+    const r=await fetch(window.AURA_CONFIG.supabaseUrl+'/functions/v1/um-refresh',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+tok},body:JSON.stringify({states:['QLD']})});
+    const j=await r.json();
+    if(!r.ok||!j.ok) throw new Error((j.results&&j.results[0]&&j.results[0].error)||j.error||('HTTP '+r.status));
+    alert('Delivery points refreshed: '+j.results[0].rows+' Queensland localities, extract '+j.results[0].extract_date+'.');
+    await umLoad(true);
+  }catch(e){ alert('Refresh failed: '+(e.message||e)); }
+  if(btn){btn.disabled=false;btn.textContent='Refresh delivery points';}
+};
+function umRenderRates(){
+  const u=window._um, el=document.getElementById('umRates'); if(!el) return;
+  const lab={standard:'Standard',premium:'Premium',small:'Small',large:'Large',to50:'≤50g',to100:'50-100g',same_state:'same state',other_state:'interstate'};
+  el.innerHTML=u.rates.map(r=>`<tr><td>${lab[r.service]}</td><td>${lab[r.size]} ${lab[r.weight_band]}</td><td>${lab[r.scope]}</td><td class="num"><input type="number" step="0.001" value="${r.price}" style="width:90px;text-align:right" onchange="umRateEdit(${r.id},'price',this.value)"></td><td><select onchange="umRateEdit(${r.id},'gst_inclusive',this.value)"><option value="unknown" ${r.gst_inclusive==null?'selected':''}>not confirmed</option><option value="yes" ${r.gst_inclusive===true?'selected':''}>inc GST</option><option value="no" ${r.gst_inclusive===false?'selected':''}>ex GST</option></select></td><td class="mini">${esc(r.effective_from)}</td></tr>`).join('');
+  const st=document.getElementById('umDpStatus'); if(st) st.textContent=u.dp.length+' Sunshine Coast localities loaded · Australia Post extract '+(u.extract?umAu(u.extract):'unknown')+' · refreshes on the 3rd of each month';
+}
+window.umFromLead=async function(id){
+  const l=leadById(id); if(!l) return; closeModal(); go('letterbox'); await umLoad();
+  const u=window._um; u.sel={}; u.name=(l.company||l.name||'Letterbox drop')+' · letterbox';
+  /* Pull "Suburbs (n): Buderim 4556 (...), ..." out of the enquiry and tick the matches. */
+  const m=/Suburbs \(\d+\):\s*([^\n]+)/.exec(l.details||'');
+  if(m){ m[1].split(',').forEach(part=>{ const mm=/^\s*(.+?)\s+(\d{4})\b/.exec(part); if(!mm) return; const r=u.dp.find(x=>x.postcode===Number(mm[2])&&x.locality.toLowerCase()===mm[1].trim().toLowerCase()); if(r) u.sel[umKey(r)]=r; }); }
+  u.bus=/Residential plus business/i.test(l.details||'');
+  u.size=/Item: A4 \(/.test(l.details||'')?'large':'small';
+  const d=/Start: (\d{4}-\d{2}-\d{2})/.exec(l.details||''); if(d) u.week=d[1];
+  umRender();
+};
+function umRender(){
+  const u=window._um;
+  const t=document.getElementById('umTiles'); if(t){
+    const open=u.camps.filter(c=>['planned','quoted','booked','lodged'].includes(c.status));
+    const next=open.filter(c=>c.lodge_by).sort((a,b)=>a.lodge_by<b.lodge_by?-1:1)[0];
+    const sc=u.dp.reduce((a,r)=>a+(r.priv_st|0)+(r.priv_rsd|0),0);
+    t.innerHTML=[{n:String(open.length),l:'Open campaigns',c:open.filter(c=>c.status==='booked').length+' booked'},{n:next?umAu(next.lodge_by):'—',l:'Next lodgement',c:next?next.name.slice(0,26):'nothing due'},{n:sc.toLocaleString(),l:'SC letterboxes',c:'accept advertising'},{n:(u.rates.find(r=>r.service==='standard'&&r.size==='small'&&r.weight_band==='to50'&&r.scope==='same_state')||{price:0}).price*100+'c',l:'Standard small',c:'per article, same state'}].map(x=>`<div class="tile"><div class="ic" style="background:#fde8ea"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#dc1928" stroke-width="2"><path d="M3 5h18v14H3z"/><path d="M3 7l9 6 9-6"/></svg></div><div class="n">${x.n}</div><div class="l">${x.l}</div><div class="chip flat">${esc(x.c)}</div></div>`).join('');
+  }
+  umRenderFound(); umRenderPlan(); umRenderCamps(); umRenderRates();
+}
+
 /* ---------- Letterbox distribution: supplier RFQ ----------
    A booking from letterbox-distribution.html lands as a normal lead with
    source_product_code 'letterbox-distribution' and the whole spec in
