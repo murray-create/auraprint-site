@@ -17,7 +17,7 @@ const HEADER = `
 </div>
 <nav class="main">
   <div class="wrap">
-    <a class="logo" href="index.html">AURA<span>PRINT</span></a>
+    <a class="logo" href="/">AURA<span>PRINT</span></a>
     <button class="nav-burger" id="navBurger" aria-label="Open menu" aria-expanded="false" aria-controls="navDrawer">
       <span></span><span></span><span></span>
     </button>
@@ -51,7 +51,7 @@ const HEADER = `
           <div><h4>Magnets</h4><ul><li><a href="magnets.html">All Fridge Magnets →</a></li><li><a href="magnets.html">Business Card Magnets</a></li><li><a href="magnets.html">Photo Frame Magnets</a></li><li><a href="magnets.html">Whiteboard Magnets</a></li><li><a href="vehicle-magnets.html">Vehicle Magnets</a></li></ul></div>
         </div>
       </div>
-      <div><a href="index.html#quoter">Instant Price</a></div>
+      <div><a href="/#quoter">Instant Price</a></div>
       <div><a href="about.html">About</a></div>
       <div><a href="contact.html">Contact</a></div>
     </div>
@@ -63,7 +63,7 @@ const HEADER = `
 <div class="drawer-backdrop" id="drawerBackdrop" hidden></div>
 <aside class="drawer" id="navDrawer" aria-label="Site menu" hidden>
   <div class="drawer-head">
-    <a class="logo" href="index.html">AURA<span>PRINT</span></a>
+    <a class="logo" href="/">AURA<span>PRINT</span></a>
     <button class="drawer-close" id="drawerClose" aria-label="Close menu">✕</button>
   </div>
   <nav class="drawer-nav">
@@ -125,7 +125,7 @@ const HEADER = `
     <div class="drawer-group">
       <a class="drawer-link" href="magnets.html">Fridge Magnets</a>
     </div>
-    <div class="drawer-group"><a class="drawer-link" href="index.html#quoter">Instant Price</a></div>
+    <div class="drawer-group"><a class="drawer-link" href="/#quoter">Instant Price</a></div>
     <div class="drawer-group"><a class="drawer-link" href="about.html">About</a></div>
     <div class="drawer-group"><a class="drawer-link" href="contact.html">Contact</a></div>
   </nav>
@@ -140,7 +140,7 @@ const FOOTER = `
   <div class="wrap">
     <div class="cols">
       <div>
-        <a class="logo" href="index.html" style="color:#fff">AURA<span>PRINT</span></a>
+        <a class="logo" href="/" style="color:#fff">AURA<span>PRINT</span></a>
         <p style="color:#b8b2ab;font-size:14px;margin-top:14px">Bold print and promotional products from the Sunshine Coast, delivered Australia-wide.</p>
         <p style="margin-top:16px;font-size:14px"><a href="art-setup.html" style="color:#fff;font-weight:700;text-decoration:underline">Preparing your artwork? Read our print-ready guide →</a></p>
         <h4 style="margin-top:24px">Print offers &amp; tips, straight to your inbox</h4>
