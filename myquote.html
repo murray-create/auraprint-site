@@ -125,16 +125,26 @@
     /* Options quote: the lines are alternatives and the customer picks ONE.
        Nothing is added together; the total shown is the chosen option's. */
     var isOpts = q.pricing_mode==='options';
+    /* Pick-any quote: the customer ticks any of the lines they want and the
+       price is the sum of the ticked lines (added 9 Sep 2026 after QU-2265). */
+    var isAny = q.pricing_mode==='any';
     var chosen = q.chosen_item_no || null;
+    var chosenSet = (q.chosen_item_nos||[]).map(function(n){return parseInt(n,10);});
+    var isPick = isOpts || isAny;
     var itemsHtml = (q.items||[]).map(function(i){
       var unitEx = i.qty ? i.price_ex_cents / i.qty : i.price_ex_cents;
       var lbl='';
+      var on = isOpts ? chosen===i.item_no : (isAny ? chosenSet.indexOf(i.item_no)>-1 : false);
       if (isOpts){
         lbl = canDecide
-          ? '<label class="optlbl"><input type="radio" name="opt" value="'+i.item_no+'"'+(chosen===i.item_no?' checked':'')+'>Option '+i.item_no+'</label>'
-          : '<span class="optlbl">Option '+i.item_no+(chosen===i.item_no?' — chosen':'')+'</span>';
+          ? '<label class="optlbl"><input type="radio" name="opt" value="'+i.item_no+'"'+(on?' checked':'')+'>Option '+i.item_no+'</label>'
+          : '<span class="optlbl">Option '+i.item_no+(on?' — chosen':'')+'</span>';
+      } else if (isAny){
+        lbl = canDecide
+          ? '<label class="optlbl"><input type="checkbox" name="opt" value="'+i.item_no+'"'+(on?' checked':'')+'>Item '+i.item_no+' — tick to include</label>'
+          : '<span class="optlbl">Item '+i.item_no+(on?' — ordered':' — not ordered')+'</span>';
       }
-      return '<tr'+(isOpts?' class="optrow'+(chosen===i.item_no?' on':'')+'" data-opt="'+i.item_no+'"':'')+'><td>'+lbl+descCell(i.description)+'</td>'+
+      return '<tr'+(isPick?' class="optrow'+(on?' on':'')+'" data-opt="'+i.item_no+'"':'')+'><td>'+lbl+descCell(i.description)+'</td>'+
         '<td>'+i.qty+'</td>'+
         '<td>'+money(unitEx)+'</td>'+
         '<td>10.00%</td>'+
@@ -164,13 +174,14 @@
         (q.company?esc(q.contact_name)+'<br>':'')+
         esc(q.contact_email)+
         ((q.street||q.suburb||q.postcode)?'<br>'+esc([q.street,[q.suburb,q.state,q.postcode].filter(Boolean).join(' ')].filter(Boolean).join(', ')):'')+'</div>'+
-      '<div class="col"><div class="lbl">'+(isOpts?(chosen?'Chosen option (inc GST)':'Your price (inc GST)'):'Total (inc GST)')+'</div><div class="total" id="totInc">'+(isOpts&&!chosen?'<span style="font-size:18px;color:#6b6880">Choose an option below</span>':money(q.total_inc_cents))+'</div>'+statusFlag(q)+'</div>'+
+      '<div class="col"><div class="lbl">'+(isOpts?(chosen?'Chosen option (inc GST)':'Your price (inc GST)'):(isAny?(chosenSet.length?'Your items (inc GST)':'Your price (inc GST)'):'Total (inc GST)'))+'</div><div class="total" id="totInc">'+(isOpts&&!chosen?'<span style="font-size:18px;color:#6b6880">Choose an option below</span>':(isAny&&!chosenSet.length?'<span style="font-size:18px;color:#6b6880">Tick the items you want below</span>':money(q.total_inc_cents)))+'</div>'+statusFlag(q)+'</div>'+
       '</div>'+
       (isOpts?'<div class="optnote"><b>This quote gives you options.</b> The lines below are alternatives, not a list — '+(canDecide?'tick the one you\'d like and the price updates. Only that option becomes your order.':'the option marked chosen is the one we\'ll produce.')+' Each price includes GST.</div>':'')+
+      (isAny?'<div class="optnote"><b>Pick what you need.</b> '+(canDecide?'Tick any of the items below — one, some or all — and your price updates as you go. Only the ticked items become your order.':'The items marked ordered are the ones we\'ll produce.')+' Each price includes GST.</div>':'')+
 
       '<table><thead><tr><th>Description</th><th>Quantity</th><th>Unit price (ex)</th><th>GST</th><th>Amount (ex)</th></tr></thead>'+
       '<tbody>'+itemsHtml+'</tbody></table>'+
-      '<table class="totals" id="totals"'+(isOpts&&!chosen?' style="display:none"':'')+'><tr><td style="width:70%"></td><td><b>Subtotal</b></td><td style="text-align:right" id="totEx">'+money(q.subtotal_ex_cents)+'</td></tr>'+
+      '<table class="totals" id="totals"'+((isOpts&&!chosen)||(isAny&&!chosenSet.length)?' style="display:none"':'')+'><tr><td style="width:70%"></td><td><b>Subtotal</b></td><td style="text-align:right" id="totEx">'+money(q.subtotal_ex_cents)+'</td></tr>'+
       '<tr><td></td><td><b>Total GST</b></td><td style="text-align:right" id="totGst">'+money(q.gst_cents)+'</td></tr>'+
       '<tr><td></td><td>'+(isOpts?'Chosen option':'Total')+'</td><td style="text-align:right" id="totAll">'+money(q.total_inc_cents)+'</td></tr></table>'+
 
@@ -205,6 +216,7 @@
       document.getElementById('dAccept').addEventListener('click', function(){ decide('accepted', this); });
       document.getElementById('dDecline').addEventListener('click', function(){ decide('declined', this); });
     }
+    window._opts = null; window._any = null;
     if (isOpts && canDecide){
       window._opts = q.items||[];
       window._chosenOpt = chosen;
@@ -214,6 +226,59 @@
       });
       if (chosen) pickOption(chosen);
     }
+    if (isAny && canDecide){
+      window._any = q.items||[];
+      window._chosenSet = chosenSet.slice();
+      var arows = document.querySelectorAll('tr.optrow');
+      Array.prototype.forEach.call(arows, function(tr){
+        tr.addEventListener('click', function(ev){
+          /* The checkbox toggles natively and we read its state. A click on the
+             label text makes the browser click the checkbox for us, so ignore
+             the label click itself (handling both would cancel out). A click
+             anywhere else on the row flips the item. */
+          var tg = ev.target;
+          var isInput = tg && tg.tagName==='INPUT';
+          if (!isInput && tg && tg.closest && tg.closest('label')) return;
+          toggleItem(parseInt(tr.getAttribute('data-opt'),10), isInput ? tg.checked : null);
+        });
+      });
+      refreshAnyTotals();
+    }
+  }
+
+  function toggleItem(no, forced){
+    var set = window._chosenSet || [];
+    var idx = set.indexOf(no);
+    var want = forced===null || forced===undefined ? idx<0 : !!forced;
+    if (want && idx<0) set.push(no);
+    if (!want && idx>-1) set.splice(idx,1);
+    set.sort(function(a,b){return a-b;});
+    window._chosenSet = set;
+    refreshAnyTotals();
+  }
+
+  function refreshAnyTotals(){
+    var set = window._chosenSet || [];
+    var ex=0, gst=0, inc=0;
+    (window._any||[]).forEach(function(i){
+      if (set.indexOf(i.item_no)>-1){ ex+=i.price_ex_cents; gst+=i.gst_cents; inc+=i.price_inc_cents; }
+    });
+    Array.prototype.forEach.call(document.querySelectorAll('tr.optrow'), function(tr){
+      var on = set.indexOf(parseInt(tr.getAttribute('data-opt'),10))>-1;
+      tr.classList.toggle('on', on);
+      var c = tr.querySelector('input[type=checkbox]'); if (c) c.checked = on;
+    });
+    if (set.length){
+      document.getElementById('totInc').textContent = money(inc);
+      document.getElementById('totEx').textContent = money(ex);
+      document.getElementById('totGst').textContent = money(gst);
+      document.getElementById('totAll').textContent = money(inc);
+      document.getElementById('totals').style.display = '';
+    } else {
+      document.getElementById('totInc').innerHTML = '<span style="font-size:18px;color:#6b6880">Tick the items you want below</span>';
+      document.getElementById('totals').style.display = 'none';
+    }
+    var m = document.getElementById('dMsg'); if (m && m.className.indexOf('err')>-1){ m.className='msg'; m.textContent=''; }
   }
 
   function pickOption(no){
@@ -241,13 +306,17 @@
     if (!name){ msg.className = 'msg err'; msg.textContent = 'Please enter your name first.'; return; }
     if (decision==='declined' && !comments){ msg.className = 'msg err'; msg.textContent = 'Please tell us why you\'re declining so we can help.'; return; }
     if (decision==='declined' && !confirm('Decline this quote?')) return;
-    var chosenOpt = null;
+    var chosenOpt = null, chosenSet = null;
     if (window._opts && window._opts.length){
       chosenOpt = window._chosenOpt || null;
       if (decision==='accepted' && !chosenOpt){ msg.className = 'msg err'; msg.textContent = 'Please tick the option you\'d like first.'; return; }
     }
+    if (window._any && window._any.length){
+      chosenSet = (window._chosenSet||[]).slice();
+      if (decision==='accepted' && !chosenSet.length){ msg.className = 'msg err'; msg.textContent = 'Please tick at least one item you\'d like first.'; return; }
+    }
     btn.disabled = true; msg.textContent = 'Sending…';
-    sb.rpc('decide_quote', { p_token: t, p_decision: decision, p_name: name, p_comments: comments||null, p_chosen_item_no: chosenOpt })
+    sb.rpc('decide_quote', { p_token: t, p_decision: decision, p_name: name, p_comments: comments||null, p_chosen_item_no: chosenOpt, p_chosen_item_nos: chosenSet })
       .then(function(res){
         if (res.error){ msg.className = 'msg err'; msg.textContent = res.error.message; btn.disabled = false; return; }
         /* let Aura staff know straight away (fire and forget) */
