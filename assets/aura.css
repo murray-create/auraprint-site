@@ -385,3 +385,71 @@ body.drawer-open #aura-chat-btn,body.drawer-open #aura-chat{display:none !import
    than a phone. An inline style beats a class selector, so this needs
    !important. Scoped to download links only. */
 a[download]{white-space:normal !important;max-width:100%}
+
+
+/* ---- AURA:FCOLS  19 Sep 2026 -------------------------------------------
+   Footer product tier: five columns of real product links above the existing
+   brand/company row. Every link points at a page that exists, because a footer
+   list is only worth having when there is something substantial behind it.
+   Also the Letterbox Drops nav accent. ------------------------------------ */
+footer .fcols{display:grid;grid-template-columns:repeat(5,1fr);gap:30px;margin-bottom:44px;
+  padding-bottom:38px;border-bottom:1px solid rgba(255,255,255,.12)}
+footer .fcols>div{min-width:0}
+footer .fcols .lb h4{color:#ffb3bd}
+@media(max-width:1149px){footer .fcols{grid-template-columns:repeat(3,1fr);gap:26px}}
+@media(max-width:640px){footer .fcols{grid-template-columns:repeat(2,1fr);gap:20px;padding-bottom:28px;margin-bottom:30px}}
+
+.navlinks>div.nav-lb>a{color:#dc1928}
+.navlinks>div.nav-lb:hover>a{color:#9e0d18}
+/* Letterbox is the 5th of six top-level items and its panel is four columns
+   wide, so anchor it to the right edge or it runs off a 1200px viewport. */
+.navlinks>div.nav-lb .mega{left:auto;right:-20px}
+.drawer-lb .drawer-toggle{color:#dc1928}
+
+/* Suburb page: locality counts table + area cards */
+.lb-tbl{width:100%;border-collapse:collapse;font-size:14.5px;margin:18px 0 6px}
+.lb-tbl th,.lb-tbl td{text-align:left;padding:9px 12px;border-bottom:1px solid #eee7de}
+.lb-tbl th{font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:#8a847d}
+.lb-tbl td.n,.lb-tbl th.n{text-align:right;font-variant-numeric:tabular-nums}
+.lb-tbl tr.tot td{font-weight:800;border-bottom:none;border-top:2px solid var(--ink)}
+.lb-tblwrap{overflow-x:auto;-webkit-overflow-scrolling:touch;max-width:100%}
+@media(max-width:640px){
+  .lb-tbl{font-size:13.5px}
+  .lb-tbl th,.lb-tbl td{padding:8px 6px}
+  .lb-tbl th{font-size:10.5px;letter-spacing:.04em}
+}
+.lb-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:14px;margin-top:18px}
+.lb-card{display:block;border:1px solid #e8e2da;border-radius:14px;padding:16px 18px;background:#fff}
+.lb-card:hover{border-color:var(--magenta);box-shadow:0 10px 26px rgba(15,15,16,.07)}
+.lb-card b{display:block;font-size:15.5px}
+.lb-card span{font-size:13px;color:#6b6560}
+
+
+/* ---- AURA:LBPICKER  19 Sep 2026 ----------------------------------------
+   Suburb picker on the letterbox area pages. The table is plain HTML and is
+   fully usable without JS; these rules style the search bar, the live totals
+   and the tick column that assets/lb-picker.js drives. --------------------- */
+.lbp-bar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:18px 0 14px}
+.lbp-bar input[type=search]{flex:1;min-width:190px;padding:12px 16px;border:1px solid #e0d9d0;
+  border-radius:999px;font-size:14.5px;font-family:inherit;background:#fff}
+.lbp-bar input[type=search]:focus{outline:2px solid var(--magenta);outline-offset:1px}
+.lbp-mini{padding:10px 18px!important;font-size:13.5px!important}
+.lbp-chk{display:flex;align-items:center;gap:7px;font-size:13.5px;color:#6b6560;white-space:nowrap}
+
+.lbp-tot{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;padding:16px 18px;
+  border:1px solid #e8e2da;border-radius:14px;background:#fff}
+.lbp-tot>div{min-width:0}
+.lbp-tot span{display:block;font-size:11.5px;text-transform:uppercase;letter-spacing:.08em;color:#8a847d}
+.lbp-tot i{font-style:normal;font-weight:700;color:#6b6560}
+.lbp-tot b{display:block;font-size:clamp(19px,2.4vw,25px);line-height:1.2;margin-top:4px;
+  font-variant-numeric:tabular-nums}
+.lbp-tot .lbp-cost{color:var(--magenta)}
+@media(max-width:560px){.lbp-tot{grid-template-columns:1fr 1fr}
+  .lbp-tot>div:last-child{grid-column:1/-1;border-top:1px solid #efe9e1;padding-top:12px}}
+
+.lbp-tbl th.c,.lbp-tbl td.c{width:34px;padding-right:0}
+.lbp-tbl input[type=checkbox]{width:17px;height:17px;accent-color:var(--magenta);cursor:pointer}
+.lbp-tbl tr[data-loc]:hover{background:#faf8f5}
+.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+#lbPickExtra{margin-top:14px}
+#lbPickGo[aria-disabled="true"]{opacity:.45;pointer-events:none}

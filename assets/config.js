@@ -48,6 +48,39 @@ window.AURA_CONFIG = {
   supabaseDirectUrl: "https://pwjxkzifitybvtnrfxfi.supabase.co",
   supabaseKey: "sb_publishable_HYMPZZd4CPpmWktzmht7Jg_xD1C-QZ1",
 
+  /* ------------------------------------------------------------------ *
+     LETTERBOX DISTRIBUTION, PUBLIC PRICING
+
+     margin and minFee are the source of truth and are used everywhere.
+
+     cost.* are a FALLBACK ONLY. The booking form and the letterbox area
+     pages read the live Australia Post rate from the um_rates table and
+     apply the margin to it, so when Australia Post moves a rate the public
+     price moves with it and the margin holds. These figures are used only
+     when that fetch fails, and they are what is printed into the HTML so
+     the pages are still correct with JavaScript off.
+
+     VERIFIED 19 Sep 2026 against the Australia Post Post Charges Guide
+     MS11 effective 1 Sep 2026, page 10, Unaddressed Mail. All four match
+     the guide. The guide states "Unless noted otherwise, prices are
+     inclusive of GST", so these are GST inclusive, same state, under 50g.
+     (um_rates previously held 0.420 for standardSmall. That was a typo,
+     corrected to 0.405 in the database on 19 Sep 2026.)
+
+     margin is margin ON SALE, matching the CRM: sell = cost / (1 - margin).
+     40.5c / 0.85 = 47.6c. That is NOT cost x 1.15, which would be 46.6c.
+     Murray confirmed margin on sale, 19 Sep 2026.
+
+     minFee is the minimum charge on delivery-only jobs. Waived when Aura
+     prints the flyer as well.
+   * ------------------------------------------------------------------ */
+  letterbox: {
+    margin: 0.15,
+    minFee: 250,
+    cost: { standardSmall: 40.5, standardLarge: 63.5,
+            premiumSmall: 51.6, premiumLarge: 80.9 }
+  },
+
   /* Business details printed on tax invoices (invoice.html) and the CRM PDF.
      Fill in bsb/acc (and payid if you have one) to show EFT details;
      leave blank to hide that section's numbers.
