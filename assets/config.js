@@ -10,6 +10,38 @@ window.AURA_CONFIG = {
      Events wired: page views, tel_click, generate_lead, newsletter_signup. */
   ga4Id: "G-SN65LGSK5Q",
 
+  /* ------------------------------------------------------------------ *
+     GOOGLE ADS CONVERSION TRACKING
+
+     adsId is the Google Ads tag ID, "AW-XXXXXXXXXX", found under
+     Tools > Data manager > Google tag in the Ads account. Leave it empty
+     and no Ads tag loads, exactly like ga4Id above.
+
+     adsLabels are the per-action conversion labels. In Google Ads go to
+     Goals > Conversions > Summary, create each action as a Website
+     conversion, open it, choose "Install the tag yourself", and copy the
+     send_to value. It looks like "AW-1234567890/AbC-D_efGhIjKlM". Paste
+     the WHOLE string, tag ID included.
+
+       lead     - someone submitted a quote or contact form
+       purchase - a self-serve shop order was placed (value is sent)
+       call     - someone tapped the phone number
+
+     Each one is independent: fill in only the ones you have created and
+     the rest stay silent. Nothing here changes GA4, which keeps recording
+     these same events whether or not Google Ads is set up.
+
+     Also import generate_lead and purchase from GA4 as conversions in the
+     Ads account. Two paths to the same truth means a blocked tag or a
+     broken GA4 link cannot leave you flying blind.
+   * ------------------------------------------------------------------ */
+  adsId: "",
+  adsLabels: {
+    lead:     "",
+    purchase: "",
+    call:     ""
+  },
+
   /* LEP Print Portal white-label URL */
   portalUrl: "https://printportal.cloud/wl/159459",
 

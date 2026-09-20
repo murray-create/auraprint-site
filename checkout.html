@@ -75,8 +75,8 @@
   </div>
 </section>
 
-<script src="assets/config.js?v=20260831d"></script>
-<script src="assets/aura-cart.js?v=20260901a"></script>
+<script src="assets/config.js?v=20260920a"></script>
+<script src="assets/aura-cart.js?v=20260920a"></script>
 <script>
 (function(){
   var C = window.AuraCart, BIZ = (window.AURA_CONFIG||{}).business || {};
@@ -172,6 +172,21 @@
        browser. If a supplier rate moved while the cart was sitting there, the
        total the customer agreed to changes - never let that happen silently. */
     var cartTotal = list.reduce(function(s,i){ return s + (i.price_cents||0); }, 0);
+
+    /* Reported before the call, so an order that fails server-side still
+       shows up as an attempt. The funnel gap between begin_checkout and
+       purchase is what tells you the checkout is losing people. */
+    C.whenTracked(function(){
+      window.auraTrack('begin_checkout', {
+        currency: 'AUD',
+        value: C.exDollars(cartTotal),
+        items: list.map(function(it,i){
+          return { item_id: it.product_slug || ('line-'+(i+1)), item_name: it.name,
+                   quantity: Number(it.qty) || 1, price: C.exDollars(it.price_cents) };
+        })
+      });
+    });
+
     var res = await C.callFn('shop-checkout', payload);
     document.body.classList.remove('busy');
     btn.disabled = false; btn.textContent = 'Continue to artwork →';
@@ -409,6 +424,6 @@
   draw();
 })();
 </script>
-<script src="assets/aura.js?v=20260905a"></script>
+<script src="assets/aura.js?v=20260920a"></script>
 </body>
 </html>

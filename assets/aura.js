@@ -254,6 +254,69 @@ function auMobile(raw){
 }
 
 /* Map a form's fields to the leads table columns. */
+/* ---------------------------------------------------------------
+   AD ATTRIBUTION: remember how this visitor arrived.
+
+   Google appends ?gclid=... to every paid click (gbraid and wbraid on
+   iOS app and web-to-app clicks). That parameter exists ONLY on the
+   landing page, so if it is not stashed there it has gone by the time
+   the customer fills in the quote form three pages later, and the CRM
+   can never say which keyword produced the job.
+
+   Stored in a first-party cookie for 90 days, Google's default
+   conversion window. utm_* ride along so email, Meta and any other
+   tagged campaign is attributed the same way.
+
+   First touch wins, with one exception: a fresh Google click id always
+   overwrites, because Google has just charged for that click and the
+   conversion has to be credited to it. Without that exception every
+   paid lead that later returned via an organic search would look free.
+   --------------------------------------------------------------- */
+var ATTR_COOKIE = 'aura_attr';
+var ATTR_KEYS = ['gclid','gbraid','wbraid','utm_source','utm_medium',
+                 'utm_campaign','utm_term','utm_content'];
+
+function readCookie(name){
+  try {
+    var m = document.cookie.match('(?:^|; )' + name + '=([^;]*)');
+    return m ? decodeURIComponent(m[1]) : null;
+  } catch (e) { return null; }
+}
+function writeCookie(name, value, days){
+  try {
+    var d = new Date(); d.setTime(d.getTime() + days * 864e5);
+    document.cookie = name + '=' + encodeURIComponent(value) +
+      ';expires=' + d.toUTCString() + ';path=/;SameSite=Lax' +
+      (location.protocol === 'https:' ? ';Secure' : '');
+  } catch (e) {}
+}
+function currentAttribution(){
+  var raw = readCookie(ATTR_COOKIE);
+  if (!raw) return {};
+  try { var o = JSON.parse(raw); return (o && typeof o === 'object') ? o : {}; }
+  catch (e) { return {}; }
+}
+function captureAttribution(){
+  var fresh = {}, q;
+  try { q = new URLSearchParams(location.search); } catch (e) { return currentAttribution(); }
+  ATTR_KEYS.forEach(function(k){
+    var v = q.get(k);
+    if (v) fresh[k] = String(v).slice(0, 200);
+  });
+  if (!Object.keys(fresh).length) return currentAttribution();
+
+  var existing = currentAttribution();
+  var isPaidClick = !!(fresh.gclid || fresh.gbraid || fresh.wbraid);
+  if (Object.keys(existing).length && !isPaidClick) return existing;
+
+  fresh.landing_page = (location.pathname + location.search).slice(0, 300);
+  if (document.referrer) fresh.referrer = String(document.referrer).slice(0, 300);
+  fresh.first_seen = new Date().toISOString();
+  writeCookie(ATTR_COOKIE, JSON.stringify(fresh), 90);
+  return fresh;
+}
+window.auraAttribution = currentAttribution;
+
 function collectLead(form){
   var g = function(n){ var el = form.querySelector('[name="'+n+'"]'); return el ? String(el.value||'').trim() : null; };
   var page = (location.pathname.split('/').pop() || '');
@@ -275,6 +338,19 @@ function collectLead(form){
     source_product_code: g('source_product_code'),
     user_agent:          navigator.userAgent
   };
+
+  /* How they arrived. gclid carries whichever Google click id was present,
+     so a row with a gclid is a paid click and one without is not. */
+  var attr = currentAttribution();
+  lead.gclid        = attr.gclid || attr.gbraid || attr.wbraid || null;
+  lead.utm_source   = attr.utm_source   || null;
+  lead.utm_medium   = attr.utm_medium   || null;
+  lead.utm_campaign = attr.utm_campaign || null;
+  lead.utm_term     = attr.utm_term     || null;
+  lead.utm_content  = attr.utm_content  || null;
+  lead.landing_page = attr.landing_page || null;
+  lead.referrer     = attr.referrer     || null;
+
   Object.keys(lead).forEach(function(k){ if (lead[k] == null || lead[k] === '') delete lead[k]; });
   return lead;
 }
@@ -444,6 +520,7 @@ function wireForms(){
             page_path: location.pathname,
             stored: !!stored, emailed: !!emailed
           });
+          auraAdsConvert('lead');
         } else {
           status.style.color = '#c0392b';
           status.innerHTML = 'Something went wrong sending that. Please call <b>1300 291 277</b> or email <b>' + em + '</b> and we’ll sort it right away.';
@@ -523,23 +600,50 @@ function auraTrack(name, params){
 }
 window.auraTrack = auraTrack;
 
+/* Fire a Google Ads conversion. Stays silent unless config.js carries a
+   label for this action, so the site behaves identically before Google
+   Ads exists. GA4 still records the same event either way, and the Ads
+   account should ALSO import generate_lead and purchase from GA4: two
+   independent paths mean one broken link cannot leave you flying blind.
+   kind is 'lead' | 'purchase' | 'call'. */
+function auraAdsConvert(kind, params){
+  try {
+    var labels = (window.AURA_CONFIG || {}).adsLabels || {};
+    var label = labels[kind];
+    if (!label || typeof window.gtag !== 'function') return;
+    var p = { send_to: label };
+    if (params && params.value != null){
+      p.value = Number(params.value);
+      p.currency = params.currency || 'AUD';
+    }
+    /* Google de-duplicates on this, so a customer refreshing the order
+       page cannot be counted as a second sale. */
+    if (params && params.transaction_id) p.transaction_id = String(params.transaction_id);
+    window.gtag('event', 'conversion', p);
+  } catch (e) {}
+}
+window.auraAdsConvert = auraAdsConvert;
+
 function wireAnalytics(){
-  var id = (window.AURA_CONFIG || {}).ga4Id;
-  if (!id) return;                     /* analytics switched off */
+  var CFG = (window.AURA_CONFIG || {});
+  var ga4 = CFG.ga4Id, ads = CFG.adsId;
+  if (!ga4 && !ads) return;            /* both switched off */
   if (window.__auraGaLoaded) return;   /* never load gtag twice */
   window.__auraGaLoaded = true;
 
   window.dataLayer = window.dataLayer || [];
   window.gtag = function(){ window.dataLayer.push(arguments); };
   window.gtag('js', new Date());
-  window.gtag('config', id, {
+  if (ga4) window.gtag('config', ga4, {
     page_title: document.title,
     page_path: location.pathname + location.search
   });
+  /* The Ads tag is configured separately; both share one gtag.js. */
+  if (ads) window.gtag('config', ads);
 
   var s = document.createElement('script');
   s.async = true;
-  s.src = 'https://www.googletagmanager.com/gtag/js?id=' + encodeURIComponent(id);
+  s.src = 'https://www.googletagmanager.com/gtag/js?id=' + encodeURIComponent(ga4 || ads);
   document.head.appendChild(s);
 
   /* Delegated, so it covers the header, footer and drawer that this file
@@ -550,6 +654,7 @@ function wireAnalytics(){
     var href = a.getAttribute('href') || '';
     if (href.indexOf('tel:') === 0){
       auraTrack('tel_click', { link_url: href, page_path: location.pathname });
+      auraAdsConvert('call');
     } else if (href.indexOf('mailto:') === 0){
       auraTrack('email_click', { link_url: href, page_path: location.pathname });
     }
@@ -658,6 +763,9 @@ function wireTurnaround(){
 }
 
 document.addEventListener('DOMContentLoaded', function(){
+  /* First, so a gclid is banked even if a later step throws. This does not
+     depend on GA4 being on: the CRM needs the click id regardless. */
+  captureAttribution();
   wireAnalytics();
 
   /* The header and footer are now written into every page's HTML, so the menu

@@ -45,8 +45,8 @@
   <div class="wrap" id="wrap" style="max-width:760px"></div>
 </section>
 
-<script src="assets/config.js?v=20260831d"></script>
-<script src="assets/aura-cart.js?v=20260901a"></script>
+<script src="assets/config.js?v=20260920a"></script>
+<script src="assets/aura-cart.js?v=20260920a"></script>
 <script>
 (function(){
   var C = window.AuraCart, CFG = window.AURA_CONFIG||{}, BIZ = CFG.business||{};
@@ -94,6 +94,40 @@
     var inProd = ['in_production','shipped','completed'].indexOf(d.status) > -1;
     var shipped = !!d.tracking;
     sub.textContent = 'Order ' + d.order_number + (d.contact_name ? ' for ' + d.contact_name : '');
+
+    /* ---- purchase: report the sale to GA4 and to Google Ads -------------
+       Fired when the order first appears here, NOT when it is paid. The
+       order is the conversion, and an EFT payment can land days later,
+       long after the ad click that caused it. Guarded on the order number
+       so a refresh, a bookmark or a second visit cannot count it twice.
+       Values are ex GST, because ad platforms want revenue not tax. */
+    try {
+      var pKey = 'aura_purchase_' + d.order_number;
+      if (!localStorage.getItem(pKey)) {
+        localStorage.setItem(pKey, '1');
+        var incCents = d.total_inc_cents || 0;
+        var exCents  = Math.round(incCents / 1.1);
+        C.whenTracked(function () {
+          window.auraTrack('purchase', {
+            transaction_id: d.order_number,
+            currency: 'AUD',
+            value: exCents / 100,
+            tax:  (incCents - exCents) / 100,
+            items: (d.items || []).map(function (i, n) {
+              return { item_id: 'line-' + (n + 1),
+                       item_name: i.description,
+                       quantity: Number(i.qty) || 1,
+                       price: C.exDollars(i.price_inc_cents) };
+            })
+          });
+          if (typeof window.auraAdsConvert === 'function') {
+            window.auraAdsConvert('purchase', { value: exCents / 100,
+                                                currency: 'AUD',
+                                                transaction_id: d.order_number });
+          }
+        });
+      }
+    } catch (e) {}
 
     var banner = '';
     if(justPaid || paid){
@@ -185,6 +219,6 @@
   load();
 })();
 </script>
-<script src="assets/aura.js?v=20260905a"></script>
+<script src="assets/aura.js?v=20260920a"></script>
 </body>
 </html>

@@ -35,12 +35,38 @@
   function save(list) { return write(KEY, { at: Date.now(), items: list.slice(0, MAX_LINES) }); }
   function clear() { try { w.localStorage.removeItem(KEY); } catch (e) {} badge(); }
 
+  /* ---------- analytics ----------
+     assets/aura.js loads AFTER the inline script on cart, checkout and
+     order, so auraTrack may not exist yet when a shop step completes.
+     Wait for it rather than dropping the event, and give up quietly if
+     the visitor blocks analytics entirely. */
+  function whenTracked(fn) {
+    var tries = 0;
+    (function go() {
+      if (typeof w.auraTrack === 'function') { try { fn(); } catch (e) {} return; }
+      if (++tries > 40) return;                 /* about 4 seconds, then stop */
+      w.setTimeout(go, 100);
+    })();
+  }
+  /* Ad platforms want revenue, not the GST. Values reported ex GST. */
+  function exDollars(incCents) { return Math.round((incCents || 0) / 1.1) / 100; }
+
   function add(item) {
     var list = items();
     if (list.length >= MAX_LINES) return { ok: false, error: 'Your cart is full. Please check out first.' };
     list.push(item);
     if (!save(list)) return { ok: false, error: 'Your browser is blocking storage, so the cart cannot be saved.' };
     badge();
+    whenTracked(function () {
+      w.auraTrack('add_to_cart', {
+        currency: 'AUD',
+        value: exDollars(item.price_cents),
+        items: [{ item_id: item.slug || item.product_slug || 'item',
+                  item_name: item.name || 'Print item',
+                  quantity: Number(item.qty) || 1,
+                  price: exDollars(item.price_cents) }]
+      });
+    });
     return { ok: true, count: list.length };
   }
   function removeAt(i) { var l = items(); l.splice(i, 1); save(l); badge(); }
@@ -169,6 +195,7 @@
     order: order, setOrder: setOrder, clearOrder: clearOrder,
     money: money, esc: esc, specLine: specLine,
     callFn: callFn, rules: rules, canBuy: canBuy, badge: badge,
+    whenTracked: whenTracked, exDollars: exDollars,
     MAX_LINES: MAX_LINES
   };
 
