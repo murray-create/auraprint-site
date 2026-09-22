@@ -404,6 +404,18 @@ footer .fcols .lb h4{color:#ffb3bd}
 /* Letterbox is the 5th of six top-level items and its panel is four columns
    wide, so anchor it to the right edge or it runs off a 1200px viewport. */
 .navlinks>div.nav-lb .mega{left:auto;right:-20px}
+
+/* Promo & Uniforms is the 4th of six items and gained a 4th column with the
+   uniforms launch, so its panel ran off the right of the screen. Anchor it to
+   the item's right edge, and below 1400px drop it to a 2x2 grid so the left
+   edge stays on screen too. */
+.navlinks>div.nav-promo .mega{left:auto;right:-20px}
+@media(max-width:1400px){
+  .navlinks>div.nav-promo .mega{grid-template-columns:repeat(2,minmax(0,1fr));gap:22px 40px}
+  .navlinks>div.nav-promo:hover .mega{display:grid}
+}
+/* last-resort guard: no mega panel may be wider than the viewport */
+.mega{max-width:calc(100vw - 32px)}
 .drawer-lb .drawer-toggle{color:#dc1928}
 
 /* Suburb page: locality counts table + area cards */
