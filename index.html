@@ -36,6 +36,8 @@ input[type=range]{accent-color:var(--magenta);height:34px}
 .cat-tab:hover{background:var(--ink);color:#fff}
 .cat-tab.active,.cat-tab[aria-selected="true"]{background:var(--aura);border-color:transparent;color:#fff;box-shadow:0 8px 24px rgba(236,72,153,.35)}
 .cat-tab:focus-visible{outline:3px solid var(--violet);outline-offset:3px}
+.cat-n{display:inline-block;margin-left:7px;padding:2px 8px;border-radius:999px;font-size:12px;font-weight:800;background:rgba(0,0,0,.08);color:inherit;vertical-align:1px}
+.cat-tab.active .cat-n,.cat-tab:hover .cat-n{background:rgba(255,255,255,.22);color:#fff}
 .cat-panel{display:none}
 .cat-panel.active{display:block}
 .cat-desc{color:#6b6560;margin-bottom:18px;max-width:700px}
@@ -69,12 +71,16 @@ input[type=range]{accent-color:var(--magenta);height:34px}
 .review{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:var(--radius);padding:20px 22px;font-size:14.5px}
 .review .stars{color:#FBBF24;letter-spacing:2px;margin-bottom:8px}
 .review b{display:block;margin-top:10px;font-size:13px;color:#d8d2cb}
-.steps .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:30px;margin-top:40px}
-.step{background:#fff;border:1px solid #ece6de;border-radius:var(--radius);padding:30px}
+.steps .grid3{display:grid;grid-template-columns:repeat(4,1fr);gap:22px;margin-top:40px}
+@media(max-width:1100px){.steps .grid3{grid-template-columns:repeat(2,1fr)}}
+.step{background:#fff;border:1px solid #ece6de;border-radius:var(--radius);padding:30px;padding-left:30px}
+/* aura.css .step:before draws its own counter badge; this page already prints .num, so suppress it. */
+.steps .step:before{content:none}
 .step .num{font-family:'Archivo Black',sans-serif;font-size:44px;background:var(--aura);-webkit-background-clip:text;background-clip:text;color:transparent}
 .step h3{font-size:19px;margin:12px 0 8px}
 .step p{font-size:14.5px;color:#6b6560}
-@media(max-width:900px){.hero .wrap,.band .wrap{grid-template-columns:1fr}.steps .grid3{grid-template-columns:1fr}}
+@media(max-width:900px){.hero .wrap,.band .wrap{grid-template-columns:1fr}}
+@media(max-width:640px){.steps .grid3{grid-template-columns:1fr}}
 .feat{background:#faf8f5}
 .feat-grid{display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:22px}
 .feat-card{display:flex;flex-direction:column;gap:12px;background:#fff;border:1px solid #ece6de;border-radius:var(--radius);padding:26px;color:inherit;text-decoration:none;transition:.25s;position:relative}
@@ -83,7 +89,24 @@ input[type=range]{accent-color:var(--magenta);height:34px}
 .feat-card p{color:#6b6560;font-size:14.5px;margin:0}
 .feat-main{background:var(--ink);color:#fff;border:none}
 .feat-main h3{font-size:clamp(24px,2.6vw,32px)}
-.feat-badge{display:inline-block;align-self:flex-start;background:#dc1928;color:#fff;font-weight:800;font-size:11.5px;letter-spacing:.06em;text-transform:uppercase;padding:6px 11px;border-radius:999px}
+.feat-badge{display:inline-block;align-self:flex-start;background:#dc1928;color:#fff;font-weight:800;font-size:11.5px;letter-spacing:.06em;text-transform:uppercase;padding:6px 11px;border-radius:999px;white-space:nowrap}
+/* Photo band bleeding to the card edges. The section used to carry no imagery at all. */
+.feat-media{display:block;position:relative;overflow:hidden;margin:-26px -26px 6px;aspect-ratio:4/3;background:#f1ebe3}
+.feat-media>img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform .45s ease}
+.feat-card:hover .feat-media>img{transform:scale(1.04)}
+/* The main card shows three garments side by side, so the range reads at a glance. */
+.feat-media-contain{background:#f6f1ea}
+.feat-media-contain>img{object-fit:contain;padding:16px}
+.feat-media-row{display:flex;gap:0;background:#f6f1ea;aspect-ratio:21/9}
+.feat-media-row>img{position:static;inset:auto;width:33.333%;height:100%;object-fit:contain;padding:14px}
+.feat-card:hover .feat-media-row>img{transform:none}
+/* Letterbox keeps a place on the page without taking a whole feature card. */
+.feat-strip{display:flex;align-items:center;gap:16px;margin-top:22px;padding:16px 20px;border-radius:var(--radius);background:#fff;border:1px solid #ece6de;border-left:5px solid #dc1928;color:inherit;text-decoration:none;transition:.25s}
+.feat-strip:hover{transform:translateY(-2px);box-shadow:0 14px 34px rgba(0,0,0,.08)}
+.feat-strip-tag{flex:0 0 auto;font-weight:800;color:#dc1928;font-size:14px;letter-spacing:.02em}
+.feat-strip-copy{flex:1 1 auto;font-size:14.5px;color:#6b6560}
+.feat-strip-go{flex:0 0 auto;font-weight:800;font-size:18px;color:#dc1928}
+@media(max-width:700px){.feat-strip{flex-wrap:wrap;gap:8px}.feat-strip-copy{flex:1 1 100%;order:3}}
 .feat-badge.alt{background:var(--aura)}
 .feat-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:6px}
 .feat-stats b{display:block;font-size:22px;background:var(--aura);-webkit-background-clip:text;background-clip:text;color:transparent}
@@ -319,31 +342,43 @@ input[type=range]{accent-color:var(--magenta);height:34px}
   <div class="wrap">
     <div class="sec-head">
       <div>
-        <h2>New: letterbox drops, <span class="grad-text">delivered by Australia Post.</span></h2>
-        <p style="color:#6b6560;margin-top:10px">Pick your suburbs, see the official letterbox count and a delivery price on the spot. We print, bundle and lodge. Posties deliver it with the mail in a fixed week.</p>
+        <h2>New: uniforms and merch, <span class="grad-text">embroidered and delivered.</span></h2>
+        <p style="color:#6b6560;margin-top:10px">125 garments from JB's Wear, AS Colour, Aussie Pacific and Winning Spirit. Your logo embroidered or printed by Australian trade decorators, then shipped direct to you.</p>
       </div>
-      <a class="btn btn-aura" href="letterbox-distribution.html">Plan a letterbox drop →</a>
+      <a class="btn btn-aura" href="uniforms-workwear.html">See the uniform range &#8594;</a>
     </div>
     <div class="feat-grid">
-      <a class="feat-card feat-main" href="letterbox-distribution.html">
-        <span class="feat-badge">Australia Post Unaddressed Mail · posties, not backpackers</span>
-        <h3>Every letterbox. Every street. A week you can plan around.</h3>
-        <div class="feat-stats"><div><b>127,958</b><span>Sunshine Coast letterboxes</span></div><div><b>from 47.6c</b><span>per letterbox delivered, inc GST</span></div><div><b>1 quote</b><span>print + delivery together</span></div></div>
-        <span class="feat-link">Choose suburbs and price it →</span>
+      <a class="feat-card feat-main" href="uniforms-workwear.html">
+        <span class="feat-media feat-media-row">
+          <img src="assets/img/uniforms/jb-s-wear-210-navy.webp" alt="Embroidered polo shirt" width="420" height="512" loading="lazy">
+          <img src="assets/img/uniforms/jb-s-wear-6hps-lime-navy.webp" alt="Hi vis work polo" width="420" height="512" loading="lazy">
+          <img src="assets/img/uniforms/as-colour-1190-black.webp" alt="Embroidered trucker cap" width="420" height="420" loading="lazy">
+        </span>
+        <span class="feat-badge">New range &middot; quote only</span>
+        <h3>Kit out the whole team. One logo, every garment.</h3>
+        <div class="feat-stats"><div><b>125</b><span>curated garments</span></div><div><b>7</b><span>Australian brands</span></div><div><b>1,299</b><span>colours to pick from</span></div></div>
+        <span class="feat-link">See the range and get a quote &#8594;</span>
       </a>
-      <a class="feat-card" href="same-day-printing.html">
-        <span class="feat-badge alt">Fast turnaround</span>
-        <h3>Same day and next day printing</h3>
-        <p>Business cards, flyers and stationery. Order by 8am for same day on selected products.</p>
-        <span class="feat-link">See what qualifies →</span>
+      <a class="feat-card" href="corflute-signs.html">
+        <span class="feat-media"><img src="assets/img/construction-signs.jpg" alt="Corflute construction site sign on a fence" width="722" height="722" loading="lazy"></span>
+        <span class="feat-badge alt">Site &amp; real estate</span>
+        <h3>Corflute signs</h3>
+        <p>Site, real estate and event boards on 3mm or 5mm corflute, any size, priced on the page.</p>
+        <span class="feat-link">from $140 &middot; price online &#8594;</span>
       </a>
-      <a class="feat-card" href="real-estate-print-signage.html">
-        <span class="feat-badge alt">Industry</span>
-        <h3>Real estate print and signage</h3>
-        <p>Listing flyers, corflute signs, DL drops and open home kits, priced online.</p>
-        <span class="feat-link">Real estate range →</span>
+      <a class="feat-card" href="promotional-pens.html">
+        <span class="feat-media feat-media-contain"><img src="assets/img/promo/pens.webp" alt="Branded promotional pen" width="640" height="640" loading="lazy"></span>
+        <span class="feat-badge alt">Branded giveaways</span>
+        <h3>Promotional pens</h3>
+        <p>152 pens with live supplier stock. 125 Byron pens with your logo, $239 plus GST.</p>
+        <span class="feat-link">from $1.91 each &middot; price online &#8594;</span>
       </a>
     </div>
+    <a class="feat-strip" href="letterbox-distribution.html">
+      <span class="feat-strip-tag">Letterbox Drops</span>
+      <span class="feat-strip-copy">Australia Post Unaddressed Mail. 127,958 Sunshine Coast letterboxes, from 47.6c each delivered inc GST, print and delivery on one quote.</span>
+      <span class="feat-strip-go" aria-hidden="true">&#8594;</span>
+    </a>
   </div>
 </section>
 
@@ -358,10 +393,10 @@ input[type=range]{accent-color:var(--magenta);height:34px}
     </div>
 
     <div class="cat-tabs" role="tablist" aria-label="Product categories">
-      <button class="cat-tab active" id="tab-print" data-cat="print" role="tab" aria-selected="true" aria-controls="panel-print" tabindex="0">Print</button>
-      <button class="cat-tab" id="tab-signage" data-cat="signage" role="tab" aria-selected="false" aria-controls="panel-signage" tabindex="-1">Signage &amp; Display</button>
-      <button class="cat-tab" id="tab-promo" data-cat="promo" role="tab" aria-selected="false" aria-controls="panel-promo" tabindex="-1">Promo Products</button>
-      <button class="cat-tab" id="tab-uniforms" data-cat="uniforms" role="tab" aria-selected="false" aria-controls="panel-uniforms" tabindex="-1">Uniforms &amp; Apparel</button>
+      <button class="cat-tab active" id="tab-print" data-cat="print" role="tab" aria-selected="true" aria-controls="panel-print" tabindex="0">Print <span class="cat-n">26</span></button>
+      <button class="cat-tab" id="tab-signage" data-cat="signage" role="tab" aria-selected="false" aria-controls="panel-signage" tabindex="-1">Signage &amp; Display <span class="cat-n">61</span></button>
+      <button class="cat-tab" id="tab-promo" data-cat="promo" role="tab" aria-selected="false" aria-controls="panel-promo" tabindex="-1">Promo Products <span class="cat-n">835</span></button>
+      <button class="cat-tab" id="tab-uniforms" data-cat="uniforms" role="tab" aria-selected="false" aria-controls="panel-uniforms" tabindex="-1">Uniforms &amp; Apparel <span class="cat-n">125</span></button>
     </div>
 
     <div class="cat-panel active" id="panel-print" role="tabpanel" aria-labelledby="tab-print">
@@ -428,12 +463,12 @@ input[type=range]{accent-color:var(--magenta);height:34px}
         <a href="promotional-pens.html">Pens</a><a href="promotional-drink-bottles.html">Drink Bottles</a><a href="promotional-mugs.html">Mugs &amp; Cups</a><a href="promotional-tote-bags.html">Tote &amp; Cooler Bags</a><a href="promotional-keyrings.html">Keyrings</a><a href="custom-lanyards.html">Lanyards &amp; Badges</a><a href="eco-promotional-products.html">Eco Range</a><a href="australian-made-promotional-products.html">Australian Made</a><a class="chip-all" href="promo.html">All promo &#8594;</a>
       </div>
       <div class="grid">
-        <a class="card" href="promotional-pens.html"><div class="thumb">&#128394;&#65039;</div><div class="body"><h3>Promotional Pens</h3><p>152 pens with live stock. 125 Byron pens with your logo, $239 plus GST.</p><div class="cardfoot"><div class="from">from <em>$1.91</em> ea</div><span class="cardtag">Price online &#8594;</span></div></div></a>
-        <a class="card" href="promotional-drink-bottles.html"><div class="thumb">&#127862;</div><div class="body"><h3>Drink Bottles &amp; Tumblers</h3><p>70 bottles, flasks and tumblers. Plastic from $5.31 each at 100 units.</p><div class="cardfoot"><div class="from">from <em>$1.86</em> ea</div><span class="cardtag">Price online &#8594;</span></div></div></a>
-        <a class="card" href="promotional-tote-bags.html"><div class="thumb">&#128092;</div><div class="body"><h3>Tote &amp; Cooler Bags</h3><p>75 totes, cooler bags and backpacks in cotton, jute, non-woven and paper.</p><div class="cardfoot"><div class="from">from <em>$0.81</em> ea</div><span class="cardtag">Price online &#8594;</span></div></div></a>
-        <a class="card" href="promotional-keyrings.html"><div class="thumb">&#128273;</div><div class="body"><h3>Keyrings</h3><p>49 keyrings and key tags. The one item nobody ever throws away.</p><div class="cardfoot"><div class="from">from <em>$0.68</em> ea</div><span class="cardtag">Price online &#8594;</span></div></div></a>
-        <a class="card" href="custom-lanyards.html"><div class="thumb">&#127903;&#65039;</div><div class="body"><h3>Lanyards &amp; Badges</h3><p>Printed lanyards, badge holders and ID clips with safety breakaways.</p><div class="cardfoot"><div class="from">from <em>$0.62</em> ea</div><span class="cardtag">Price online &#8594;</span></div></div></a>
-        <a class="card" href="eco-promotional-products.html"><div class="thumb">&#127793;</div><div class="body"><h3>Eco Range</h3><p>88 recycled, bamboo, cork and jute products for tender and council work.</p><div class="cardfoot"><div class="from">from <em>$0.68</em> ea</div><span class="cardtag">Price online &#8594;</span></div></div></a>
+        <a class="card" href="promotional-pens.html"><div class="thumb garment"><img src="assets/img/promo/pens.webp" alt="Branded promotional pen" width="640" height="640" loading="lazy"></div><div class="body"><h3>Promotional Pens</h3><p>152 pens with live stock. 125 Byron pens with your logo, $239 plus GST.</p><div class="cardfoot"><div class="from">from <em>$1.91</em> ea</div><span class="cardtag">Price online &#8594;</span></div></div></a>
+        <a class="card" href="promotional-drink-bottles.html"><div class="thumb garment"><img src="assets/img/promo/bottles.webp" alt="Branded drink bottle" width="640" height="640" loading="lazy"></div><div class="body"><h3>Drink Bottles &amp; Tumblers</h3><p>70 bottles, flasks and tumblers. Plastic from $5.31 each at 100 units.</p><div class="cardfoot"><div class="from">from <em>$1.86</em> ea</div><span class="cardtag">Price online &#8594;</span></div></div></a>
+        <a class="card" href="promotional-tote-bags.html"><div class="thumb garment"><img src="assets/img/promo/totes.webp" alt="Branded calico tote bag" width="640" height="640" loading="lazy"></div><div class="body"><h3>Tote &amp; Cooler Bags</h3><p>75 totes, cooler bags and backpacks in cotton, jute, non-woven and paper.</p><div class="cardfoot"><div class="from">from <em>$0.81</em> ea</div><span class="cardtag">Price online &#8594;</span></div></div></a>
+        <a class="card" href="promotional-keyrings.html"><div class="thumb garment"><img src="assets/img/promo/keyrings.webp" alt="Branded leather keyring" width="640" height="640" loading="lazy"></div><div class="body"><h3>Keyrings</h3><p>49 keyrings and key tags. The one item nobody ever throws away.</p><div class="cardfoot"><div class="from">from <em>$0.68</em> ea</div><span class="cardtag">Price online &#8594;</span></div></div></a>
+        <a class="card" href="custom-lanyards.html"><div class="thumb garment"><img src="assets/img/promo/lanyards.webp" alt="Printed lanyard with badge clip" width="640" height="640" loading="lazy"></div><div class="body"><h3>Lanyards &amp; Badges</h3><p>Printed lanyards, badge holders and ID clips with safety breakaways.</p><div class="cardfoot"><div class="from">from <em>$0.62</em> ea</div><span class="cardtag">Price online &#8594;</span></div></div></a>
+        <a class="card" href="eco-promotional-products.html"><div class="thumb garment"><img src="assets/img/promo/eco.webp" alt="Eco notebook made from recycled material" width="640" height="640" loading="lazy"></div><div class="body"><h3>Eco Range</h3><p>88 recycled, bamboo, cork and jute products for tender and council work.</p><div class="cardfoot"><div class="from">from <em>$0.68</em> ea</div><span class="cardtag">Price online &#8594;</span></div></div></a>
       </div>
     </div>
 
@@ -473,7 +508,7 @@ input[type=range]{accent-color:var(--magenta);height:34px}
       <h2>Strength, experience and a <span class="grad-text">reputation to print on.</span></h2>
       <p>We are wide-format specialists based in Baringa on the Sunshine Coast, backed by Australia's biggest trade print networks. That means big-brand capability with a local's accountability.</p>
       <p>Every job gets a human check, a digital proof for your approval, and a turnaround promise we actually keep. Need it next day? Say the word.</p>
-      <a class="btn btn-aura" href="about.html" style="margin-top:14px">More about Aura</a>
+      <a class="btn btn-aura" href="about.html" style="margin-top:14px">More about Aura Print</a>
     </div>
     <div class="reviews">
       <div class="review"><div class="stars">✅</div><b>Proof before print.</b> Nothing goes to press until you've approved a digital proof - human-checked, every job.</div>
@@ -490,7 +525,7 @@ input[type=range]{accent-color:var(--magenta);height:34px}
       <div class="step"><div class="num">01</div><h3>Price it instantly</h3><p>Pick your product, spec and quantity. See your price live, no waiting on emails.</p></div>
       <div class="step"><div class="num">02</div><h3>Upload artwork</h3><p>Send print-ready files or use our templates. Our preflight checks catch problems early.</p></div>
       <div class="step"><div class="num">03</div><h3>Approve your proof</h3><p>A digital proof lands in your inbox. Nothing prints until you say so.</p></div>
-      <div class="step"><div class="num">04</div><h3>Printed &amp; delivered</h3><p>Pickup in Baringa or delivery Australia-wide. Express next-day options available.</p></div>
+      <div class="step"><div class="num">04</div><h3>Printed &amp; delivered</h3><p>Delivered Australia-wide, with express next-day options on selected products.</p></div>
     </div>
   </div>
 </section>
