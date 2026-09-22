@@ -31,13 +31,37 @@
 .qty-row{display:flex;justify-content:space-between;font-weight:700;font-size:14px;margin-top:6px}
 .quoter .btn{width:100%;text-align:center;margin-top:18px}
 input[type=range]{accent-color:var(--magenta);height:34px}
-.cat-tabs{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:30px}
-.cat-tab{padding:12px 26px;border-radius:999px;font-weight:700;font-size:15px;border:2px solid var(--ink);background:transparent;cursor:pointer;transition:.2s;font-family:'Inter',sans-serif}
+.cat-tabs{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:26px}
+.cat-tab{padding:12px 24px;border-radius:999px;font-weight:700;font-size:15px;border:2px solid var(--ink);background:transparent;cursor:pointer;transition:.2s;font-family:'Inter',sans-serif;white-space:nowrap}
 .cat-tab:hover{background:var(--ink);color:#fff}
-.cat-tab.active{background:var(--aura);border-color:transparent;color:#fff;box-shadow:0 8px 24px rgba(236,72,153,.35)}
+.cat-tab.active,.cat-tab[aria-selected="true"]{background:var(--aura);border-color:transparent;color:#fff;box-shadow:0 8px 24px rgba(236,72,153,.35)}
+.cat-tab:focus-visible{outline:3px solid var(--violet);outline-offset:3px}
 .cat-panel{display:none}
 .cat-panel.active{display:block}
-.cat-desc{color:#6b6560;margin-bottom:18px;max-width:640px}
+.cat-desc{color:#6b6560;margin-bottom:18px;max-width:700px}
+.cat-foot{margin-top:22px;font-size:14.5px;color:#6b6560}
+.cat-foot a{font-weight:700;color:var(--violet)}
+#products .chips{margin-bottom:26px}
+#products .chips .chip-all{background:var(--ink);color:#fff;border-color:transparent}
+#products .chips .chip-all:hover{color:#fff;opacity:.85}
+/* Equal-height product cards so every row lines up on its price line. */
+#products .card{display:flex;flex-direction:column}
+#products .card .body{display:flex;flex-direction:column;flex:1}
+#products .card .cardfoot{margin-top:auto;padding-top:4px}
+/* Thumbs must not grow to the image's own height, or the body text in a row
+   starts at four different heights. Lock the box, position the image inside it. */
+#products .card .thumb{aspect-ratio:4/3;position:relative;overflow:hidden;font-size:62px}
+#products .card .badge{z-index:2}
+#products .card .thumb.photo img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+/* Garment shots are cut out on white and portrait, so contain rather than crop. */
+#products .card .thumb.garment{aspect-ratio:1/1;background:#f6f1ea}
+#products .card .thumb.garment img{position:absolute;top:7%;left:7%;width:86%;height:86%;object-fit:contain;transition:transform .45s ease}
+#products .card:hover .thumb.garment img{transform:scale(1.05)}
+@media(max-width:640px){
+  .cat-tabs{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;margin-left:-4px;padding:4px}
+  .cat-tabs::-webkit-scrollbar{display:none}
+  .cat-tab{padding:11px 20px;font-size:14px;flex:0 0 auto}
+}
 .band .wrap{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center}
 .band h2{font-size:clamp(28px,3.6vw,44px);margin-bottom:18px}
 .band p{color:#b8b2ab;margin-bottom:14px}
@@ -162,7 +186,7 @@ input[type=range]{accent-color:var(--magenta);height:34px}
     <button class="drawer-close" id="drawerClose" aria-label="Close menu">✕</button>
   </div>
   <nav class="drawer-nav">
-    <a class="drawer-feature" href="letterbox-distribution.html" style="display:flex;justify-content:space-between;align-items:center;gap:10px;margin:0 0 10px;padding:13px 14px;border-radius:12px;background:#dc1928;color:#fff;font-weight:800;text-decoration:none"><span>Letterbox Drops<br><small style="font-weight:600;opacity:.9">Delivered by Australia Post</small></span><span aria-hidden="true">→</span></a>
+    <a class="drawer-feature" href="letterbox-distribution.html" style="display:flex;justify-content:space-between;align-items:center;gap:12px;margin:6px 14px 16px;padding:16px 18px;border-radius:14px;background:#dc1928;color:#fff;font-weight:800;text-decoration:none;line-height:1.35;box-shadow:0 8px 20px rgba(220,25,40,.22)"><span>Letterbox Drops<br><small style="font-weight:600;opacity:.92;display:block;margin-top:3px">Delivered by Australia Post</small></span><span aria-hidden="true">→</span></a>
     <div class="drawer-group drawer-lb">
       <button class="drawer-toggle" aria-expanded="false">Letterbox areas <span>&#9662;</span></button>
       <ul class="drawer-sub" hidden><li><a href="letterbox-distribution.html"><b>Book a letterbox drop &#8594;</b></a></li><li><a href="letterbox-distribution-caloundra.html">Caloundra</a></li><li><a href="letterbox-distribution-aura-baringa.html">Aura &amp; Baringa</a></li><li><a href="letterbox-distribution-kawana.html">Kawana</a></li><li><a href="letterbox-distribution-mooloolaba.html">Mooloolaba</a></li><li><a href="letterbox-distribution-maroochydore.html">Maroochydore</a></li><li><a href="letterbox-distribution-buderim.html">Buderim</a></li><li><a href="letterbox-distribution-nambour.html">Nambour</a></li><li><a href="letterbox-distribution-marcoola-twin-waters.html">Bli Bli &amp; Twin Waters</a></li><li><a href="letterbox-distribution-coolum-peregian.html">Coolum &amp; Peregian</a></li><li><a href="letterbox-distribution-noosa.html">Noosa</a></li><li><a href="letterbox-distribution-maleny-hinterland.html">Maleny &amp; Hinterland</a></li><li><a href="letterbox-distribution-beerwah-glasshouse.html">Beerwah &amp; Glass House</a></li><li><a href="letterbox-distribution-palmwoods.html">Palmwoods &amp; Mooloolah</a></li><li><a href="letterbox-distribution-eumundi-yandina.html">Eumundi &amp; Yandina</a></li><li><a href="letterbox-distribution-cooroy-pomona.html">Cooroy &amp; Pomona</a></li><li><a href="letterbox-distribution-australia.html">Australia-wide</a></li></ul>
@@ -328,90 +352,117 @@ input[type=range]{accent-color:var(--magenta);height:34px}
     <div class="sec-head">
       <div>
         <h2>Shop by <span class="grad-text">category</span></h2>
-        <p style="color:#6b6560;margin-top:10px">Every product has live online pricing or a fast quote, with artwork checks built in.</p>
+        <p style="color:#6b6560;margin-top:10px">Four ranges, one supplier. Live online pricing where we can give it, a fast quote where the job needs a human.</p>
       </div>
       <a class="btn btn-ghost" href="print.html">All products</a>
     </div>
 
-    <div class="cat-tabs" role="tablist">
-      <button class="cat-tab active" data-cat="print">Print</button>
-      <button class="cat-tab" data-cat="signage">Signage &amp; Display</button>
-      <button class="cat-tab" data-cat="promo">Promo &amp; Apparel</button>
+    <div class="cat-tabs" role="tablist" aria-label="Product categories">
+      <button class="cat-tab active" id="tab-print" data-cat="print" role="tab" aria-selected="true" aria-controls="panel-print" tabindex="0">Print</button>
+      <button class="cat-tab" id="tab-signage" data-cat="signage" role="tab" aria-selected="false" aria-controls="panel-signage" tabindex="-1">Signage &amp; Display</button>
+      <button class="cat-tab" id="tab-promo" data-cat="promo" role="tab" aria-selected="false" aria-controls="panel-promo" tabindex="-1">Promo Products</button>
+      <button class="cat-tab" id="tab-uniforms" data-cat="uniforms" role="tab" aria-selected="false" aria-controls="panel-uniforms" tabindex="-1">Uniforms &amp; Apparel</button>
     </div>
 
-    <div class="cat-panel active" id="panel-print">
-      <p class="cat-desc">Small format print, fulfilled through Australia's biggest trade networks. Cards, marketing material and bound books with instant online pricing.</p>
+    <div class="cat-panel active" id="panel-print" role="tabpanel" aria-labelledby="tab-print">
+      <p class="cat-desc">Cards, marketing material and bound books, printed through Australia's biggest trade networks. Price it and order it online.</p>
       <div class="chips">
-        <a href="business-cards.html">Business Cards</a><a href="nv-velvet-business-cards.html">NV Velvet Cards</a><a href="flyers.html">Flyers</a><a href="letterbox-distribution.html">Letterbox Drops</a><a href="brochures.html">Brochures</a><a href="postcards.html">Postcards</a><a href="letterheads.html">Letterheads</a><a href="envelopes.html">Envelopes</a><a href="presentation-folders.html">Presentation Folders</a><a href="menus.html">Menus</a><a href="greeting-cards.html">Greeting Cards</a><a href="booklets.html">Booklets</a><a href="perfect-bound-books.html">Perfect Bound Books</a><a href="invoice-books.html">Invoice Books (NCR)</a><a href="notepads.html">Notepads</a><a href="calendars.html">Calendars</a><a href="loyalty-cards.html">Loyalty Cards</a>
+        <a href="business-cards.html">Business Cards</a><a href="flyers.html">Flyers</a><a href="brochures.html">Brochures</a><a href="postcards.html">Postcards</a><a href="booklets.html">Booklets</a><a href="presentation-folders.html">Presentation Folders</a><a href="menus.html">Menus</a><a href="letterheads.html">Letterheads</a><a class="chip-all" href="print.html">All print &#8594;</a>
       </div>
       <!--GEN:print-->
       <div class="grid">
       <a class="card" href="business-cards.html"><span class="badge">Most popular</span><div class="thumb photo"><img src="assets/img/business-cards.jpg" alt="Business Cards" width="900" height="900" loading="lazy"></div>
   <div class="body"><h3>Business Cards</h3><p>90x55mm. From everyday 350gsm to thick NV Velvet with Spot UV and metallic foil.</p>
-  <div class="cardfoot"><div class="from">from <em>$55</em></div><span class="cardtag">Price online →</span></div></div></a>
+  <div class="cardfoot"><div class="from">from <em>$55</em></div><span class="cardtag">Price online &#8594;</span></div></div></a>
       <a class="card" href="nv-velvet-business-cards.html"><div class="thumb photo"><img src="assets/img/nv-velvet.jpg" alt="NV Velvet Business Cards" width="900" height="900" loading="lazy"></div>
   <div class="body"><h3>NV Velvet Business Cards</h3><p>Soft-touch velvet laminate over 450gsm artboard. The card people remember.</p>
-  <div class="cardfoot"><div class="from">from <em>$120</em></div><span class="cardtag">Price online →</span></div></div></a>
+  <div class="cardfoot"><div class="from">from <em>$120</em></div><span class="cardtag">Price online &#8594;</span></div></div></a>
       <a class="card" href="flyers.html"><div class="thumb photo"><img src="assets/img/flyers.jpg" alt="Flyers" width="900" height="900" loading="lazy"></div>
   <div class="body"><h3>Flyers</h3><p>DL to A3 on stocks from 130gsm to 350gsm. Letterbox-ready and event-proof.</p>
-  <div class="cardfoot"><div class="from">from <em>$117</em></div><span class="cardtag">Price online →</span></div></div></a>
+  <div class="cardfoot"><div class="from">from <em>$117</em></div><span class="cardtag">Price online &#8594;</span></div></div></a>
       <a class="card" href="brochures.html"><div class="thumb photo"><img src="assets/img/brochures.jpg" alt="Brochures" width="900" height="900" loading="lazy"></div>
   <div class="body"><h3>Brochures</h3><p>Half fold, tri fold, Z fold and gate fold on premium stocks.</p>
-  <div class="cardfoot"><div class="from">from <em>$271</em></div><span class="cardtag">Price online →</span></div></div></a>
+  <div class="cardfoot"><div class="from">from <em>$271</em></div><span class="cardtag">Price online &#8594;</span></div></div></a>
       <a class="card" href="postcards.html"><div class="thumb photo"><img src="assets/img/postcards.jpg" alt="Postcards" width="900" height="900" loading="lazy"></div>
   <div class="body"><h3>Postcards</h3><p>Direct mail that stands out. A6 to A5 on thick stocks.</p>
-  <div class="cardfoot"><div class="from">from <em>$158</em></div><span class="cardtag">Price online →</span></div></div></a>
+  <div class="cardfoot"><div class="from">from <em>$158</em></div><span class="cardtag">Price online &#8594;</span></div></div></a>
       <a class="card" href="letterheads.html"><div class="thumb photo"><img src="assets/img/letterheads.jpg" alt="Letterheads" width="900" height="675" loading="lazy"></div>
   <div class="body"><h3>Letterheads</h3><p>Offset quality on premium uncoated and laser-safe stocks.</p>
-  <div class="cardfoot"><div class="from">from <em>$263</em></div><span class="cardtag">Price online →</span></div></div></a>
+  <div class="cardfoot"><div class="from">from <em>$263</em></div><span class="cardtag">Price online &#8594;</span></div></div></a>
       </div>
       <!--/GEN:print-->
     </div>
 
-    <div class="cat-panel" id="panel-signage">
+    <div class="cat-panel" id="panel-signage" role="tabpanel" aria-labelledby="tab-signage" hidden>
       <p class="cat-desc">Wide format is our specialty. Site signage, banners, flags and event displays printed tough for Queensland conditions.</p>
       <div class="chips">
-        <a href="corflute-signs.html">Corflute Signs</a><a href="a-frames.html">A-Frames</a><a href="aluminium-signs.html">Aluminium Composite</a><a href="safety-signs.html">Safety Signs</a><a href="posters.html">Posters</a><a href="stickers.html">Stickers &amp; Labels</a><a href="vehicle-magnets.html">Magnets</a><a href="pull-up-banners.html">Pull Up Banners</a><a href="outdoor-banners.html">Outdoor Banners</a><a href="teardrop-flags.html">Teardrop Flags</a><a href="fence-mesh.html">Fence Mesh</a><a href="exhibition-displays.html">Exhibition Displays</a><a href="media-walls.html">Media Walls</a><a href="marquees.html">Marquees</a><a href="standees.html">Standees</a>
+        <a href="corflute-signs.html">Corflute Signs</a><a href="a-frames.html">A-Frames</a><a href="pull-up-banners.html">Pull Up Banners</a><a href="aluminium-signs.html">Aluminium Composite</a><a href="outdoor-banners.html">Outdoor Banners</a><a href="teardrop-flags.html">Teardrop Flags</a><a href="stickers.html">Stickers &amp; Labels</a><a href="safety-signs.html">Safety Signs</a><a class="chip-all" href="signage.html">All signage &#8594;</a>
       </div>
       <!--GEN:signage-->
       <div class="grid">
       <a class="card" href="corflute-signs.html"><div class="thumb photo"><img src="assets/img/corflute-signs.jpg" alt="Corflute Signs" width="900" height="900" loading="lazy"></div>
   <div class="body"><h3>Corflute Signs</h3><p>Real estate, builders and event boards on 3mm or 5mm corflute, any size.</p>
-  <div class="cardfoot"><div class="from">from <em>$140</em></div><span class="cardtag">Price online →</span></div></div></a>
+  <div class="cardfoot"><div class="from">from <em>$140</em></div><span class="cardtag">Price online &#8594;</span></div></div></a>
       <a class="card" href="a-frames.html"><div class="thumb photo"><img src="assets/img/a-frames.jpg" alt="A-Frames" width="900" height="900" loading="lazy"></div>
-  <div class="body"><h3>A-Frames</h3><p>Ten A-frame styles priced live: Signflute, sandwich boards, Endurosign, real estate frames, chalkboards, Monsoon and expandable SEG displays.</p>
-  <div class="cardfoot"><div class="from">from <em>$109</em></div><span class="cardtag">Price online →</span></div></div></a>
+  <div class="body"><h3>A-Frames</h3><p>Ten styles priced live, from sandwich boards to Monsoon and expandable SEG displays.</p>
+  <div class="cardfoot"><div class="from">from <em>$109</em></div><span class="cardtag">Price online &#8594;</span></div></div></a>
       <a class="card" href="aluminium-signs.html"><div class="thumb photo"><img src="assets/img/aluminium-signs.jpg" alt="Aluminium composite signs" width="900" height="600" loading="lazy"></div>
   <div class="body"><h3>Aluminium Composite Signs</h3><p>Premium rigid ACM signage that stays flat and lasts years outdoors.</p>
-  <div class="cardfoot"><div class="from">from <em>$207</em></div><span class="cardtag">Price online →</span></div></div></a>
+  <div class="cardfoot"><div class="from">from <em>$207</em></div><span class="cardtag">Price online &#8594;</span></div></div></a>
       <a class="card" href="safety-signs.html"><div class="thumb photo"><img src="assets/img/safety-signs.jpg" alt="Safety Signs" width="1200" height="1801" loading="lazy"></div>
   <div class="body"><h3>Safety Signs</h3><p>Compliant site and workplace signage to AS 1319, stock or custom.</p>
-  <div class="cardfoot"><div class="from">fast quote</div><span class="cardtag">Get a quote →</span></div></div></a>
+  <div class="cardfoot"><div class="from">fast quote</div><span class="cardtag">Get a quote &#8594;</span></div></div></a>
       <a class="card" href="posters.html"><div class="thumb photo"><img src="assets/img/posters.jpg" alt="Posters" width="722" height="722" loading="lazy"></div>
   <div class="body"><h3>Posters</h3><p>Offset and wide format posters, A2 to billboard scale.</p>
-  <div class="cardfoot"><div class="from">from <em>$102</em></div><span class="cardtag">Price online →</span></div></div></a>
+  <div class="cardfoot"><div class="from">from <em>$102</em></div><span class="cardtag">Price online &#8594;</span></div></div></a>
       <a class="card" href="stickers.html"><div class="thumb photo"><img src="assets/img/stickers.jpg" alt="Stickers &amp; Labels" width="900" height="900" loading="lazy"></div>
-  <div class="body"><h3>Stickers &amp; Labels</h3><p>Kiss-cut roll stickers priced live: circles, squares and rectangles in 42 sizes, paper, vinyl and clear stocks. Die-cut shapes and sheet stickers by quote.</p>
-  <div class="cardfoot"><div class="from">from <em>$289</em></div><span class="cardtag">Price online →</span></div></div></a>
+  <div class="body"><h3>Stickers &amp; Labels</h3><p>Kiss-cut roll stickers in 42 sizes, on paper, vinyl and clear stocks.</p>
+  <div class="cardfoot"><div class="from">from <em>$289</em></div><span class="cardtag">Price online &#8594;</span></div></div></a>
       </div>
       <!--/GEN:signage-->
     </div>
 
-    <div class="cat-panel" id="panel-promo">
-      <p class="cat-desc">800+ branded products with live stock from our supplier network, plus a full uniform and workwear range. Browse the catalogue on-site, no redirects.</p>
+    <div class="cat-panel" id="panel-promo" role="tabpanel" aria-labelledby="tab-promo" hidden>
+      <p class="cat-desc">800+ branded giveaways with live supplier stock, priced on the page. Browsed on our site, not a redirect to somebody else's.</p>
       <div class="chips">
-        <a href="promotional-pens.html">Promotional Pens</a><a href="promotional-drink-bottles.html">Drink Bottles</a><a href="promotional-mugs.html">Mugs &amp; Cups</a><a href="promotional-tote-bags.html">Tote &amp; Cooler Bags</a><a href="promotional-keyrings.html">Keyrings</a><a href="custom-lanyards.html">Lanyards &amp; Badges</a><a href="promotional-notebooks.html">Notebooks</a><a href="promotional-tech.html">Tech &amp; Power Banks</a><a href="eco-promotional-products.html">Eco Range</a><a href="australian-made-promotional-products.html">Australian Made</a><a href="event-merchandise.html">Event &amp; Tradeshow</a><a href="magnets.html">Fridge Magnets</a><a href="uniforms-workwear.html">Uniforms &amp; Merch</a><a href="embroidered-polo-shirts.html">Embroidered Polos</a><a href="hi-vis-workwear.html">Hi Vis &amp; Workwear</a><a href="custom-t-shirts.html">Custom T-Shirts</a><a href="embroidered-caps-hats.html">Caps &amp; Headwear</a>
+        <a href="promotional-pens.html">Pens</a><a href="promotional-drink-bottles.html">Drink Bottles</a><a href="promotional-mugs.html">Mugs &amp; Cups</a><a href="promotional-tote-bags.html">Tote &amp; Cooler Bags</a><a href="promotional-keyrings.html">Keyrings</a><a href="custom-lanyards.html">Lanyards &amp; Badges</a><a href="eco-promotional-products.html">Eco Range</a><a href="australian-made-promotional-products.html">Australian Made</a><a class="chip-all" href="promo.html">All promo &#8594;</a>
       </div>
       <div class="grid">
-        <a class="card" href="promotional-pens.html"><div class="thumb">🖊️</div><div class="body"><h3>Promotional Pens</h3><p>152 pens with live stock. 125 Byron pens with your logo, $239 plus GST.</p><div class="cardfoot"><div class="from">from $1.91 ea</div><span class="cardtag">Price online →</span></div></div></a>
-        <a class="card" href="promotional-drink-bottles.html"><div class="thumb">🍶</div><div class="body"><h3>Drink Bottles &amp; Tumblers</h3><p>70 bottles, flasks and tumblers. Plastic from $5.31 each at 100 units.</p><div class="cardfoot"><div class="from">from $1.86 ea</div><span class="cardtag">Price online →</span></div></div></a>
-        <a class="card" href="promotional-tote-bags.html"><div class="thumb">👜</div><div class="body"><h3>Tote &amp; Cooler Bags</h3><p>75 totes, cooler bags and backpacks. Cotton, jute, non-woven and paper.</p><div class="cardfoot"><div class="from">from $0.81 ea</div><span class="cardtag">Price online →</span></div></div></a>
-        <a class="card" href="promotional-keyrings.html"><div class="thumb">🔑</div><div class="body"><h3>Keyrings</h3><p>49 keyrings and key tags. The one item nobody ever throws away.</p><div class="cardfoot"><div class="from">from $0.68 ea</div><span class="cardtag">Price online →</span></div></div></a>
-        <a class="card" href="custom-lanyards.html"><div class="thumb">🎟️</div><div class="body"><h3>Lanyards &amp; Badges</h3><p>Printed lanyards, badge holders and ID clips with safety breakaways.</p><div class="cardfoot"><div class="from">from $0.62 ea</div><span class="cardtag">Price online →</span></div></div></a>
-        <a class="card" href="eco-promotional-products.html"><div class="thumb">🌱</div><div class="body"><h3>Eco Range</h3><p>88 recycled, bamboo, cork and jute products for tender and council work.</p><div class="cardfoot"><div class="from">from $0.68 ea</div><span class="cardtag">Price online →</span></div></div></a>
-        <a class="card" href="embroidered-polo-shirts.html"><div class="thumb">👔</div><div class="body"><h3>Uniforms &amp; Merch</h3><p>Embroidered polos, hi vis, tees, hoodies, caps and aprons from JB’s Wear, Biz Collection and AS Colour.</p><div class="cardfoot"><div class="from">quote only</div><span class="cardtag">See the range →</span></div></div></a>
-        <a class="card" href="hi-vis-workwear.html"><div class="thumb">🦺</div><div class="body"><h3>Hi Vis &amp; Workwear</h3><p>Day and day/night garments, drill shirts, work shorts and pants. Compliance stated as the manufacturer publishes it.</p><div class="cardfoot"><div class="from">quote only</div><span class="cardtag">See the range →</span></div></div></a>
+        <a class="card" href="promotional-pens.html"><div class="thumb">&#128394;&#65039;</div><div class="body"><h3>Promotional Pens</h3><p>152 pens with live stock. 125 Byron pens with your logo, $239 plus GST.</p><div class="cardfoot"><div class="from">from <em>$1.91</em> ea</div><span class="cardtag">Price online &#8594;</span></div></div></a>
+        <a class="card" href="promotional-drink-bottles.html"><div class="thumb">&#127862;</div><div class="body"><h3>Drink Bottles &amp; Tumblers</h3><p>70 bottles, flasks and tumblers. Plastic from $5.31 each at 100 units.</p><div class="cardfoot"><div class="from">from <em>$1.86</em> ea</div><span class="cardtag">Price online &#8594;</span></div></div></a>
+        <a class="card" href="promotional-tote-bags.html"><div class="thumb">&#128092;</div><div class="body"><h3>Tote &amp; Cooler Bags</h3><p>75 totes, cooler bags and backpacks in cotton, jute, non-woven and paper.</p><div class="cardfoot"><div class="from">from <em>$0.81</em> ea</div><span class="cardtag">Price online &#8594;</span></div></div></a>
+        <a class="card" href="promotional-keyrings.html"><div class="thumb">&#128273;</div><div class="body"><h3>Keyrings</h3><p>49 keyrings and key tags. The one item nobody ever throws away.</p><div class="cardfoot"><div class="from">from <em>$0.68</em> ea</div><span class="cardtag">Price online &#8594;</span></div></div></a>
+        <a class="card" href="custom-lanyards.html"><div class="thumb">&#127903;&#65039;</div><div class="body"><h3>Lanyards &amp; Badges</h3><p>Printed lanyards, badge holders and ID clips with safety breakaways.</p><div class="cardfoot"><div class="from">from <em>$0.62</em> ea</div><span class="cardtag">Price online &#8594;</span></div></div></a>
+        <a class="card" href="eco-promotional-products.html"><div class="thumb">&#127793;</div><div class="body"><h3>Eco Range</h3><p>88 recycled, bamboo, cork and jute products for tender and council work.</p><div class="cardfoot"><div class="from">from <em>$0.68</em> ea</div><span class="cardtag">Price online &#8594;</span></div></div></a>
       </div>
+    </div>
+
+    <div class="cat-panel" id="panel-uniforms" role="tabpanel" aria-labelledby="tab-uniforms" hidden>
+      <p class="cat-desc">125 curated garments from JB's Wear, AS Colour, Aussie Pacific, Winning Spirit, Biz Collection and more. Embroidered or printed by Australian trade decorators and shipped direct. Quoted, not guessed, because an honest price needs the garment, the quantity and the stitch count.</p>
+      <div class="chips">
+        <a href="embroidered-polo-shirts.html">Embroidered Polos</a><a href="hi-vis-workwear.html">Hi Vis &amp; Workwear</a><a href="custom-t-shirts.html">T-Shirts</a><a href="custom-hoodies-jackets.html">Hoodies &amp; Jackets</a><a href="embroidered-caps-hats.html">Caps &amp; Headwear</a><a href="hospitality-uniforms.html">Hospitality</a><a href="corporate-uniforms.html">Corporate Shirts</a><a class="chip-all" href="uniforms-workwear.html">Full range &#8594;</a>
+      </div>
+      <div class="grid">
+        <a class="card" href="embroidered-polo-shirts.html"><span class="badge">New range</span><div class="thumb garment"><img src="assets/img/uniforms/jb-s-wear-210-navy.webp" alt="Embroidered polo shirt" width="420" height="512" loading="lazy"></div>
+  <div class="body"><h3>Embroidered Polos</h3><p>33 polo styles in mens, ladies and kids fits. The everyday trade and club uniform.</p>
+  <div class="cardfoot"><div class="from">quote only</div><span class="cardtag">See the range &#8594;</span></div></div></a>
+        <a class="card" href="hi-vis-workwear.html"><div class="thumb garment"><img src="assets/img/uniforms/jb-s-wear-6hps-lime-navy.webp" alt="Hi vis work polo" width="420" height="512" loading="lazy"></div>
+  <div class="body"><h3>Hi Vis &amp; Workwear</h3><p>14 day and day/night garments, drill shirts, shorts and pants. Compliance as the maker publishes it.</p>
+  <div class="cardfoot"><div class="from">quote only</div><span class="cardtag">See the range &#8594;</span></div></div></a>
+        <a class="card" href="custom-t-shirts.html"><div class="thumb garment"><img src="assets/img/uniforms/as-colour-5001-navy.webp" alt="Custom printed t-shirt" width="420" height="420" loading="lazy"></div>
+  <div class="body"><h3>Custom T-Shirts</h3><p>15 tee styles in retail-weight cotton. Screen print, DTF or embroidery.</p>
+  <div class="cardfoot"><div class="from">quote only</div><span class="cardtag">See the range &#8594;</span></div></div></a>
+        <a class="card" href="custom-hoodies-jackets.html"><div class="thumb garment"><img src="assets/img/uniforms/as-colour-5161-black.webp" alt="Embroidered hoodie" width="420" height="420" loading="lazy"></div>
+  <div class="body"><h3>Hoodies &amp; Jackets</h3><p>20 hoods, crews, softshells, puffers and vests. Winter staff kit and team merch.</p>
+  <div class="cardfoot"><div class="from">quote only</div><span class="cardtag">See the range &#8594;</span></div></div></a>
+        <a class="card" href="embroidered-caps-hats.html"><div class="thumb garment"><img src="assets/img/uniforms/as-colour-1190-black.webp" alt="Embroidered trucker cap" width="420" height="420" loading="lazy"></div>
+  <div class="body"><h3>Caps &amp; Headwear</h3><p>24 caps, truckers, bucket hats and beanies. Twelve minimum, new logo or reorder.</p>
+  <div class="cardfoot"><div class="from">quote only</div><span class="cardtag">See the range &#8594;</span></div></div></a>
+        <a class="card" href="hospitality-uniforms.html"><div class="thumb garment"><img src="assets/img/uniforms/jb-s-wear-5acbc-black.webp" alt="Cross back canvas apron" width="420" height="512" loading="lazy"></div>
+  <div class="body"><h3>Hospitality &amp; Corporate</h3><p>19 aprons, chef wear and business shirts for cafes, venues and front of house.</p>
+  <div class="cardfoot"><div class="from">quote only</div><span class="cardtag">See the range &#8594;</span></div></div></a>
+      </div>
+      <p class="cat-foot">Not sure which decoration suits your logo? <a href="uniform-decoration.html">Compare embroidery, screen print, DTF and vinyl &#8594;</a></p>
     </div>
   </div>
 </section>
@@ -591,14 +642,46 @@ function render(){
   })(performance.now());
 }
 sel.addEventListener('change',render); qty.addEventListener('input',render); render();
-document.querySelectorAll('.cat-tab').forEach(tab=>{
-  tab.addEventListener('click',()=>{
-    document.querySelectorAll('.cat-tab').forEach(t=>t.classList.remove('active'));
-    document.querySelectorAll('.cat-panel').forEach(p=>p.classList.remove('active'));
-    tab.classList.add('active');
-    document.getElementById('panel-'+tab.dataset.cat).classList.add('active');
+/* Category tabs: ARIA state, arrow-key roving focus, and a shareable hash
+   (#print / #signage / #promo / #uniforms) so a tab can be linked to directly. */
+(function(){
+  var tabs=[].slice.call(document.querySelectorAll('.cat-tab'));
+  if(!tabs.length)return;
+  function show(cat,focus,push){
+    var hit=false;
+    tabs.forEach(function(t){
+      var on=t.dataset.cat===cat; if(on)hit=true;
+      t.classList.toggle('active',on);
+      t.setAttribute('aria-selected',on?'true':'false');
+      t.tabIndex=on?0:-1;
+      var p=document.getElementById('panel-'+t.dataset.cat);
+      if(p){p.classList.toggle('active',on); if(on)p.removeAttribute('hidden'); else p.setAttribute('hidden','');}
+      if(on&&focus)t.focus();
+    });
+    if(hit&&push&&history.replaceState)history.replaceState(null,'','#'+cat);
+    return hit;
+  }
+  tabs.forEach(function(tab,i){
+    tab.addEventListener('click',function(){show(tab.dataset.cat,false,true);});
+    tab.addEventListener('keydown',function(e){
+      var n=null;
+      if(e.key==='ArrowRight')n=tabs[(i+1)%tabs.length];
+      else if(e.key==='ArrowLeft')n=tabs[(i-1+tabs.length)%tabs.length];
+      else if(e.key==='Home')n=tabs[0];
+      else if(e.key==='End')n=tabs[tabs.length-1];
+      if(n){e.preventDefault();show(n.dataset.cat,true,true);}
+    });
   });
-});
+  function fromHash(scroll){
+    var h=(location.hash||'').replace('#','');
+    if(h&&show(h,false,false)&&scroll){
+      var sec=document.getElementById('products');
+      if(sec)sec.scrollIntoView({behavior:'smooth',block:'start'});
+    }
+  }
+  fromHash(true);
+  window.addEventListener('hashchange',function(){fromHash(true);});
+})();
 </script>
 </body>
 </html>
