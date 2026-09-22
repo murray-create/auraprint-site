@@ -43,10 +43,10 @@ const HEADER = `
           <div><h4>Labels &amp; Speciality</h4><ul><li><a href="roll-labels.html">Roll Labels</a></li><li><a href="custom-label-rolls.html">Custom Label Rolls</a></li><li><a href="large-format-stickers-sav.html">Large Format (SAV)</a></li><li><a href="electrostatic-stickers.html">Electrostatic Stickers</a></li></ul></div>
         </div>
       </div>
-      <div><a href="promo.html">Promo &amp; Apparel ▾</a>
+      <div><a href="promo.html">Promo &amp; Uniforms ▾</a>
         <div class="mega">
           <div><h4>Drinkware &amp; Bags</h4><ul><li><a href="promotional-drink-bottles.html">Drink Bottles &amp; Tumblers</a></li><li><a href="promotional-mugs.html">Mugs &amp; Cups</a></li><li><a href="promotional-tote-bags.html">Tote &amp; Cooler Bags</a></li><li><a href="promotional-keyrings.html">Keyrings</a></li></ul></div>
-          <div><h4>Ranges</h4><ul><li><a href="promo.html"><b>All 800+ products →</b></a></li><li><a href="eco-promotional-products.html">Eco Range</a></li><li><a href="australian-made-promotional-products.html">Australian Made</a></li><li><a href="event-merchandise.html">Event &amp; Tradeshow</a></li><li><a href="promo.html">Apparel &amp; Workwear</a></li></ul></div>
+          <div><h4>Ranges</h4><ul><li><a href="promo.html"><b>All 800+ products →</b></a></li><li><a href="eco-promotional-products.html">Eco Range</a></li><li><a href="australian-made-promotional-products.html">Australian Made</a></li><li><a href="event-merchandise.html">Event &amp; Tradeshow</a></li><li><a href="uniforms-workwear.html">Uniforms &amp; Merch</a></li></ul></div>
           <div><h4>Office &amp; Tech</h4><ul><li><a href="promotional-pens.html">Promotional Pens</a></li><li><a href="promotional-notebooks.html">Notebooks &amp; Journals</a></li><li><a href="custom-lanyards.html">Lanyards &amp; Badges</a></li><li><a href="promotional-tech.html">Tech &amp; Power Banks</a></li></ul></div>
           <div><h4>Magnets</h4><ul><li><a href="magnets.html">All Fridge Magnets →</a></li><li><a href="magnets.html">Business Card Magnets</a></li><li><a href="magnets.html">Photo Frame Magnets</a></li><li><a href="magnets.html">Whiteboard Magnets</a></li><li><a href="vehicle-magnets.html">Vehicle Magnets</a></li></ul></div>
         </div>
@@ -105,7 +105,7 @@ const HEADER = `
       </ul>
     </div>
     <div class="drawer-group">
-      <button class="drawer-toggle" aria-expanded="false">Promo &amp; Apparel <span>▾</span></button>
+      <button class="drawer-toggle" aria-expanded="false">Promo Products <span>▾</span></button>
       <ul class="drawer-sub" hidden>
         <li><a href="promo.html"><b>All 800+ products - price online →</b></a></li>
         <li><a href="promotional-pens.html">Promotional Pens</a></li>
@@ -119,7 +119,20 @@ const HEADER = `
         <li><a href="eco-promotional-products.html">Eco Range</a></li>
         <li><a href="australian-made-promotional-products.html">Australian Made</a></li>
         <li><a href="event-merchandise.html">Event &amp; Tradeshow</a></li>
-        <li><a href="promo.html">Apparel &amp; Workwear</a></li>
+        <li><a href="uniforms-workwear.html">Uniforms &amp; Merch</a></li>
+      </ul>
+    </div>
+    <div class="drawer-group">
+      <button class="drawer-toggle" aria-expanded="false">Uniforms &amp; Merch <span>▾</span></button>
+      <ul class="drawer-sub" hidden>
+        <li><a href="uniforms-workwear.html"><b>All uniforms &amp; merch →</b></a></li>
+        <li><a href="embroidered-polo-shirts.html">Embroidered Polos</a></li>
+        <li><a href="custom-t-shirts.html">T-Shirts &amp; Merch</a></li>
+        <li><a href="hi-vis-workwear.html">Hi Vis &amp; Workwear</a></li>
+        <li><a href="custom-hoodies-jackets.html">Hoodies &amp; Jackets</a></li>
+        <li><a href="embroidered-caps-hats.html">Caps &amp; Headwear</a></li>
+        <li><a href="hospitality-uniforms.html">Hospitality &amp; Cafe</a></li>
+        <li><a href="corporate-uniforms.html">Corporate Uniforms</a></li>
       </ul>
     </div>
     <div class="drawer-group">
