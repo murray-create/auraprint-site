@@ -8,6 +8,7 @@ FORCE='--force' in sys.argv
 HEROES={  # homepage card slug -> catalogue code
  'pens':'P200', 'bottles':'S777', 'totes':'RB1018C',
  'keyrings':'A4200', 'lanyards':'L151', 'eco':'T927.ECO',
+ 'mugs':'S400', 'notebooks':'D426',
 }
 from PIL import Image
 cat={i['code'].strip():i for i in json.load(open('data/promo-catalogue.json'))}
