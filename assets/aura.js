@@ -126,6 +126,7 @@ const HEADER = `
       <button class="drawer-toggle" aria-expanded="false">Uniforms &amp; Merch <span>▾</span></button>
       <ul class="drawer-sub" hidden>
         <li><a href="uniforms-workwear.html"><b>All uniforms &amp; merch →</b></a></li>
+        <li><a href="uniform-decoration.html">Decoration Guide</a></li>
         <li><a href="embroidered-polo-shirts.html">Embroidered Polos</a></li>
         <li><a href="custom-t-shirts.html">T-Shirts &amp; Merch</a></li>
         <li><a href="hi-vis-workwear.html">Hi Vis &amp; Workwear</a></li>
