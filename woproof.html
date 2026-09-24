@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en-AU">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex,nofollow">
+<title>Proof for approval | Aura Print &amp; Promo</title>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+<!-- Online approval for a uniform / merch work order proof. The proof itself is a
+     frozen snapshot made in the CRM (work_order_proofs.html), shown in a sandboxed
+     frame so its styles cannot touch this page. The link token is the credential:
+     get_wo_proof / decide_wo_proof, then wo-proof-notify emails admin@. -->
+<style>
+  :root{ --ink:#1a1a1a; --pink:#c026a3; --line:#e8e2da; --mut:#6b6560; --go:#15a34a; }
+  *{box-sizing:border-box}
+  body{margin:0;background:#efece6;font-family:Inter,system-ui,sans-serif;color:var(--ink);font-size:14px;line-height:1.45}
+  .wrap{max-width:900px;margin:20px auto;padding:0 12px}
+  .head{background:#fff;border-radius:12px 12px 0 0;padding:20px 24px;display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap;border-bottom:1px solid var(--line)}
+  .head h1{font-family:'Archivo Black',sans-serif;font-size:24px;margin:0}
+  .head .muted{color:var(--mut);font-size:13px}
+  .flag{display:inline-block;border-radius:6px;padding:7px 12px;font-size:13px;font-weight:700}
+  .flag.ok{background:#dcfce7;border:1px solid #a7e3bd;color:#15803d}
+  .flag.chg{background:#fef3c7;border:1px solid #f3d9a4;color:#b45309}
+  .flag.old{background:#eee;border:1px solid #ddd;color:#555}
+  .frame{background:#fff}
+  iframe{display:block;width:100%;border:0;min-height:600px}
+  .decide{background:#fff;border-radius:0 0 12px 12px;padding:22px 24px 26px;border-top:3px solid var(--pink)}
+  .decide h2{font-size:18px;margin:0 0 6px}
+  .decide p{margin:4px 0 10px;color:#444}
+  .field{margin:12px 0}
+  label.l{display:block;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--mut);margin-bottom:5px}
+  input[type=text],textarea{width:100%;max-width:440px;padding:11px;border:2px solid var(--line);border-radius:9px;font-size:15px;font-family:inherit}
+  textarea{max-width:600px;min-height:80px}
+  .chk{display:flex;gap:10px;align-items:flex-start;max-width:600px;font-size:14px}
+  .chk input{width:20px;height:20px;accent-color:var(--go);margin-top:1px;flex:none}
+  .btnrow{display:flex;gap:12px;flex-wrap:wrap;margin-top:16px}
+  .go{background:var(--go);color:#fff;font-weight:800;font-size:15px;padding:13px 28px;border-radius:8px;border:none;cursor:pointer}
+  .alt{background:#efe9e1;color:#6b6560;font-weight:700;font-size:14px;padding:13px 22px;border-radius:8px;border:none;cursor:pointer}
+  .go:disabled,.alt:disabled{opacity:.5;cursor:default}
+  .msg{margin-top:12px;font-size:14px}.msg.err{color:#b91c1c}.msg.ok{color:#15803d}
+  #chgBox{display:none}
+  .errpage{max-width:700px;margin:60px auto;background:#fff;padding:40px;text-align:center;border-radius:12px}
+  .foot{max-width:900px;margin:10px auto 30px;padding:0 14px;font-size:12px;color:var(--mut)}
+</style>
+<link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+</head>
+<body>
+<div id="app"></div>
+<p class="foot">Aura Print &amp; Promo · 1300 291 277 · admin@auraprint.com.au · auraprint.com.au</p>
+<script src="assets/config.js?v=20260922a"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+(function(){
+  var CFG=window.AURA_CONFIG||{}, sb=supabase.createClient(CFG.supabaseUrl,CFG.supabaseKey);
+  var t=(new URLSearchParams(location.search).get('t')||'').trim(), app=document.getElementById('app'), P=null;
+  function esc(s){ return String(s==null?'':s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];}); }
+  function when(s){ return new Date(s).toLocaleString('en-AU',{day:'numeric',month:'short',year:'numeric',hour:'numeric',minute:'2-digit',timeZone:'Australia/Brisbane'}); }
+  function fail(m){ app.innerHTML='<div class="errpage"><h2>Proof unavailable</h2><p>'+esc(m)+'</p><p>Need help? Call 1300 291 277 or email admin@auraprint.com.au.</p></div>'; }
+  function fit(f){ try{ var d=f.contentDocument; if(d&&d.body) f.style.height=(d.documentElement.scrollHeight+20)+'px'; }catch(e){} }
+  function load(){
+    if(!/^[0-9a-f-]{36}$/i.test(t)) return fail('This link is incomplete. Please use the full link from your email.');
+    sb.rpc('get_wo_proof',{p_token:t}).then(function(r){
+      if(r.error) return fail(r.error.message);
+      P=r.data; render();
+    });
+  }
+  function render(){
+    var st=P.status, flag='';
+    if(st==='approved') flag='<span class="flag ok">Approved by '+esc(P.decided_name)+' · '+when(P.decided_at)+'</span>';
+    else if(st==='changes') flag='<span class="flag chg">Changes requested by '+esc(P.decided_name)+' · '+when(P.decided_at)+'</span>';
+    else if(st==='superseded'||!P.latest) flag='<span class="flag old">A newer version of this proof has been sent</span>';
+    var h='<div class="wrap"><div class="head"><div><h1>Proof for approval</h1><div class="muted">Job '+esc(P.wo_number)+' · version '+P.version+' · sent '+when(P.created_at)+'</div></div>'+flag+'</div>'+
+      '<div class="frame"><iframe id="pf" title="Proof" sandbox="allow-same-origin"></iframe></div>';
+    if(st==='sent'&&P.latest){
+      h+='<div class="decide"><h2>Your approval</h2><p>Please check every position, size and colour on the proof above, and the spelling of any names and numbers. We start production once you approve.</p>'+
+        '<div class="field"><label class="l" for="nm">Your name</label><input type="text" id="nm" autocomplete="name"></div>'+
+        '<label class="chk"><input type="checkbox" id="ck"> I have checked the positions, sizes, colours, garments and spelling on this proof.</label>'+
+        '<div class="btnrow"><button class="go" id="bOk">Approve proof</button><button class="alt" id="bChg">Request changes</button></div>'+
+        '<div id="chgBox"><div class="field"><label class="l" for="cm">What needs to change?</label><textarea id="cm" placeholder="e.g. move the chest logo 10mm higher, make the back print smaller, correct the spelling of Sarah"></textarea></div>'+
+        '<div class="btnrow"><button class="go" style="background:#b45309" id="bSend">Send changes</button></div></div>'+
+        '<div class="msg" id="msg"></div></div>';
+    } else if(st==='changes'){
+      h+='<div class="decide"><h2>Thanks, we have your changes</h2><p>“'+esc(P.decision_comments||'')+'”</p><p>We will send you an updated proof.</p></div>';
+    } else if(st==='approved'){
+      h+='<div class="decide"><h2>Thank you, this proof is approved</h2><p>We will be in touch about your invoice and production timing.</p></div>';
+    } else {
+      h+='<div class="decide"><h2>This version has been replaced</h2><p>Please use the most recent proof link we emailed you.</p></div>';
+    }
+    app.innerHTML=h+'</div>';
+    var f=document.getElementById('pf');
+    /* the proof is printable on its own; its Print button is not needed here */
+    f.srcdoc=String(P.html||'').replace(/<p><button onclick="window\.print\(\)">Print<\/button><\/p>/,'');
+    f.onload=function(){ fit(f); setTimeout(function(){fit(f);},600); };
+    var ok=document.getElementById('bOk'); if(!ok) return;
+    ok.onclick=function(){ decide('approved'); };
+    document.getElementById('bChg').onclick=function(){ document.getElementById('chgBox').style.display='block'; document.getElementById('cm').focus(); };
+    document.getElementById('bSend').onclick=function(){ decide('changes'); };
+  }
+  function decide(d){
+    var msg=document.getElementById('msg'), name=document.getElementById('nm').value.trim(), cm=(document.getElementById('cm').value||'').trim();
+    msg.className='msg err';
+    if(!name){ msg.textContent='Please enter your name.'; return; }
+    if(d==='approved'&&!document.getElementById('ck').checked){ msg.textContent='Please tick the box to confirm you have checked the proof.'; return; }
+    if(d==='changes'&&!cm){ msg.textContent='Please tell us what needs to change.'; return; }
+    [].forEach.call(document.querySelectorAll('.decide button'),function(b){b.disabled=true;});
+    msg.className='msg'; msg.textContent='Sending…';
+    sb.rpc('decide_wo_proof',{p_token:t,p_decision:d,p_name:name,p_comments:cm||null}).then(function(r){
+      if(r.error){ msg.className='msg err'; msg.textContent=r.error.message; [].forEach.call(document.querySelectorAll('.decide button'),function(b){b.disabled=false;}); return; }
+      try{ fetch(CFG.supabaseUrl+'/functions/v1/wo-proof-notify',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({token:t})}).catch(function(){}); }catch(e){}
+      msg.className='msg ok'; msg.textContent=d==='approved'?'Thank you, your proof is approved.':'Thanks, we have your changes.';
+      setTimeout(load,1200);
+    });
+  }
+  load();
+})();
+</script>
+</body>
+</html>
