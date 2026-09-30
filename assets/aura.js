@@ -594,7 +594,29 @@ function wireDrawer(){
   });
 }
 
-/* Footer newsletter -> leads table (source_form 'newsletter'). */
+/* Footer newsletter -> CRM contact with express marketing consent, via the
+   newsletter_subscribe RPC (30 Sep 2026). It used to insert into leads without
+   a name, which the leads RLS policy refuses, so every sign-up failed.
+   Subscribers go to Contacts (source 'newsletter'), not the Leads tab, and are
+   in the Campaigns "opted in" audience automatically. Admin gets a Web3Forms
+   notice for each one. */
+function subscribeNewsletter(CFG, email, page){
+  if (!CFG.supabaseUrl || !CFG.supabaseKey) return Promise.resolve({ ok:false });
+  var hosts = [CFG.supabaseUrl];
+  if (CFG.supabaseFallbackUrl && CFG.supabaseFallbackUrl !== CFG.supabaseUrl) hosts.push(CFG.supabaseFallbackUrl);
+  function post(i){
+    if (i >= hosts.length) return Promise.resolve({ ok:false });
+    return fetch(hosts[i] + '/rest/v1/rpc/newsletter_subscribe', {
+      method: 'POST',
+      headers: { 'apikey': CFG.supabaseKey, 'Authorization': 'Bearer ' + CFG.supabaseKey, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ p_email: email, p_page: page })
+    }).then(function(r){
+      if (!r.ok && r.status >= 500 && i + 1 < hosts.length) return post(i + 1);
+      return r.ok ? r.json() : { ok:false };
+    }).catch(function(){ return post(i + 1); });
+  }
+  return post(0);
+}
 function wireNewsletter(){
   var btn = document.getElementById('nl-join'), input = document.getElementById('nl-email'),
       status = document.getElementById('nl-status');
@@ -604,16 +626,22 @@ function wireNewsletter(){
     if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(em)){
       status.style.color = '#f2b8a2'; status.textContent = 'Please enter a valid email address.'; input.focus(); return;
     }
+    var CFG = window.AURA_CONFIG || {}, page = location.pathname.split('/').pop() || 'index.html';
     btn.disabled = true; btn.textContent = '…';
-    saveLead(window.AURA_CONFIG || {}, {
-      email: em, source_form: 'newsletter',
-      source_page: location.pathname.split('/').pop() || 'index.html',
-      job_details: 'Newsletter signup (footer)', user_agent: navigator.userAgent
-    }).then(function(r){
-      if (r.ok || r.skipped){
+    subscribeNewsletter(CFG, em, page).then(function(r){
+      if (r && r.ok){
         input.value = ''; status.style.color = '#8fd3a8'; status.textContent = '✓ You’re on the list.';
         btn.textContent = '✓';
         auraTrack('newsletter_signup', { page_path: location.pathname });
+        if (CFG.web3formsKey){
+          var d = new FormData();
+          d.append('access_key', CFG.web3formsKey);
+          d.append('subject', 'New newsletter subscriber: ' + em);
+          d.append('from_name', 'Aura Print website');
+          d.append('email', em);
+          d.append('message', em + ' joined the newsletter from ' + page + '. They are now an opted-in contact in the CRM.');
+          fetch('https://api.web3forms.com/submit', { method:'POST', body:d }).catch(function(){});
+        }
       } else {
         status.style.color = '#f2b8a2'; status.textContent = 'That didn’t save - please try again.';
         btn.disabled = false; btn.textContent = 'Join';
