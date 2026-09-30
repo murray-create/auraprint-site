@@ -323,11 +323,30 @@ function captureAttribution(){
     var v = q.get(k);
     if (v) fresh[k] = String(v).slice(0, 200);
   });
-  if (!Object.keys(fresh).length) return currentAttribution();
+  if (!Object.keys(fresh).length) {
+    /* No tags on the URL. Still bank where they came from on their FIRST
+       visit (Google search, Facebook, ChatGPT, a link on another site), so
+       the CRM scoreboard can credit the right source. Our own pages as the
+       referrer mean they were already browsing, so that is ignored. */
+    var have = currentAttribution();
+    if (Object.keys(have).length) return have;
+    var ref = '';
+    try { ref = document.referrer || ''; } catch (e) {}
+    var own = /^https?:\/\/([^\/]*\.)?auraprint\.com\.au(\/|$)/i.test(ref);
+    if (!ref || own) return have;
+    var first = {
+      referrer: String(ref).slice(0, 300),
+      landing_page: (location.pathname + location.search).slice(0, 300),
+      first_seen: new Date().toISOString()
+    };
+    writeCookie(ATTR_COOKIE, JSON.stringify(first), 90);
+    return first;
+  }
 
   var existing = currentAttribution();
   var isPaidClick = !!(fresh.gclid || fresh.gbraid || fresh.wbraid);
-  if (Object.keys(existing).length && !isPaidClick) return existing;
+  var existingTagged = ATTR_KEYS.some(function(k){ return existing[k]; });
+  if (existingTagged && !isPaidClick) return existing;
 
   fresh.landing_page = (location.pathname + location.search).slice(0, 300);
   if (document.referrer) fresh.referrer = String(document.referrer).slice(0, 300);
