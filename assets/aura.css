@@ -465,3 +465,9 @@ footer .fcols .lb h4{color:#ffb3bd}
 .sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 #lbPickExtra{margin-top:14px}
 #lbPickGo[aria-disabled="true"]{opacity:.45;pointer-events:none}
+
+/* Footer social icons (30 Sep 2026): Facebook, LinkedIn, Google Business Profile */
+footer .social{display:flex;gap:10px;flex-wrap:wrap}
+footer .social a{width:42px;height:42px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;color:#fff;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.16);transition:transform .2s,background .2s,border-color .2s}
+footer .social a:hover,footer .social a:focus-visible{background:var(--aura);border-color:transparent;transform:translateY(-2px)}
+footer .social svg{width:19px;height:19px;fill:currentColor}
