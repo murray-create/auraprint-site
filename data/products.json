@@ -96,7 +96,7 @@
   "icon": "📄",
   "desc": "DL to A3 on stocks from 130gsm to 350gsm. Letterbox-ready and event-proof.",
   "seo": "Flyer Printing Sunshine Coast",
-  "from": 85,
+  "from": 117,
   "portal": true,
   "template": "flyers",
   "specs": [
@@ -174,7 +174,7 @@
   "icon": "📖",
   "desc": "Half fold, tri fold, Z fold and gate fold on premium stocks.",
   "seo": "Brochure Printing Sunshine Coast",
-  "from": 198,
+  "from": 271,
   "portal": true,
   "template": "brochures",
   "specs": [
@@ -240,7 +240,7 @@
   "icon": "💌",
   "desc": "Direct mail that stands out. A6 to A5 on thick stocks.",
   "seo": "Postcard Printing Australia",
-  "from": 115,
+  "from": 158,
   "portal": true,
   "template": "postcards",
   "quote": false,
@@ -312,7 +312,7 @@
   "icon": "✉️",
   "desc": "Offset quality on premium uncoated and laser-safe stocks.",
   "seo": "Letterhead Printing Australia",
-  "from": 192,
+  "from": 263,
   "portal": true,
   "template": "letterheads",
   "specs": [
@@ -528,7 +528,7 @@
    "brochures"
   ],
   "img": "assets/img/presentation-folders.jpg",
-  "from": 254,
+  "from": 348,
   "suppliers": [
    "LEP"
   ],
@@ -600,7 +600,7 @@
    "loyalty-cards"
   ],
   "img": "assets/img/menus.jpg",
-  "from": 97,
+  "from": 112,
   "suppliers": [
    "CMYKhub"
   ],
@@ -690,7 +690,7 @@
    "business-cards"
   ],
   "img": "assets/img/greeting-cards.jpg",
-  "from": 82,
+  "from": 112,
   "suppliers": [
    "Easy Signs",
    "LEP"
@@ -769,7 +769,7 @@
    "wiro-booklets",
    "brochures"
   ],
-  "from": 275,
+  "from": 316,
   "suppliers": [
    "CMYKhub",
    "Easy Signs"
@@ -1042,7 +1042,7 @@
    "calendars",
    "pens"
   ],
-  "from": 311,
+  "from": 426,
   "suppliers": [
    "LEP"
   ],
@@ -1117,7 +1117,7 @@
    "greeting-cards",
    "notepads"
   ],
-  "from": 90,
+  "from": 123,
   "suppliers": [
    "CMYKhub",
    "LEP"
@@ -1169,7 +1169,7 @@
   "icon": "🪧",
   "desc": "Real estate, builders and event boards on 3mm or 5mm corflute, any size.",
   "seo": "Corflute Signs Sunshine Coast",
-  "from": 122,
+  "from": 154,
   "portal": false,
   "template": "corflute-easysigns",
   "specs": [
@@ -1564,7 +1564,7 @@
    "safety-signs",
    "a-frames"
   ],
-  "from": 163,
+  "from": 228,
   "suppliers": [
    "Easy Signs"
   ],
@@ -1652,7 +1652,7 @@
   "icon": "🖼️",
   "desc": "Offset and wide format posters, A2 to billboard scale.",
   "seo": "Poster Printing Sunshine Coast",
-  "from": 102,
+  "from": 117,
   "portal": true,
   "template": "posters",
   "specs": [
@@ -1744,7 +1744,7 @@
    "posters"
   ],
   "img": "assets/img/stickers.jpg",
-  "from": 211,
+  "from": 289,
   "live": {
    "styles": [
     {
@@ -1901,7 +1901,7 @@
    "corflute-signs",
    "aluminium-signs"
   ],
-  "from": 163,
+  "from": 206,
   "suppliers": [
    "Easy Signs"
   ],
@@ -1946,7 +1946,7 @@
   "badge": "Best seller",
   "desc": "Economy to premium bases with vivid print. Includes padded carry bag.",
   "seo": "Pull Up Banners Sunshine Coast",
-  "from": 136,
+  "from": 202,
   "portal": false,
   "template": "pullup-easysigns",
   "specs": [
@@ -2023,7 +2023,7 @@
    "outdoor-banners",
    "fence-mesh"
   ],
-  "from": 153,
+  "from": 222,
   "suppliers": [
    "Easy Signs"
   ],
@@ -2088,7 +2088,7 @@
    "corflute-signs"
   ],
   "img": "assets/img/outdoor-banners.jpg",
-  "from": 130,
+  "from": 206,
   "suppliers": [
    "CMYKhub",
    "Easy Signs"
@@ -2152,7 +2152,7 @@
    "safety-signs"
   ],
   "img": "assets/img/fence-mesh.jpg",
-  "from": 163,
+  "from": 206,
   "suppliers": [
    "Easy Signs"
   ],
@@ -2202,7 +2202,7 @@
    "marquees",
    "tablecloths"
   ],
-  "from": 174,
+  "from": 248,
   "suppliers": [
    "Easy Signs"
   ],
@@ -2295,7 +2295,7 @@
    "corflute-signs"
   ],
   "img": "assets/img/standees.jpg",
-  "from": 117,
+  "from": 177,
   "suppliers": [
    "Easy Signs"
   ],
@@ -2371,7 +2371,7 @@
    "media-walls",
    "pull-up-banners"
   ],
-  "from": 164,
+  "from": 236,
   "suppliers": [
    "Easy Signs"
   ],
@@ -2450,7 +2450,7 @@
   "sub": "Signs & Stickers",
   "desc": "Acoustic Panels produced through our trade production network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
   "seo": "Acoustic Panels Sunshine Coast | Aura Print & Promo",
-  "from": 163,
+  "from": 206,
   "quote": true,
   "suppliers": [
    "Easy Signs"
@@ -2525,7 +2525,7 @@
   "sub": "Signs & Stickers",
   "desc": "Acrylic Reception Signs produced through our trade production network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
   "seo": "Acrylic Reception Signs Sunshine Coast | Aura Print & Promo",
-  "from": 325,
+  "from": 455,
   "quote": true,
   "suppliers": [
    "Easy Signs"
@@ -2619,7 +2619,7 @@
   "sub": "Banners & Flags",
   "desc": "Arch Banners produced through our trade production network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
   "seo": "Arch Banners Sunshine Coast | Aura Print & Promo",
-  "from": 362,
+  "from": 486,
   "quote": true,
   "suppliers": [
    "Easy Signs"
@@ -2683,7 +2683,7 @@
   "sub": "Events & Display",
   "desc": "Auction Paddles produced through our trade production network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
   "seo": "Auction Paddles Sunshine Coast | Aura Print & Promo",
-  "from": 117,
+  "from": 177,
   "quote": true,
   "suppliers": [
    "Easy Signs"
@@ -2759,7 +2759,7 @@
   "sub": "Signs & Stickers",
   "desc": "Bollard Signs produced through our trade production network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
   "seo": "Bollard Signs Sunshine Coast | Aura Print & Promo",
-  "from": 117,
+  "from": 177,
   "quote": true,
   "suppliers": [
    "Easy Signs"
@@ -2838,7 +2838,7 @@
   "sub": "Banners & Flags",
   "desc": "Bow Banners produced through our trade production network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
   "seo": "Bow Banners Sunshine Coast | Aura Print & Promo",
-  "from": 144,
+  "from": 166,
   "quote": true,
   "suppliers": [
    "Easy Signs"
@@ -2901,7 +2901,7 @@
   "sub": "Signs & Stickers",
   "desc": "Bumper Stickers produced through our trade production network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
   "seo": "Bumper Stickers Sunshine Coast | Aura Print & Promo",
-  "from": 163,
+  "from": 206,
   "quote": true,
   "suppliers": [
    "Easy Signs"
@@ -2960,7 +2960,7 @@
   "sub": "Signs & Stickers",
   "desc": "Cardboard Signs produced through our trade production network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
   "seo": "Cardboard Signs Sunshine Coast | Aura Print & Promo",
-  "from": 163,
+  "from": 206,
   "quote": true,
   "suppliers": [
    "Easy Signs"
@@ -3033,7 +3033,7 @@
   "sub": "Events & Display",
   "desc": "Collapsible SEG Lightbox Display produced through our trade production network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
   "seo": "Collapsible SEG Lightbox Display Sunshine Coast | Aura Print & Promo",
-  "from": 132,
+  "from": 196,
   "quote": true,
   "suppliers": [
    "Easy Signs"
@@ -3102,7 +3102,7 @@
   "sub": "Signs & Stickers",
   "desc": "Construction Signs produced through our trade production network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
   "seo": "Construction Signs Sunshine Coast | Aura Print & Promo",
-  "from": 163,
+  "from": 206,
   "quote": true,
   "suppliers": [
    "Easy Signs"
@@ -3174,7 +3174,7 @@
   "sub": "Events & Display",
   "desc": "Crowd Control Barriers produced through our trade production network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
   "seo": "Crowd Control Barriers Sunshine Coast | Aura Print & Promo",
-  "from": 93,
+  "from": 146,
   "quote": true,
   "suppliers": [
    "Easy Signs"
@@ -3272,7 +3272,7 @@
   "sub": "Signs & Stickers",
   "desc": "Custom Label Rolls produced through our trade production network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
   "seo": "Custom Label Rolls Sunshine Coast | Aura Print & Promo",
-  "from": 195,
+  "from": 246,
   "quote": true,
   "suppliers": [
    "Easy Signs"
@@ -3308,7 +3308,7 @@
   "sub": "Cards & Stationery",
   "desc": "Custom Printed Coasters produced through our trade production network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
   "seo": "Custom Printed Coasters Sunshine Coast | Aura Print & Promo",
-  "from": 70,
+  "from": 107,
   "quote": true,
   "suppliers": [
    "Easy Signs"
@@ -3364,7 +3364,7 @@
   "sub": "Marketing Material",
   "desc": "Custom Printed Flat Mailing Boxes produced through our trade production network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
   "seo": "Custom Printed Flat Mailing Boxes Sunshine Coast | Aura Print & Promo",
-  "from": 39,
+  "from": 50,
   "quote": true,
   "suppliers": [
    "Easy Signs"
@@ -3436,7 +3436,7 @@
   "sub": "Signs & Stickers",
   "desc": "Custom Stickers produced through our trade production network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
   "seo": "Custom Stickers Sunshine Coast | Aura Print & Promo",
-  "from": 163,
+  "from": 206,
   "quote": true,
   "suppliers": [
    "Easy Signs"
@@ -3507,7 +3507,7 @@
   "sub": "Events & Display",
   "desc": "Deck Chairs produced through our trade production network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
   "seo": "Deck Chairs Sunshine Coast | Aura Print & Promo",
-  "from": 117,
+  "from": 177,
   "quote": true,
   "suppliers": [
    "Easy Signs"
@@ -3564,7 +3564,7 @@
   "sub": "Events & Display",
   "desc": "Director Chairs produced through our trade production network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
   "seo": "Director Chairs Sunshine Coast | Aura Print & Promo",
-  "from": 59,
+  "from": 104,
   "quote": true,
   "suppliers": [
    "Easy Signs"
@@ -3621,7 +3621,7 @@
   "sub": "Marketing Material",
   "desc": "DTF Gang Sheets produced through our trade network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
   "seo": "DTF Gang Sheets Sunshine Coast | Aura Print & Promo",
-  "from": 89,
+  "from": 122,
   "quote": true,
   "suppliers": [
    "CMYKhub"
@@ -3688,7 +3688,7 @@
   "sub": "Signs & Stickers",
   "desc": "Electrostatic Stickers produced through our trade network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
   "seo": "Electrostatic Stickers Sunshine Coast | Aura Print & Promo",
-  "from": 133,
+  "from": 182,
   "quote": true,
   "suppliers": [
    "CMYKhub"
@@ -3747,7 +3747,7 @@
   "sub": "Banners & Flags",
   "desc": "End Sign Flags produced through our trade production network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
   "seo": "End Sign Flags Sunshine Coast | Aura Print & Promo",
-  "from": 23,
+  "from": 46,
   "quote": true,
   "suppliers": [
    "Easy Signs"
@@ -3804,7 +3804,7 @@
   "sub": "Events & Display",
   "desc": "Fabric Display Cubes produced through our trade production network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
   "seo": "Fabric Display Cubes Sunshine Coast | Aura Print & Promo",
-  "from": 107,
+  "from": 143,
   "quote": true,
   "suppliers": [
    "Easy Signs"
@@ -3863,7 +3863,7 @@
   "sub": "Signs & Stickers",
   "desc": "Floor Stickers produced through our trade production network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
   "seo": "Floor Stickers Sunshine Coast | Aura Print & Promo",
-  "from": 163,
+  "from": 206,
   "quote": true,
   "suppliers": [
    "Easy Signs"
@@ -3922,7 +3922,7 @@
   "sub": "Signs & Stickers",
   "desc": "Foam PVC Signs produced through our trade production network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
   "seo": "Foam PVC Signs Sunshine Coast | Aura Print & Promo",
-  "from": 163,
+  "from": 187,
   "quote": true,
   "suppliers": [
    "Easy Signs"
@@ -4027,7 +4027,7 @@
   "sub": "Signs & Stickers",
   "desc": "Ground Spikes & Sign Holders produced through our trade production network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
   "seo": "Ground Spikes & Sign Holders Sunshine Coast | Aura Print & Promo",
-  "from": 226,
+  "from": 286,
   "quote": true,
   "suppliers": [
    "Easy Signs"
@@ -4085,7 +4085,7 @@
   "sub": "Marketing Material",
   "desc": "Invitations produced through our trade production network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
   "seo": "Invitations Sunshine Coast | Aura Print & Promo",
-  "from": 51,
+  "from": 83,
   "quote": true,
   "suppliers": [
    "Easy Signs"
@@ -4156,7 +4156,7 @@
   "sub": "Signs & Stickers",
   "desc": "Large Format Stickers (SAV) produced through our trade production network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
   "seo": "Large Format Stickers (SAV) Sunshine Coast | Aura Print & Promo",
-  "from": 163,
+  "from": 206,
   "quote": true,
   "suppliers": [
    "Easy Signs"
@@ -4235,7 +4235,7 @@
   "sub": "Events & Display",
   "desc": "Modular SEG Lightbox Display produced through our trade production network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
   "seo": "Modular SEG Lightbox Display Sunshine Coast | Aura Print & Promo",
-  "from": 1182,
+  "from": 1523,
   "quote": true,
   "suppliers": [
    "Easy Signs"
@@ -4282,7 +4282,7 @@
   "sub": "Events & Display",
   "desc": "Novelty Cheques produced through our trade production network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
   "seo": "Novelty Cheques Sunshine Coast | Aura Print & Promo",
-  "from": 117,
+  "from": 177,
   "quote": true,
   "suppliers": [
    "Easy Signs"
@@ -4344,7 +4344,7 @@
   "sub": "Signs & Stickers",
   "desc": "One Way Window Films produced through our trade production network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
   "seo": "One Way Window Films Sunshine Coast | Aura Print & Promo",
-  "from": 163,
+  "from": 206,
   "quote": true,
   "suppliers": [
    "Easy Signs"
@@ -4400,7 +4400,7 @@
   "sub": "Signs & Stickers",
   "desc": "Outdoor Custom Stickers produced through our trade production network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
   "seo": "Outdoor Custom Stickers Sunshine Coast | Aura Print & Promo",
-  "from": 163,
+  "from": 206,
   "quote": true,
   "suppliers": [
    "Easy Signs"
@@ -4470,7 +4470,7 @@
   "sub": "Signs & Stickers",
   "desc": "Parking Signs produced through our trade production network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
   "seo": "Parking Signs Sunshine Coast | Aura Print & Promo",
-  "from": 65,
+  "from": 111,
   "quote": true,
   "suppliers": [
    "Easy Signs"
@@ -4545,7 +4545,7 @@
   "sub": "Signs & Stickers",
   "desc": "Plastic Election Signs produced through our trade production network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
   "seo": "Plastic Election Signs Sunshine Coast | Aura Print & Promo",
-  "from": 163,
+  "from": 206,
   "quote": true,
   "suppliers": [
    "Easy Signs"
@@ -4602,7 +4602,7 @@
   "sub": "Signs & Stickers",
   "desc": "Rally Signs produced through our trade production network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
   "seo": "Rally Signs Sunshine Coast | Aura Print & Promo",
-  "from": 163,
+  "from": 206,
   "quote": true,
   "suppliers": [
    "Easy Signs"
@@ -4676,7 +4676,7 @@
   "sub": "Banners & Flags",
   "desc": "Rectangle Flags produced through our trade production network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
   "seo": "Rectangle Flags Sunshine Coast | Aura Print & Promo",
-  "from": 152,
+  "from": 221,
   "quote": true,
   "suppliers": [
    "Easy Signs"
@@ -4770,7 +4770,7 @@
   "sub": "Banners & Flags",
   "desc": "Replacement Flags produced through our trade production network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
   "seo": "Replacement Flags Sunshine Coast | Aura Print & Promo",
-  "from": 57,
+  "from": 101,
   "quote": true,
   "suppliers": [
    "Easy Signs"
@@ -4834,7 +4834,7 @@
   "sub": "Signs & Stickers",
   "desc": "Rigid Boards produced through our trade network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
   "seo": "Rigid Boards Sunshine Coast | Aura Print & Promo",
-  "from": 123,
+  "from": 169,
   "quote": true,
   "suppliers": [
    "CMYKhub"
@@ -4893,7 +4893,7 @@
   "sub": "Signs & Stickers",
   "desc": "Roll Labels produced through our trade network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
   "seo": "Roll Labels Sunshine Coast | Aura Print & Promo",
-  "from": 212,
+  "from": 291,
   "quote": true,
   "suppliers": [
    "CMYKhub"
@@ -4965,7 +4965,7 @@
   "sub": "Signs & Stickers",
   "desc": "Screenboard Signs produced through our trade production network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
   "seo": "Screenboard Signs Sunshine Coast | Aura Print & Promo",
-  "from": 117,
+  "from": 177,
   "quote": true,
   "suppliers": [
    "Easy Signs"
@@ -5030,7 +5030,7 @@
   "sub": "Events & Display",
   "desc": "SEG Fabric produced through our trade production network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
   "seo": "SEG Fabric Sunshine Coast | Aura Print & Promo",
-  "from": 117,
+  "from": 177,
   "quote": true,
   "suppliers": [
    "Easy Signs"
@@ -5088,7 +5088,7 @@
   "sub": "Events & Display",
   "desc": "Selfie Frames produced through our trade production network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
   "seo": "Selfie Frames Sunshine Coast | Aura Print & Promo",
-  "from": 117,
+  "from": 177,
   "quote": true,
   "suppliers": [
    "Easy Signs"
@@ -5141,7 +5141,7 @@
   "sub": "Events & Display",
   "desc": "Stackable Cubes produced through our trade production network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
   "seo": "Stackable Cubes Sunshine Coast | Aura Print & Promo",
-  "from": 117,
+  "from": 177,
   "quote": true,
   "suppliers": [
    "Easy Signs"
@@ -5217,7 +5217,7 @@
   "sub": "Cards & Stationery",
   "desc": "Letterheads, with-comps and business stationery printed same day on selected specs. Genuine fast turnaround, Australia-wide delivery.",
   "seo": "Same Day Stationery Printing Sunshine Coast",
-  "from": 130,
+  "from": 178,
   "quote": true,
   "suppliers": [
    "LEP"
@@ -5273,7 +5273,7 @@
   "sub": "Banners & Flags",
   "desc": "Vinyl Pole Banners produced through our trade production network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
   "seo": "Vinyl Pole Banners Sunshine Coast | Aura Print & Promo",
-  "from": 156,
+  "from": 225,
   "quote": true,
   "suppliers": [
    "Easy Signs"
@@ -5345,7 +5345,7 @@
   "sub": "Signs & Stickers",
   "desc": "Vinyl Stickers produced through our trade network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
   "seo": "Vinyl Stickers Sunshine Coast | Aura Print & Promo",
-  "from": 130,
+  "from": 178,
   "quote": true,
   "suppliers": [
    "CMYKhub"
@@ -5435,7 +5435,7 @@
   "sub": "Signs & Stickers",
   "desc": "Window Graphics produced through our trade production network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
   "seo": "Window Graphics Sunshine Coast | Aura Print & Promo",
-  "from": 117,
+  "from": 177,
   "quote": true,
   "suppliers": [
    "Easy Signs"
@@ -5504,7 +5504,7 @@
   "sub": "Books & Booklets",
   "desc": "Wiro Magazines produced through our trade network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
   "seo": "Wiro Magazines Sunshine Coast | Aura Print & Promo",
-  "from": 170,
+  "from": 233,
   "quote": true,
   "suppliers": [
    "LEP"
@@ -5586,7 +5586,7 @@
   "sub": "Banners & Flags",
   "desc": "X Banners produced through our trade production network. Fast turnaround, Australia-wide delivery. Request a quote for your exact spec.",
   "seo": "X Banners Sunshine Coast | Aura Print & Promo",
-  "from": 51,
+  "from": 94,
   "quote": true,
   "suppliers": [
    "Easy Signs"
