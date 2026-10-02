@@ -374,8 +374,19 @@ function submit(ev){
     var ups = (res.uploads||[]).map(function(u, i){
       var file = S.files[i];
       if (!u.upload_url || !file) return Promise.resolve(false);
-      return fetch(u.upload_url, { method:'PUT', headers:{ 'Content-Type': file.type || 'application/octet-stream', 'x-upsert':'false' }, body:file })
-        .then(function(r){ return r.ok; }, function(){ return false; });
+      /* The signed URL comes back on the supabase.co host, which school, business and
+         some home filters block (2 Oct 2026: a real logo never arrived this way).
+         Send it through Aura's own api. host first, and the direct host second. */
+      var hosts = [CFG.supabaseUrl, CFG.supabaseFallbackUrl].filter(function(h, k, a){ return h && a.indexOf(h) === k; });
+      var rest = u.upload_url.replace(/^https:\/\/[^\/]+/, '');
+      var urls = hosts.map(function(h){ return h.replace(/\/$/, '') + rest; });
+      if (urls.indexOf(u.upload_url) < 0) urls.push(u.upload_url);
+      function put(k){
+        if (k >= urls.length) return Promise.resolve(false);
+        return fetch(urls[k], { method:'PUT', headers:{ 'Content-Type': file.type || 'application/octet-stream', 'x-upsert':'false' }, body:file })
+          .then(function(r){ return r.ok ? true : put(k + 1); }, function(){ return put(k + 1); });
+      }
+      return put(0);
     });
     return Promise.all(ups).then(function(okList){
       var failed = okList.filter(function(x){ return !x; }).length;
