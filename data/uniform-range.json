@@ -704,382 +704,458 @@
    {
     "n": "Sunset",
     "h": "#ffcd69",
-    "img": "assets/img/uniforms/as-colour-5001-sunset.webp"
+    "img": "assets/img/uniforms/as-colour-5001-sunset.webp",
+    "back": "assets/img/uniforms/as-colour-5001-sunset-back.webp"
    },
    {
     "n": "Charity Pink",
     "h": "#f5699b",
-    "img": "assets/img/uniforms/as-colour-5001-charity-pink.webp"
+    "img": "assets/img/uniforms/as-colour-5001-charity-pink.webp",
+    "back": "assets/img/uniforms/as-colour-5001-charity-pink-back.webp"
    },
    {
     "n": "Smoke",
     "h": "#b9c3c3",
-    "img": "assets/img/uniforms/as-colour-5001-smoke.webp"
+    "img": "assets/img/uniforms/as-colour-5001-smoke.webp",
+    "back": "assets/img/uniforms/as-colour-5001-smoke-back.webp"
    },
    {
     "n": "Moss",
     "h": "#9b9141",
-    "img": "assets/img/uniforms/as-colour-5001-moss.webp"
+    "img": "assets/img/uniforms/as-colour-5001-moss.webp",
+    "back": "assets/img/uniforms/as-colour-5001-moss-back.webp"
    },
    {
     "n": "Cocoa",
     "h": "#9b5f41",
-    "img": "assets/img/uniforms/as-colour-5001-cocoa.webp"
+    "img": "assets/img/uniforms/as-colour-5001-cocoa.webp",
+    "back": "assets/img/uniforms/as-colour-5001-cocoa-back.webp"
    },
    {
     "n": "Lime",
     "h": "#e1e1b9",
-    "img": "assets/img/uniforms/as-colour-5001-lime.webp"
+    "img": "assets/img/uniforms/as-colour-5001-lime.webp",
+    "back": "assets/img/uniforms/as-colour-5001-lime-back.webp"
    },
    {
     "n": "Mushroom",
     "h": "#917d69",
-    "img": "assets/img/uniforms/as-colour-5001-mushroom.webp"
+    "img": "assets/img/uniforms/as-colour-5001-mushroom.webp",
+    "back": "assets/img/uniforms/as-colour-5001-mushroom-back.webp"
    },
    {
     "n": "Bone",
     "h": "#c3b9af",
-    "img": "assets/img/uniforms/as-colour-5001-bone.webp"
+    "img": "assets/img/uniforms/as-colour-5001-bone.webp",
+    "back": "assets/img/uniforms/as-colour-5001-bone-back.webp"
    },
    {
     "n": "Atlantic",
     "h": "#054b55",
-    "img": "assets/img/uniforms/as-colour-5001-atlantic.webp"
+    "img": "assets/img/uniforms/as-colour-5001-atlantic.webp",
+    "back": "assets/img/uniforms/as-colour-5001-atlantic-back.webp"
    },
    {
     "n": "Topaz",
     "h": "#55af91",
-    "img": "assets/img/uniforms/as-colour-5001-topaz.webp"
+    "img": "assets/img/uniforms/as-colour-5001-topaz.webp",
+    "back": "assets/img/uniforms/as-colour-5001-topaz-back.webp"
    },
    {
     "n": "Charlotte",
     "h": "#05a5af",
-    "img": "assets/img/uniforms/as-colour-5001-charlotte.webp"
+    "img": "assets/img/uniforms/as-colour-5001-charlotte.webp",
+    "back": "assets/img/uniforms/as-colour-5001-charlotte-back.webp"
    },
    {
     "n": "Chestnut",
     "h": "#412d23",
-    "img": "assets/img/uniforms/as-colour-5001-chestnut.webp"
+    "img": "assets/img/uniforms/as-colour-5001-chestnut.webp",
+    "back": "assets/img/uniforms/as-colour-5001-chestnut-back.webp"
    },
    {
     "n": "Lemonade",
     "h": "#ebe187",
-    "img": "assets/img/uniforms/as-colour-5001-lemonade.webp"
+    "img": "assets/img/uniforms/as-colour-5001-lemonade.webp",
+    "back": "assets/img/uniforms/as-colour-5001-lemonade-back.webp"
    },
    {
     "n": "Fire",
     "h": "#cd1919",
-    "img": "assets/img/uniforms/as-colour-5001-fire.webp"
+    "img": "assets/img/uniforms/as-colour-5001-fire.webp",
+    "back": "assets/img/uniforms/as-colour-5001-fire-back.webp"
    },
    {
     "n": "Hydro",
     "h": "#4187af",
-    "img": "assets/img/uniforms/as-colour-5001-hydro.webp"
+    "img": "assets/img/uniforms/as-colour-5001-hydro.webp",
+    "back": "assets/img/uniforms/as-colour-5001-hydro-back.webp"
    },
    {
     "n": "Powder",
     "h": "#d7d7e1",
-    "img": "assets/img/uniforms/as-colour-5001-powder.webp"
+    "img": "assets/img/uniforms/as-colour-5001-powder.webp",
+    "back": "assets/img/uniforms/as-colour-5001-powder-back.webp"
    },
    {
     "n": "Seafoam",
     "h": "#d7e1d7",
-    "img": "assets/img/uniforms/as-colour-5001-seafoam.webp"
+    "img": "assets/img/uniforms/as-colour-5001-seafoam.webp",
+    "back": "assets/img/uniforms/as-colour-5001-seafoam-back.webp"
    },
    {
     "n": "Pistachio",
     "h": "#b9b991",
-    "img": "assets/img/uniforms/as-colour-5001-pistachio.webp"
+    "img": "assets/img/uniforms/as-colour-5001-pistachio.webp",
+    "back": "assets/img/uniforms/as-colour-5001-pistachio-back.webp"
    },
    {
     "n": "Safari",
     "h": "#a59b73",
-    "img": "assets/img/uniforms/as-colour-5001-safari.webp"
+    "img": "assets/img/uniforms/as-colour-5001-safari.webp",
+    "back": "assets/img/uniforms/as-colour-5001-safari-back.webp"
    },
    {
     "n": "Eucalyptus",
     "h": "#878769",
-    "img": "assets/img/uniforms/as-colour-5001-eucalyptus.webp"
+    "img": "assets/img/uniforms/as-colour-5001-eucalyptus.webp",
+    "back": "assets/img/uniforms/as-colour-5001-eucalyptus-back.webp"
    },
    {
     "n": "Cypress",
     "h": "#4b4b41",
-    "img": "assets/img/uniforms/as-colour-5001-cypress.webp"
+    "img": "assets/img/uniforms/as-colour-5001-cypress.webp",
+    "back": "assets/img/uniforms/as-colour-5001-cypress-back.webp"
    },
    {
     "n": "Jade",
     "h": "#234b41",
-    "img": "assets/img/uniforms/as-colour-5001-jade.webp"
+    "img": "assets/img/uniforms/as-colour-5001-jade.webp",
+    "back": "assets/img/uniforms/as-colour-5001-jade-back.webp"
    },
    {
     "n": "Camel",
     "h": "#a57d41",
-    "img": "assets/img/uniforms/as-colour-5001-camel.webp"
+    "img": "assets/img/uniforms/as-colour-5001-camel.webp",
+    "back": "assets/img/uniforms/as-colour-5001-camel-back.webp"
    },
    {
     "n": "Autumn",
     "h": "#b93723",
-    "img": "assets/img/uniforms/as-colour-5001-autumn.webp"
+    "img": "assets/img/uniforms/as-colour-5001-autumn.webp",
+    "back": "assets/img/uniforms/as-colour-5001-autumn-back.webp"
    },
    {
     "n": "Berry",
     "h": "#87374b",
-    "img": "assets/img/uniforms/as-colour-5001-berry.webp"
+    "img": "assets/img/uniforms/as-colour-5001-berry.webp",
+    "back": "assets/img/uniforms/as-colour-5001-berry-back.webp"
    },
    {
     "n": "Cardinal",
     "h": "#7d0f19",
-    "img": "assets/img/uniforms/as-colour-5001-cardinal.webp"
+    "img": "assets/img/uniforms/as-colour-5001-cardinal.webp",
+    "back": "assets/img/uniforms/as-colour-5001-cardinal-back.webp"
    },
    {
     "n": "Cobalt",
     "h": "#192d55",
-    "img": "assets/img/uniforms/as-colour-5001-cobalt.webp"
+    "img": "assets/img/uniforms/as-colour-5001-cobalt.webp",
+    "back": "assets/img/uniforms/as-colour-5001-cobalt-back.webp"
    },
    {
     "n": "Navy",
     "h": "#23232d",
-    "img": "assets/img/uniforms/as-colour-5001-navy.webp"
+    "img": "assets/img/uniforms/as-colour-5001-navy.webp",
+    "back": "assets/img/uniforms/as-colour-5001-navy-back.webp"
    },
    {
     "n": "Midnight Blue",
     "h": "#2d3741",
-    "img": "assets/img/uniforms/as-colour-5001-midnight-blue.webp"
+    "img": "assets/img/uniforms/as-colour-5001-midnight-blue.webp",
+    "back": "assets/img/uniforms/as-colour-5001-midnight-blue-back.webp"
    },
    {
     "n": "Bright Royal",
     "h": "#234187",
-    "img": "assets/img/uniforms/as-colour-5001-bright-royal.webp"
+    "img": "assets/img/uniforms/as-colour-5001-bright-royal.webp",
+    "back": "assets/img/uniforms/as-colour-5001-bright-royal-back.webp"
    },
    {
     "n": "Arctic Blue",
     "h": "#2d73a5",
-    "img": "assets/img/uniforms/as-colour-5001-arctic-blue.webp"
+    "img": "assets/img/uniforms/as-colour-5001-arctic-blue.webp",
+    "back": "assets/img/uniforms/as-colour-5001-arctic-blue-back.webp"
    },
    {
     "n": "Petrol Blue",
     "h": "#414b55",
-    "img": "assets/img/uniforms/as-colour-5001-petrol-blue.webp"
+    "img": "assets/img/uniforms/as-colour-5001-petrol-blue.webp",
+    "back": "assets/img/uniforms/as-colour-5001-petrol-blue-back.webp"
    },
    {
     "n": "Slate Blue",
     "h": "#699191",
-    "img": "assets/img/uniforms/as-colour-5001-slate-blue.webp"
+    "img": "assets/img/uniforms/as-colour-5001-slate-blue.webp",
+    "back": "assets/img/uniforms/as-colour-5001-slate-blue-back.webp"
    },
    {
     "n": "Carolina Blue",
     "h": "#87afcd",
-    "img": "assets/img/uniforms/as-colour-5001-carolina-blue.webp"
+    "img": "assets/img/uniforms/as-colour-5001-carolina-blue.webp",
+    "back": "assets/img/uniforms/as-colour-5001-carolina-blue-back.webp"
    },
    {
     "n": "Mineral",
     "h": "#91a5a5",
-    "img": "assets/img/uniforms/as-colour-5001-mineral.webp"
+    "img": "assets/img/uniforms/as-colour-5001-mineral.webp",
+    "back": "assets/img/uniforms/as-colour-5001-mineral-back.webp"
    },
    {
     "n": "Pale Blue",
     "h": "#afc3c3",
-    "img": "assets/img/uniforms/as-colour-5001-pale-blue.webp"
+    "img": "assets/img/uniforms/as-colour-5001-pale-blue.webp",
+    "back": "assets/img/uniforms/as-colour-5001-pale-blue-back.webp"
    },
    {
     "n": "Lapis",
     "h": "#6973a5",
-    "img": "assets/img/uniforms/as-colour-5001-lapis.webp"
+    "img": "assets/img/uniforms/as-colour-5001-lapis.webp",
+    "back": "assets/img/uniforms/as-colour-5001-lapis-back.webp"
    },
    {
     "n": "Mauve",
     "h": "#7d6973",
-    "img": "assets/img/uniforms/as-colour-5001-mauve.webp"
+    "img": "assets/img/uniforms/as-colour-5001-mauve.webp",
+    "back": "assets/img/uniforms/as-colour-5001-mauve-back.webp"
    },
    {
     "n": "Purple",
     "h": "#5f4173",
-    "img": "assets/img/uniforms/as-colour-5001-purple.webp"
+    "img": "assets/img/uniforms/as-colour-5001-purple.webp",
+    "back": "assets/img/uniforms/as-colour-5001-purple-back.webp"
    },
    {
     "n": "Plum",
     "h": "#2d1923",
-    "img": "assets/img/uniforms/as-colour-5001-plum.webp"
+    "img": "assets/img/uniforms/as-colour-5001-plum.webp",
+    "back": "assets/img/uniforms/as-colour-5001-plum-back.webp"
    },
    {
     "n": "Burgundy",
     "h": "#4b1923",
-    "img": "assets/img/uniforms/as-colour-5001-burgundy.webp"
+    "img": "assets/img/uniforms/as-colour-5001-burgundy.webp",
+    "back": "assets/img/uniforms/as-colour-5001-burgundy-back.webp"
    },
    {
     "n": "Red",
     "h": "#b90f19",
-    "img": "assets/img/uniforms/as-colour-5001-red.webp"
+    "img": "assets/img/uniforms/as-colour-5001-red.webp",
+    "back": "assets/img/uniforms/as-colour-5001-red-back.webp"
    },
    {
     "n": "Clay",
     "h": "#7d412d",
-    "img": "assets/img/uniforms/as-colour-5001-clay.webp"
+    "img": "assets/img/uniforms/as-colour-5001-clay.webp",
+    "back": "assets/img/uniforms/as-colour-5001-clay-back.webp"
    },
    {
     "n": "Coral",
     "h": "#9b4141",
-    "img": "assets/img/uniforms/as-colour-5001-coral.webp"
+    "img": "assets/img/uniforms/as-colour-5001-coral.webp",
+    "back": "assets/img/uniforms/as-colour-5001-coral-back.webp"
    },
    {
     "n": "Bubblegum",
     "h": "#f5a5b9",
-    "img": "assets/img/uniforms/as-colour-5001-bubblegum.webp"
+    "img": "assets/img/uniforms/as-colour-5001-bubblegum.webp",
+    "back": "assets/img/uniforms/as-colour-5001-bubblegum-back.webp"
    },
    {
     "n": "Pink",
     "h": "#f5d7d7",
-    "img": "assets/img/uniforms/as-colour-5001-pink.webp"
+    "img": "assets/img/uniforms/as-colour-5001-pink.webp",
+    "back": "assets/img/uniforms/as-colour-5001-pink-back.webp"
    },
    {
     "n": "Pale Pink",
     "h": "#f5c3b9",
-    "img": "assets/img/uniforms/as-colour-5001-pale-pink.webp"
+    "img": "assets/img/uniforms/as-colour-5001-pale-pink.webp",
+    "back": "assets/img/uniforms/as-colour-5001-pale-pink-back.webp"
    },
    {
     "n": "Copper",
     "h": "#a5552d",
-    "img": "assets/img/uniforms/as-colour-5001-copper.webp"
+    "img": "assets/img/uniforms/as-colour-5001-copper.webp",
+    "back": "assets/img/uniforms/as-colour-5001-copper-back.webp"
    },
    {
     "n": "Orange",
     "h": "#e15f23",
-    "img": "assets/img/uniforms/as-colour-5001-orange.webp"
+    "img": "assets/img/uniforms/as-colour-5001-orange.webp",
+    "back": "assets/img/uniforms/as-colour-5001-orange-back.webp"
    },
    {
     "n": "Gold",
     "h": "#ffa523",
-    "img": "assets/img/uniforms/as-colour-5001-gold.webp"
+    "img": "assets/img/uniforms/as-colour-5001-gold.webp",
+    "back": "assets/img/uniforms/as-colour-5001-gold-back.webp"
    },
    {
     "n": "Mustard",
     "h": "#ebaf55",
-    "img": "assets/img/uniforms/as-colour-5001-mustard.webp"
+    "img": "assets/img/uniforms/as-colour-5001-mustard.webp",
+    "back": "assets/img/uniforms/as-colour-5001-mustard-back.webp"
    },
    {
     "n": "Yellow",
     "h": "#ffc34b",
-    "img": "assets/img/uniforms/as-colour-5001-yellow.webp"
+    "img": "assets/img/uniforms/as-colour-5001-yellow.webp",
+    "back": "assets/img/uniforms/as-colour-5001-yellow-back.webp"
    },
    {
     "n": "Citrus",
     "h": "#b9eb73",
-    "img": "assets/img/uniforms/as-colour-5001-citrus.webp"
+    "img": "assets/img/uniforms/as-colour-5001-citrus.webp",
+    "back": "assets/img/uniforms/as-colour-5001-citrus-back.webp"
    },
    {
     "n": "Sage",
     "h": "#73917d",
-    "img": "assets/img/uniforms/as-colour-5001-sage.webp"
+    "img": "assets/img/uniforms/as-colour-5001-sage.webp",
+    "back": "assets/img/uniforms/as-colour-5001-sage-back.webp"
    },
    {
     "n": "Kelly Green",
     "h": "#05734b",
-    "img": "assets/img/uniforms/as-colour-5001-kelly-green.webp"
+    "img": "assets/img/uniforms/as-colour-5001-kelly-green.webp",
+    "back": "assets/img/uniforms/as-colour-5001-kelly-green-back.webp"
    },
    {
     "n": "Forest Green",
     "h": "#233723",
-    "img": "assets/img/uniforms/as-colour-5001-forest-green.webp"
+    "img": "assets/img/uniforms/as-colour-5001-forest-green.webp",
+    "back": "assets/img/uniforms/as-colour-5001-forest-green-back.webp"
    },
    {
     "n": "Pine Green",
     "h": "#0f2d23",
-    "img": "assets/img/uniforms/as-colour-5001-pine-green.webp"
+    "img": "assets/img/uniforms/as-colour-5001-pine-green.webp",
+    "back": "assets/img/uniforms/as-colour-5001-pine-green-back.webp"
    },
    {
     "n": "Army",
     "h": "#554b2d",
-    "img": "assets/img/uniforms/as-colour-5001-army.webp"
+    "img": "assets/img/uniforms/as-colour-5001-army.webp",
+    "back": "assets/img/uniforms/as-colour-5001-army-back.webp"
    },
    {
     "n": "Dark Chocolate",
     "h": "#372d23",
-    "img": "assets/img/uniforms/as-colour-5001-dark-chocolate.webp"
+    "img": "assets/img/uniforms/as-colour-5001-dark-chocolate.webp",
+    "back": "assets/img/uniforms/as-colour-5001-dark-chocolate-back.webp"
    },
    {
     "n": "Walnut",
     "h": "#695541",
-    "img": "assets/img/uniforms/as-colour-5001-walnut.webp"
+    "img": "assets/img/uniforms/as-colour-5001-walnut.webp",
+    "back": "assets/img/uniforms/as-colour-5001-walnut-back.webp"
    },
    {
     "n": "Khaki",
     "h": "#af9169",
-    "img": "assets/img/uniforms/as-colour-5001-khaki.webp"
+    "img": "assets/img/uniforms/as-colour-5001-khaki.webp",
+    "back": "assets/img/uniforms/as-colour-5001-khaki-back.webp"
    },
    {
     "n": "Sand",
     "h": "#af9173",
-    "img": "assets/img/uniforms/as-colour-5001-sand.webp"
+    "img": "assets/img/uniforms/as-colour-5001-sand.webp",
+    "back": "assets/img/uniforms/as-colour-5001-sand-back.webp"
    },
    {
     "n": "Natural",
     "h": "#f5ebeb",
-    "img": "assets/img/uniforms/as-colour-5001-natural.webp"
+    "img": "assets/img/uniforms/as-colour-5001-natural.webp",
+    "back": "assets/img/uniforms/as-colour-5001-natural-back.webp"
    },
    {
     "n": "White",
     "h": "#f5f5f5",
-    "img": "assets/img/uniforms/as-colour-5001-white.webp"
+    "img": "assets/img/uniforms/as-colour-5001-white.webp",
+    "back": "assets/img/uniforms/as-colour-5001-white-back.webp"
    },
    {
     "n": "Ecru",
     "h": "#ebe1d7",
-    "img": "assets/img/uniforms/as-colour-5001-ecru.webp"
+    "img": "assets/img/uniforms/as-colour-5001-ecru.webp",
+    "back": "assets/img/uniforms/as-colour-5001-ecru-back.webp"
    },
    {
     "n": "Light Grey",
     "h": "#afafa5",
-    "img": "assets/img/uniforms/as-colour-5001-light-grey.webp"
+    "img": "assets/img/uniforms/as-colour-5001-light-grey.webp",
+    "back": "assets/img/uniforms/as-colour-5001-light-grey-back.webp"
    },
    {
     "n": "Granite",
     "h": "#87877d",
-    "img": "assets/img/uniforms/as-colour-5001-granite.webp"
+    "img": "assets/img/uniforms/as-colour-5001-granite.webp",
+    "back": "assets/img/uniforms/as-colour-5001-granite-back.webp"
    },
    {
     "n": "Grey Marle",
     "h": "#9b9b9b",
-    "img": "assets/img/uniforms/as-colour-5001-grey-marle.webp"
+    "img": "assets/img/uniforms/as-colour-5001-grey-marle.webp",
+    "back": "assets/img/uniforms/as-colour-5001-grey-marle-back.webp"
    },
    {
     "n": "Charcoal",
     "h": "#4b4b4b",
-    "img": "assets/img/uniforms/as-colour-5001-charcoal.webp"
+    "img": "assets/img/uniforms/as-colour-5001-charcoal.webp",
+    "back": "assets/img/uniforms/as-colour-5001-charcoal-back.webp"
    },
    {
     "n": "Coal",
     "h": "#2d2d2d",
-    "img": "assets/img/uniforms/as-colour-5001-coal.webp"
+    "img": "assets/img/uniforms/as-colour-5001-coal.webp",
+    "back": "assets/img/uniforms/as-colour-5001-coal-back.webp"
    },
    {
     "n": "Black",
     "h": "#232323",
-    "img": "assets/img/uniforms/as-colour-5001-black.webp"
+    "img": "assets/img/uniforms/as-colour-5001-black.webp",
+    "back": "assets/img/uniforms/as-colour-5001-black-back.webp"
    },
    {
     "n": "Butter",
     "h": "#f5ebcd",
-    "img": "assets/img/uniforms/as-colour-5001-butter.webp"
+    "img": "assets/img/uniforms/as-colour-5001-butter.webp",
+    "back": "assets/img/uniforms/as-colour-5001-butter-back.webp"
    },
    {
     "n": "Kiwi",
     "h": "#919b5f",
-    "img": "assets/img/uniforms/as-colour-5001-kiwi.webp"
+    "img": "assets/img/uniforms/as-colour-5001-kiwi.webp",
+    "back": "assets/img/uniforms/as-colour-5001-kiwi-back.webp"
    },
    {
     "n": "Orchid",
     "h": "#ebe1e1",
-    "img": "assets/img/uniforms/as-colour-5001-orchid.webp"
+    "img": "assets/img/uniforms/as-colour-5001-orchid.webp",
+    "back": "assets/img/uniforms/as-colour-5001-orchid-back.webp"
    },
    {
     "n": "Fog Blue",
     "h": "#69879b",
-    "img": "assets/img/uniforms/as-colour-5001-fog-blue.webp"
+    "img": "assets/img/uniforms/as-colour-5001-fog-blue.webp",
+    "back": "assets/img/uniforms/as-colour-5001-fog-blue-back.webp"
    },
    {
     "n": "Shadow",
     "h": "#5f5f5f",
-    "img": "assets/img/uniforms/as-colour-5001-shadow.webp"
+    "img": "assets/img/uniforms/as-colour-5001-shadow.webp",
+    "back": "assets/img/uniforms/as-colour-5001-shadow-back.webp"
    }
   ],
   "spec": "https://www.ascolour.com.au/staple-tee-5001/",
@@ -1095,7 +1171,9 @@
    "4XL",
    "5XL"
   ],
-  "size_mode": "published"
+  "size_mode": "published",
+  "worn": "assets/img/uniforms/as-colour-5001-worn.webp",
+  "img_src": "AS Colour official library"
  },
  {
   "cat": "tees",
@@ -1114,87 +1192,104 @@
    {
     "n": "White",
     "h": "#f5f5f5",
-    "img": "assets/img/uniforms/as-colour-5051-white.webp"
+    "img": "assets/img/uniforms/as-colour-5051-white.webp",
+    "back": "assets/img/uniforms/as-colour-5051-white-back.webp"
    },
    {
     "n": "Natural",
     "h": "#ebebe1",
-    "img": "assets/img/uniforms/as-colour-5051-natural.webp"
+    "img": "assets/img/uniforms/as-colour-5051-natural.webp",
+    "back": "assets/img/uniforms/as-colour-5051-natural-back.webp"
    },
    {
     "n": "Eucalyptus",
     "h": "#919173",
-    "img": "assets/img/uniforms/as-colour-5051-eucalyptus.webp"
+    "img": "assets/img/uniforms/as-colour-5051-eucalyptus.webp",
+    "back": "assets/img/uniforms/as-colour-5051-eucalyptus-back.webp"
    },
    {
     "n": "Mustard",
     "h": "#d7a555",
-    "img": "assets/img/uniforms/as-colour-5051-mustard.webp"
+    "img": "assets/img/uniforms/as-colour-5051-mustard.webp",
+    "back": "assets/img/uniforms/as-colour-5051-mustard-back.webp"
    },
    {
     "n": "Khaki",
     "h": "#af9169",
-    "img": "assets/img/uniforms/as-colour-5051-khaki.webp"
+    "img": "assets/img/uniforms/as-colour-5051-khaki.webp",
+    "back": "assets/img/uniforms/as-colour-5051-khaki-back.webp"
    },
    {
     "n": "Red",
     "h": "#b90f19",
-    "img": "assets/img/uniforms/as-colour-5051-red.webp"
+    "img": "assets/img/uniforms/as-colour-5051-red.webp",
+    "back": "assets/img/uniforms/as-colour-5051-red-back.webp"
    },
    {
     "n": "Bright Royal",
     "h": "#234b87",
-    "img": "assets/img/uniforms/as-colour-5051-bright-royal.webp"
+    "img": "assets/img/uniforms/as-colour-5051-bright-royal.webp",
+    "back": "assets/img/uniforms/as-colour-5051-bright-royal-back.webp"
    },
    {
     "n": "Navy",
     "h": "#23232d",
-    "img": "assets/img/uniforms/as-colour-5051-navy.webp"
+    "img": "assets/img/uniforms/as-colour-5051-navy.webp",
+    "back": "assets/img/uniforms/as-colour-5051-navy-back.webp"
    },
    {
     "n": "Sage",
     "h": "#73917d",
-    "img": "assets/img/uniforms/as-colour-5051-sage.webp"
+    "img": "assets/img/uniforms/as-colour-5051-sage.webp",
+    "back": "assets/img/uniforms/as-colour-5051-sage-back.webp"
    },
    {
     "n": "Army",
     "h": "#554b2d",
-    "img": "assets/img/uniforms/as-colour-5051-army.webp"
+    "img": "assets/img/uniforms/as-colour-5051-army.webp",
+    "back": "assets/img/uniforms/as-colour-5051-army-back.webp"
    },
    {
     "n": "Grey Marle",
     "h": "#a5a5a5",
-    "img": "assets/img/uniforms/as-colour-5051-grey-marle.webp"
+    "img": "assets/img/uniforms/as-colour-5051-grey-marle.webp",
+    "back": "assets/img/uniforms/as-colour-5051-grey-marle-back.webp"
    },
    {
     "n": "Granite",
     "h": "#919187",
-    "img": "assets/img/uniforms/as-colour-5051-granite.webp"
+    "img": "assets/img/uniforms/as-colour-5051-granite.webp",
+    "back": "assets/img/uniforms/as-colour-5051-granite-back.webp"
    },
    {
     "n": "Coal",
     "h": "#373737",
-    "img": "assets/img/uniforms/as-colour-5051-coal.webp"
+    "img": "assets/img/uniforms/as-colour-5051-coal.webp",
+    "back": "assets/img/uniforms/as-colour-5051-coal-back.webp"
    },
    {
     "n": "Black",
     "h": "#232323",
-    "img": "assets/img/uniforms/as-colour-5051-black.webp"
+    "img": "assets/img/uniforms/as-colour-5051-black.webp",
+    "back": "assets/img/uniforms/as-colour-5051-black-back.webp"
    },
    {
     "n": "Burgundy",
     "h": "#4b1923",
-    "img": "assets/img/uniforms/as-colour-5051-burgundy.webp"
+    "img": "assets/img/uniforms/as-colour-5051-burgundy.webp",
+    "back": "assets/img/uniforms/as-colour-5051-burgundy-back.webp"
    },
    {
     "n": "Orchid",
     "h": "#e1d7e1",
-    "img": "assets/img/uniforms/as-colour-5051-orchid.webp"
+    "img": "assets/img/uniforms/as-colour-5051-orchid.webp",
+    "back": "assets/img/uniforms/as-colour-5051-orchid-back.webp"
    },
    {
     "n": "Seafoam",
     "h": "#e1ebeb",
-    "img": "assets/img/uniforms/as-colour-5051-seafoam.webp"
+    "img": "assets/img/uniforms/as-colour-5051-seafoam.webp",
+    "back": "assets/img/uniforms/as-colour-5051-seafoam-back.webp"
    }
   ],
   "spec": "https://www.ascolour.com.au/basic-tee-5051/",
@@ -1210,7 +1305,9 @@
    "4XL",
    "5XL"
   ],
-  "size_mode": "guide"
+  "size_mode": "guide",
+  "worn": "assets/img/uniforms/as-colour-5051-worn.webp",
+  "img_src": "AS Colour official library"
  },
  {
   "cat": "tees",
@@ -1229,287 +1326,344 @@
    {
     "n": "Smoke",
     "h": "#b9c3c3",
-    "img": "assets/img/uniforms/as-colour-5026-smoke.webp"
+    "img": "assets/img/uniforms/as-colour-5026-smoke.webp",
+    "back": "assets/img/uniforms/as-colour-5026-smoke-back.webp"
    },
    {
     "n": "Sunset",
     "h": "#f5c35f",
-    "img": "assets/img/uniforms/as-colour-5026-sunset.webp"
+    "img": "assets/img/uniforms/as-colour-5026-sunset.webp",
+    "back": "assets/img/uniforms/as-colour-5026-sunset-back.webp"
    },
    {
     "n": "Charlotte",
     "h": "#058791",
-    "img": "assets/img/uniforms/as-colour-5026-charlotte.webp"
+    "img": "assets/img/uniforms/as-colour-5026-charlotte.webp",
+    "back": "assets/img/uniforms/as-colour-5026-charlotte-back.webp"
    },
    {
     "n": "Cocoa",
     "h": "#9b5f41",
-    "img": "assets/img/uniforms/as-colour-5026-cocoa.webp"
+    "img": "assets/img/uniforms/as-colour-5026-cocoa.webp",
+    "back": "assets/img/uniforms/as-colour-5026-cocoa-back.webp"
    },
    {
     "n": "Moss",
     "h": "#877d23",
-    "img": "assets/img/uniforms/as-colour-5026-moss.webp"
+    "img": "assets/img/uniforms/as-colour-5026-moss.webp",
+    "back": "assets/img/uniforms/as-colour-5026-moss-back.webp"
    },
    {
     "n": "Orchid",
     "h": "#ebd7e1",
-    "img": "assets/img/uniforms/as-colour-5026-orchid.webp"
+    "img": "assets/img/uniforms/as-colour-5026-orchid.webp",
+    "back": "assets/img/uniforms/as-colour-5026-orchid-back.webp"
    },
    {
     "n": "Khaki",
     "h": "#b99b73",
-    "img": "assets/img/uniforms/as-colour-5026-khaki.webp"
+    "img": "assets/img/uniforms/as-colour-5026-khaki.webp",
+    "back": "assets/img/uniforms/as-colour-5026-khaki-back.webp"
    },
    {
     "n": "Ecru",
     "h": "#f5ebe1",
-    "img": "assets/img/uniforms/as-colour-5026-ecru.webp"
+    "img": "assets/img/uniforms/as-colour-5026-ecru.webp",
+    "back": "assets/img/uniforms/as-colour-5026-ecru-back.webp"
    },
    {
     "n": "Bone",
     "h": "#d7cdc3",
-    "img": "assets/img/uniforms/as-colour-5026-bone.webp"
+    "img": "assets/img/uniforms/as-colour-5026-bone.webp",
+    "back": "assets/img/uniforms/as-colour-5026-bone-back.webp"
    },
    {
     "n": "Butter",
     "h": "#f5ebd7",
-    "img": "assets/img/uniforms/as-colour-5026-butter.webp"
+    "img": "assets/img/uniforms/as-colour-5026-butter.webp",
+    "back": "assets/img/uniforms/as-colour-5026-butter-back.webp"
    },
    {
     "n": "Safari",
     "h": "#af9b7d",
-    "img": "assets/img/uniforms/as-colour-5026-safari.webp"
+    "img": "assets/img/uniforms/as-colour-5026-safari.webp",
+    "back": "assets/img/uniforms/as-colour-5026-safari-back.webp"
    },
    {
     "n": "Mineral",
     "h": "#7d9191",
-    "img": "assets/img/uniforms/as-colour-5026-mineral.webp"
+    "img": "assets/img/uniforms/as-colour-5026-mineral.webp",
+    "back": "assets/img/uniforms/as-colour-5026-mineral-back.webp"
    },
    {
     "n": "Lapis",
     "h": "#5f69a5",
-    "img": "assets/img/uniforms/as-colour-5026-lapis.webp"
+    "img": "assets/img/uniforms/as-colour-5026-lapis.webp",
+    "back": "assets/img/uniforms/as-colour-5026-lapis-back.webp"
    },
    {
     "n": "Hazy Pink",
     "h": "#b9877d",
-    "img": "assets/img/uniforms/as-colour-5026-hazy-pink.webp"
+    "img": "assets/img/uniforms/as-colour-5026-hazy-pink.webp",
+    "back": "assets/img/uniforms/as-colour-5026-hazy-pink-back.webp"
    },
    {
     "n": "Chestnut",
     "h": "#4b2d23",
-    "img": "assets/img/uniforms/as-colour-5026-chestnut.webp"
+    "img": "assets/img/uniforms/as-colour-5026-chestnut.webp",
+    "back": "assets/img/uniforms/as-colour-5026-chestnut-back.webp"
    },
    {
     "n": "Eucalyptus",
     "h": "#919173",
-    "img": "assets/img/uniforms/as-colour-5026-eucalyptus.webp"
+    "img": "assets/img/uniforms/as-colour-5026-eucalyptus.webp",
+    "back": "assets/img/uniforms/as-colour-5026-eucalyptus-back.webp"
    },
    {
     "n": "Storm",
     "h": "#b9b9af",
-    "img": "assets/img/uniforms/as-colour-5026-storm.webp"
+    "img": "assets/img/uniforms/as-colour-5026-storm.webp",
+    "back": "assets/img/uniforms/as-colour-5026-storm-back.webp"
    },
    {
     "n": "Cypress",
     "h": "#55554b",
-    "img": "assets/img/uniforms/as-colour-5026-cypress.webp"
+    "img": "assets/img/uniforms/as-colour-5026-cypress.webp",
+    "back": "assets/img/uniforms/as-colour-5026-cypress-back.webp"
    },
    {
     "n": "Sand",
     "h": "#a59169",
-    "img": "assets/img/uniforms/as-colour-5026-sand.webp"
+    "img": "assets/img/uniforms/as-colour-5026-sand.webp",
+    "back": "assets/img/uniforms/as-colour-5026-sand-back.webp"
    },
    {
     "n": "Walnut",
     "h": "#695541",
-    "img": "assets/img/uniforms/as-colour-5026-walnut.webp"
+    "img": "assets/img/uniforms/as-colour-5026-walnut.webp",
+    "back": "assets/img/uniforms/as-colour-5026-walnut-back.webp"
    },
    {
     "n": "Clay",
     "h": "#874b37",
-    "img": "assets/img/uniforms/as-colour-5026-clay.webp"
+    "img": "assets/img/uniforms/as-colour-5026-clay.webp",
+    "back": "assets/img/uniforms/as-colour-5026-clay-back.webp"
    },
    {
     "n": "Pine Green",
     "h": "#0f2323",
-    "img": "assets/img/uniforms/as-colour-5026-pine-green.webp"
+    "img": "assets/img/uniforms/as-colour-5026-pine-green.webp",
+    "back": "assets/img/uniforms/as-colour-5026-pine-green-back.webp"
    },
    {
     "n": "Camel",
     "h": "#b98741",
-    "img": "assets/img/uniforms/as-colour-5026-camel.webp"
+    "img": "assets/img/uniforms/as-colour-5026-camel.webp",
+    "back": "assets/img/uniforms/as-colour-5026-camel-back.webp"
    },
    {
     "n": "Berry",
     "h": "#914155",
-    "img": "assets/img/uniforms/as-colour-5026-berry.webp"
+    "img": "assets/img/uniforms/as-colour-5026-berry.webp",
+    "back": "assets/img/uniforms/as-colour-5026-berry-back.webp"
    },
    {
     "n": "Autumn",
     "h": "#c33719",
-    "img": "assets/img/uniforms/as-colour-5026-autumn.webp"
+    "img": "assets/img/uniforms/as-colour-5026-autumn.webp",
+    "back": "assets/img/uniforms/as-colour-5026-autumn-back.webp"
    },
    {
     "n": "Cardinal",
     "h": "#7d0f19",
-    "img": "assets/img/uniforms/as-colour-5026-cardinal.webp"
+    "img": "assets/img/uniforms/as-colour-5026-cardinal.webp",
+    "back": "assets/img/uniforms/as-colour-5026-cardinal-back.webp"
    },
    {
     "n": "Cobalt",
     "h": "#232d55",
-    "img": "assets/img/uniforms/as-colour-5026-cobalt.webp"
+    "img": "assets/img/uniforms/as-colour-5026-cobalt.webp",
+    "back": "assets/img/uniforms/as-colour-5026-cobalt-back.webp"
    },
    {
     "n": "Pistachio",
     "h": "#b9b99b",
-    "img": "assets/img/uniforms/as-colour-5026-pistachio.webp"
+    "img": "assets/img/uniforms/as-colour-5026-pistachio.webp",
+    "back": "assets/img/uniforms/as-colour-5026-pistachio-back.webp"
    },
    {
     "n": "Lime",
     "h": "#d7d7a5",
-    "img": "assets/img/uniforms/as-colour-5026-lime.webp"
+    "img": "assets/img/uniforms/as-colour-5026-lime.webp",
+    "back": "assets/img/uniforms/as-colour-5026-lime-back.webp"
    },
    {
     "n": "Jade",
     "h": "#054b37",
-    "img": "assets/img/uniforms/as-colour-5026-jade.webp"
+    "img": "assets/img/uniforms/as-colour-5026-jade.webp",
+    "back": "assets/img/uniforms/as-colour-5026-jade-back.webp"
    },
    {
     "n": "Emerald",
     "h": "#0f412d",
-    "img": "assets/img/uniforms/as-colour-5026-emerald.webp"
+    "img": "assets/img/uniforms/as-colour-5026-emerald.webp",
+    "back": "assets/img/uniforms/as-colour-5026-emerald-back.webp"
    },
    {
     "n": "Yellow",
     "h": "#f5af2d",
-    "img": "assets/img/uniforms/as-colour-5026-yellow.webp"
+    "img": "assets/img/uniforms/as-colour-5026-yellow.webp",
+    "back": "assets/img/uniforms/as-colour-5026-yellow-back.webp"
    },
    {
     "n": "Bright Royal",
     "h": "#194b87",
-    "img": "assets/img/uniforms/as-colour-5026-bright-royal.webp"
+    "img": "assets/img/uniforms/as-colour-5026-bright-royal.webp",
+    "back": "assets/img/uniforms/as-colour-5026-bright-royal-back.webp"
    },
    {
     "n": "Pale Blue",
     "h": "#a5b9c3",
-    "img": "assets/img/uniforms/as-colour-5026-pale-blue.webp"
+    "img": "assets/img/uniforms/as-colour-5026-pale-blue.webp",
+    "back": "assets/img/uniforms/as-colour-5026-pale-blue-back.webp"
    },
    {
     "n": "Powder",
     "h": "#cdcdd7",
-    "img": "assets/img/uniforms/as-colour-5026-powder.webp"
+    "img": "assets/img/uniforms/as-colour-5026-powder.webp",
+    "back": "assets/img/uniforms/as-colour-5026-powder-back.webp"
    },
    {
     "n": "Petrol Blue",
     "h": "#37414b",
-    "img": "assets/img/uniforms/as-colour-5026-petrol-blue.webp"
+    "img": "assets/img/uniforms/as-colour-5026-petrol-blue.webp",
+    "back": "assets/img/uniforms/as-colour-5026-petrol-blue-back.webp"
    },
    {
     "n": "Navy",
     "h": "#19232d",
-    "img": "assets/img/uniforms/as-colour-5026-navy.webp"
+    "img": "assets/img/uniforms/as-colour-5026-navy.webp",
+    "back": "assets/img/uniforms/as-colour-5026-navy-back.webp"
    },
    {
     "n": "Midnight Blue",
     "h": "#232d37",
-    "img": "assets/img/uniforms/as-colour-5026-midnight-blue.webp"
+    "img": "assets/img/uniforms/as-colour-5026-midnight-blue.webp",
+    "back": "assets/img/uniforms/as-colour-5026-midnight-blue-back.webp"
    },
    {
     "n": "Red",
     "h": "#c30f19",
-    "img": "assets/img/uniforms/as-colour-5026-red.webp"
+    "img": "assets/img/uniforms/as-colour-5026-red.webp",
+    "back": "assets/img/uniforms/as-colour-5026-red-back.webp"
    },
    {
     "n": "Burgundy",
     "h": "#4b1919",
-    "img": "assets/img/uniforms/as-colour-5026-burgundy.webp"
+    "img": "assets/img/uniforms/as-colour-5026-burgundy.webp",
+    "back": "assets/img/uniforms/as-colour-5026-burgundy-back.webp"
    },
    {
     "n": "Pale Pink",
     "h": "#f5cdb9",
-    "img": "assets/img/uniforms/as-colour-5026-pale-pink.webp"
+    "img": "assets/img/uniforms/as-colour-5026-pale-pink.webp",
+    "back": "assets/img/uniforms/as-colour-5026-pale-pink-back.webp"
    },
    {
     "n": "Plum",
     "h": "#37232d",
-    "img": "assets/img/uniforms/as-colour-5026-plum.webp"
+    "img": "assets/img/uniforms/as-colour-5026-plum.webp",
+    "back": "assets/img/uniforms/as-colour-5026-plum-back.webp"
    },
    {
     "n": "Lagoon",
     "h": "#b9d7d7",
-    "img": "assets/img/uniforms/as-colour-5026-lagoon.webp"
+    "img": "assets/img/uniforms/as-colour-5026-lagoon.webp",
+    "back": "assets/img/uniforms/as-colour-5026-lagoon-back.webp"
    },
    {
     "n": "Atlantic",
     "h": "#054b55",
-    "img": "assets/img/uniforms/as-colour-5026-atlantic.webp"
+    "img": "assets/img/uniforms/as-colour-5026-atlantic.webp",
+    "back": "assets/img/uniforms/as-colour-5026-atlantic-back.webp"
    },
    {
     "n": "Army",
     "h": "#4b412d",
-    "img": "assets/img/uniforms/as-colour-5026-army.webp"
+    "img": "assets/img/uniforms/as-colour-5026-army.webp",
+    "back": "assets/img/uniforms/as-colour-5026-army-back.webp"
    },
    {
     "n": "White",
     "h": "#ebebeb",
-    "img": "assets/img/uniforms/as-colour-5026-white.webp"
+    "img": "assets/img/uniforms/as-colour-5026-white.webp",
+    "back": "assets/img/uniforms/as-colour-5026-white-back.webp"
    },
    {
     "n": "White Marle",
     "h": "#ebebeb",
-    "img": "assets/img/uniforms/as-colour-5026-white-marle.webp"
+    "img": "assets/img/uniforms/as-colour-5026-white-marle.webp",
+    "back": "assets/img/uniforms/as-colour-5026-white-marle-back.webp"
    },
    {
     "n": "Grey Marle",
     "h": "#919191",
-    "img": "assets/img/uniforms/as-colour-5026-grey-marle.webp"
+    "img": "assets/img/uniforms/as-colour-5026-grey-marle.webp",
+    "back": "assets/img/uniforms/as-colour-5026-grey-marle-back.webp"
    },
    {
     "n": "Coal",
     "h": "#232323",
-    "img": "assets/img/uniforms/as-colour-5026-coal.webp"
+    "img": "assets/img/uniforms/as-colour-5026-coal.webp",
+    "back": "assets/img/uniforms/as-colour-5026-coal-back.webp"
    },
    {
     "n": "Black",
     "h": "#232323",
-    "img": "assets/img/uniforms/as-colour-5026-black.webp"
+    "img": "assets/img/uniforms/as-colour-5026-black.webp",
+    "back": "assets/img/uniforms/as-colour-5026-black-back.webp"
    },
    {
     "n": "Ocean",
     "h": "#379bcd",
-    "img": "assets/img/uniforms/as-colour-5026-ocean.webp"
+    "img": "assets/img/uniforms/as-colour-5026-ocean.webp",
+    "back": "assets/img/uniforms/as-colour-5026-ocean-back.webp"
    },
    {
     "n": "Violet",
     "h": "#554191",
-    "img": "assets/img/uniforms/as-colour-5026-violet.webp"
+    "img": "assets/img/uniforms/as-colour-5026-violet.webp",
+    "back": "assets/img/uniforms/as-colour-5026-violet-back.webp"
    },
    {
     "n": "Watermelon",
     "h": "#d74155",
-    "img": "assets/img/uniforms/as-colour-5026-watermelon.webp"
+    "img": "assets/img/uniforms/as-colour-5026-watermelon.webp",
+    "back": "assets/img/uniforms/as-colour-5026-watermelon-back.webp"
    },
    {
     "n": "Gravel",
     "h": "#7d7d87",
-    "img": "assets/img/uniforms/as-colour-5026-gravel.webp"
+    "img": "assets/img/uniforms/as-colour-5026-gravel.webp",
+    "back": "assets/img/uniforms/as-colour-5026-gravel-back.webp"
    },
    {
     "n": "Ink Blue",
     "h": "#191923",
-    "img": "assets/img/uniforms/as-colour-5026-ink-blue.webp"
+    "img": "assets/img/uniforms/as-colour-5026-ink-blue.webp",
+    "back": "assets/img/uniforms/as-colour-5026-ink-blue-back.webp"
    },
    {
     "n": "Liberty",
     "h": "#234173",
-    "img": "assets/img/uniforms/as-colour-5026-liberty.webp"
+    "img": "assets/img/uniforms/as-colour-5026-liberty.webp",
+    "back": "assets/img/uniforms/as-colour-5026-liberty-back.webp"
    },
    {
     "n": "Shadow",
     "h": "#555555",
-    "img": "assets/img/uniforms/as-colour-5026-shadow.webp"
+    "img": "assets/img/uniforms/as-colour-5026-shadow.webp",
+    "back": "assets/img/uniforms/as-colour-5026-shadow-back.webp"
    }
   ],
   "spec": "https://www.ascolour.com.au/classic-tee-5026/",
@@ -1525,7 +1679,9 @@
    "4XL",
    "5XL"
   ],
-  "size_mode": "guide"
+  "size_mode": "guide",
+  "worn": "assets/img/uniforms/as-colour-5026-worn.webp",
+  "img_src": "AS Colour official library"
  },
  {
   "cat": "tees",
@@ -1544,267 +1700,320 @@
    {
     "n": "Bone",
     "h": "#e1d7cd",
-    "img": "assets/img/uniforms/as-colour-4001-bone.webp"
+    "img": "assets/img/uniforms/as-colour-4001-bone.webp",
+    "back": "assets/img/uniforms/as-colour-4001-bone-back.webp"
    },
    {
     "n": "Mushroom",
     "h": "#9b877d",
-    "img": "assets/img/uniforms/as-colour-4001-mushroom.webp"
+    "img": "assets/img/uniforms/as-colour-4001-mushroom.webp",
+    "back": "assets/img/uniforms/as-colour-4001-mushroom-back.webp"
    },
    {
     "n": "Charity Pink",
     "h": "#ff73a5",
-    "img": "assets/img/uniforms/as-colour-4001-charity-pink.webp"
+    "img": "assets/img/uniforms/as-colour-4001-charity-pink.webp",
+    "back": "assets/img/uniforms/as-colour-4001-charity-pink-back.webp"
    },
    {
     "n": "Powder",
     "h": "#c3c3cd",
-    "img": "assets/img/uniforms/as-colour-4001-powder.webp"
+    "img": "assets/img/uniforms/as-colour-4001-powder.webp",
+    "back": "assets/img/uniforms/as-colour-4001-powder-back.webp"
    },
    {
     "n": "Atlantic",
     "h": "#05555f",
-    "img": "assets/img/uniforms/as-colour-4001-atlantic.webp"
+    "img": "assets/img/uniforms/as-colour-4001-atlantic.webp",
+    "back": "assets/img/uniforms/as-colour-4001-atlantic-back.webp"
    },
    {
     "n": "Chestnut",
     "h": "#412d23",
-    "img": "assets/img/uniforms/as-colour-4001-chestnut.webp"
+    "img": "assets/img/uniforms/as-colour-4001-chestnut.webp",
+    "back": "assets/img/uniforms/as-colour-4001-chestnut-back.webp"
    },
    {
     "n": "Camel",
     "h": "#b97d41",
-    "img": "assets/img/uniforms/as-colour-4001-camel.webp"
+    "img": "assets/img/uniforms/as-colour-4001-camel.webp",
+    "back": "assets/img/uniforms/as-colour-4001-camel-back.webp"
    },
    {
     "n": "Autumn",
     "h": "#cd4123",
-    "img": "assets/img/uniforms/as-colour-4001-autumn.webp"
+    "img": "assets/img/uniforms/as-colour-4001-autumn.webp",
+    "back": "assets/img/uniforms/as-colour-4001-autumn-back.webp"
    },
    {
     "n": "Berry",
     "h": "#914155",
-    "img": "assets/img/uniforms/as-colour-4001-berry.webp"
+    "img": "assets/img/uniforms/as-colour-4001-berry.webp",
+    "back": "assets/img/uniforms/as-colour-4001-berry-back.webp"
    },
    {
     "n": "Cardinal",
     "h": "#871919",
-    "img": "assets/img/uniforms/as-colour-4001-cardinal.webp"
+    "img": "assets/img/uniforms/as-colour-4001-cardinal.webp",
+    "back": "assets/img/uniforms/as-colour-4001-cardinal-back.webp"
    },
    {
     "n": "Jade",
     "h": "#0f4b37",
-    "img": "assets/img/uniforms/as-colour-4001-jade.webp"
+    "img": "assets/img/uniforms/as-colour-4001-jade.webp",
+    "back": "assets/img/uniforms/as-colour-4001-jade-back.webp"
    },
    {
     "n": "Army",
     "h": "#4b412d",
-    "img": "assets/img/uniforms/as-colour-4001-army.webp"
+    "img": "assets/img/uniforms/as-colour-4001-army.webp",
+    "back": "assets/img/uniforms/as-colour-4001-army-back.webp"
    },
    {
     "n": "Pine Green",
     "h": "#0f2323",
-    "img": "assets/img/uniforms/as-colour-4001-pine-green.webp"
+    "img": "assets/img/uniforms/as-colour-4001-pine-green.webp",
+    "back": "assets/img/uniforms/as-colour-4001-pine-green-back.webp"
    },
    {
     "n": "Forest Green",
     "h": "#193719",
-    "img": "assets/img/uniforms/as-colour-4001-forest-green.webp"
+    "img": "assets/img/uniforms/as-colour-4001-forest-green.webp",
+    "back": "assets/img/uniforms/as-colour-4001-forest-green-back.webp"
    },
    {
     "n": "Sage",
     "h": "#698773",
-    "img": "assets/img/uniforms/as-colour-4001-sage.webp"
+    "img": "assets/img/uniforms/as-colour-4001-sage.webp",
+    "back": "assets/img/uniforms/as-colour-4001-sage-back.webp"
    },
    {
     "n": "Eucalyptus",
     "h": "#919173",
-    "img": "assets/img/uniforms/as-colour-4001-eucalyptus.webp"
+    "img": "assets/img/uniforms/as-colour-4001-eucalyptus.webp",
+    "back": "assets/img/uniforms/as-colour-4001-eucalyptus-back.webp"
    },
    {
     "n": "Pistachio",
     "h": "#afaf91",
-    "img": "assets/img/uniforms/as-colour-4001-pistachio.webp"
+    "img": "assets/img/uniforms/as-colour-4001-pistachio.webp",
+    "back": "assets/img/uniforms/as-colour-4001-pistachio-back.webp"
    },
    {
     "n": "Lime",
     "h": "#d7d7af",
-    "img": "assets/img/uniforms/as-colour-4001-lime.webp"
+    "img": "assets/img/uniforms/as-colour-4001-lime.webp",
+    "back": "assets/img/uniforms/as-colour-4001-lime-back.webp"
    },
    {
     "n": "Natural",
     "h": "#f5f5eb",
-    "img": "assets/img/uniforms/as-colour-4001-natural.webp"
+    "img": "assets/img/uniforms/as-colour-4001-natural.webp",
+    "back": "assets/img/uniforms/as-colour-4001-natural-back.webp"
    },
    {
     "n": "Mauve",
     "h": "#87737d",
-    "img": "assets/img/uniforms/as-colour-4001-mauve.webp"
+    "img": "assets/img/uniforms/as-colour-4001-mauve.webp",
+    "back": "assets/img/uniforms/as-colour-4001-mauve-back.webp"
    },
    {
     "n": "Burgundy",
     "h": "#4b2323",
-    "img": "assets/img/uniforms/as-colour-4001-burgundy.webp"
+    "img": "assets/img/uniforms/as-colour-4001-burgundy.webp",
+    "back": "assets/img/uniforms/as-colour-4001-burgundy-back.webp"
    },
    {
     "n": "Red",
     "h": "#b9050f",
-    "img": "assets/img/uniforms/as-colour-4001-red.webp"
+    "img": "assets/img/uniforms/as-colour-4001-red.webp",
+    "back": "assets/img/uniforms/as-colour-4001-red-back.webp"
    },
    {
     "n": "Fire",
     "h": "#e12323",
-    "img": "assets/img/uniforms/as-colour-4001-fire.webp"
+    "img": "assets/img/uniforms/as-colour-4001-fire.webp",
+    "back": "assets/img/uniforms/as-colour-4001-fire-back.webp"
    },
    {
     "n": "Clay",
     "h": "#693723",
-    "img": "assets/img/uniforms/as-colour-4001-clay.webp"
+    "img": "assets/img/uniforms/as-colour-4001-clay.webp",
+    "back": "assets/img/uniforms/as-colour-4001-clay-back.webp"
    },
    {
     "n": "Copper",
     "h": "#a5552d",
-    "img": "assets/img/uniforms/as-colour-4001-copper.webp"
+    "img": "assets/img/uniforms/as-colour-4001-copper.webp",
+    "back": "assets/img/uniforms/as-colour-4001-copper-back.webp"
    },
    {
     "n": "Coral",
     "h": "#a54b41",
-    "img": "assets/img/uniforms/as-colour-4001-coral.webp"
+    "img": "assets/img/uniforms/as-colour-4001-coral.webp",
+    "back": "assets/img/uniforms/as-colour-4001-coral-back.webp"
    },
    {
     "n": "Bubblegum",
     "h": "#f5a5b9",
-    "img": "assets/img/uniforms/as-colour-4001-bubblegum.webp"
+    "img": "assets/img/uniforms/as-colour-4001-bubblegum.webp",
+    "back": "assets/img/uniforms/as-colour-4001-bubblegum-back.webp"
    },
    {
     "n": "Pink",
     "h": "#ffd7d7",
-    "img": "assets/img/uniforms/as-colour-4001-pink.webp"
+    "img": "assets/img/uniforms/as-colour-4001-pink.webp",
+    "back": "assets/img/uniforms/as-colour-4001-pink-back.webp"
    },
    {
     "n": "Pale Pink",
     "h": "#ebc3b9",
-    "img": "assets/img/uniforms/as-colour-4001-pale-pink.webp"
+    "img": "assets/img/uniforms/as-colour-4001-pale-pink.webp",
+    "back": "assets/img/uniforms/as-colour-4001-pale-pink-back.webp"
    },
    {
     "n": "Yellow",
     "h": "#ffc355",
-    "img": "assets/img/uniforms/as-colour-4001-yellow.webp"
+    "img": "assets/img/uniforms/as-colour-4001-yellow.webp",
+    "back": "assets/img/uniforms/as-colour-4001-yellow-back.webp"
    },
    {
     "n": "Mustard",
     "h": "#ebaf55",
-    "img": "assets/img/uniforms/as-colour-4001-mustard.webp"
+    "img": "assets/img/uniforms/as-colour-4001-mustard.webp",
+    "back": "assets/img/uniforms/as-colour-4001-mustard-back.webp"
    },
    {
     "n": "Orange",
     "h": "#f57d2d",
-    "img": "assets/img/uniforms/as-colour-4001-orange.webp"
+    "img": "assets/img/uniforms/as-colour-4001-orange.webp",
+    "back": "assets/img/uniforms/as-colour-4001-orange-back.webp"
    },
    {
     "n": "Walnut",
     "h": "#5f4b41",
-    "img": "assets/img/uniforms/as-colour-4001-walnut.webp"
+    "img": "assets/img/uniforms/as-colour-4001-walnut.webp",
+    "back": "assets/img/uniforms/as-colour-4001-walnut-back.webp"
    },
    {
     "n": "Sand",
     "h": "#917d5f",
-    "img": "assets/img/uniforms/as-colour-4001-sand.webp"
+    "img": "assets/img/uniforms/as-colour-4001-sand.webp",
+    "back": "assets/img/uniforms/as-colour-4001-sand-back.webp"
    },
    {
     "n": "Seafoam",
     "h": "#d7e1e1",
-    "img": "assets/img/uniforms/as-colour-4001-seafoam.webp"
+    "img": "assets/img/uniforms/as-colour-4001-seafoam.webp",
+    "back": "assets/img/uniforms/as-colour-4001-seafoam-back.webp"
    },
    {
     "n": "Pale Blue",
     "h": "#afc3c3",
-    "img": "assets/img/uniforms/as-colour-4001-pale-blue.webp"
+    "img": "assets/img/uniforms/as-colour-4001-pale-blue.webp",
+    "back": "assets/img/uniforms/as-colour-4001-pale-blue-back.webp"
    },
    {
     "n": "Mineral",
     "h": "#879b9b",
-    "img": "assets/img/uniforms/as-colour-4001-mineral.webp"
+    "img": "assets/img/uniforms/as-colour-4001-mineral.webp",
+    "back": "assets/img/uniforms/as-colour-4001-mineral-back.webp"
    },
    {
     "n": "Carolina Blue",
     "h": "#739bb9",
-    "img": "assets/img/uniforms/as-colour-4001-carolina-blue.webp"
+    "img": "assets/img/uniforms/as-colour-4001-carolina-blue.webp",
+    "back": "assets/img/uniforms/as-colour-4001-carolina-blue-back.webp"
    },
    {
     "n": "Bright Royal",
     "h": "#194b91",
-    "img": "assets/img/uniforms/as-colour-4001-bright-royal.webp"
+    "img": "assets/img/uniforms/as-colour-4001-bright-royal.webp",
+    "back": "assets/img/uniforms/as-colour-4001-bright-royal-back.webp"
    },
    {
     "n": "Cobalt",
     "h": "#192d4b",
-    "img": "assets/img/uniforms/as-colour-4001-cobalt.webp"
+    "img": "assets/img/uniforms/as-colour-4001-cobalt.webp",
+    "back": "assets/img/uniforms/as-colour-4001-cobalt-back.webp"
    },
    {
     "n": "Petrol Blue",
     "h": "#37414b",
-    "img": "assets/img/uniforms/as-colour-4001-petrol-blue.webp"
+    "img": "assets/img/uniforms/as-colour-4001-petrol-blue.webp",
+    "back": "assets/img/uniforms/as-colour-4001-petrol-blue-back.webp"
    },
    {
     "n": "Navy",
     "h": "#191923",
-    "img": "assets/img/uniforms/as-colour-4001-navy.webp"
+    "img": "assets/img/uniforms/as-colour-4001-navy.webp",
+    "back": "assets/img/uniforms/as-colour-4001-navy-back.webp"
    },
    {
     "n": "Ecru",
     "h": "#ebebe1",
-    "img": "assets/img/uniforms/as-colour-4001-ecru.webp"
+    "img": "assets/img/uniforms/as-colour-4001-ecru.webp",
+    "back": "assets/img/uniforms/as-colour-4001-ecru-back.webp"
    },
    {
     "n": "White",
     "h": "#f5f5f5",
-    "img": "assets/img/uniforms/as-colour-4001-white.webp"
+    "img": "assets/img/uniforms/as-colour-4001-white.webp",
+    "back": "assets/img/uniforms/as-colour-4001-white-back.webp"
    },
    {
     "n": "Grey Marle",
     "h": "#919191",
-    "img": "assets/img/uniforms/as-colour-4001-grey-marle.webp"
+    "img": "assets/img/uniforms/as-colour-4001-grey-marle.webp",
+    "back": "assets/img/uniforms/as-colour-4001-grey-marle-back.webp"
    },
    {
     "n": "Charcoal",
     "h": "#2d2d2d",
-    "img": "assets/img/uniforms/as-colour-4001-charcoal.webp"
+    "img": "assets/img/uniforms/as-colour-4001-charcoal.webp",
+    "back": "assets/img/uniforms/as-colour-4001-charcoal-back.webp"
    },
    {
     "n": "Coal",
     "h": "#373737",
-    "img": "assets/img/uniforms/as-colour-4001-coal.webp"
+    "img": "assets/img/uniforms/as-colour-4001-coal.webp",
+    "back": "assets/img/uniforms/as-colour-4001-coal-back.webp"
    },
    {
     "n": "Black",
     "h": "#232323",
-    "img": "assets/img/uniforms/as-colour-4001-black.webp"
+    "img": "assets/img/uniforms/as-colour-4001-black.webp",
+    "back": "assets/img/uniforms/as-colour-4001-black-back.webp"
    },
    {
     "n": "Butter",
     "h": "#f5ebd7",
-    "img": "assets/img/uniforms/as-colour-4001-butter.webp"
+    "img": "assets/img/uniforms/as-colour-4001-butter.webp",
+    "back": "assets/img/uniforms/as-colour-4001-butter-back.webp"
    },
    {
     "n": "Hydro",
     "h": "#4187b9",
-    "img": "assets/img/uniforms/as-colour-4001-hydro.webp"
+    "img": "assets/img/uniforms/as-colour-4001-hydro.webp",
+    "back": "assets/img/uniforms/as-colour-4001-hydro-back.webp"
    },
    {
     "n": "Midnight Blue",
     "h": "#232d37",
-    "img": "assets/img/uniforms/as-colour-4001-midnight-blue.webp"
+    "img": "assets/img/uniforms/as-colour-4001-midnight-blue.webp",
+    "back": "assets/img/uniforms/as-colour-4001-midnight-blue-back.webp"
    },
    {
     "n": "Orchid",
     "h": "#ebe1e1",
-    "img": "assets/img/uniforms/as-colour-4001-orchid.webp"
+    "img": "assets/img/uniforms/as-colour-4001-orchid.webp",
+    "back": "assets/img/uniforms/as-colour-4001-orchid-back.webp"
    },
    {
     "n": "Purple",
     "h": "#5f4173",
-    "img": "assets/img/uniforms/as-colour-4001-purple.webp"
+    "img": "assets/img/uniforms/as-colour-4001-purple.webp",
+    "back": "assets/img/uniforms/as-colour-4001-purple-back.webp"
    }
   ],
   "spec": "https://www.ascolour.com.au/wos-maple-tee-4001/",
@@ -1820,7 +2029,9 @@
    "4XL",
    "5XL"
   ],
-  "size_mode": "guide"
+  "size_mode": "guide",
+  "worn": "assets/img/uniforms/as-colour-4001-worn.webp",
+  "img_src": "AS Colour official library"
  },
  {
   "cat": "tees",
@@ -2814,7 +3025,8 @@
    "2XL",
    "3XL"
   ],
-  "size_mode": "published"
+  "size_mode": "published",
+  "img_src": "AS Colour official library"
  },
  {
   "cat": "hoodies",
@@ -2869,7 +3081,8 @@
    "4XL",
    "5XL"
   ],
-  "size_mode": "guide"
+  "size_mode": "guide",
+  "img_src": "AS Colour official library"
  },
  {
   "cat": "hoodies",
@@ -2888,112 +3101,134 @@
    {
     "n": "Carolina Blue",
     "h": "#87afcd",
-    "img": "assets/img/uniforms/as-colour-5161-carolina-blue.webp"
+    "img": "assets/img/uniforms/as-colour-5161-carolina-blue.webp",
+    "back": "assets/img/uniforms/as-colour-5161-carolina-blue-back.webp"
    },
    {
     "n": "Seafoam",
     "h": "#d7ebe1",
-    "img": "assets/img/uniforms/as-colour-5161-seafoam.webp"
+    "img": "assets/img/uniforms/as-colour-5161-seafoam.webp",
+    "back": "assets/img/uniforms/as-colour-5161-seafoam-back.webp"
    },
    {
     "n": "Bone",
     "h": "#cdc3b9",
-    "img": "assets/img/uniforms/as-colour-5161-bone.webp"
+    "img": "assets/img/uniforms/as-colour-5161-bone.webp",
+    "back": "assets/img/uniforms/as-colour-5161-bone-back.webp"
    },
    {
     "n": "Powder",
     "h": "#b9c3cd",
-    "img": "assets/img/uniforms/as-colour-5161-powder.webp"
+    "img": "assets/img/uniforms/as-colour-5161-powder.webp",
+    "back": "assets/img/uniforms/as-colour-5161-powder-back.webp"
    },
    {
     "n": "Sand",
     "h": "#af9b7d",
-    "img": "assets/img/uniforms/as-colour-5161-sand.webp"
+    "img": "assets/img/uniforms/as-colour-5161-sand.webp",
+    "back": "assets/img/uniforms/as-colour-5161-sand-back.webp"
    },
    {
     "n": "Clay",
     "h": "#7d412d",
-    "img": "assets/img/uniforms/as-colour-5161-clay.webp"
+    "img": "assets/img/uniforms/as-colour-5161-clay.webp",
+    "back": "assets/img/uniforms/as-colour-5161-clay-back.webp"
    },
    {
     "n": "Butter",
     "h": "#ebe1cd",
-    "img": "assets/img/uniforms/as-colour-5161-butter.webp"
+    "img": "assets/img/uniforms/as-colour-5161-butter.webp",
+    "back": "assets/img/uniforms/as-colour-5161-butter-back.webp"
    },
    {
     "n": "Cobalt",
     "h": "#192d55",
-    "img": "assets/img/uniforms/as-colour-5161-cobalt.webp"
+    "img": "assets/img/uniforms/as-colour-5161-cobalt.webp",
+    "back": "assets/img/uniforms/as-colour-5161-cobalt-back.webp"
    },
    {
     "n": "Cypress",
     "h": "#555541",
-    "img": "assets/img/uniforms/as-colour-5161-cypress.webp"
+    "img": "assets/img/uniforms/as-colour-5161-cypress.webp",
+    "back": "assets/img/uniforms/as-colour-5161-cypress-back.webp"
    },
    {
     "n": "Pine Green",
     "h": "#192323",
-    "img": "assets/img/uniforms/as-colour-5161-pine-green.webp"
+    "img": "assets/img/uniforms/as-colour-5161-pine-green.webp",
+    "back": "assets/img/uniforms/as-colour-5161-pine-green-back.webp"
    },
    {
     "n": "Chestnut",
     "h": "#412319",
-    "img": "assets/img/uniforms/as-colour-5161-chestnut.webp"
+    "img": "assets/img/uniforms/as-colour-5161-chestnut.webp",
+    "back": "assets/img/uniforms/as-colour-5161-chestnut-back.webp"
    },
    {
     "n": "White Marle",
     "h": "#d7d7d7",
-    "img": "assets/img/uniforms/as-colour-5161-white-marle.webp"
+    "img": "assets/img/uniforms/as-colour-5161-white-marle.webp",
+    "back": "assets/img/uniforms/as-colour-5161-white-marle-back.webp"
    },
    {
     "n": "Grey Marle",
     "h": "#afafb9",
-    "img": "assets/img/uniforms/as-colour-5161-grey-marle.webp"
+    "img": "assets/img/uniforms/as-colour-5161-grey-marle.webp",
+    "back": "assets/img/uniforms/as-colour-5161-grey-marle-back.webp"
    },
    {
     "n": "Black",
     "h": "#191919",
-    "img": "assets/img/uniforms/as-colour-5161-black.webp"
+    "img": "assets/img/uniforms/as-colour-5161-black.webp",
+    "back": "assets/img/uniforms/as-colour-5161-black-back.webp"
    },
    {
     "n": "Storm",
     "h": "#afafaf",
-    "img": "assets/img/uniforms/as-colour-5161-storm.webp"
+    "img": "assets/img/uniforms/as-colour-5161-storm.webp",
+    "back": "assets/img/uniforms/as-colour-5161-storm-back.webp"
    },
    {
     "n": "Ink Blue",
     "h": "#23232d",
-    "img": "assets/img/uniforms/as-colour-5161-ink-blue.webp"
+    "img": "assets/img/uniforms/as-colour-5161-ink-blue.webp",
+    "back": "assets/img/uniforms/as-colour-5161-ink-blue-back.webp"
    },
    {
     "n": "White",
     "h": "#ebebeb",
-    "img": "assets/img/uniforms/as-colour-5161-white.webp"
+    "img": "assets/img/uniforms/as-colour-5161-white.webp",
+    "back": "assets/img/uniforms/as-colour-5161-white-back.webp"
    },
    {
     "n": "Charity Pink",
     "h": "#eb699b",
-    "img": "assets/img/uniforms/as-colour-5161-charity-pink.webp"
+    "img": "assets/img/uniforms/as-colour-5161-charity-pink.webp",
+    "back": "assets/img/uniforms/as-colour-5161-charity-pink-back.webp"
    },
    {
     "n": "Ecru",
     "h": "#e1d7cd",
-    "img": "assets/img/uniforms/as-colour-5161-ecru.webp"
+    "img": "assets/img/uniforms/as-colour-5161-ecru.webp",
+    "back": "assets/img/uniforms/as-colour-5161-ecru-back.webp"
    },
    {
     "n": "Liberty",
     "h": "#234173",
-    "img": "assets/img/uniforms/as-colour-5161-liberty.webp"
+    "img": "assets/img/uniforms/as-colour-5161-liberty.webp",
+    "back": "assets/img/uniforms/as-colour-5161-liberty-back.webp"
    },
    {
     "n": "Shadow",
     "h": "#5f5f5f",
-    "img": "assets/img/uniforms/as-colour-5161-shadow.webp"
+    "img": "assets/img/uniforms/as-colour-5161-shadow.webp",
+    "back": "assets/img/uniforms/as-colour-5161-shadow-back.webp"
    },
    {
     "n": "Walnut",
     "h": "#695f4b",
-    "img": "assets/img/uniforms/as-colour-5161-walnut.webp"
+    "img": "assets/img/uniforms/as-colour-5161-walnut.webp",
+    "back": "assets/img/uniforms/as-colour-5161-walnut-back.webp"
    }
   ],
   "spec": "https://www.ascolour.com.au/relax-hood-5161/",
@@ -3009,7 +3244,9 @@
    "4XL",
    "5XL"
   ],
-  "size_mode": "guide"
+  "size_mode": "guide",
+  "worn": "assets/img/uniforms/as-colour-5161-worn.webp",
+  "img_src": "AS Colour official library"
  },
  {
   "cat": "hoodies",
@@ -3569,62 +3806,74 @@
    {
     "n": "Army",
     "h": "#5f5f4b",
-    "img": "assets/img/uniforms/as-colour-1190-army.webp"
+    "img": "assets/img/uniforms/as-colour-1190-army.webp",
+    "back": "assets/img/uniforms/as-colour-1190-army-back.webp"
    },
    {
     "n": "Black",
     "h": "#2d2d2d",
-    "img": "assets/img/uniforms/as-colour-1190-black.webp"
+    "img": "assets/img/uniforms/as-colour-1190-black.webp",
+    "back": "assets/img/uniforms/as-colour-1190-black-back.webp"
    },
    {
     "n": "Cobalt",
     "h": "#374b69",
-    "img": "assets/img/uniforms/as-colour-1190-cobalt.webp"
+    "img": "assets/img/uniforms/as-colour-1190-cobalt.webp",
+    "back": "assets/img/uniforms/as-colour-1190-cobalt-back.webp"
    },
    {
     "n": "Ecru",
     "h": "#ebebe1",
-    "img": "assets/img/uniforms/as-colour-1190-ecru.webp"
+    "img": "assets/img/uniforms/as-colour-1190-ecru.webp",
+    "back": "assets/img/uniforms/as-colour-1190-ecru-back.webp"
    },
    {
     "n": "Forest Green",
     "h": "#375537",
-    "img": "assets/img/uniforms/as-colour-1190-forest-green.webp"
+    "img": "assets/img/uniforms/as-colour-1190-forest-green.webp",
+    "back": "assets/img/uniforms/as-colour-1190-forest-green-back.webp"
    },
    {
     "n": "Ink Blue",
     "h": "#2d2d37",
-    "img": "assets/img/uniforms/as-colour-1190-ink-blue.webp"
+    "img": "assets/img/uniforms/as-colour-1190-ink-blue.webp",
+    "back": "assets/img/uniforms/as-colour-1190-ink-blue-back.webp"
    },
    {
     "n": "Khaki",
     "h": "#cdb99b",
-    "img": "assets/img/uniforms/as-colour-1190-khaki.webp"
+    "img": "assets/img/uniforms/as-colour-1190-khaki.webp",
+    "back": "assets/img/uniforms/as-colour-1190-khaki-back.webp"
    },
    {
     "n": "Petrol Blue",
     "h": "#556973",
-    "img": "assets/img/uniforms/as-colour-1190-petrol-blue.webp"
+    "img": "assets/img/uniforms/as-colour-1190-petrol-blue.webp",
+    "back": "assets/img/uniforms/as-colour-1190-petrol-blue-back.webp"
    },
    {
     "n": "Shadow",
     "h": "#878787",
-    "img": "assets/img/uniforms/as-colour-1190-shadow.webp"
+    "img": "assets/img/uniforms/as-colour-1190-shadow.webp",
+    "back": "assets/img/uniforms/as-colour-1190-shadow-back.webp"
    },
    {
     "n": "Storm",
     "h": "#c3c3c3",
-    "img": "assets/img/uniforms/as-colour-1190-storm.webp"
+    "img": "assets/img/uniforms/as-colour-1190-storm.webp",
+    "back": "assets/img/uniforms/as-colour-1190-storm-back.webp"
    },
    {
     "n": "Walnut",
     "h": "#7d695f",
-    "img": "assets/img/uniforms/as-colour-1190-walnut.webp"
+    "img": "assets/img/uniforms/as-colour-1190-walnut.webp",
+    "back": "assets/img/uniforms/as-colour-1190-walnut-back.webp"
    },
    {
     "n": "White",
     "h": "#e1e1e1",
-    "img": "assets/img/uniforms/as-colour-1190-white.webp"
+    "img": "assets/img/uniforms/as-colour-1190-white.webp",
+    "back": "assets/img/uniforms/as-colour-1190-white-back.webp"
    }
   ],
   "spec": "https://www.ascolour.com.au/mesh-trucker-cap-1190/",
@@ -3632,7 +3881,9 @@
   "size_list": [
    "One size"
   ],
-  "size_mode": "onesize"
+  "size_mode": "onesize",
+  "worn": "assets/img/uniforms/as-colour-1190-worn.webp",
+  "img_src": "AS Colour official library"
  },
  {
   "cat": "caps",
@@ -3650,27 +3901,32 @@
    {
     "n": "Khaki",
     "h": "#9b7d5f",
-    "img": "assets/img/uniforms/as-colour-1108-khaki.webp"
+    "img": "assets/img/uniforms/as-colour-1108-khaki.webp",
+    "back": "assets/img/uniforms/as-colour-1108-khaki-back.webp"
    },
    {
     "n": "Walnut",
     "h": "#694b41",
-    "img": "assets/img/uniforms/as-colour-1108-walnut.webp"
+    "img": "assets/img/uniforms/as-colour-1108-walnut.webp",
+    "back": "assets/img/uniforms/as-colour-1108-walnut-back.webp"
    },
    {
     "n": "Navy",
     "h": "#23232d",
-    "img": "assets/img/uniforms/as-colour-1108-navy.webp"
+    "img": "assets/img/uniforms/as-colour-1108-navy.webp",
+    "back": "assets/img/uniforms/as-colour-1108-navy-back.webp"
    },
    {
     "n": "Black",
     "h": "#2d2d2d",
-    "img": "assets/img/uniforms/as-colour-1108-black.webp"
+    "img": "assets/img/uniforms/as-colour-1108-black.webp",
+    "back": "assets/img/uniforms/as-colour-1108-black-back.webp"
    },
    {
     "n": "Forest Green",
     "h": "#193723",
-    "img": "assets/img/uniforms/as-colour-1108-forest-green.webp"
+    "img": "assets/img/uniforms/as-colour-1108-forest-green.webp",
+    "back": "assets/img/uniforms/as-colour-1108-forest-green-back.webp"
    }
   ],
   "spec": "https://www.ascolour.com.au/stock-trucker-cap-1108/",
@@ -3678,7 +3934,9 @@
   "size_list": [
    "One size"
   ],
-  "size_mode": "onesize"
+  "size_mode": "onesize",
+  "worn": "assets/img/uniforms/as-colour-1108-worn.webp",
+  "img_src": "AS Colour official library"
  },
  {
   "cat": "caps",
@@ -3696,62 +3954,74 @@
    {
     "n": "Ecru",
     "h": "#fff5eb",
-    "img": "assets/img/uniforms/as-colour-1161-ecru.webp"
+    "img": "assets/img/uniforms/as-colour-1161-ecru.webp",
+    "back": "assets/img/uniforms/as-colour-1161-ecru-back.webp"
    },
    {
     "n": "Khaki",
     "h": "#b99b7d",
-    "img": "assets/img/uniforms/as-colour-1161-khaki.webp"
+    "img": "assets/img/uniforms/as-colour-1161-khaki.webp",
+    "back": "assets/img/uniforms/as-colour-1161-khaki-back.webp"
    },
    {
     "n": "Navy",
     "h": "#2d2d41",
-    "img": "assets/img/uniforms/as-colour-1161-navy.webp"
+    "img": "assets/img/uniforms/as-colour-1161-navy.webp",
+    "back": "assets/img/uniforms/as-colour-1161-navy-back.webp"
    },
    {
     "n": "Black",
     "h": "#2d2d2d",
-    "img": "assets/img/uniforms/as-colour-1161-black.webp"
+    "img": "assets/img/uniforms/as-colour-1161-black.webp",
+    "back": "assets/img/uniforms/as-colour-1161-black-back.webp"
    },
    {
     "n": "Cypress",
     "h": "#4b5541",
-    "img": "assets/img/uniforms/as-colour-1161-cypress.webp"
+    "img": "assets/img/uniforms/as-colour-1161-cypress.webp",
+    "back": "assets/img/uniforms/as-colour-1161-cypress-back.webp"
    },
    {
     "n": "Liberty",
     "h": "#19377d",
-    "img": "assets/img/uniforms/as-colour-1161-liberty.webp"
+    "img": "assets/img/uniforms/as-colour-1161-liberty.webp",
+    "back": "assets/img/uniforms/as-colour-1161-liberty-back.webp"
    },
    {
     "n": "Walnut",
     "h": "#5f4b41",
-    "img": "assets/img/uniforms/as-colour-1161-walnut.webp"
+    "img": "assets/img/uniforms/as-colour-1161-walnut.webp",
+    "back": "assets/img/uniforms/as-colour-1161-walnut-back.webp"
    },
    {
     "n": "White",
     "h": "#ebebeb",
-    "img": "assets/img/uniforms/as-colour-1161-white.webp"
+    "img": "assets/img/uniforms/as-colour-1161-white.webp",
+    "back": "assets/img/uniforms/as-colour-1161-white-back.webp"
    },
    {
     "n": "Bone",
     "h": "#f5ebe1",
-    "img": "assets/img/uniforms/as-colour-1161-bone.webp"
+    "img": "assets/img/uniforms/as-colour-1161-bone.webp",
+    "back": "assets/img/uniforms/as-colour-1161-bone-back.webp"
    },
    {
     "n": "Fire",
     "h": "#f52d2d",
-    "img": "assets/img/uniforms/as-colour-1161-fire.webp"
+    "img": "assets/img/uniforms/as-colour-1161-fire.webp",
+    "back": "assets/img/uniforms/as-colour-1161-fire-back.webp"
    },
    {
     "n": "Forest Green",
     "h": "#0f412d",
-    "img": "assets/img/uniforms/as-colour-1161-forest-green.webp"
+    "img": "assets/img/uniforms/as-colour-1161-forest-green.webp",
+    "back": "assets/img/uniforms/as-colour-1161-forest-green-back.webp"
    },
    {
     "n": "Sunset",
     "h": "#ffcd73",
-    "img": "assets/img/uniforms/as-colour-1161-sunset.webp"
+    "img": "assets/img/uniforms/as-colour-1161-sunset.webp",
+    "back": "assets/img/uniforms/as-colour-1161-sunset-back.webp"
    }
   ],
   "spec": "https://www.ascolour.com.au/frame-foam-trucker-cap-1161/",
@@ -3759,7 +4029,9 @@
   "size_list": [
    "One size"
   ],
-  "size_mode": "onesize"
+  "size_mode": "onesize",
+  "worn": "assets/img/uniforms/as-colour-1161-worn.webp",
+  "img_src": "AS Colour official library"
  },
  {
   "cat": "caps",
@@ -3777,67 +4049,80 @@
    {
     "n": "Butter",
     "h": "#ebebcd",
-    "img": "assets/img/uniforms/as-colour-1117-butter.webp"
+    "img": "assets/img/uniforms/as-colour-1117-butter.webp",
+    "back": "assets/img/uniforms/as-colour-1117-butter-back.webp"
    },
    {
     "n": "Ecru",
     "h": "#cdcdc3",
-    "img": "assets/img/uniforms/as-colour-1117-ecru.webp"
+    "img": "assets/img/uniforms/as-colour-1117-ecru.webp",
+    "back": "assets/img/uniforms/as-colour-1117-ecru-back.webp"
    },
    {
     "n": "Bone",
     "h": "#ebe1d7",
-    "img": "assets/img/uniforms/as-colour-1117-bone.webp"
+    "img": "assets/img/uniforms/as-colour-1117-bone.webp",
+    "back": "assets/img/uniforms/as-colour-1117-bone-back.webp"
    },
    {
     "n": "Orchid",
     "h": "#e1d7d7",
-    "img": "assets/img/uniforms/as-colour-1117-orchid.webp"
+    "img": "assets/img/uniforms/as-colour-1117-orchid.webp",
+    "back": "assets/img/uniforms/as-colour-1117-orchid-back.webp"
    },
    {
     "n": "Walnut",
     "h": "#695541",
-    "img": "assets/img/uniforms/as-colour-1117-walnut.webp"
+    "img": "assets/img/uniforms/as-colour-1117-walnut.webp",
+    "back": "assets/img/uniforms/as-colour-1117-walnut-back.webp"
    },
    {
     "n": "Army",
     "h": "#373723",
-    "img": "assets/img/uniforms/as-colour-1117-army.webp"
+    "img": "assets/img/uniforms/as-colour-1117-army.webp",
+    "back": "assets/img/uniforms/as-colour-1117-army-back.webp"
    },
    {
     "n": "Storm",
     "h": "#b9b9b9",
-    "img": "assets/img/uniforms/as-colour-1117-storm.webp"
+    "img": "assets/img/uniforms/as-colour-1117-storm.webp",
+    "back": "assets/img/uniforms/as-colour-1117-storm-back.webp"
    },
    {
     "n": "Navy",
     "h": "#2d2d37",
-    "img": "assets/img/uniforms/as-colour-1117-navy.webp"
+    "img": "assets/img/uniforms/as-colour-1117-navy.webp",
+    "back": "assets/img/uniforms/as-colour-1117-navy-back.webp"
    },
    {
     "n": "Black",
     "h": "#2d2d2d",
-    "img": "assets/img/uniforms/as-colour-1117-black.webp"
+    "img": "assets/img/uniforms/as-colour-1117-black.webp",
+    "back": "assets/img/uniforms/as-colour-1117-black-back.webp"
    },
    {
     "n": "Hazy Pink",
     "h": "#c39b91",
-    "img": "assets/img/uniforms/as-colour-1117-hazy-pink.webp"
+    "img": "assets/img/uniforms/as-colour-1117-hazy-pink.webp",
+    "back": "assets/img/uniforms/as-colour-1117-hazy-pink-back.webp"
    },
    {
     "n": "Khaki",
     "h": "#c3af91",
-    "img": "assets/img/uniforms/as-colour-1117-khaki.webp"
+    "img": "assets/img/uniforms/as-colour-1117-khaki.webp",
+    "back": "assets/img/uniforms/as-colour-1117-khaki-back.webp"
    },
    {
     "n": "Forest Green",
     "h": "#0f2319",
-    "img": "assets/img/uniforms/as-colour-1117-forest-green.webp"
+    "img": "assets/img/uniforms/as-colour-1117-forest-green.webp",
+    "back": "assets/img/uniforms/as-colour-1117-forest-green-back.webp"
    },
    {
     "n": "Powder",
     "h": "#737d87",
-    "img": "assets/img/uniforms/as-colour-1117-powder.webp"
+    "img": "assets/img/uniforms/as-colour-1117-powder.webp",
+    "back": "assets/img/uniforms/as-colour-1117-powder-back.webp"
    }
   ],
   "spec": "https://www.ascolour.com.au/bucket-hat-1117/",
@@ -3845,7 +4130,9 @@
   "size_list": [
    "One size"
   ],
-  "size_mode": "onesize"
+  "size_mode": "onesize",
+  "worn": "assets/img/uniforms/as-colour-1117-worn.webp",
+  "img_src": "AS Colour official library"
  },
  {
   "cat": "caps",
@@ -3956,7 +4243,9 @@
   "size_list": [
    "One size"
   ],
-  "size_mode": "onesize"
+  "size_mode": "onesize",
+  "worn": "assets/img/uniforms/as-colour-1107-worn.webp",
+  "img_src": "AS Colour official library"
  },
  {
   "cat": "caps",
@@ -4047,7 +4336,9 @@
   "size_list": [
    "One size"
   ],
-  "size_mode": "onesize"
+  "size_mode": "onesize",
+  "worn": "assets/img/uniforms/as-colour-1120-worn.webp",
+  "img_src": "AS Colour official library"
  },
  {
   "cat": "hospitality",
@@ -7096,59 +7387,71 @@
    {
     "n": "Army/black",
     "h": "#5f5f41",
-    "img": "assets/img/uniforms/as-colour-1191-army-black.webp"
+    "img": "assets/img/uniforms/as-colour-1191-army-black.webp",
+    "back": "assets/img/uniforms/as-colour-1191-army-black-back.webp"
    },
    {
     "n": "Black/white",
     "h": "#2d2d2d",
-    "img": "assets/img/uniforms/as-colour-1191-black-white.webp"
+    "img": "assets/img/uniforms/as-colour-1191-black-white.webp",
+    "back": "assets/img/uniforms/as-colour-1191-black-white-back.webp"
    },
    {
     "n": "Ink Blue/white",
     "h": "#373741",
-    "img": "assets/img/uniforms/as-colour-1191-ink-blue-white.webp"
+    "img": "assets/img/uniforms/as-colour-1191-ink-blue-white.webp",
+    "back": "assets/img/uniforms/as-colour-1191-ink-blue-white-back.webp"
    },
    {
     "n": "Khaki/black",
     "h": "#c3af91",
-    "img": "assets/img/uniforms/as-colour-1191-khaki-black.webp"
+    "img": "assets/img/uniforms/as-colour-1191-khaki-black.webp",
+    "back": "assets/img/uniforms/as-colour-1191-khaki-black-back.webp"
    },
    {
     "n": "Shadow/black",
     "h": "#878787",
-    "img": "assets/img/uniforms/as-colour-1191-shadow-black.webp"
+    "img": "assets/img/uniforms/as-colour-1191-shadow-black.webp",
+    "back": "assets/img/uniforms/as-colour-1191-shadow-black-back.webp"
    },
    {
     "n": "Shadow/white",
     "h": "#ebebeb",
-    "img": "assets/img/uniforms/as-colour-1191-shadow-white.webp"
+    "img": "assets/img/uniforms/as-colour-1191-shadow-white.webp",
+    "back": "assets/img/uniforms/as-colour-1191-shadow-white-back.webp"
    },
    {
     "n": "Walnut/black",
     "h": "#695f55",
-    "img": "assets/img/uniforms/as-colour-1191-walnut-black.webp"
+    "img": "assets/img/uniforms/as-colour-1191-walnut-black.webp",
+    "back": "assets/img/uniforms/as-colour-1191-walnut-black-back.webp"
    },
    {
     "n": "Forest/black",
     "h": "#375537",
-    "img": "assets/img/uniforms/as-colour-1191-forest-black.webp"
+    "img": "assets/img/uniforms/as-colour-1191-forest-black.webp",
+    "back": "assets/img/uniforms/as-colour-1191-forest-black-back.webp"
    },
    {
     "n": "Ink Blue/black",
     "h": "#2d2d37",
-    "img": "assets/img/uniforms/as-colour-1191-ink-blue-black.webp"
+    "img": "assets/img/uniforms/as-colour-1191-ink-blue-black.webp",
+    "back": "assets/img/uniforms/as-colour-1191-ink-blue-black-back.webp"
    },
    {
     "n": "Storm/white",
     "h": "#c3c3c3",
-    "img": "assets/img/uniforms/as-colour-1191-storm-white.webp"
+    "img": "assets/img/uniforms/as-colour-1191-storm-white.webp",
+    "back": "assets/img/uniforms/as-colour-1191-storm-white-back.webp"
    }
   ],
   "deco": "Front panel embroidery, roughly 90mm to 120mm wide. Height is the tighter limit. On a six panel cap the centre seam will distort fine detail, so a symmetrical logo holds up best.",
   "size_list": [
    "One size"
   ],
-  "size_mode": "onesize"
+  "size_mode": "onesize",
+  "worn": "assets/img/uniforms/as-colour-1191-worn.webp",
+  "img_src": "AS Colour official library"
  },
  {
   "cat": "caps",
@@ -7168,24 +7471,29 @@
    {
     "n": "Bone",
     "h": "#f5ebe1",
-    "img": "assets/img/uniforms/as-colour-1157-bone.webp"
+    "img": "assets/img/uniforms/as-colour-1157-bone.webp",
+    "back": "assets/img/uniforms/as-colour-1157-bone-back.webp"
    },
    {
     "n": "Midnight Blue",
     "h": "#191923",
-    "img": "assets/img/uniforms/as-colour-1157-midnight-blue.webp"
+    "img": "assets/img/uniforms/as-colour-1157-midnight-blue.webp",
+    "back": "assets/img/uniforms/as-colour-1157-midnight-blue-back.webp"
    },
    {
     "n": "Black",
     "h": "#191919",
-    "img": "assets/img/uniforms/as-colour-1157-black.webp"
+    "img": "assets/img/uniforms/as-colour-1157-black.webp",
+    "back": "assets/img/uniforms/as-colour-1157-black-back.webp"
    }
   ],
   "deco": "Corduroy has a directional pile, so embroidery needs backing and fine detail can sink into the wale. Simple marks work best.",
   "size_list": [
    "One size"
   ],
-  "size_mode": "onesize"
+  "size_mode": "onesize",
+  "worn": "assets/img/uniforms/as-colour-1157-worn.webp",
+  "img_src": "AS Colour official library"
  },
  {
   "cat": "caps",
@@ -7205,34 +7513,41 @@
    {
     "n": "Petrol Blue",
     "h": "#4b4b55",
-    "img": "assets/img/uniforms/as-colour-1141-petrol-blue.webp"
+    "img": "assets/img/uniforms/as-colour-1141-petrol-blue.webp",
+    "back": "assets/img/uniforms/as-colour-1141-petrol-blue-back.webp"
    },
    {
     "n": "Bone",
     "h": "#e1d7cd",
-    "img": "assets/img/uniforms/as-colour-1141-bone.webp"
+    "img": "assets/img/uniforms/as-colour-1141-bone.webp",
+    "back": "assets/img/uniforms/as-colour-1141-bone-back.webp"
    },
    {
     "n": "Navy",
     "h": "#2d2d37",
-    "img": "assets/img/uniforms/as-colour-1141-navy.webp"
+    "img": "assets/img/uniforms/as-colour-1141-navy.webp",
+    "back": "assets/img/uniforms/as-colour-1141-navy-back.webp"
    },
    {
     "n": "Army",
     "h": "#41412d",
-    "img": "assets/img/uniforms/as-colour-1141-army.webp"
+    "img": "assets/img/uniforms/as-colour-1141-army.webp",
+    "back": "assets/img/uniforms/as-colour-1141-army-back.webp"
    },
    {
     "n": "Black",
     "h": "#232323",
-    "img": "assets/img/uniforms/as-colour-1141-black.webp"
+    "img": "assets/img/uniforms/as-colour-1141-black.webp",
+    "back": "assets/img/uniforms/as-colour-1141-black-back.webp"
    }
   ],
   "deco": "Front panel embroidery, roughly 90mm to 120mm wide. Height is the tighter limit. On a six panel cap the centre seam will distort fine detail, so a symmetrical logo holds up best.",
   "size_list": [
    "One size"
   ],
-  "size_mode": "onesize"
+  "size_mode": "onesize",
+  "worn": "assets/img/uniforms/as-colour-1141-worn.webp",
+  "img_src": "AS Colour official library"
  },
  {
   "cat": "caps",
@@ -7264,7 +7579,9 @@
   "size_list": [
    "One size"
   ],
-  "size_mode": "onesize"
+  "size_mode": "onesize",
+  "worn": "assets/img/uniforms/as-colour-1107f-worn.webp",
+  "img_src": "AS Colour official library"
  },
  {
   "cat": "polos",

@@ -94,6 +94,13 @@
 .chips-row i:hover{transform:scale(1.14)}
 .chips-row i.on{box-shadow:0 0 0 2px #fff,0 0 0 3.5px #0F0F10}
 .chips-row i:focus-visible{outline:2px solid #7C3AED;outline-offset:2px}
+.uni .art{position:relative}
+.uni .art.has-views{padding-bottom:40px}
+.uni .views{position:absolute;left:0;right:0;bottom:8px;justify-content:center;display:flex;gap:4px}
+.uni .views button{font:600 11px/1 inherit;font-family:inherit;padding:5px 8px;border-radius:999px;border:1px solid #e0d9d0;background:rgba(255,255,255,.92);color:#3d3a36;cursor:pointer}
+.uni .views button.on{background:#0F0F10;border-color:#0F0F10;color:#fff}
+.uni .views button:disabled{opacity:.35;cursor:default}
+.uni .views button:focus-visible{outline:2px solid #7C3AED;outline-offset:2px}
 .uni .deco{font-size:12.8px;color:#3d3a36;background:#FAF8F5;border-left:3px solid #7C3AED;border-radius:0 8px 8px 0;padding:9px 11px;margin:0 0 10px;line-height:1.5}
 .uni .deco b{display:block;font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;color:#7C3AED;margin-bottom:3px}
 .uni .spec{font-size:12.5px;color:#6b6560;text-decoration:underline;margin:0 0 12px;display:block}
@@ -513,15 +520,33 @@
   search.addEventListener('input',apply);
 
   /* Clicking a colour swaps the card photo. Falls back silently on cards with no photo. */
+  /* Front / Back / On model views. Back falls back to front when a colour has no back shot. */
+  function show(card){
+    const img=card.querySelector('.art img'); if(!img)return;
+    const chip=card.querySelector('.chips-row i.on'), art=card.querySelector('.art');
+    let v=card.dataset.view||'front';
+    const bb=card.querySelector('.views [data-v="back"]');
+    if(bb){ bb.disabled=!(chip&&chip.dataset.back); if(v==='back'&&bb.disabled)v='front'; }
+    card.querySelectorAll('.views button').forEach(b=>b.classList.toggle('on',b.dataset.v===v));
+    const name=(card.querySelector('h3').textContent||''), cn=chip?(chip.dataset.n||''):'';
+    let url=chip?chip.dataset.img:null, alt=name+' in '+cn;
+    if(v==='back'&&chip&&chip.dataset.back){ url=chip.dataset.back; alt=name+' back, in '+cn; }
+    if(v==='worn'&&art.dataset.worn){ url=art.dataset.worn; alt=name+' shown on a model'; }
+    if(url){ img.src=url; img.alt=alt; }
+  }
   function pick(chip){
     const card=chip.closest('.uni'); if(!card)return;
-    const img=card.querySelector('.art img'), url=chip.dataset.img;
     card.querySelectorAll('.chips-row i').forEach(i=>i.classList.remove('on'));
     chip.classList.add('on');
     const label=card.querySelector('.sw .cn'); if(label)label.textContent=chip.dataset.n||'';
-    if(img&&url){ img.src=url; img.alt=(card.querySelector('h3').textContent||'')+' in '+(chip.dataset.n||''); }
+    if(card.dataset.view==='worn')card.dataset.view='front';
+    show(card);
   }
-  grid.addEventListener('click',e=>{ const c=e.target.closest('.chips-row i'); if(c)pick(c); });
+  grid.addEventListener('click',e=>{
+    const vb=e.target.closest('.views button');
+    if(vb){ if(vb.disabled)return; const card=vb.closest('.uni'); card.dataset.view=vb.dataset.v; show(card); return; }
+    const c=e.target.closest('.chips-row i'); if(c)pick(c);
+  });
   grid.addEventListener('keydown',e=>{
     if(e.key!=='Enter'&&e.key!==' ')return;
     const c=e.target.closest('.chips-row i'); if(c){e.preventDefault();pick(c);}
