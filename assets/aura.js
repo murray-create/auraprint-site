@@ -912,7 +912,7 @@ function wireTurnaround(){
    builder) so it never covers a submit button. */
 function wireMobileBar(){
   var path = location.pathname.replace(/^\//,'') || 'index.html';
-  if (/^(quote|cart|checkout|order|uniform-order|proof|myquote|crm|admin)\b/.test(path)) return;
+  if (/^(quote|cart|checkout|order|reorder|uniform-order|proof|myquote|crm|admin)\b/.test(path)) return;
   if (document.getElementById('auraMBar')) return;
   var tool = document.querySelector('#aura-config,#bc-config,#quoter,#lbForm,#catalogue');
   var page = path.replace(/\.html$/,'');
