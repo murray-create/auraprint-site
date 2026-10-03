@@ -236,8 +236,9 @@
 <script>
 /* Order this again (3 Oct 2026). Reads the job through get_quote_by_token and
    sends the request through request_reorder, which files it as a lead for staff
-   to duplicate and reprice. Nothing here commits an order or a price. */
-(function(){
+   to duplicate and reprice. Nothing here commits an order or a price.
+   Runs on DOMContentLoaded because config.js loads at the end of the page. */
+document.addEventListener('DOMContentLoaded', function(){
   var CFG = window.AURA_CONFIG || {};
   var token = new URLSearchParams(location.search).get('t') || '';
   var hosts = [CFG.supabaseUrl, CFG.supabaseFallbackUrl].filter(function(h,i,a){ return h && a.indexOf(h) === i; });
@@ -299,7 +300,7 @@
          : 'Something went wrong sending that. Please call <b>1300 291 277</b> and we will sort it straight away.');
     });
   });
-})();
+});
 </script>
 
 <section class="reviews-band">
