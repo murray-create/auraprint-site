@@ -621,7 +621,7 @@ function wireForms(){
         if (stored || emailed){
           form.querySelectorAll('input,textarea,select').forEach(function(el){ if(el.type!=='hidden' && el.type!=='checkbox') el.value=''; });
           status.style.color = '#1a8a4a';
-          status.innerHTML = '✓ Thanks! Your request is in. We’ll be in touch within the hour (Mon to Fri, 9am to 5pm).' +
+          status.innerHTML = '✓ Thanks! Your request is in. Most quotes come back the same business day (Mon to Fri, 9am to 5pm).' +
             ((db.upload && db.upload.failed) ? ' <br><b>Your artwork did not upload.</b> Please email it to <b>' + em + '</b> and quote your name.' : '');
           if (btn){ btn.textContent = '✓ Sent'; }
           auraTrack('generate_lead', {

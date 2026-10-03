@@ -279,7 +279,7 @@ document.addEventListener('DOMContentLoaded', function(){
     var note = $('roNote').value.trim();
     rpc('request_reorder', { p_token: token, p_lines: lines, p_note: note }).then(function(res){
       $('roForm').hidden = true; $('roDone').hidden = false;
-      $('roDone').innerHTML = '<b>Thanks, your reorder request is in.</b><br>We will check the price and send you a quote to approve, usually within the hour (Mon to Fri, 9am to 5pm). Nothing is printed or charged until you approve it.';
+      $('roDone').innerHTML = '<b>Thanks, your reorder request is in.</b><br>We will check the price and send you a quote to approve, usually the same business day (Mon to Fri, 9am to 5pm). Nothing is printed or charged until you approve it.';
       try { if (window.auraTrack) window.auraTrack('reorder_request', { quote: res.quote_number }); } catch(_){}
       if (CFG.web3formsKey) {
         var fd = new FormData();
@@ -368,6 +368,6 @@ document.addEventListener('DOMContentLoaded', function(){
 </footer>
 <!-- AURA:FOOTER end -->
 <script src="assets/config.js?v=20260922a"></script>
-<script src="assets/aura.js?v=20261003a"></script>
+<script src="assets/aura.js?v=20261003b"></script>
 </body>
 </html>
