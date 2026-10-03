@@ -8,7 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/aura.css?v=20260930a">
+<link rel="stylesheet" href="assets/aura.css?v=20261003a">
 <style>.split{display:grid;grid-template-columns:1.2fr .8fr;gap:50px;align-items:start}</style>
 <link rel="canonical" href="https://auraprint.com.au/quote.html">
 <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
@@ -220,20 +220,36 @@
         </select>
       </div>
       <div class="field"><label>Quantity</label><input type="text" id="qQty" name="quantity" placeholder="e.g. 500"></div>
-      <div class="field"><label>Tell us about the job *</label><textarea rows="4" id="qJob" name="job_details" required placeholder="Size, stock, finish, deadline - whatever you know. We'll fill the gaps."></textarea></div>
-      <div class="field"><label>Artwork link (optional)</label><input type="url" name="artwork_link" placeholder="Paste a Canva, Drive or Dropbox link"><span style="display:block;margin-top:5px;font-size:12.5px;color:#8a847d">Or we'll request your files once the quote is approved.</span></div>
-      <div class="field" style="margin-bottom:6px"><label style="font-size:15px">Where are we delivering?</label><span style="display:block;margin-top:-4px;margin-bottom:2px;font-size:12.5px;color:#8a847d">We need the suburb and postcode to price freight. Street address is handy but optional.</span></div>
-      <div class="field"><label>Street address (optional)</label><input type="text" name="delivery_line1" placeholder="4/1 Packer Road"></div>
-      <div class="field"><label>Delivery suburb *</label><input type="text" name="delivery_suburb" required placeholder="Baringa"></div>
-      <div class="field two" style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
-        <div class="field" style="margin-bottom:0"><label>State *</label>
-          <select name="delivery_state" required>
+      <div class="field"><label>Tell us about the job *</label><textarea rows="4" id="qJob" name="job_details" required placeholder="What it is, how many, size and finish. Whatever you know. We'll fill the gaps."></textarea></div>
+      <div class="field"><label>Date you need it (optional)</label><input type="date" name="needed_by"><span style="display:block;margin-top:5px;font-size:12.5px;color:#8a847d">Helps us tell you straight away if the date is achievable.</span></div>
+      <div class="field"><label>Artwork (optional)</label><input type="file" name="artwork_file" multiple accept=".pdf,.ai,.eps,.svg,.png,.jpg,.jpeg,.tif,.tiff,.psd,.zip,.webp" style="padding:10px;background:#fff"><span style="display:block;margin-top:5px;font-size:12.5px;color:#8a847d">Up to 3 files, 50 MB each. PDF is best. No artwork yet? Leave it blank and we can help.</span></div>
+      <div class="field"><label>Or paste an artwork link (optional)</label><input type="url" name="artwork_link" placeholder="Canva, Google Drive, Dropbox or WeTransfer link"></div>
+      <div class="field"><label>Delivery postcode (optional)</label><input type="text" name="delivery_postcode" inputmode="numeric" maxlength="4" pattern="[0-9]{4}" placeholder="4551"><span style="display:block;margin-top:5px;font-size:12.5px;color:#8a847d">So we can include freight in your price. We confirm the full address when you approve the quote.</span></div>
+      <details class="field" style="margin-bottom:14px"><summary style="cursor:pointer;font-weight:600;font-size:14px">Add the full delivery address now (optional)</summary>
+        <div class="field" style="margin-top:12px"><label>Street address</label><input type="text" name="delivery_line1" autocomplete="address-line1"></div>
+        <div class="field"><label>Suburb</label><input type="text" name="delivery_suburb" autocomplete="address-level2"></div>
+        <div class="field" style="margin-bottom:0"><label>State</label>
+          <select name="delivery_state">
             <option value="">Select…</option>
             <option>QLD</option><option>NSW</option><option>VIC</option><option>SA</option>
             <option>WA</option><option>TAS</option><option>NT</option><option>ACT</option>
           </select>
         </div>
-        <div class="field" style="margin-bottom:0"><label>Postcode *</label><input type="text" name="delivery_postcode" required inputmode="numeric" maxlength="4" pattern="[0-9]{4}" placeholder="4551"></div>
+      </details>
+      <div class="field"><label>How did you find us? (optional)</label>
+        <select name="found_us">
+          <option value="">Choose one…</option>
+          <option>Google search</option>
+          <option>Google Maps</option>
+          <option>Facebook or Instagram</option>
+          <option>LinkedIn</option>
+          <option>AI assistant (ChatGPT, Gemini, Copilot)</option>
+          <option>Recommended by someone</option>
+          <option>Letterbox flyer</option>
+          <option>Saw your work somewhere</option>
+          <option>I am an existing customer</option>
+          <option>Other</option>
+        </select>
       </div>
       <input type="hidden" name="source_product_code" id="qCode" value="">
       <input type="hidden" name="source_page" id="qSrc" value="">
@@ -327,7 +343,7 @@
 </footer>
 <!-- AURA:FOOTER end -->
 <script src="assets/config.js?v=20260922a"></script>
-<script src="assets/aura.js?v=20260930a"></script>
+<script src="assets/aura.js?v=20261003a"></script>
 <script>
 /* Pre-fill from product pages, configurators and the promo catalogue.
    Carries: ?product=SLUG&qty=&spec=&price= (configurators)
@@ -336,7 +352,7 @@
    The customer never retypes what they already chose. */
 (function(){
   const p=new URLSearchParams(location.search);
-  const src=document.getElementById('qSrc'); if(src) src.value=document.referrer||location.href;
+  const src=document.getElementById('qSrc'); if(src) src.value=(p.get('from')?p.get('from').replace(/[^a-z0-9-]/gi,'')+'.html':'')||document.referrer||location.href;
   const forced=p.get('cat');
   if(forced){const c0=document.getElementById('qProduct');
     if(c0&&[...c0.options].some(o=>o.value===forced||o.text===forced))c0.value=forced;}

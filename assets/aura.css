@@ -471,3 +471,15 @@ footer .social{display:flex;gap:10px;flex-wrap:wrap}
 footer .social a{width:42px;height:42px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;color:#fff;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.16);transition:transform .2s,background .2s,border-color .2s}
 footer .social a:hover,footer .social a:focus-visible{background:var(--aura);border-color:transparent;transform:translateY(-2px)}
 footer .social svg{width:19px;height:19px;fill:currentColor}
+
+/* Mobile action bar (3 Oct 2026), see wireMobileBar() in aura.js */
+.mbar{display:none}
+@media(max-width:900px){
+  .mbar{display:flex;gap:10px;position:fixed;left:0;right:0;bottom:0;z-index:950;background:#0F0F10;padding:10px 12px calc(10px + env(safe-area-inset-bottom));box-shadow:0 -8px 24px rgba(0,0,0,.25)}
+  .mbar-btn{flex:1;display:flex;align-items:center;justify-content:center;min-height:48px;border-radius:999px;font-family:Inter,sans-serif;font-weight:800;font-size:15px;text-decoration:none;text-align:center}
+  .mbar-price{background:var(--aura);color:#fff}
+  .mbar-call{background:#fff;color:#0F0F10}
+  body.has-mbar{padding-bottom:calc(72px + env(safe-area-inset-bottom))}
+  body.has-mbar #auraCartPill{bottom:calc(82px + env(safe-area-inset-bottom)) !important}
+}
+@media print{.mbar{display:none !important}}

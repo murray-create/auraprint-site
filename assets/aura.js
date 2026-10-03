@@ -375,8 +375,16 @@ function collectLead(form){
     source_form:         page.indexOf('contact') > -1 ? 'contact' : 'quote',
     source_page:         g('source_page') || page,
     source_product_code: g('source_product_code'),
-    user_agent:          navigator.userAgent
+    user_agent:          navigator.userAgent,
+    needed_by:           g('needed_by'),
+    found_us:            g('found_us')
   };
+  /* Client-made id so the artwork upload (quote-upload edge function) can find
+     this exact row after the anonymous insert, which returns nothing. */
+  lead.id = (window.crypto && crypto.randomUUID) ? crypto.randomUUID()
+          : 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c){ var r = Math.random()*16|0; return (c === 'x' ? r : (r&3|8)).toString(16); });
+  /* Staff read the job text first, so the date the customer needs it goes there too. */
+  if (lead.needed_by && lead.job_details) lead.job_details = 'Needed by: ' + lead.needed_by + '\n' + lead.job_details;
 
   /* How they arrived. gclid carries whichever Google click id was present,
      so a row with a gclid is a paid click and one without is not. */
@@ -403,6 +411,48 @@ function withTimeout(p, ms){
     p.then(function(v){ if(!settled){ settled = true; clearTimeout(timer); resolve(v); } },
            function(){   if(!settled){ settled = true; clearTimeout(timer); resolve({ ok:false }); } });
   });
+}
+
+/* Artwork files chosen on the quote form (3 Oct 2026). Runs only after the lead
+   row exists. quote-upload checks the row and hands back signed upload URLs in
+   the private artwork bucket; each PUT tries Aura's own api. host first, the
+   same way the uniform builder does, because some networks block supabase.co.
+   Resolves { names:[], failed:n }. Never throws, so a failed upload can never
+   cost us the enquiry itself. */
+function uploadQuoteFiles(CFG, lead, files){
+  var hosts = [CFG.supabaseUrl, CFG.supabaseFallbackUrl].filter(function(h, i, a){ return h && a.indexOf(h) === i; });
+  var list = Array.prototype.slice.call(files || [], 0, 3);
+  var out = { names: list.map(function(f){ return f.name; }), failed: 0 };
+  if (!list.length || !hosts.length) return Promise.resolve(out);
+  var body = JSON.stringify({ lead_id: lead.id, email: lead.email, files: list.map(function(f){ return { filename: f.name, size_bytes: f.size }; }) });
+  function sign(i){
+    if (i >= hosts.length) return Promise.resolve(null);
+    return fetch(hosts[i] + '/functions/v1/quote-upload', { method:'POST', headers:{ 'Content-Type':'application/json', apikey: CFG.supabaseKey || '' }, body: body })
+      .then(function(r){ if (r.status >= 500 && i + 1 < hosts.length) return sign(i + 1); return r.json().catch(function(){ return {}; }); },
+            function(){ return sign(i + 1); });
+  }
+  return sign(0).then(function(res){
+    if (!res || !res.ok){ out.failed = list.length; out.error = res && res.error; return out; }
+    return Promise.all((res.uploads || []).map(function(u, k){
+      var file = list[k];
+      if (!u.upload_url || !file) return Promise.resolve(false);
+      var rest = u.upload_url.replace(/^https:\/\/[^\/]+/, '');
+      var urls = hosts.map(function(h){ return h.replace(/\/$/, '') + rest; });
+      if (urls.indexOf(u.upload_url) < 0) urls.push(u.upload_url);
+      function put(j){
+        if (j >= urls.length) return Promise.resolve(false);
+        return fetch(urls[j], { method:'PUT', headers:{ 'Content-Type': file.type || 'application/octet-stream', 'x-upsert':'false' }, body: file })
+          .then(function(r){ return r.ok ? true : put(j + 1); }, function(){ return put(j + 1); });
+      }
+      return put(0);
+    })).then(function(oks){
+      out.failed = oks.filter(function(x){ return !x; }).length;
+      /* Second call: the function can only sign a download link for staff once
+         the file exists, so it is told when the uploads are done. */
+      body = JSON.stringify({ lead_id: lead.id, email: lead.email, confirm: true });
+      return sign(0).then(function(){ return out; }, function(){ return out; });
+    });
+  }).catch(function(){ out.failed = list.length; return out; });
 }
 
 /* Store the enquiry in the Supabase leads table. Resolves {ok|skipped}.
@@ -523,8 +573,21 @@ function wireForms(){
         data.append('from_name', 'Aura Print website');
       }
 
-      /* Primary: store the enquiry in the CRM database. */
-      var dbSave = withTimeout(saveLead(CFG, collectLead(form)), 8000);
+      /* Files never travel in the alert email; they go to private storage. */
+      var fileEl = form.querySelector('input[type="file"][name="artwork_file"]');
+      var chosen = fileEl && fileEl.files && fileEl.files.length ? fileEl.files : null;
+      if (data) data.delete('artwork_file');
+
+      /* Primary: store the enquiry in the CRM database, then any artwork. */
+      var leadRow = collectLead(form);
+      var dbSave = withTimeout(saveLead(CFG, leadRow), 8000).then(function(db){
+        if (!chosen || !(db && db.ok)) return db;
+        if (btn) btn.textContent = 'Uploading artwork…';
+        return withTimeout(uploadQuoteFiles(CFG, leadRow, chosen), 120000).then(function(up){
+          db.upload = up || { failed: chosen.length, names: [] };
+          return db;
+        });
+      });
 
       /* The alert email goes out AFTER the database attempt so it can REPORT the
          result. These two used to run in parallel, which meant a failed CRM save
@@ -539,6 +602,12 @@ function wireForms(){
              : db && db.blocked ? "blocked by the sender's network or browser"
              : db && db.skipped ? 'the database is not configured'
              : 'rejected with status ' + ((db && db.status) || 'unknown')));
+        if (chosen){
+          var up = db && db.upload;
+          data.append('artwork_upload', !(db && db.ok) ? 'Customer attached ' + chosen.length + ' file(s) but the lead did not save, so they were not uploaded. Ask for the files.'
+            : (up && !up.failed) ? 'Uploaded to the CRM (open the lead): ' + up.names.join(', ')
+            : 'Upload FAILED for ' + ((up && up.failed) || chosen.length) + ' file(s). Ask the customer to email them.');
+        }
         return fetch(ENDPOINT, { method:'POST', body:data })
           .then(function(r){ return r.json(); })
           .then(function(res){ return !!res.success; })
@@ -552,7 +621,8 @@ function wireForms(){
         if (stored || emailed){
           form.querySelectorAll('input,textarea,select').forEach(function(el){ if(el.type!=='hidden' && el.type!=='checkbox') el.value=''; });
           status.style.color = '#1a8a4a';
-          status.innerHTML = '✓ Thanks! Your request is in — we’ll be in touch within the hour (Mon–Fri 8:30–5).';
+          status.innerHTML = '✓ Thanks! Your request is in. We’ll be in touch within the hour (Mon to Fri, 9am to 5pm).' +
+            ((db.upload && db.upload.failed) ? ' <br><b>Your artwork did not upload.</b> Please email it to <b>' + em + '</b> and quote your name.' : '');
           if (btn){ btn.textContent = '✓ Sent'; }
           auraTrack('generate_lead', {
             form_name: form.getAttribute('data-subject') || 'Website enquiry',
@@ -829,6 +899,46 @@ function wireTurnaround(){
   });
 }
 
+
+/* Mobile action bar (3 Oct 2026). On phones the header "Get a Quote" button is
+   hidden and the phone number scrolls away, so a visitor who has read the page
+   has nothing to tap. This pins two actions to the bottom of the screen.
+   "Get a price" jumps to the page's own price tool when it has one, otherwise
+   it opens the quote form with the page recorded as the source. Hidden on the
+   pages that are already the action (quote, cart, checkout, order, uniform
+   builder) so it never covers a submit button. */
+function wireMobileBar(){
+  var path = location.pathname.replace(/^\//,'') || 'index.html';
+  if (/^(quote|cart|checkout|order|uniform-order|proof|myquote|crm|admin)\b/.test(path)) return;
+  if (document.getElementById('auraMBar')) return;
+  var tool = document.querySelector('#aura-config,#bc-config,#quoter,#lbForm,#catalogue');
+  var page = path.replace(/\.html$/,'');
+  var a1 = document.createElement('a');
+  a1.className = 'mbar-btn mbar-price';
+  if (tool) {
+    if (!tool.id) tool.id = 'aura-price-tool';
+    a1.href = '#' + tool.id;
+    a1.textContent = 'Get a price';
+  } else {
+    a1.href = 'quote.html?from=' + encodeURIComponent(page);
+    a1.textContent = 'Get a quote';
+  }
+  a1.addEventListener('click', function(){ auraTrack('mbar_click', { action: tool ? 'price' : 'quote', page_path: location.pathname }); });
+  var a2 = document.createElement('a');
+  a2.className = 'mbar-btn mbar-call';
+  a2.href = 'tel:1300291277';
+  a2.textContent = 'Call 1300 291 277';
+  a2.setAttribute('aria-label', 'Call Aura Print on 1300 291 277');
+  var bar = document.createElement('div');
+  bar.id = 'auraMBar';
+  bar.className = 'mbar';
+  bar.setAttribute('role', 'navigation');
+  bar.setAttribute('aria-label', 'Quick actions');
+  bar.appendChild(a1); bar.appendChild(a2);
+  document.body.appendChild(bar);
+  document.body.classList.add('has-mbar');
+}
+
 document.addEventListener('DOMContentLoaded', function(){
   /* First, so a gclid is banked even if a later step throws. This does not
      depend on GA4 being on: the CRM needs the click id regardless. */
@@ -852,6 +962,7 @@ document.addEventListener('DOMContentLoaded', function(){
   wireNewsletter();
   wireTurnaround();
   wireCartPill();
+  wireMobileBar();
 
   /* marquee helper (if page has one) */
   const m=document.getElementById('marq'); if(m) m.innerHTML+=m.innerHTML;
