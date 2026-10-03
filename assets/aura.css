@@ -483,3 +483,13 @@ footer .social svg{width:19px;height:19px;fill:currentColor}
   body.has-mbar #auraCartPill{bottom:calc(82px + env(safe-area-inset-bottom)) !important}
 }
 @media print{.mbar{display:none !important}}
+
+/* 3 Oct 2026 nav restructure: Stickers & Labels folded into Print (5 columns),
+   Uniforms split out of Promo. Print is the 1st item so its panel opens to the
+   right; below 1400px it drops to a 3-column grid so it stays on screen.
+   Uniforms is the 4th item, so anchor it right like Promo. */
+@media(max-width:1400px){
+  .navlinks>div.nav-print .mega{grid-template-columns:repeat(3,minmax(0,1fr));gap:22px 40px}
+  .navlinks>div.nav-print:hover .mega{display:grid}
+}
+.navlinks>div.nav-uni .mega{left:auto;right:-20px}

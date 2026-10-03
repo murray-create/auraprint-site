@@ -111,7 +111,7 @@ function productPage(p) {
         <div class="amount grad-text">${money(p.from)}</div>
       </div>` : ''}
       <div class="panel" style="margin-top:20px;background:var(--paper)">
-        <h3 style="font-size:17px;margin-bottom:8px">Priced per job - quotes back within the hour</h3>
+        <h3 style="font-size:17px;margin-bottom:8px">Priced per job - most quotes back the same business day</h3>
         <p style="font-size:14.5px;color:#555">Produced through our national trade production network. Tell us size, quantity and deadline and we'll price it fast (Mon-Fri 8:30-5).</p>
       </div>
       <div style="display:flex;gap:12px;margin-top:18px;flex-wrap:wrap">${quoteCta}</div>`;
@@ -119,7 +119,7 @@ function productPage(p) {
   return `${HEAD(p.seo, p.desc, `${p.slug}.html`, p.img && !/^https?:/.test(p.img) ? p.img : null)}
 
 <div class="page-hero" style="padding:40px 0 36px">
-  <div class="wrap"><div class="crumbs"><a href="index.html">Home</a> / <a href="${p.cat}.html">${esc(catName)}</a> / <b style="color:#fff">${esc(p.name)}</b></div></div>
+  <div class="wrap"><div class="crumbs"><a href="/">Home</a> / <a href="${p.cat}.html">${esc(catName)}</a> / <b style="color:#fff">${esc(p.name)}</b></div></div>
 </div>
 
 <section>
@@ -128,7 +128,7 @@ function productPage(p) {
       ${gallery}
       <div class="trust">
         <span>📍 <b>Baringa, Sunshine Coast</b></span>
-        <span>✅ <b>Proof before print</b></span>
+        <span>✅ <b>You approve before print</b></span>
         <span>🇦🇺 <b>100% Australian owned</b></span>
       </div>
       ${hasTemplate ? `<a class="btn btn-ghost" href="${templatePath}" download style="margin-top:18px;width:100%;text-align:center">⬇ Download artwork template (PDF)</a>` : ''}
@@ -148,11 +148,11 @@ function productPage(p) {
       <ul style="list-style:none;color:#b8b2ab;font-size:15px;line-height:2.1">
         ${(p.specs || []).map(specLine).join('\n        ')}
       </ul>
-      ${hasTemplate ? `<a class="btn btn-aura" href="${templatePath}" download style="margin-top:20px">Download template</a>` : `<p style="color:#8a847d;font-size:13px;margin-top:16px">Need an artwork template? Ask via chat or the quote form and we'll send one.</p>`}
+      ${hasTemplate ? `<a class="btn btn-aura" href="${templatePath}" download style="margin-top:20px">Download template</a>` : `<p style="color:#8a847d;font-size:13px;margin-top:16px">Need an artwork template? Ask through the quote form and we'll send one.</p>`}
     </div>
     <div>
-      <h2 style="font-size:clamp(24px,3vw,36px);margin-bottom:16px">Why print with <span class="grad-text">Aura?</span></h2>
-      <p style="color:#b8b2ab">Every job is preflight-checked by a human, and you approve a digital proof before anything prints. Pick up in Baringa or have it delivered anywhere in Australia.</p>
+      <h2 style="font-size:clamp(24px,3vw,36px);margin-bottom:16px">Why print with <span class="grad-text">Aura Print?</span></h2>
+      <p style="color:#b8b2ab">Every job is preflight-checked by a human, and nothing prints until you approve it. You get a digital proof unless you tell us your file is print ready. Delivered anywhere in Australia.</p>
     </div>
   </div>
 </section>
@@ -202,7 +202,7 @@ function categoryPage(key) {
 
 <div class="page-hero">
   <div class="wrap">
-    <div class="crumbs"><a href="index.html">Home</a> / <b style="color:#fff">${esc(c.name)}</b></div>
+    <div class="crumbs"><a href="/">Home</a> / <b style="color:#fff">${esc(c.name)}</b></div>
     <h1>${esc(heroParts[0])}<span class="grad-text">${esc(c.heroAccent)}</span>${esc(heroParts[1] || '')}</h1>
     <p>${esc(c.intro)}</p>
   </div>
@@ -213,7 +213,7 @@ ${sections}
 <section class="band" style="margin-top:60px">
   <div class="wrap" style="text-align:center">
     <h2 style="font-size:clamp(26px,3.4vw,42px);margin-bottom:14px">Can't see what you need?</h2>
-    <p style="color:#b8b2ab;max-width:560px;margin:0 auto 26px">If it can be printed, we can do it. Tell us about the job and we'll price it within the hour.</p>
+    <p style="color:#b8b2ab;max-width:560px;margin:0 auto 26px">If it can be printed, we can do it. Tell us about the job and most quotes come back the same business day.</p>
     <a class="btn btn-aura" href="quote.html">Get a custom quote</a>
   </div>
 </section>
@@ -262,7 +262,7 @@ writeFileSync('404.html', `${HEAD('Page not found', "That page has moved or neve
   <h1>LOST IN THE <span class="grad-text">PRESS?</span></h1>
   <p>That page doesn't exist. The catalogue does.</p>
   <div style="display:flex;gap:12px;margin-top:24px;flex-wrap:wrap">
-    <a class="btn btn-aura" href="index.html">Back to the homepage</a>
+    <a class="btn btn-aura" href="/">Back to the homepage</a>
     <a class="btn btn-ghost" style="border-color:#fff;color:#fff" href="quote.html">Get a quote</a>
   </div>
 </div></div>
