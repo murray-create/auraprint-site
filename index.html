@@ -706,6 +706,19 @@ function render(){
   })(performance.now());
 }
 sel.addEventListener('change',render); qty.addEventListener('input',render); render();
+/* Usage tracking for the hero price tool (added 3 Oct 2026) so the 21 Oct
+   homepage decision rests on data. Events only, no visible change. */
+(function(){
+  const T=(n,p)=>{try{window.auraTrack&&window.auraTrack(n,p);}catch(e){}};
+  const qNow=()=>{const f=FEED&&FEED[sel.value];return f&&f.qtys.length?f.qtys[Math.min(+qty.value,f.qtys.length-1)]:null;};
+  let used=false;
+  const first=()=>{if(!used){used=true;T('hero_price_use',{hero_product:sel.value});}};
+  sel.addEventListener('change',()=>{first();T('hero_price_product',{hero_product:sel.value});});
+  qty.addEventListener('change',()=>{first();T('hero_price_qty',{hero_product:sel.value,hero_qty:qNow()});});
+  qCta.addEventListener('click',()=>T('hero_price_click',{hero_product:sel.value,hero_qty:qNow(),hero_cta:qCta.textContent.trim()}));
+  document.querySelectorAll('.hero .btn').forEach(b=>{ if(b===qCta) return;
+    b.addEventListener('click',()=>T('hero_cta_click',{hero_cta:b.textContent.trim()}));});
+})();
 /* Category tabs: ARIA state, arrow-key roving focus, and a shareable hash
    (#print / #signage / #promo / #uniforms) so a tab can be linked to directly. */
 (function(){
