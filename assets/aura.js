@@ -627,7 +627,10 @@ function wireForms(){
           auraTrack('generate_lead', {
             form_name: form.getAttribute('data-subject') || 'Website enquiry',
             page_path: location.pathname,
-            stored: !!stored, emailed: !!emailed
+            stored: !!stored, emailed: !!emailed,
+            lead_category: leadRow.category || '(none)',
+            found_us: leadRow.found_us || '(not answered)',
+            has_artwork: !!(chosen || leadRow.artwork_link)
           });
           auraAdsConvert('lead');
         } else {
