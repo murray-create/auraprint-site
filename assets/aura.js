@@ -441,7 +441,7 @@ function uploadQuoteFiles(CFG, lead, files){
       if (urls.indexOf(u.upload_url) < 0) urls.push(u.upload_url);
       function put(j){
         if (j >= urls.length) return Promise.resolve(false);
-        return fetch(urls[j], { method:'PUT', headers:{ 'Content-Type': file.type || 'application/octet-stream', 'x-upsert':'false' }, body: file })
+        return fetch(urls[j], { method:'PUT', headers:{ 'Content-Type': u.content_type || file.type || 'application/pdf', 'x-upsert':'false' }, body: file })
           .then(function(r){ return r.ok ? true : put(j + 1); }, function(){ return put(j + 1); });
       }
       return put(0);
