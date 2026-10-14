@@ -125,7 +125,7 @@ window.AURA_CONFIG = {
     address2: "Baringa QLD 4551",
     phone: "1300 291 277",
     email: "admin@auraprint.com.au",
-    accName: "Murray Alexander Boyton t/a Aura Print",
+    accName: "Murray Boyton t/a Aura Print",
     bsb: "034-168",
     acc: "510720",
     payid: "0404 601 314",
