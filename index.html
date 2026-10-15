@@ -31,38 +31,51 @@
 .qty-row{display:flex;justify-content:space-between;font-weight:700;font-size:14px;margin-top:6px}
 .quoter .btn{width:100%;text-align:center;margin-top:18px}
 input[type=range]{accent-color:var(--magenta);height:34px}
-.cat-tabs{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:26px}
-.cat-tab{padding:12px 24px;border-radius:999px;font-weight:700;font-size:15px;border:2px solid var(--ink);background:transparent;cursor:pointer;transition:.2s;font-family:'Inter',sans-serif;white-space:nowrap}
-.cat-tab:hover{background:var(--ink);color:#fff}
-.cat-tab.active,.cat-tab[aria-selected="true"]{background:var(--aura);border-color:transparent;color:#fff;box-shadow:0 8px 24px rgba(236,72,153,.35)}
-.cat-tab:focus-visible{outline:3px solid var(--violet);outline-offset:3px}
-.cat-n{display:inline-block;margin-left:7px;padding:2px 8px;border-radius:999px;font-size:12px;font-weight:800;background:rgba(0,0,0,.08);color:inherit;vertical-align:1px}
-.cat-tab.active .cat-n,.cat-tab:hover .cat-n{background:rgba(255,255,255,.22);color:#fff}
+/* Shop by category (rebuilt 16 Oct 2026). One gradient moment only: the
+   headline word. Tabs are a quiet segmented control, tiles share one 4:3 frame
+   across all four ranges, and prices sit in Ink. */
+#products .sec-head{margin-bottom:28px}
+#products .sec-head p{color:#6b6560;margin-top:10px;max-width:620px}
+.cat-tabs{display:inline-flex;gap:4px;padding:5px;margin-bottom:26px;background:#fff;border:1px solid #e5ded5;border-radius:999px;max-width:100%}
+.cat-tab{padding:10px 20px;border:0;border-radius:999px;background:transparent;color:#4a4540;font:600 15px/1.2 'Inter',sans-serif;cursor:pointer;white-space:nowrap;transition:background .2s,color .2s}
+.cat-tab:hover{background:#f3eee7;color:var(--ink)}
+.cat-tab.active,.cat-tab[aria-selected="true"]{background:var(--ink);color:#fff}
+.cat-tab:focus-visible{outline:3px solid var(--violet);outline-offset:2px}
 .cat-panel{display:none}
 .cat-panel.active{display:block}
-.cat-desc{color:#6b6560;margin-bottom:18px;max-width:700px}
-.cat-foot{margin-top:22px;font-size:14.5px;color:#6b6560}
-.cat-foot a{font-weight:700;color:var(--violet)}
-#products .chips{margin-bottom:26px}
-#products .chips .chip-all{background:var(--ink);color:#fff;border-color:transparent}
-#products .chips .chip-all:hover{color:#fff;opacity:.85}
-/* Equal-height product cards so every row lines up on its price line. */
-#products .card{display:flex;flex-direction:column}
-#products .card .body{display:flex;flex-direction:column;flex:1}
-#products .card .cardfoot{margin-top:auto;padding-top:4px}
-/* Thumbs must not grow to the image's own height, or the body text in a row
-   starts at four different heights. Lock the box, position the image inside it. */
-#products .card .thumb{aspect-ratio:4/3;position:relative;overflow:hidden;font-size:62px}
-#products .card .badge{z-index:2}
-#products .card .thumb.photo img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
-/* Garment shots are cut out on white and portrait, so contain rather than crop. */
-#products .card .thumb.garment{aspect-ratio:1/1;background:#f6f1ea}
-#products .card .thumb.garment img{position:absolute;top:7%;left:7%;width:86%;height:86%;object-fit:contain;transition:transform .45s ease}
-#products .card:hover .thumb.garment img{transform:scale(1.05)}
+.cat-desc{color:#6b6560;margin-bottom:22px;max-width:640px;font-size:15.5px}
+#products .grid{grid-template-columns:repeat(4,minmax(0,1fr));gap:20px}
+#products .card{display:flex;flex-direction:column;border-radius:var(--radius);border:1px solid #ece6de;transition:transform .25s,box-shadow .25s,border-color .25s}
+#products .card:hover{transform:translateY(-3px);border-color:#d9d0c4;box-shadow:0 14px 30px rgba(15,15,16,.08)}
+#products .card .thumb{aspect-ratio:4/3;position:relative;overflow:hidden;background:#f3eee7}
+#products .card .thumb img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform .45s ease}
+#products .card .thumb.garment img{inset:8%;width:84%;height:84%;object-fit:contain;mix-blend-mode:multiply}
+#products .card:hover .thumb img{transform:scale(1.04)}
+#products .card .badge{z-index:2;top:12px;left:12px;background:var(--ink)}
+#products .card .body{display:flex;flex-direction:column;flex:1;padding:16px 18px 16px}
+#products .card h3{font-size:17px;line-height:1.2;margin-bottom:6px}
+#products .card p{font-size:13.5px;line-height:1.5;margin-bottom:14px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+#products .cardfoot{margin-top:auto;padding-top:12px;border-top:1px solid #f0ebe4}
+#products .card .from{font-size:13.5px;font-weight:500;color:#6b6560}
+#products .card .from em{font-weight:800;color:var(--ink);background:none;-webkit-text-fill-color:currentColor}
+#products .cardtag{font-size:13px;font-weight:700;text-transform:none;letter-spacing:0;background:none;color:var(--ink);-webkit-text-fill-color:currentColor}
+#products .card:hover .cardtag{color:var(--violet)}
+.cat-foot{display:flex;justify-content:space-between;align-items:center;gap:16px 24px;flex-wrap:wrap;margin-top:26px}
+.cat-more{font-size:14.5px;color:#6b6560;margin:0}
+.cat-more a{color:var(--ink);font-weight:600;text-decoration:underline;text-decoration-color:#d9d0c4;text-underline-offset:3px}
+.cat-more a:hover{text-decoration-color:var(--violet);color:var(--violet)}
+.cat-foot .btn{padding:11px 22px;font-size:14.5px}
+@media(max-width:1100px){#products .grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:820px){#products .grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}}
 @media(max-width:640px){
-  .cat-tabs{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;margin-left:-4px;padding:4px}
-  .cat-tabs::-webkit-scrollbar{display:none}
-  .cat-tab{padding:11px 20px;font-size:14px;flex:0 0 auto}
+  .cat-tabs{display:grid;grid-template-columns:1fr 1fr;width:100%;border-radius:18px}
+  .cat-tab{padding:11px 8px;font-size:14px;border-radius:13px;text-align:center}
+  #products .grid{gap:12px}
+  #products .card .body{padding:12px 12px 12px}
+  #products .card h3{font-size:15px}
+  #products .card p,#products .cardtag{display:none}
+  #products .cardfoot{padding-top:8px}
+  .cat-foot .btn{width:100%;text-align:center}
 }
 .band .wrap{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center}
 .band h2{font-size:clamp(28px,3.6vw,44px);margin-bottom:18px}
@@ -442,23 +455,19 @@ input[type=range]{accent-color:var(--magenta);height:34px}
     <div class="sec-head">
       <div>
         <h2>Shop by <span class="grad-text">category</span></h2>
-        <p style="color:#6b6560;margin-top:10px">Four ranges, one supplier. Live online pricing where we can give it, a fast quote where the job needs a human.</p>
+        <p>Four ranges, one local contact. Live prices online where we can give them, a quote where the job needs a person.</p>
       </div>
-      <a class="btn btn-ghost" href="print.html">All products</a>
     </div>
 
     <div class="cat-tabs" role="tablist" aria-label="Product categories">
-      <button class="cat-tab active" id="tab-print" data-cat="print" role="tab" aria-selected="true" aria-controls="panel-print" tabindex="0">Print <span class="cat-n">26</span></button>
-      <button class="cat-tab" id="tab-signage" data-cat="signage" role="tab" aria-selected="false" aria-controls="panel-signage" tabindex="-1">Signage &amp; Display <span class="cat-n">61</span></button>
-      <button class="cat-tab" id="tab-promo" data-cat="promo" role="tab" aria-selected="false" aria-controls="panel-promo" tabindex="-1">Promo Products <span class="cat-n">835</span></button>
-      <button class="cat-tab" id="tab-uniforms" data-cat="uniforms" role="tab" aria-selected="false" aria-controls="panel-uniforms" tabindex="-1">Uniforms &amp; Apparel <span class="cat-n">125</span></button>
+      <button class="cat-tab active" id="tab-print" data-cat="print" role="tab" aria-selected="true" aria-controls="panel-print" tabindex="0">Print</button>
+      <button class="cat-tab" id="tab-signage" data-cat="signage" role="tab" aria-selected="false" aria-controls="panel-signage" tabindex="-1">Signage &amp; Display</button>
+      <button class="cat-tab" id="tab-promo" data-cat="promo" role="tab" aria-selected="false" aria-controls="panel-promo" tabindex="-1">Promo Products</button>
+      <button class="cat-tab" id="tab-uniforms" data-cat="uniforms" role="tab" aria-selected="false" aria-controls="panel-uniforms" tabindex="-1">Uniforms &amp; Apparel</button>
     </div>
 
     <div class="cat-panel active" id="panel-print" role="tabpanel" aria-labelledby="tab-print">
-      <p class="cat-desc">Cards, marketing material and bound books, produced through trusted Australian trade printers. Price it and order it online.</p>
-      <div class="chips">
-        <a href="business-cards.html">Business Cards</a><a href="flyers.html">Flyers</a><a href="brochures.html">Brochures</a><a href="postcards.html">Postcards</a><a href="booklets.html">Booklets</a><a href="presentation-folders.html">Presentation Folders</a><a href="menus.html">Menus</a><a href="letterheads.html">Letterheads</a><a href="greeting-cards.html">Greeting Cards</a><a class="chip-all" href="print.html">All print &#8594;</a>
-      </div>
+      <p class="cat-desc">Business cards, flyers, brochures and booklets. Price it and order it online.</p>
       <!--GEN:print-->
       <div class="grid">
       <a class="card" href="business-cards.html"><span class="badge">Most popular</span><div class="thumb photo"><img src="assets/img/business-cards.jpg" alt="Business Cards" width="900" height="900" loading="lazy"></div>
@@ -487,13 +496,11 @@ input[type=range]{accent-color:var(--magenta);height:34px}
   <div class="cardfoot"><div class="from">from <em>$348</em></div><span class="cardtag">Price online &#8594;</span></div></div></a>
       </div>
       <!--/GEN:print-->
+      <div class="cat-foot"><p class="cat-more">Also in print: <a href="menus.html">Menus</a> · <a href="greeting-cards.html">Greeting Cards</a></p><a class="btn btn-ghost" href="print.html">All 26 print products &#8594;</a></div>
     </div>
 
     <div class="cat-panel" id="panel-signage" role="tabpanel" aria-labelledby="tab-signage" hidden>
-      <p class="cat-desc">Site signage, banners, flags and event displays, made for Queensland conditions.</p>
-      <div class="chips">
-        <a href="corflute-signs.html">Corflute Signs</a><a href="a-frames.html">A-Frames</a><a href="pull-up-banners.html">Pull Up Banners</a><a href="aluminium-signs.html">Aluminium Composite</a><a href="outdoor-banners.html">Outdoor Banners</a><a href="teardrop-flags.html">Teardrop Flags</a><a href="stickers.html">Stickers &amp; Labels</a><a href="safety-signs.html">Safety Signs</a><a href="standees.html">Standees</a><a href="vehicle-magnets.html">Vehicle Magnets</a><a class="chip-all" href="signage.html">All signage &#8594;</a>
-      </div>
+      <p class="cat-desc">Site signs, banners, flags and event displays, made for Queensland conditions.</p>
       <!--GEN:signage-->
       <div class="grid">
       <a class="card" href="corflute-signs.html"><div class="thumb photo"><img src="assets/img/corflute-signs.jpg" alt="Corflute Signs" width="900" height="900" loading="lazy"></div>
@@ -522,13 +529,11 @@ input[type=range]{accent-color:var(--magenta);height:34px}
   <div class="cardfoot"><div class="from">from <em>$222</em></div><span class="cardtag">Price online &#8594;</span></div></div></a>
       </div>
       <!--/GEN:signage-->
+      <div class="cat-foot"><p class="cat-more">Also in signage: <a href="outdoor-banners.html">Outdoor Banners</a> · <a href="standees.html">Standees</a> · <a href="vehicle-magnets.html">Vehicle Magnets</a></p><a class="btn btn-ghost" href="signage.html">All 61 signage products &#8594;</a></div>
     </div>
 
     <div class="cat-panel" id="panel-promo" role="tabpanel" aria-labelledby="tab-promo" hidden>
-      <p class="cat-desc">800+ branded giveaways with live supplier stock, priced on the page. Browsed on our site, not a redirect to somebody else's.</p>
-      <div class="chips">
-        <a href="promotional-pens.html">Pens</a><a href="promotional-drink-bottles.html">Drink Bottles</a><a href="promotional-mugs.html">Mugs &amp; Cups</a><a href="promotional-tote-bags.html">Tote &amp; Cooler Bags</a><a href="promotional-keyrings.html">Keyrings</a><a href="custom-lanyards.html">Lanyards &amp; Badges</a><a href="eco-promotional-products.html">Eco Range</a><a href="australian-made-promotional-products.html">Australian Made</a><a class="chip-all" href="promo.html">All promo &#8594;</a>
-      </div>
+      <p class="cat-desc">800+ branded giveaways with live supplier stock, priced on the page.</p>
       <div class="grid">
         <a class="card" href="promotional-pens.html"><div class="thumb garment"><img src="assets/img/promo/pens.webp" alt="Branded promotional pen" width="640" height="640" loading="lazy"></div><div class="body"><h3>Promotional Pens</h3><p>152 pens with live stock, priced on the page.</p><div class="cardfoot"><div class="from">from <em>$1.91</em> ea</div><span class="cardtag">Price online &#8594;</span></div></div></a>
         <a class="card" href="promotional-drink-bottles.html"><div class="thumb garment"><img src="assets/img/promo/bottles.webp" alt="Branded drink bottle" width="640" height="640" loading="lazy"></div><div class="body"><h3>Drink Bottles &amp; Tumblers</h3><p>70 bottles, flasks and tumblers. Plastic from $5.31 each at 100 units.</p><div class="cardfoot"><div class="from">from <em>$1.86</em> ea</div><span class="cardtag">Price online &#8594;</span></div></div></a>
@@ -539,40 +544,38 @@ input[type=range]{accent-color:var(--magenta);height:34px}
         <a class="card" href="promotional-mugs.html"><div class="thumb garment"><img src="assets/img/promo/mugs.webp" alt="Branded coffee cup" width="640" height="640" loading="lazy"></div><div class="body"><h3>Mugs &amp; Cups</h3><p>Ceramic mugs, reusable coffee cups and travel tumblers for the office and cafe.</p><div class="cardfoot"><div class="from">from <em>$1.86</em> ea</div><span class="cardtag">Price online &#8594;</span></div></div></a>
         <a class="card" href="promotional-notebooks.html"><div class="thumb garment"><img src="assets/img/promo/notebooks.webp" alt="Branded A5 notebook" width="640" height="640" loading="lazy"></div><div class="body"><h3>Notebooks &amp; Journals</h3><p>A5 and A6 notebooks, journals and pads. The conference giveaway that gets used.</p><div class="cardfoot"><div class="from">from <em>$2.17</em> ea</div><span class="cardtag">Price online &#8594;</span></div></div></a>
       </div>
+      <div class="cat-foot"><p class="cat-more">Also in promo: <a href="australian-made-promotional-products.html">Australian Made</a></p><a class="btn btn-ghost" href="promo.html">All 800+ promo products &#8594;</a></div>
     </div>
 
     <div class="cat-panel" id="panel-uniforms" role="tabpanel" aria-labelledby="tab-uniforms" hidden>
-      <p class="cat-desc">125 curated garments from JB's Wear, AS Colour, Aussie Pacific, Winning Spirit, Biz Collection and more. Your logo embroidered, screen printed or DTF printed, with a proof to approve first. Quoted, not guessed, because an honest price needs the garment, the quantity and the stitch count.</p>
-      <div class="chips">
-        <a href="embroidered-polo-shirts.html">Embroidered Polos</a><a href="hi-vis-workwear.html">Hi Vis &amp; Workwear</a><a href="custom-t-shirts.html">T-Shirts</a><a href="custom-hoodies-jackets.html">Hoodies &amp; Jackets</a><a href="embroidered-caps-hats.html">Caps &amp; Headwear</a><a href="hospitality-uniforms.html">Hospitality</a><a href="corporate-uniforms.html">Corporate Shirts</a><a class="chip-all" href="/apparel/">Full range &#8594;</a>
-      </div>
+      <p class="cat-desc">Garments from JB's Wear, AS Colour, Biz Collection and more, with your logo embroidered or printed. Quoted to your garment, quantity and logo.</p>
       <div class="grid">
         <a class="card" href="embroidered-polo-shirts.html"><div class="thumb garment"><img src="assets/img/uniforms/jb-s-wear-210-navy.webp" alt="Embroidered polo shirt" width="420" height="512" loading="lazy"></div>
   <div class="body"><h3>Embroidered Polos</h3><p>33 polo styles in mens, ladies and kids fits. The everyday trade and club uniform.</p>
-  <div class="cardfoot"><div class="from">quote only</div><span class="cardtag">See the range &#8594;</span></div></div></a>
+  <div class="cardfoot"><div class="from">Custom quote</div><span class="cardtag">See the range &#8594;</span></div></div></a>
         <a class="card" href="hi-vis-workwear.html"><div class="thumb garment"><img src="assets/img/uniforms/jb-s-wear-6hps-lime-navy.webp" alt="Hi vis work polo" width="420" height="512" loading="lazy"></div>
   <div class="body"><h3>Hi Vis &amp; Workwear</h3><p>14 day and day/night garments, drill shirts, shorts and pants. Compliance as the maker publishes it.</p>
-  <div class="cardfoot"><div class="from">quote only</div><span class="cardtag">See the range &#8594;</span></div></div></a>
+  <div class="cardfoot"><div class="from">Custom quote</div><span class="cardtag">See the range &#8594;</span></div></div></a>
         <a class="card" href="custom-t-shirts.html"><div class="thumb garment"><img src="assets/img/uniforms/as-colour-5001-navy.webp" alt="Custom printed t-shirt" width="420" height="420" loading="lazy"></div>
   <div class="body"><h3>Custom T-Shirts</h3><p>15 tee styles in retail-weight cotton. Screen print, DTF or embroidery.</p>
-  <div class="cardfoot"><div class="from">quote only</div><span class="cardtag">See the range &#8594;</span></div></div></a>
+  <div class="cardfoot"><div class="from">Custom quote</div><span class="cardtag">See the range &#8594;</span></div></div></a>
         <a class="card" href="custom-hoodies-jackets.html"><div class="thumb garment"><img src="assets/img/uniforms/as-colour-5161-black.webp" alt="Embroidered hoodie" width="420" height="420" loading="lazy"></div>
   <div class="body"><h3>Hoodies &amp; Jackets</h3><p>20 hoods, crews, softshells, puffers and vests. Winter staff kit and team merch.</p>
-  <div class="cardfoot"><div class="from">quote only</div><span class="cardtag">See the range &#8594;</span></div></div></a>
+  <div class="cardfoot"><div class="from">Custom quote</div><span class="cardtag">See the range &#8594;</span></div></div></a>
         <a class="card" href="embroidered-caps-hats.html"><div class="thumb garment"><img src="assets/img/uniforms/as-colour-1190-black.webp" alt="Embroidered trucker cap" width="420" height="420" loading="lazy"></div>
   <div class="body"><h3>Caps &amp; Headwear</h3><p>24 caps, truckers, bucket hats and beanies. Twelve minimum, new logo or reorder.</p>
-  <div class="cardfoot"><div class="from">quote only</div><span class="cardtag">See the range &#8594;</span></div></div></a>
+  <div class="cardfoot"><div class="from">Custom quote</div><span class="cardtag">See the range &#8594;</span></div></div></a>
         <a class="card" href="hospitality-uniforms.html"><div class="thumb garment"><img src="assets/img/uniforms/jb-s-wear-5acbc-black.webp" alt="Cross back canvas apron" width="420" height="512" loading="lazy"></div>
   <div class="body"><h3>Hospitality &amp; Cafe</h3><p>9 aprons, chef wear and service garments for cafes, venues and front of house.</p>
-  <div class="cardfoot"><div class="from">quote only</div><span class="cardtag">See the range &#8594;</span></div></div></a>
+  <div class="cardfoot"><div class="from">Custom quote</div><span class="cardtag">See the range &#8594;</span></div></div></a>
         <a class="card" href="corporate-uniforms.html"><div class="thumb garment"><img src="assets/img/uniforms/jb-s-wear-4p-white.webp" alt="Corporate poplin business shirt" width="420" height="512" loading="lazy"></div>
   <div class="body"><h3>Corporate Shirts</h3><p>10 business shirts and blouses in poplin and oxford, long and short sleeve.</p>
-  <div class="cardfoot"><div class="from">quote only</div><span class="cardtag">See the range &#8594;</span></div></div></a>
+  <div class="cardfoot"><div class="from">Custom quote</div><span class="cardtag">See the range &#8594;</span></div></div></a>
         <a class="card" href="uniform-decoration.html"><div class="thumb garment"><img src="assets/img/uniforms/decoration-front.svg" alt="Diagram of standard decoration positions on a garment" width="320" height="278" loading="lazy"></div>
   <div class="body"><h3>Decoration Methods</h3><p>Embroidery, screen print, DTF and vinyl compared, with positions, sizes and minimums.</p>
-  <div class="cardfoot"><div class="from">guide</div><span class="cardtag">Read the guide &#8594;</span></div></div></a>
+  <div class="cardfoot"><div class="from">Free guide</div><span class="cardtag">Read the guide &#8594;</span></div></div></a>
       </div>
-      <p class="cat-foot">Not sure which decoration suits your logo? <a href="uniform-decoration.html">Compare embroidery, screen print, DTF and vinyl &#8594;</a></p>
+      <div class="cat-foot"><p class="cat-more">Not sure which method suits your logo? <a href="uniform-decoration.html">Compare decoration methods</a></p><a class="btn btn-ghost" href="/apparel/">All 125 garments &#8594;</a></div>
     </div>
   </div>
 </section>
