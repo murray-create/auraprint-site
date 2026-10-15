@@ -167,7 +167,7 @@ footer li a:hover{color:#fff}
   background:var(--aura);-webkit-background-clip:text;background-clip:text;color:transparent;white-space:nowrap}
 
 /* configurator layout (product pages) */
-.config{display:grid;grid-template-columns:1fr 1fr;gap:50px;padding:60px 0}
+.config{display:grid;grid-template-columns:1fr 1fr;gap:50px;padding-top:60px;padding-bottom:60px} /* top/bottom only: a padding shorthand here wiped .wrap side padding on phones (16 Oct 2026) */
 .gallery .main{aspect-ratio:4/3;background:#efe9e1;border-radius:20px;display:flex;align-items:center;justify-content:center;font-size:110px;border:1px solid #ece6de;overflow:hidden}
 .gallery .main.photo{background:#fff}
 .gallery .main.photo img{width:100%;height:100%;object-fit:cover}

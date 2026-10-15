@@ -111,7 +111,7 @@
 .ap-chart th{background:#f3efe9}
 
 /* bulk order grid */
-.ap-bulk{padding:20px 0 44px}
+.ap-bulk{padding-top:20px;padding-bottom:44px} /* keep .wrap side padding */
 .ap-bulk h2{font-size:clamp(24px,2.6vw,32px)}
 .ap-bulk>p{color:#6b6560;margin:6px 0 14px}
 .ap-bt{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));border:1.5px solid #e2dcd4;border-radius:12px;background:#fff;margin-bottom:12px;overflow:hidden}
