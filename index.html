@@ -780,6 +780,8 @@ sel.addEventListener('change',render); qty.addEventListener('input',render); ren
   var tabs=[].slice.call(document.querySelectorAll('.cat-tab'));
   if(!tabs.length)return;
   function show(cat,focus,push){
+    /* Ignore hashes that are not a tab (#products, #top), or every panel hides. */
+    if(!tabs.some(function(t){return t.dataset.cat===cat;}))return false;
     var hit=false;
     tabs.forEach(function(t){
       var on=t.dataset.cat===cat; if(on)hit=true;
