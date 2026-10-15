@@ -364,7 +364,7 @@ function submit(ev){
     source_page:'uniform-order.html', attribution:attr,
     lines:S.lines.map(function(l){
       var g = S.byCode[l.code];
-      return { brand:g.brand, code:g.code, name:g.name, cat:g.cat, colour:l.colour, colour_hex:l.colour_hex, photo:l.photo,
+      return { brand:g.brand, code:g.code, shop_id:g.shop_id||null, from_inc:g.from_inc||null, name:g.name, cat:g.cat, colour:l.colour, colour_hex:l.colour_hex, photo:l.photo,
                sizes:l.sizes, decorations:l.decorations, notes:l.notes };
     }),
     logos:S.files.map(function(x){ return { filename:x.name, size_bytes:x.size, content_type:x.type }; })
@@ -486,8 +486,23 @@ function wire(){
   $('#ubForm').addEventListener('submit', submit);
 }
 
+/* Lines added from the apparel shop (apparel/p/*.html, 15 Oct 2026) carry the
+   catalogue id (e.g. 'jbs-210') as their code. Map the shop index into the shape
+   this builder already understands so those lines render, price and submit. */
+var SHOP_CAT = { 'hi-vis':'hivis', workwear:'hivis', headwear:'caps', shirts:'corporate', suiting:'corporate',
+  knitwear:'corporate', pants:'corporate', jackets:'hoodies', hoodies:'hoodies', hospitality:'hospitality',
+  polos:'polos', tees:'tees' };
+function fromShop(x){
+  return { code:x.c, shop_id:x.id, brand:x.b, name:x.n, cat:SHOP_CAT[x.k] || x.k, fabric:'', sizes:(x.sz||[]).join(', '),
+           url:'/apparel/p/' + x.u + '.html', from_inc:x.p,
+           size_list:(x.sz && x.sz.length && x.sz[0] !== 'OSFA') ? x.sz : ['One size'],
+           swatches:(x.cl||[]).map(function(c){ return { n:c[0], h:c[1], img:c[2] }; }) };
+}
 function init(){
+  var shop = fetch('/data/apparel/index.json?v=' + (window.UB_VER||'1')).then(function(r){ return r.ok ? r.json() : []; }).catch(function(){ return []; });
   fetch('data/uniform-range.json?v=' + (window.UB_VER||'1')).then(function(r){ return r.json(); }).then(function(d){
+    return shop.then(function(rows){ rows.forEach(function(x){ S.byCode[x.id] = fromShop(x); }); return d; });
+  }).then(function(d){
     S.range = d; d.forEach(function(g){ S.byCode[g.code] = g; });
     var brands = Array.from(new Set(d.map(function(g){ return g.brand; }))).sort();
     $('#ubBrand').innerHTML = '<option value="">All brands</option>' + brands.map(function(b){ return '<option>'+esc(b)+'</option>'; }).join('');
