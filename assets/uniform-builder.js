@@ -1,17 +1,21 @@
 /* Uniform order builder - uniform-order.html (2 Oct 2026).
-   Customer picks garments from data/uniform-range.json, chooses colour, sizes,
+   Customer picks garments from the apparel shop index (data/apparel/index.json, all
+   styles with Aura prices; 16 Oct 2026, was the curated data/uniform-range.json, which
+   is still loaded so old ?add=CODE links and saved drafts resolve), chooses colour, sizes,
    decoration method and positions, uploads a logo, and sends. The request lands
    in the CRM as a lead with structured lines (leads.uniform_order) through the
    uniform-request Edge Function, which also signs the logo uploads.
-   No prices are shown: decoration pricing is not yet confirmed. */
+   Garment prices are shown; decoration is quoted. */
 (function(){
 'use strict';
 var CFG = window.AURA_CONFIG || {};
 var DRAFT_KEY = 'aura-uniform-order-v1';
 var CATS = [
   ['all','All'],['polos','Polos'],['tees','Tees'],['hoodies','Hoodies & jackets'],
-  ['hivis','Hi-vis & workwear'],['corporate','Corporate'],['hospitality','Hospitality'],['caps','Caps & hats']
+  ['hivis','Hi-vis & workwear'],['corporate','Corporate'],['hospitality','Hospitality'],['caps','Caps & hats'],
+  ['healthcare','Healthcare'],['activewear','Activewear'],['bags','Bags'],['accessories','Accessories'],['footwear','Footwear']
 ];
+var PAGE = 60;
 var METHODS = [
   { id:'Embroidery',  short:'Stitched thread. Hard-wearing and premium.' },
   { id:'DTF print',   short:'Full colour transfer. Great for small runs.' },
@@ -19,7 +23,8 @@ var METHODS = [
   { id:'Not sure',    short:'We will recommend one.' }
 ];
 
-var S = { range:[], byCode:{}, lines:[], cat:'all', brand:'', q:'', edit:null, files:[] };
+var S = { range:[], byCode:{}, lines:[], cat:'all', brand:'', q:'', edit:null, files:[], show:PAGE };
+function keyOf(g){ return g.shop_id || g.code; }
 
 /* ---------- helpers ---------- */
 function $(s, r){ return (r||document).querySelector(s); }
@@ -147,18 +152,20 @@ function renderGrid(){
     $('#ubGrid').innerHTML = '<p class="ub-empty" style="grid-column:1/-1"><b>Nothing matches that search.</b>Try another word, or <a href="quote.html?cat=Apparel%20%26%20Workwear">tell us what you need</a> and we will source it.</p>';
     return;
   }
+  var total = list.length; list = list.slice(0, S.show);
   $('#ubGrid').innerHTML = list.map(function(g){
     var img = photoFor(g), sw = g.swatches||[];
     var dots = sw.slice(0,10).map(function(s){ return '<i style="background:'+esc(s.h||'#ddd')+'" title="'+esc(s.n)+'"></i>'; }).join('') + (sw.length>10 ? '<em>+'+(sw.length-10)+'</em>' : '');
-    return '<button type="button" class="ub-card" data-code="'+esc(g.code)+'" aria-label="Add '+esc(g.name)+' to your order">'+
+    return '<button type="button" class="ub-card" data-code="'+esc(keyOf(g))+'" aria-label="Add '+esc(g.name)+' to your order">'+
       '<div class="ph">'+(img ? '<img src="'+esc(img)+'" alt="" loading="lazy" width="170" height="170">' : '<span class="noimg">Photo on request</span>')+
-        (inOrder[g.code] ? '<span class="in-order">'+inOrder[g.code]+' in order</span>' : '')+'</div>'+
+        (inOrder[keyOf(g)] ? '<span class="in-order">'+inOrder[keyOf(g)]+' in order</span>' : '')+'</div>'+
       '<span class="br">'+esc(g.brand)+' &middot; '+esc(g.code)+'</span>'+
       '<h3>'+esc(g.name)+'</h3>'+
       (g.fabric ? '<p class="meta">'+esc(g.fabric)+'</p>' : '')+
       (sw.length ? '<div class="dots">'+dots+'</div>' : '')+
+      (g.from_inc ? '<p class="meta"><b style="color:#0F0F10">From $'+(+g.from_inc).toFixed(2)+'</b> inc GST, garment only</p>' : '')+
       '<span class="add">Choose &amp; add</span></button>';
-  }).join('');
+  }).join('') + (total > list.length ? '<p style="grid-column:1/-1;text-align:center;margin:8px 0 0"><button type="button" class="btn btn-ghost" id="ubMore">Show more ('+(total-list.length).toLocaleString()+' left)</button></p>' : '');
 }
 
 /* ---------- order panel ---------- */
@@ -423,10 +430,12 @@ function submit(ev){
 
 /* ---------- wiring ---------- */
 function wire(){
-  $('#ubCats').addEventListener('click', function(e){ var b = e.target.closest('button[data-cat]'); if (!b) return; S.cat = b.dataset.cat; renderCats(); renderGrid(); });
-  $('#ubSearch').addEventListener('input', function(e){ S.q = e.target.value; renderGrid(); });
-  $('#ubBrand').addEventListener('change', function(e){ S.brand = e.target.value; renderGrid(); });
-  $('#ubGrid').addEventListener('click', function(e){ var c = e.target.closest('.ub-card'); if (c) openCfg(c.dataset.code); });
+  $('#ubCats').addEventListener('click', function(e){ var b = e.target.closest('button[data-cat]'); if (!b) return; S.cat = b.dataset.cat; S.show = PAGE; renderCats(); renderGrid(); });
+  $('#ubSearch').addEventListener('input', function(e){ S.q = e.target.value; S.show = PAGE; renderGrid(); });
+  $('#ubBrand').addEventListener('change', function(e){ S.brand = e.target.value; S.show = PAGE; renderGrid(); });
+  $('#ubGrid').addEventListener('click', function(e){
+    if (e.target.closest('#ubMore')){ S.show += PAGE * 2; renderGrid(); return; }
+    var c = e.target.closest('.ub-card'); if (c) openCfg(c.dataset.code); });
   $('#ubLines').addEventListener('click', function(e){
     var b = e.target.closest('button[data-act]'); if (!b) return;
     var l = S.lines.filter(function(x){ return x.id === b.dataset.id; })[0]; if (!l) return;
@@ -503,8 +512,10 @@ function init(){
   fetch('data/uniform-range.json?v=' + (window.UB_VER||'1')).then(function(r){ return r.json(); }).then(function(d){
     return shop.then(function(rows){ rows.forEach(function(x){ S.byCode[x.id] = fromShop(x); }); return d; });
   }).then(function(d){
-    S.range = d; d.forEach(function(g){ S.byCode[g.code] = g; });
-    var brands = Array.from(new Set(d.map(function(g){ return g.brand; }))).sort();
+    d.forEach(function(g){ if (!S.byCode[g.code]) S.byCode[g.code] = g; });
+    var shopRows = Object.keys(S.byCode).map(function(k){ return S.byCode[k]; }).filter(function(g){ return g.shop_id; });
+    S.range = shopRows.length ? shopRows : d;
+    var brands = Array.from(new Set(S.range.map(function(g){ return g.brand; }))).sort();
     $('#ubBrand').innerHTML = '<option value="">All brands</option>' + brands.map(function(b){ return '<option>'+esc(b)+'</option>'; }).join('');
     var p = new URLSearchParams(location.search);
     if (p.get('cat') && CATS.some(function(c){ return c[0] === p.get('cat'); })) S.cat = p.get('cat');
