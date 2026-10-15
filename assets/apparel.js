@@ -82,6 +82,8 @@ function cardHtml(x){
 function initList(root){
   var grid = $('.ap-grid', root), more = $('.ap-more', root), countEl = $('.ap-count', root);
   var st = { q:'', b:'', g:'', f:'', k:'', sort:'', shown:48 };
+  /* The filter bar (.ap-tools) is rendered as a sibling ABOVE the list section, not inside it, so look up controls page-wide. */
+  var ctl = document;
   var cards = [];
   function collect(){ cards = $$('.ap-card', grid).map(function(el, i){ return { el:el, i:i, b:el.dataset.b, g:el.dataset.g, k:el.dataset.k, p:+el.dataset.p, f:el.dataset.f||'', n:el.dataset.n||'' }; }); }
   function apply(){
@@ -104,9 +106,9 @@ function initList(root){
     var empty = $('.ap-empty', root); if (empty) empty.hidden = list.length > 0;
   }
   function wire(){
-    var q = $('#apQ', root); if (q) q.addEventListener('input', function(){ st.q = q.value; st.shown = 48; apply(); });
-    $$('[data-filter]', root).forEach(function(sel){ sel.addEventListener('change', function(){ st[sel.dataset.filter] = sel.value; st.shown = 48; apply(); track('apparel_filter', { filter: sel.dataset.filter, value: sel.value }); }); });
-    $$('.ap-chips', root).forEach(function(ch){
+    var q = $('#apQ', ctl); if (q) q.addEventListener('input', function(){ st.q = q.value; st.shown = 48; apply(); });
+    $$('[data-filter]', ctl).forEach(function(sel){ sel.addEventListener('change', function(){ st[sel.dataset.filter] = sel.value; st.shown = 48; apply(); track('apparel_filter', { filter: sel.dataset.filter, value: sel.value }); }); });
+    $$('.ap-chips', ctl).forEach(function(ch){
       ch.addEventListener('click', function(e){
         var b = e.target.closest('button'); if (!b) return;
         $$('button', ch).forEach(function(x){ x.classList.toggle('on', x === b); });
@@ -121,7 +123,7 @@ function initList(root){
     var img = d.closest('.ap-card').querySelector('.ph img'); if (img.src !== d.dataset.img) img.src = d.dataset.img;
   }
   var params = new URLSearchParams(location.search);
-  if (params.get('q')){ st.q = params.get('q'); var qi = $('#apQ', root); if (qi) qi.value = st.q; }
+  if (params.get('q')){ st.q = params.get('q'); var qi = $('#apQ', ctl); if (qi) qi.value = st.q; }
   if (root.dataset.src === 'index'){
     fetch('/data/apparel/index.json?v=' + (root.dataset.ver||'1')).then(function(r){ return r.json(); }).then(function(rows){
       grid.innerHTML = rows.map(cardHtml).join(''); collect(); wire(); apply();
