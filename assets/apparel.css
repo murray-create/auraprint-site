@@ -168,3 +168,34 @@
 
 /* 16 Oct 2026: author display rules (.ap-card flex, .ap-more block) beat the browser's [hidden]{display:none}, so filtered-out cards stayed visible. */
 .ap-card[hidden],.ap-more[hidden],.ap-empty[hidden]{display:none!important}
+
+/* 16 Oct 2026: Shop by industry tiles, and a phone layout for the hub. The 170px tile minimum put
+   one tile per row on a phone, so the 17 category tiles alone ran to about 7,000px of scrolling. */
+.ap-ind .ap-tile b{font-size:15.5px}
+.ap-ind-tips{background:#fff;border:1px solid #e8e2da;border-radius:16px;padding:20px 22px}
+.ap-ind-tips h2{font-size:clamp(18px,2vw,22px);margin:0 0 8px}
+.ap-ind-tips ul{margin:0 0 10px;padding-left:20px;color:#4a4540}
+.ap-ind-tips li{margin:4px 0}
+.ap-ind-tips p{margin:0;font-size:14.5px}
+.ap-ind-tips a{font-weight:700;text-decoration:underline}
+@media(max-width:560px){
+  .ap-hero{padding:30px 0 26px}
+  .ap-hero p{font-size:15px}
+  .ap-trust{gap:4px 14px;margin-top:12px;font-size:12.5px}
+  .ap-sec-h{margin-top:26px}
+  .ap-tiles{grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:14px 0 6px}
+  .ap-tile{padding:8px;gap:4px;border-radius:12px}
+  .ap-tile b{font-size:12.5px;line-height:1.25}
+  .ap-tile small{font-size:11px}
+  .ap-tiles.ap-ind{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+  .ap-ind .ap-tile{padding:10px}
+  .ap-ind .ap-tile b{font-size:14px}
+  .ap-tiles.ap-guides{grid-template-columns:1fr}
+  .ap-tiles.ap-guides .ap-tile{padding:12px 14px}
+  .ap-tiles.ap-guides .ap-tile b{font-size:14.5px}
+  .ap-tiles.ap-guides .ap-tile small{font-size:12.5px}
+  .ap-tiles.ap-brands{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;margin-right:-24px;padding:2px 24px 8px 0;scrollbar-width:none}
+  .ap-tiles.ap-brands::-webkit-scrollbar{display:none}
+  .ap-brands .ap-tile{flex:0 0 132px;scroll-snap-align:start}
+  .ap-ind-tips{padding:16px}
+}

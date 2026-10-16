@@ -42550,440 +42550,6 @@
 "slug": "australian-industrial-wear-wt09hv-mens-white-safety-shirt-with-x-back-biomotion-tape-confi"
 },
 {
-"id": "ws-m7110l",
-"brand": "Benchmark",
-"bslug": "ws",
-"code": "M7110L",
-"name": "Barkley Mens Taped Seam Long Sleeve Shirt",
-"cat": "hi-vis",
-"gender": "men",
-"tag": "",
-"fabric": "60% Cotton / 40% Polyester with Easy Care",
-"fit": "Mid-Tailored",
-"desc": "",
-"features": [
-"BARKLEY",
-"The Barkley Range is the perfect Professional Cotton Rich Easy Care shirt. The fabric design is a Dobby Self stripe, whilst construction of the range presents a quality enhanced ‘Taped Seam’ feature."
-],
-"chart": {},
-"chart_sizes": null,
-"chart_img": "https://s3.amazonaws.com/ws-au-imgs/size_chart/M7110L_size.jpg",
-"industries": [],
-"stylesheet": "https://s3.amazonaws.com/ws-au-imgs/snapshot/M7110L%2BM7110S%2B8110L%2B8110S%2B8110Q.pdf",
-"carton": null,
-"sizes": [
-"XS",
-"S",
-"M",
-"L",
-"XL",
-"2XL",
-"3XL",
-"4XL",
-"5XL"
-],
-"colours": [
-{
-"n": "Navy",
-"h": "#2a364e",
-"img": "https://media.auraprint.com.au/a/ws/m7110l/navy.webp",
-"back": "https://media.auraprint.com.au/a/ws/m7110l/navy-b.webp"
-},
-{
-"n": "Soft Pink",
-"h": "#f6d2ea",
-"img": "https://media.auraprint.com.au/a/ws/m7110l/soft-pink.webp",
-"back": "https://media.auraprint.com.au/a/ws/m7110l/soft-pink-b.webp"
-},
-{
-"n": "Storm Grey",
-"h": "#666672",
-"img": "https://media.auraprint.com.au/a/ws/m7110l/storm-grey.webp",
-"back": "https://media.auraprint.com.au/a/ws/m7110l/storm-grey-b.webp"
-},
-{
-"n": "White",
-"h": "#d2d2d2",
-"img": "https://media.auraprint.com.au/a/ws/m7110l/white.webp",
-"back": "https://media.auraprint.com.au/a/ws/m7110l/white-b.webp"
-}
-],
-"gallery": [
-"https://media.auraprint.com.au/a/ws/m7110l/g0.webp",
-"https://media.auraprint.com.au/a/ws/m7110l/g1.webp"
-],
-"prices": [
-{
-"c": null,
-"s": [
-"XS",
-"S",
-"M",
-"L",
-"XL",
-"2XL",
-"3XL",
-"4XL",
-"5XL"
-],
-"x": 43.04
-}
-],
-"from_ex": 43.04,
-"from_inc": 47.34,
-"to_inc": 47.34,
-"stock": "ws",
-"slug": "benchmark-m7110l-barkley-mens-taped-seam-long-sleeve-shirt"
-},
-{
-"id": "ws-m7110s",
-"brand": "Benchmark",
-"bslug": "ws",
-"code": "M7110S",
-"name": "Barkley Mens Taped Seam Short Sleeve Shirt",
-"cat": "hi-vis",
-"gender": "men",
-"tag": "",
-"fabric": "60% Cotton / 40% Polyester with Easy Care",
-"fit": "Mid-Tailored",
-"desc": "",
-"features": [
-"BARKLEY",
-"The Barkley Range is the perfect Professional Cotton Rich Easy Care shirt. The fabric design is a Dobby Self stripe, whilst construction of the range presents a quality enhanced ‘Taped Seam’ feature."
-],
-"chart": {},
-"chart_sizes": null,
-"chart_img": "https://s3.amazonaws.com/ws-au-imgs/size_chart/M7110S_size.jpg",
-"industries": [],
-"stylesheet": "https://ws-au-imgs.s3.amazonaws.com/snapshot/M7110S.pdf",
-"carton": null,
-"sizes": [
-"XS",
-"S",
-"M",
-"L",
-"XL",
-"2XL",
-"3XL",
-"4XL",
-"5XL"
-],
-"colours": [
-{
-"n": "Navy",
-"h": "#424e72",
-"img": "https://media.auraprint.com.au/a/ws/m7110s/navy.webp",
-"back": "https://media.auraprint.com.au/a/ws/m7110s/navy-b.webp"
-},
-{
-"n": "Soft Pink",
-"h": "#f6d2ea",
-"img": "https://media.auraprint.com.au/a/ws/m7110s/soft-pink.webp",
-"back": "https://media.auraprint.com.au/a/ws/m7110s/soft-pink-b.webp"
-},
-{
-"n": "Storm Grey",
-"h": "#5a5a66",
-"img": "https://media.auraprint.com.au/a/ws/m7110s/storm-grey.webp",
-"back": "https://media.auraprint.com.au/a/ws/m7110s/storm-grey-b.webp"
-},
-{
-"n": "White",
-"h": "#d2d2d2",
-"img": "https://media.auraprint.com.au/a/ws/m7110s/white.webp",
-"back": "https://media.auraprint.com.au/a/ws/m7110s/white-b.webp"
-}
-],
-"gallery": [
-"https://media.auraprint.com.au/a/ws/m7110s/g0.webp"
-],
-"prices": [
-{
-"c": null,
-"s": [
-"XS",
-"S",
-"M",
-"L",
-"XL",
-"2XL",
-"3XL",
-"4XL",
-"5XL"
-],
-"x": 40.8
-}
-],
-"from_ex": 40.8,
-"from_inc": 44.88,
-"to_inc": 44.88,
-"stock": "ws",
-"slug": "benchmark-m7110s-barkley-mens-taped-seam-short-sleeve-shirt"
-},
-{
-"id": "ws-m8110l",
-"brand": "Benchmark",
-"bslug": "ws",
-"code": "M8110L",
-"name": "Barkley Ladies Taped Seam Long Sleeve Shirt",
-"cat": "hi-vis",
-"gender": "women",
-"tag": "",
-"fabric": "60% Cotton / 40% Polyester with Easy Care",
-"fit": "Semi-Fitted",
-"desc": "",
-"features": [
-"BARKLEY",
-"The Barkley Range is the perfect Professional Cotton Rich Easy Care shirt. The fabric design is a Dobby Self stripe, whilst construction of the range presents a quality enhanced ‘Taped Seam’ feature."
-],
-"chart": {},
-"chart_sizes": null,
-"chart_img": "https://s3.amazonaws.com/ws-au-imgs/size_chart/M8110L_size.jpg",
-"industries": [],
-"stylesheet": "https://ws-au-imgs.s3.amazonaws.com/snapshot/M8110L.pdf",
-"carton": null,
-"sizes": [
-"6",
-"8",
-"10",
-"12",
-"14",
-"16",
-"18",
-"20",
-"22",
-"24",
-"26"
-],
-"colours": [
-{
-"n": "Navy",
-"h": "#2a364e",
-"img": "https://media.auraprint.com.au/a/ws/m8110l/navy.webp",
-"back": "https://media.auraprint.com.au/a/ws/m8110l/navy-b.webp"
-},
-{
-"n": "Soft Pink",
-"h": "#ead2ea",
-"img": "https://media.auraprint.com.au/a/ws/m8110l/soft-pink.webp",
-"back": "https://media.auraprint.com.au/a/ws/m8110l/soft-pink-b.webp"
-},
-{
-"n": "Storm Grey",
-"h": "#5a5a66",
-"img": "https://media.auraprint.com.au/a/ws/m8110l/storm-grey.webp",
-"back": "https://media.auraprint.com.au/a/ws/m8110l/storm-grey-b.webp"
-},
-{
-"n": "White",
-"h": "#dedede",
-"img": "https://media.auraprint.com.au/a/ws/m8110l/white.webp",
-"back": "https://media.auraprint.com.au/a/ws/m8110l/white-b.webp"
-}
-],
-"gallery": [],
-"prices": [
-{
-"c": null,
-"s": [
-"6",
-"8",
-"10",
-"12",
-"14",
-"16",
-"18",
-"20",
-"22",
-"24",
-"26"
-],
-"x": 40.8
-}
-],
-"from_ex": 40.8,
-"from_inc": 44.88,
-"to_inc": 44.88,
-"stock": "ws",
-"slug": "benchmark-m8110l-barkley-ladies-taped-seam-long-sleeve-shirt"
-},
-{
-"id": "ws-m8110q",
-"brand": "Benchmark",
-"bslug": "ws",
-"code": "M8110Q",
-"name": "Barkley Ladies Taped Seam 3/4 Sleeve Shirt",
-"cat": "hi-vis",
-"gender": "women",
-"tag": "",
-"fabric": "60% Cotton / 40% Polyester with Easy Care",
-"fit": "Semi-Fitted",
-"desc": "",
-"features": [
-"BARKLEY",
-"The Barkley Range is the perfect Professional Cotton Rich Easy Care shirt. The fabric design is a Dobby Self stripe, whilst construction of the range presents a quality enhanced ‘Taped Seam’ feature."
-],
-"chart": {},
-"chart_sizes": null,
-"chart_img": "https://s3.amazonaws.com/ws-au-imgs/size_chart/M8110Q_size.jpg",
-"industries": [],
-"stylesheet": "https://ws-au-imgs.s3.amazonaws.com/snapshot/M8110Q.pdf",
-"carton": null,
-"sizes": [
-"6",
-"8",
-"10",
-"12",
-"14",
-"16",
-"18",
-"20",
-"22",
-"24",
-"26"
-],
-"colours": [
-{
-"n": "Navy",
-"h": "#424266",
-"img": "https://media.auraprint.com.au/a/ws/m8110q/navy.webp",
-"back": "https://media.auraprint.com.au/a/ws/m8110q/navy-b.webp"
-},
-{
-"n": "Soft Pink",
-"h": "#dec6d2",
-"img": "https://media.auraprint.com.au/a/ws/m8110q/soft-pink.webp",
-"back": "https://media.auraprint.com.au/a/ws/m8110q/soft-pink-b.webp"
-},
-{
-"n": "Storm Grey",
-"h": "#72727e",
-"img": "https://media.auraprint.com.au/a/ws/m8110q/storm-grey.webp",
-"back": "https://media.auraprint.com.au/a/ws/m8110q/storm-grey-b.webp"
-},
-{
-"n": "White",
-"h": "#dedede",
-"img": "https://media.auraprint.com.au/a/ws/m8110q/white.webp",
-"back": "https://media.auraprint.com.au/a/ws/m8110q/white-b.webp"
-}
-],
-"gallery": [],
-"prices": [
-{
-"c": null,
-"s": [
-"6",
-"8",
-"10",
-"12",
-"14",
-"16",
-"18",
-"20",
-"22",
-"24",
-"26"
-],
-"x": 39.2
-}
-],
-"from_ex": 39.2,
-"from_inc": 43.12,
-"to_inc": 43.12,
-"stock": "ws",
-"slug": "benchmark-m8110q-barkley-ladies-taped-seam-3-4-sleeve-shirt"
-},
-{
-"id": "ws-m8110s",
-"brand": "Benchmark",
-"bslug": "ws",
-"code": "M8110S",
-"name": "Barkley Ladies Taped Seam Short Sleeve Shirt",
-"cat": "hi-vis",
-"gender": "women",
-"tag": "",
-"fabric": "60% Cotton / 40% Polyester with Easy Care",
-"fit": "Semi-Fitted",
-"desc": "",
-"features": [
-"BARKLEY",
-"The Barkley Range is the perfect Professional Cotton Rich Easy Care shirt. The fabric design is a Dobby Self stripe, whilst construction of the range presents a quality enhanced ‘Taped Seam’ feature."
-],
-"chart": {},
-"chart_sizes": null,
-"chart_img": "https://s3.amazonaws.com/ws-au-imgs/size_chart/M8110S_size.jpg",
-"industries": [],
-"stylesheet": "https://ws-au-imgs.s3.amazonaws.com/snapshot/M8110S.pdf",
-"carton": null,
-"sizes": [
-"6",
-"8",
-"10",
-"12",
-"14",
-"16",
-"18",
-"20",
-"22",
-"24",
-"26"
-],
-"colours": [
-{
-"n": "Navy",
-"h": "#424e66",
-"img": "https://media.auraprint.com.au/a/ws/m8110s/navy.webp",
-"back": "https://media.auraprint.com.au/a/ws/m8110s/navy-b.webp"
-},
-{
-"n": "Soft Pink",
-"h": "#eadeea",
-"img": "https://media.auraprint.com.au/a/ws/m8110s/soft-pink.webp",
-"back": "https://media.auraprint.com.au/a/ws/m8110s/soft-pink-b.webp"
-},
-{
-"n": "Storm Grey",
-"h": "#666672",
-"img": "https://media.auraprint.com.au/a/ws/m8110s/storm-grey.webp",
-"back": "https://media.auraprint.com.au/a/ws/m8110s/storm-grey-b.webp"
-},
-{
-"n": "White",
-"h": "#d2d2d2",
-"img": "https://media.auraprint.com.au/a/ws/m8110s/white.webp",
-"back": "https://media.auraprint.com.au/a/ws/m8110s/white-b.webp"
-}
-],
-"gallery": [
-"https://media.auraprint.com.au/a/ws/m8110s/g0.webp"
-],
-"prices": [
-{
-"c": null,
-"s": [
-"6",
-"8",
-"10",
-"12",
-"14",
-"16",
-"18",
-"20",
-"22",
-"24",
-"26"
-],
-"x": 38.24
-}
-],
-"from_ex": 38.24,
-"from_inc": 42.06,
-"to_inc": 42.06,
-"stock": "ws",
-"slug": "benchmark-m8110s-barkley-ladies-taped-seam-short-sleeve-shirt"
-},
-{
 "id": "ncc-fct005a",
 "brand": "Flamebuster",
 "bslug": "ncc",
@@ -202017,6 +201583,177 @@
 "slug": "benchmark-m7102-men-s-self-stripe-long-sleeve-shirt-clearance"
 },
 {
+"id": "ws-m7110l",
+"brand": "Benchmark",
+"bslug": "ws",
+"code": "M7110L",
+"name": "Barkley Mens Taped Seam Long Sleeve Shirt",
+"cat": "shirts",
+"gender": "men",
+"tag": "",
+"fabric": "60% Cotton / 40% Polyester with Easy Care",
+"fit": "Mid-Tailored",
+"desc": "",
+"features": [
+"BARKLEY",
+"The Barkley Range is the perfect Professional Cotton Rich Easy Care shirt. The fabric design is a Dobby Self stripe, whilst construction of the range presents a quality enhanced ‘Taped Seam’ feature."
+],
+"chart": {},
+"chart_sizes": null,
+"chart_img": "https://s3.amazonaws.com/ws-au-imgs/size_chart/M7110L_size.jpg",
+"industries": [],
+"stylesheet": "https://s3.amazonaws.com/ws-au-imgs/snapshot/M7110L%2BM7110S%2B8110L%2B8110S%2B8110Q.pdf",
+"carton": null,
+"sizes": [
+"XS",
+"S",
+"M",
+"L",
+"XL",
+"2XL",
+"3XL",
+"4XL",
+"5XL"
+],
+"colours": [
+{
+"n": "Navy",
+"h": "#2a364e",
+"img": "https://media.auraprint.com.au/a/ws/m7110l/navy.webp",
+"back": "https://media.auraprint.com.au/a/ws/m7110l/navy-b.webp"
+},
+{
+"n": "Soft Pink",
+"h": "#f6d2ea",
+"img": "https://media.auraprint.com.au/a/ws/m7110l/soft-pink.webp",
+"back": "https://media.auraprint.com.au/a/ws/m7110l/soft-pink-b.webp"
+},
+{
+"n": "Storm Grey",
+"h": "#666672",
+"img": "https://media.auraprint.com.au/a/ws/m7110l/storm-grey.webp",
+"back": "https://media.auraprint.com.au/a/ws/m7110l/storm-grey-b.webp"
+},
+{
+"n": "White",
+"h": "#d2d2d2",
+"img": "https://media.auraprint.com.au/a/ws/m7110l/white.webp",
+"back": "https://media.auraprint.com.au/a/ws/m7110l/white-b.webp"
+}
+],
+"gallery": [
+"https://media.auraprint.com.au/a/ws/m7110l/g0.webp",
+"https://media.auraprint.com.au/a/ws/m7110l/g1.webp"
+],
+"prices": [
+{
+"c": null,
+"s": [
+"XS",
+"S",
+"M",
+"L",
+"XL",
+"2XL",
+"3XL",
+"4XL",
+"5XL"
+],
+"x": 43.04
+}
+],
+"from_ex": 43.04,
+"from_inc": 47.34,
+"to_inc": 47.34,
+"stock": "ws",
+"slug": "benchmark-m7110l-barkley-mens-taped-seam-long-sleeve-shirt"
+},
+{
+"id": "ws-m7110s",
+"brand": "Benchmark",
+"bslug": "ws",
+"code": "M7110S",
+"name": "Barkley Mens Taped Seam Short Sleeve Shirt",
+"cat": "shirts",
+"gender": "men",
+"tag": "",
+"fabric": "60% Cotton / 40% Polyester with Easy Care",
+"fit": "Mid-Tailored",
+"desc": "",
+"features": [
+"BARKLEY",
+"The Barkley Range is the perfect Professional Cotton Rich Easy Care shirt. The fabric design is a Dobby Self stripe, whilst construction of the range presents a quality enhanced ‘Taped Seam’ feature."
+],
+"chart": {},
+"chart_sizes": null,
+"chart_img": "https://s3.amazonaws.com/ws-au-imgs/size_chart/M7110S_size.jpg",
+"industries": [],
+"stylesheet": "https://ws-au-imgs.s3.amazonaws.com/snapshot/M7110S.pdf",
+"carton": null,
+"sizes": [
+"XS",
+"S",
+"M",
+"L",
+"XL",
+"2XL",
+"3XL",
+"4XL",
+"5XL"
+],
+"colours": [
+{
+"n": "Navy",
+"h": "#424e72",
+"img": "https://media.auraprint.com.au/a/ws/m7110s/navy.webp",
+"back": "https://media.auraprint.com.au/a/ws/m7110s/navy-b.webp"
+},
+{
+"n": "Soft Pink",
+"h": "#f6d2ea",
+"img": "https://media.auraprint.com.au/a/ws/m7110s/soft-pink.webp",
+"back": "https://media.auraprint.com.au/a/ws/m7110s/soft-pink-b.webp"
+},
+{
+"n": "Storm Grey",
+"h": "#5a5a66",
+"img": "https://media.auraprint.com.au/a/ws/m7110s/storm-grey.webp",
+"back": "https://media.auraprint.com.au/a/ws/m7110s/storm-grey-b.webp"
+},
+{
+"n": "White",
+"h": "#d2d2d2",
+"img": "https://media.auraprint.com.au/a/ws/m7110s/white.webp",
+"back": "https://media.auraprint.com.au/a/ws/m7110s/white-b.webp"
+}
+],
+"gallery": [
+"https://media.auraprint.com.au/a/ws/m7110s/g0.webp"
+],
+"prices": [
+{
+"c": null,
+"s": [
+"XS",
+"S",
+"M",
+"L",
+"XL",
+"2XL",
+"3XL",
+"4XL",
+"5XL"
+],
+"x": 40.8
+}
+],
+"from_ex": 40.8,
+"from_inc": 44.88,
+"to_inc": 44.88,
+"stock": "ws",
+"slug": "benchmark-m7110s-barkley-mens-taped-seam-short-sleeve-shirt"
+},
+{
 "id": "ws-m7112",
 "brand": "Benchmark",
 "bslug": "ws",
@@ -205905,6 +205642,269 @@
 "to_inc": 12.14,
 "stock": "ws",
 "slug": "benchmark-m8103-women-s-self-stripe-3-4-sleeve-shirt-clearance"
+},
+{
+"id": "ws-m8110l",
+"brand": "Benchmark",
+"bslug": "ws",
+"code": "M8110L",
+"name": "Barkley Ladies Taped Seam Long Sleeve Shirt",
+"cat": "shirts",
+"gender": "women",
+"tag": "",
+"fabric": "60% Cotton / 40% Polyester with Easy Care",
+"fit": "Semi-Fitted",
+"desc": "",
+"features": [
+"BARKLEY",
+"The Barkley Range is the perfect Professional Cotton Rich Easy Care shirt. The fabric design is a Dobby Self stripe, whilst construction of the range presents a quality enhanced ‘Taped Seam’ feature."
+],
+"chart": {},
+"chart_sizes": null,
+"chart_img": "https://s3.amazonaws.com/ws-au-imgs/size_chart/M8110L_size.jpg",
+"industries": [],
+"stylesheet": "https://ws-au-imgs.s3.amazonaws.com/snapshot/M8110L.pdf",
+"carton": null,
+"sizes": [
+"6",
+"8",
+"10",
+"12",
+"14",
+"16",
+"18",
+"20",
+"22",
+"24",
+"26"
+],
+"colours": [
+{
+"n": "Navy",
+"h": "#2a364e",
+"img": "https://media.auraprint.com.au/a/ws/m8110l/navy.webp",
+"back": "https://media.auraprint.com.au/a/ws/m8110l/navy-b.webp"
+},
+{
+"n": "Soft Pink",
+"h": "#ead2ea",
+"img": "https://media.auraprint.com.au/a/ws/m8110l/soft-pink.webp",
+"back": "https://media.auraprint.com.au/a/ws/m8110l/soft-pink-b.webp"
+},
+{
+"n": "Storm Grey",
+"h": "#5a5a66",
+"img": "https://media.auraprint.com.au/a/ws/m8110l/storm-grey.webp",
+"back": "https://media.auraprint.com.au/a/ws/m8110l/storm-grey-b.webp"
+},
+{
+"n": "White",
+"h": "#dedede",
+"img": "https://media.auraprint.com.au/a/ws/m8110l/white.webp",
+"back": "https://media.auraprint.com.au/a/ws/m8110l/white-b.webp"
+}
+],
+"gallery": [],
+"prices": [
+{
+"c": null,
+"s": [
+"6",
+"8",
+"10",
+"12",
+"14",
+"16",
+"18",
+"20",
+"22",
+"24",
+"26"
+],
+"x": 40.8
+}
+],
+"from_ex": 40.8,
+"from_inc": 44.88,
+"to_inc": 44.88,
+"stock": "ws",
+"slug": "benchmark-m8110l-barkley-ladies-taped-seam-long-sleeve-shirt"
+},
+{
+"id": "ws-m8110q",
+"brand": "Benchmark",
+"bslug": "ws",
+"code": "M8110Q",
+"name": "Barkley Ladies Taped Seam 3/4 Sleeve Shirt",
+"cat": "shirts",
+"gender": "women",
+"tag": "",
+"fabric": "60% Cotton / 40% Polyester with Easy Care",
+"fit": "Semi-Fitted",
+"desc": "",
+"features": [
+"BARKLEY",
+"The Barkley Range is the perfect Professional Cotton Rich Easy Care shirt. The fabric design is a Dobby Self stripe, whilst construction of the range presents a quality enhanced ‘Taped Seam’ feature."
+],
+"chart": {},
+"chart_sizes": null,
+"chart_img": "https://s3.amazonaws.com/ws-au-imgs/size_chart/M8110Q_size.jpg",
+"industries": [],
+"stylesheet": "https://ws-au-imgs.s3.amazonaws.com/snapshot/M8110Q.pdf",
+"carton": null,
+"sizes": [
+"6",
+"8",
+"10",
+"12",
+"14",
+"16",
+"18",
+"20",
+"22",
+"24",
+"26"
+],
+"colours": [
+{
+"n": "Navy",
+"h": "#424266",
+"img": "https://media.auraprint.com.au/a/ws/m8110q/navy.webp",
+"back": "https://media.auraprint.com.au/a/ws/m8110q/navy-b.webp"
+},
+{
+"n": "Soft Pink",
+"h": "#dec6d2",
+"img": "https://media.auraprint.com.au/a/ws/m8110q/soft-pink.webp",
+"back": "https://media.auraprint.com.au/a/ws/m8110q/soft-pink-b.webp"
+},
+{
+"n": "Storm Grey",
+"h": "#72727e",
+"img": "https://media.auraprint.com.au/a/ws/m8110q/storm-grey.webp",
+"back": "https://media.auraprint.com.au/a/ws/m8110q/storm-grey-b.webp"
+},
+{
+"n": "White",
+"h": "#dedede",
+"img": "https://media.auraprint.com.au/a/ws/m8110q/white.webp",
+"back": "https://media.auraprint.com.au/a/ws/m8110q/white-b.webp"
+}
+],
+"gallery": [],
+"prices": [
+{
+"c": null,
+"s": [
+"6",
+"8",
+"10",
+"12",
+"14",
+"16",
+"18",
+"20",
+"22",
+"24",
+"26"
+],
+"x": 39.2
+}
+],
+"from_ex": 39.2,
+"from_inc": 43.12,
+"to_inc": 43.12,
+"stock": "ws",
+"slug": "benchmark-m8110q-barkley-ladies-taped-seam-3-4-sleeve-shirt"
+},
+{
+"id": "ws-m8110s",
+"brand": "Benchmark",
+"bslug": "ws",
+"code": "M8110S",
+"name": "Barkley Ladies Taped Seam Short Sleeve Shirt",
+"cat": "shirts",
+"gender": "women",
+"tag": "",
+"fabric": "60% Cotton / 40% Polyester with Easy Care",
+"fit": "Semi-Fitted",
+"desc": "",
+"features": [
+"BARKLEY",
+"The Barkley Range is the perfect Professional Cotton Rich Easy Care shirt. The fabric design is a Dobby Self stripe, whilst construction of the range presents a quality enhanced ‘Taped Seam’ feature."
+],
+"chart": {},
+"chart_sizes": null,
+"chart_img": "https://s3.amazonaws.com/ws-au-imgs/size_chart/M8110S_size.jpg",
+"industries": [],
+"stylesheet": "https://ws-au-imgs.s3.amazonaws.com/snapshot/M8110S.pdf",
+"carton": null,
+"sizes": [
+"6",
+"8",
+"10",
+"12",
+"14",
+"16",
+"18",
+"20",
+"22",
+"24",
+"26"
+],
+"colours": [
+{
+"n": "Navy",
+"h": "#424e66",
+"img": "https://media.auraprint.com.au/a/ws/m8110s/navy.webp",
+"back": "https://media.auraprint.com.au/a/ws/m8110s/navy-b.webp"
+},
+{
+"n": "Soft Pink",
+"h": "#eadeea",
+"img": "https://media.auraprint.com.au/a/ws/m8110s/soft-pink.webp",
+"back": "https://media.auraprint.com.au/a/ws/m8110s/soft-pink-b.webp"
+},
+{
+"n": "Storm Grey",
+"h": "#666672",
+"img": "https://media.auraprint.com.au/a/ws/m8110s/storm-grey.webp",
+"back": "https://media.auraprint.com.au/a/ws/m8110s/storm-grey-b.webp"
+},
+{
+"n": "White",
+"h": "#d2d2d2",
+"img": "https://media.auraprint.com.au/a/ws/m8110s/white.webp",
+"back": "https://media.auraprint.com.au/a/ws/m8110s/white-b.webp"
+}
+],
+"gallery": [
+"https://media.auraprint.com.au/a/ws/m8110s/g0.webp"
+],
+"prices": [
+{
+"c": null,
+"s": [
+"6",
+"8",
+"10",
+"12",
+"14",
+"16",
+"18",
+"20",
+"22",
+"24",
+"26"
+],
+"x": 38.24
+}
+],
+"from_ex": 38.24,
+"from_inc": 42.06,
+"to_inc": 42.06,
+"stock": "ws",
+"slug": "benchmark-m8110s-barkley-ladies-taped-seam-short-sleeve-shirt"
 },
 {
 "id": "ws-m8113",
