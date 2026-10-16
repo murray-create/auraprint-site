@@ -155,7 +155,7 @@ function renderGrid(){
   var total = list.length; list = list.slice(0, S.show);
   $('#ubGrid').innerHTML = list.map(function(g){
     var img = photoFor(g), sw = g.swatches||[];
-    var dots = sw.slice(0,10).map(function(s){ return '<i style="background:'+esc(s.h||'#ddd')+'" title="'+esc(s.n)+'"></i>'; }).join('') + (sw.length>10 ? '<em>+'+(sw.length-10)+'</em>' : '');
+    var dots = sw.slice(0,10).map(function(s){ return '<i style="background:'+esc(s.g||s.h||'#ddd')+'" title="'+esc(s.n)+'"></i>'; }).join('') + (sw.length>10 ? '<em>+'+(sw.length-10)+'</em>' : '');
     return '<button type="button" class="ub-card" data-code="'+esc(keyOf(g))+'" aria-label="Add '+esc(g.name)+' to your order">'+
       '<div class="ph">'+(img ? '<img src="'+esc(img)+'" alt="" loading="lazy" width="170" height="170">' : '<span class="noimg">Photo on request</span>')+
         (inOrder[keyOf(g)] ? '<span class="in-order">'+inOrder[keyOf(g)]+' in order</span>' : '')+'</div>'+
@@ -230,7 +230,7 @@ function renderCfg(){
   $('#ubCols').innerHTML = sw.length ?
     '<div class="ub-sw" role="radiogroup" aria-label="Colour">'+sw.map(function(s){
       var on = s.n === e.colour;
-      return '<button type="button" role="radio" aria-checked="'+on+'" class="'+(on?'on':'')+'" data-col="'+esc(s.n)+'" title="'+esc(s.n)+'" aria-label="'+esc(s.n)+'" style="background:'+esc(s.h||'#ddd')+'"></button>';
+      return '<button type="button" role="radio" aria-checked="'+on+'" class="'+(on?'on':'')+'" data-col="'+esc(s.n)+'" title="'+esc(s.n)+'" aria-label="'+esc(s.n)+'" style="background:'+esc(s.g||s.h||'#ddd')+'"></button>';
     }).join('')+'</div>' :
     '<p class="hint">Colours for this style are confirmed on your quote. Tell us the colour you want.</p><input class="ub-colin" id="ubColIn" maxlength="60" placeholder="e.g. Navy" value="'+esc(e.colour)+'">';
   // sizes
@@ -505,7 +505,7 @@ function fromShop(x){
   return { code:x.c, shop_id:x.id, brand:x.b, name:x.n, cat:SHOP_CAT[x.k] || x.k, fabric:'', sizes:(x.sz||[]).join(', '),
            url:'/apparel/p/' + x.u + '.html', from_inc:x.p,
            size_list:(x.sz && x.sz.length && x.sz[0] !== 'OSFA') ? x.sz : ['One size'],
-           swatches:(x.cl||[]).map(function(c){ return { n:c[0], h:c[1], img:c[2] }; }) };
+           swatches:(x.cl||[]).map(function(c){ return { n:c[0], h:c[1], img:c[2], g:c[3] }; }) };
 }
 function init(){
   var shop = fetch('/data/apparel/index.json?v=' + (window.UB_VER||'1')).then(function(r){ return r.ok ? r.json() : []; }).catch(function(){ return []; });

@@ -70,7 +70,7 @@ function famOf(hex){
 }
 function cardHtml(x){
   var cl = x.cl || [], dots = cl.slice(0, 9).map(function(c){
-    return '<button type="button" style="background:'+esc(c[1])+'" title="'+esc(c[0])+'" data-img="'+esc(c[2]||'')+'"></button>'; }).join('');
+    return '<button type="button" style="background:'+esc(c[3]||c[1])+'" title="'+esc(c[0])+'" data-img="'+esc(c[2]||'')+'"></button>'; }).join('');
   var fam = {}; cl.forEach(function(c){ var f = famOf(c[1]); if (f) fam[f] = 1; });
   var badges = (x.s ? '<span class="ap-badge live">Live stock</span>' : '') + (x.t ? '<span class="ap-badge new">'+esc(x.t)+'</span>' : '');
   return '<article class="ap-card" data-b="'+esc(x.b)+'" data-g="'+esc(x.g)+'" data-k="'+esc(x.k)+'" data-p="'+x.p+'" data-f="'+Object.keys(fam).join(' ')+'" data-n="'+esc((x.b+' '+x.c+' '+x.n+' '+cl.map(function(c){return c[0];}).join(' ')).toLowerCase())+'">'+
@@ -208,7 +208,7 @@ function initPdp(root){
   function buildGrid(){
     var head = '<tr><th>Colour</th>' + sizes.map(function(s){ return '<th>'+esc(s === 'OSFA' ? 'Qty' : s)+'</th>'; }).join('') + '</tr>';
     var rows = cols.map(function(c, ci){
-      return '<tr data-ci="'+ci+'"><td><i style="background:'+esc(c.h)+'"></i>'+esc(c.n)+'</td>' + sizes.map(function(sz){
+      return '<tr data-ci="'+ci+'"><td><i style="background:'+esc(c.g||c.h)+'"></i>'+esc(c.n)+'</td>' + sizes.map(function(sz){
         var p = exPrice(ci, sz); if (p == null) return '<td class="na">–</td>';
         var q = stockOf(ci, sz), ph = q == null ? '' : (q <= 0 ? 'Out' : stockLabel(q) + ' avail.');
         return '<td><input type="number" inputmode="numeric" min="0" step="1" data-ci="'+ci+'" data-s="'+esc(sz)+'" placeholder="'+ph+'" aria-label="'+esc(c.n+' '+sz)+'"></td>';
