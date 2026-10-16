@@ -15,10 +15,8 @@
   .lbl{font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--mut);font-weight:600;margin-bottom:3px}
   .topbar{display:flex;justify-content:space-between;align-items:flex-start;gap:20px}
   h1{font-family:'Archivo Black',sans-serif;font-size:38px;margin:0 0 26px;letter-spacing:-.01em}
-  .brand{font-family:'Archivo Black',sans-serif;font-size:19px;text-align:right;line-height:1.1}
-  .brand::before{content:"";display:block;width:92px;height:40px;margin:0 0 9px auto;
-    background:url(assets/aura-mark.svg) no-repeat right center/contain}
-  .brand span{color:var(--pink)}
+  .brand{text-align:right;line-height:0}
+  .brand img{display:block;width:230px;max-width:100%;height:auto;margin-left:auto}
   .meta{display:flex;gap:44px;flex-wrap:wrap;margin-bottom:30px}
   .meta .v{font-weight:700;font-size:15px}
   .seller{text-align:right;font-size:13px;color:#444}
@@ -187,7 +185,7 @@
 
     var h = '<div class="page">'+
       '<div class="topbar"><h1>Quote</h1>'+
-      '<div><div class="brand">AURA <span>PRINT</span><br>&amp; PROMO</div></div></div>'+
+      '<div><div class="brand"><img src="assets/auraprint-lockup-colour.svg" alt="Aura Print"></div></div></div>'+
 
       '<div class="topbar" style="margin-bottom:26px">'+
       '<div class="meta">'+
