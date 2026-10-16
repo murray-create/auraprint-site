@@ -270,5 +270,18 @@ document.addEventListener('DOMContentLoaded', function(){
   var l = $('[data-ap-list]'); if (l) initList(l);
   var p = $('[data-ap-pdp]'); if (p) initPdp(p);
   pill();
+  foldChips();
 });
+/* Brand and category chips wrap onto extra lines on desktop. On a phone, rows with
+   more than 6 chips show the first 6 plus a "+N more" chip that opens the rest. */
+function foldChips(){
+  $$('.ap-chips').forEach(function(ch){
+    var bs = $$('button', ch); if (bs.length <= 7 || $('.ap-more', ch)) return;
+    bs.slice(6).forEach(function(b){ b.classList.add('ap-x'); });
+    var m = document.createElement('button'); m.type = 'button'; m.className = 'ap-more';
+    m.textContent = '+' + (bs.length - 6) + ' more'; ch.appendChild(m); ch.classList.add('fold');
+    m.addEventListener('click', function(e){ e.stopPropagation(); ch.classList.remove('fold'); });
+    ch.addEventListener('click', function(e){ var b = e.target.closest('button'); if (b && b.classList.contains('ap-x')) ch.classList.remove('fold'); });
+  });
+}
 })();

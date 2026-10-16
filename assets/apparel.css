@@ -25,8 +25,9 @@
 .ap-tools .wrap{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
 .ap-tools input[type=search]{flex:1 1 220px;min-width:0;font:500 15px Inter,sans-serif;padding:11px 16px;border:1.5px solid #e2dcd4;border-radius:999px;background:#fff}
 .ap-tools select{font:600 13.5px Inter,sans-serif;padding:10px 12px;border:1.5px solid #e2dcd4;border-radius:999px;background:#fff;color:var(--ink);max-width:100%}
-.ap-chips{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;width:100%;padding-top:2px}
-.ap-chips::-webkit-scrollbar{display:none}
+.ap-chips{display:flex;flex-wrap:wrap;align-items:center;align-content:flex-start;gap:6px;width:100%;padding-top:2px}
+.ap-chips .ap-more{display:none;border-style:dashed;color:#6b645c}
+@media(max-width:700px){.ap-chips.fold .ap-x{display:none}.ap-chips.fold .ap-more{display:inline-block}}
 .ap-chips button{flex:0 0 auto;font:600 13px Inter,sans-serif;padding:7px 13px;border-radius:999px;border:1.5px solid #e2dcd4;background:#fff;cursor:pointer;color:var(--ink);white-space:nowrap}
 .ap-chips button.on{background:var(--ink);border-color:var(--ink);color:#fff}
 .ap-count{font-size:13px;color:#8a847d;margin:16px 0 10px}
