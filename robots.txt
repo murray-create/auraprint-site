@@ -4,5 +4,6 @@ Disallow: /admin.html
 Disallow: /crm.html
 Disallow: /tools/
 Disallow: /data/
+Allow: /data/apparel/index.json
 
 Sitemap: https://auraprint.com.au/sitemap.xml
