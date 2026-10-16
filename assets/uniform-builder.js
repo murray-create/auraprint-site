@@ -23,7 +23,7 @@ var METHODS = [
   { id:'Not sure',    short:'We will recommend one.' }
 ];
 
-var S = { range:[], byCode:{}, lines:[], cat:'all', brand:'', q:'', edit:null, files:[], show:PAGE };
+var S = { range:[], byCode:{}, lines:[], cat:'all', brand:'', q:'', edit:null, files:[], fileRefs:[], show:PAGE };
 function keyOf(g){ return g.shop_id || g.code; }
 
 /* ---------- helpers ---------- */
@@ -38,7 +38,9 @@ function restore(){
   try {
     var d = JSON.parse(localStorage.getItem(DRAFT_KEY) || 'null');
     if (d && Array.isArray(d.lines) && Date.now() - (d.saved||0) < 30*864e5)
-      S.lines = d.lines.filter(function(l){ return S.byCode[l.code]; });
+      S.lines = d.lines.filter(function(l){ return S.byCode[l.code]; }).map(function(l){
+        (l.decorations||[]).forEach(function(x){ if (!x.logo) x.logo = 'A'; if (!x.size) x.size = 'standard'; });
+        return l; });
   } catch(e){}
 }
 function track(name, p){ try { if (window.auraTrack) window.auraTrack(name, p||{}); } catch(e){} }
@@ -56,6 +58,19 @@ var POSITIONS = {
   cap:   [['Cap',['Front','Left side','Right side','Back']]],
   apron: [['Apron',['Bib / chest','Pocket','Waist']]]
 };
+/* Logo size and which logo goes where (16 Oct 2026).
+   Guide widths in mm only where a published Australian source gives one, the same
+   figures as uniform-decoration.html and the CRM's POS_GUIDE. No figure means we
+   confirm it. The size is a guide for the quote: stitch count, and so the embroidery
+   price, is only known once the logo is digitised. */
+var GUIDE = { 'Left chest':[80,100], 'Right chest':[70,100], 'Centre front':[180,260], 'Upper back':[200,280],
+  'Full back':[250,350], 'Left sleeve':[50,75], 'Right sleeve':[50,75] };
+var CAP_GUIDE = { 'Front':[90,120], 'Left side':[40,70], 'Right side':[40,70] };
+function guideFor(g, pos){ var sh = shapeOf(g); return (sh === 'cap' ? CAP_GUIDE : sh === 'apron' ? {} : GUIDE)[pos] || null; }
+var LOGOS = [['A','Logo A'],['B','Logo B'],['C','Logo C'],['T','Text or names']];
+function logoName(k){ var m = LOGOS.filter(function(x){ return x[0] === (k||'A'); })[0]; return m ? m[1] : 'Logo A'; }
+function sizeTxt(d){ return d.size === 'custom' && +d.width_mm ? (+d.width_mm) + 'mm wide' : 'standard size'; }
+function newDeco(g, pos, method){ return { position:pos, method:method, logo:'A', size:'standard', width_mm:null }; }
 function defaultMethod(g){
   if (g.cat === 'tees') return 'DTF print';
   return 'Embroidery';
@@ -171,7 +186,7 @@ function renderGrid(){
 /* ---------- order panel ---------- */
 function lineSummary(l){
   var sz = Object.keys(l.sizes).filter(function(k){ return +l.sizes[k] > 0; }).map(function(k){ return k+' '+l.sizes[k]; }).join(', ');
-  var dec = (l.decorations||[]).map(function(d){ return d.method + ' ' + d.position.toLowerCase(); }).join(', ');
+  var dec = (l.decorations||[]).map(function(d){ return d.method + ' ' + d.position.toLowerCase() + ' (' + logoName(d.logo) + ', ' + sizeTxt(d) + ')'; }).join('; ');
   return { sz:sz, dec:dec || 'Decoration not chosen' };
 }
 function renderPanel(){
@@ -201,9 +216,9 @@ function openCfg(code, lineId){
   S.edit = line ? JSON.parse(JSON.stringify(line)) : {
     id:null, code:code, colour:(g.swatches&&g.swatches[0]&&g.swatches[0].n)||'', sizes:{}, decorations:[], notes:''
   };
-  if (!line && (g.cat === 'caps' || shapeOf(g)==='apron')) S.edit.decorations = [{ position: shapeOf(g)==='cap' ? 'Front' : 'Bib / chest', method:'Embroidery' }];
-  else if (!line && g.cat !== 'tees') S.edit.decorations = [{ position:'Left chest', method:defaultMethod(g) }];
-  else if (!line) S.edit.decorations = [{ position:'Centre front', method:'DTF print' }];
+  if (!line && (g.cat === 'caps' || shapeOf(g)==='apron')) S.edit.decorations = [newDeco(g, shapeOf(g)==='cap' ? 'Front' : 'Bib / chest', 'Embroidery')];
+  else if (!line && g.cat !== 'tees') S.edit.decorations = [newDeco(g, 'Left chest', defaultMethod(g))];
+  else if (!line) S.edit.decorations = [newDeco(g, 'Centre front', 'DTF print')];
   var d = $('#ubDlg');
   $('#ubDBrand').textContent = g.brand + ' · ' + g.code + ' · ' + catLabel(g.cat);
   $('#ubDName').textContent = g.name;
@@ -256,10 +271,22 @@ function renderCfg(){
       return '<div style="margin-bottom:12px"><p class="hint" style="margin:0 0 6px"><b style="color:#0F0F10">'+esc(d.position)+'</b></p><div class="ub-meth">'+
         METHODS.map(function(m){
           return '<button type="button" data-i="'+i+'" data-meth="'+esc(m.id)+'" class="'+(d.method===m.id?'on':'')+'" aria-pressed="'+(d.method===m.id)+'"><b>'+esc(m.id)+'</b><small>'+esc(m.short)+'</small>'+(m.id===rec?'<span class="rec">Our pick</span>':'')+'</button>';
-        }).join('')+'</div></div>';
-    }).join('');
+        }).join('')+'</div>'+decoOpts(g, d, i)+'</div>';
+    }).join('') + (e.decorations.length ? '<p class="hint" style="margin-top:2px">Sizes are a guide for your quote. We confirm the exact size on your proof before anything is made.</p>' : '');
   $('#ubNotes').value = e.notes || '';
   updateCfgTotals();
+}
+function decoOpts(g, d, i){
+  var gd = guideFor(g, d.position), lg = d.logo || 'A', custom = d.size === 'custom';
+  return '<div class="ub-dopt"><span class="ub-dl">Logo</span><div class="ub-pos ub-pos-sm">'+
+      LOGOS.map(function(x){ var on = lg === x[0]; return '<button type="button" data-i="'+i+'" data-logo="'+x[0]+'" class="'+(on?'on':'')+'" aria-pressed="'+on+'">'+esc(x[1])+'</button>'; }).join('')+
+    '</div></div>'+
+    '<div class="ub-dopt"><span class="ub-dl">Size</span><div class="ub-pos ub-pos-sm">'+
+      '<button type="button" data-i="'+i+'" data-dsize="standard" class="'+(!custom?'on':'')+'" aria-pressed="'+!custom+'">Standard'+(gd ? ' ('+gd[0]+' to '+gd[1]+'mm wide)' : '')+'</button>'+
+      '<button type="button" data-i="'+i+'" data-dsize="custom" class="'+(custom?'on':'')+'" aria-pressed="'+custom+'">Set a width</button>'+
+      (custom ? '<label class="ub-wmm"><input type="number" inputmode="numeric" min="10" max="600" step="5" data-wmm="'+i+'" value="'+esc(d.width_mm||'')+'" placeholder="'+(gd ? Math.round((gd[0]+gd[1])/2/5)*5 : 'e.g. 90')+'" aria-label="Logo width in mm for '+esc(d.position)+'"> mm wide</label>' : '')+
+    '</div></div>'+
+    (lg === 'T' ? '<p class="hint" style="margin:4px 0 0">Put the text, or the list of names and sizes, in the notes below.</p>' : '');
 }
 function advice(){
   var e = S.edit, g = S.byCode[e.code], q = qtyOf(e), out = [];
@@ -271,7 +298,7 @@ function advice(){
   if (g.cat === 'caps' && q && q < 12)
     out.push(['warn','Caps are usually decorated in runs of 12 or more. Fewer is possible, we will confirm on the quote.']);
   if (methods['Embroidery'])
-    out.push(['','Embroidery is priced on stitch count. Each new logo needs a one-off setup, which we keep on file so reorders do not pay it again.']);
+    out.push(['','Embroidery is priced on stitch count, which we confirm once your logo is digitised. The size you choose here is a guide for your quote. Each new logo needs a one-off digitising setup, which we keep on file so reorders do not pay it again.']);
   if (methods['DTF print'])
     out.push(['','DTF prints full colour with no setup, so it suits small runs, detailed logos and staff names.']);
   if (e.decorations.some(function(d){ return d.position === 'Full front' || d.position === 'Full back'; }) && methods['Embroidery'] && !methods['DTF print'])
@@ -288,6 +315,8 @@ function saveCfg(){
   var e = S.edit, g = S.byCode[e.code];
   if (!qtyOf(e)){ $('#ubDErr').textContent = 'Enter a quantity for at least one size.'; var f=$('.ub-sizes input'); if(f) f.focus(); return; }
   if ((g.swatches||[]).length && !e.colour){ $('#ubDErr').textContent = 'Choose a colour.'; return; }
+  var noW = e.decorations.filter(function(d){ return d.size === 'custom' && !(+d.width_mm >= 10); })[0];
+  if (noW){ $('#ubDErr').textContent = 'Enter a width in mm for ' + noW.position.toLowerCase() + ', or choose Standard.'; var w = $('input[data-wmm]'); if (w) w.focus(); return; }
   e.notes = $('#ubNotes').value.trim().slice(0,600);
   e.photo = photoFor(g, e.colour); e.colour_hex = hexFor(g, e.colour);
   Object.keys(e.sizes).forEach(function(k){ if (!(+e.sizes[k] > 0)) delete e.sizes[k]; });
@@ -311,7 +340,7 @@ function showSend(on){
   panel.classList.remove('open'); $('#ubShade').hidden = true;
   $('#ubBar').hidden = on;
   window.scrollTo({ top: $('.ub-anchor').offsetTop - 70, behavior:'smooth' });
-  if (on) track('uniform_builder_review', { lines:S.lines.length, qty:totalQty() });
+  if (on){ renderFiles(); track('uniform_builder_review', { lines:S.lines.length, qty:totalQty() }); }
 }
 var EXT_OK = /\.(pdf|ai|eps|svg|png|jpe?g|webp)$/i;
 function addFiles(list){
@@ -319,13 +348,37 @@ function addFiles(list){
     if (S.files.length >= 5) return;
     if (!EXT_OK.test(f.name)){ alert(f.name + ' is not a logo file we can use. Please send PDF, AI, EPS, SVG, PNG or JPG.'); return; }
     if (f.size > 25*1024*1024){ alert(f.name + ' is over 25 MB. Paste a WeTransfer or Dropbox link in the notes instead.'); return; }
-    S.files.push(f);
+    S.files.push(f); S.fileRefs.push(nextRef());
   });
   renderFiles();
 }
+/* Which logo letters the order uses, and where. */
+function logoUse(){
+  var use = {};
+  S.lines.forEach(function(l){ var g = S.byCode[l.code];
+    (l.decorations||[]).forEach(function(d){ var k = d.logo || 'A'; if (k === 'T') return;
+      (use[k] = use[k] || []).push((g ? g.name : l.code) + ', ' + d.position.toLowerCase()); }); });
+  return use;
+}
+function nextRef(){
+  var used = Object.keys(logoUse()).sort(), taken = S.fileRefs;
+  var free = used.filter(function(k){ return taken.indexOf(k) < 0; })[0];
+  return free || (taken.indexOf('A') < 0 ? 'A' : 'X');
+}
 function renderFiles(){
+  var use = logoUse(), keys = Object.keys(use).sort();
+  $('#ubLogoPlan').innerHTML = keys.length > 1 || (keys.length === 1 && keys[0] !== 'A') ?
+    '<div class="ub-plan"><b>Your order uses '+keys.length+' logo'+(keys.length===1?'':'s')+'</b>'+keys.map(function(k){
+      var has = S.fileRefs.indexOf(k) > -1;
+      return '<p><span class="tag">'+esc(logoName(k))+'</span> '+esc(use[k].slice(0,4).join('; '))+(use[k].length>4?' and '+(use[k].length-4)+' more':'')+
+        (has ? '' : ' <em>No file yet</em>')+'</p>';
+    }).join('')+'<p class="sub">Upload each one, then tell us which file is which.</p></div>' : '';
   $('#ubFiles').innerHTML = S.files.map(function(f, i){
-    return '<li><span>'+esc(f.name)+' <small style="color:#8a847d">'+(f.size/1048576).toFixed(1)+' MB</small></span><button type="button" data-rmf="'+i+'">Remove</button></li>';
+    var r = S.fileRefs[i] || 'A';
+    return '<li><span>'+esc(f.name)+' <small style="color:#8a847d">'+(f.size/1048576).toFixed(1)+' MB</small></span>'+
+      '<span class="ub-fr"><select data-ref="'+i+'" aria-label="Which logo is '+esc(f.name)+'">'+
+        [['A','Logo A'],['B','Logo B'],['C','Logo C'],['X','Extra file']].map(function(o){ return '<option value="'+o[0]+'"'+(o[0]===r?' selected':'')+'>'+o[1]+'</option>'; }).join('')+
+      '</select><button type="button" data-rmf="'+i+'">Remove</button></span></li>';
   }).join('');
 }
 function auMobile(raw){
@@ -374,7 +427,7 @@ function submit(ev){
       return { brand:g.brand, code:g.code, shop_id:g.shop_id||null, from_inc:g.from_inc||null, name:g.name, cat:g.cat, colour:l.colour, colour_hex:l.colour_hex, photo:l.photo,
                sizes:l.sizes, decorations:l.decorations, notes:l.notes };
     }),
-    logos:S.files.map(function(x){ return { filename:x.name, size_bytes:x.size, content_type:x.type }; })
+    logos:S.files.map(function(x, i){ return { filename:x.name, size_bytes:x.size, content_type:x.type, logo_ref:S.fileRefs[i] || 'A' }; })
   };
   post('/functions/v1/uniform-request', payload).then(function(res){
     if (!res || !res.ok) throw new Error(res && res.error || 'failed');
@@ -411,7 +464,7 @@ function submit(ev){
       }
       track('generate_lead', { form_name:'Uniform order builder', page_path:location.pathname, stored:true, emailed:!!CFG.web3formsKey });
       try { if (window.auraAdsConvert) window.auraAdsConvert('lead'); } catch(e){}
-      S.lines = []; S.files = []; store();
+      S.lines = []; S.files = []; S.fileRefs = []; store();
       $('#ubDoneRef').textContent = res.ref;
       $('#ubDoneQty').textContent = res.total_qty;
       $('#ubDoneFiles').hidden = !failed;
@@ -467,13 +520,26 @@ function wire(){
     if (idx > -1) ds.splice(idx, 1);
     else {
       if (ds.length >= 6) return;
-      ds.push({ position:p, method:recommended(S.byCode[S.edit.code], p) });
+      ds.push(newDeco(S.byCode[S.edit.code], p, recommended(S.byCode[S.edit.code], p)));
     }
     renderCfg();
   });
   $('#ubMeth').addEventListener('click', function(e){
     var b = e.target.closest('button[data-meth]'); if (!b) return;
     S.edit.decorations[+b.dataset.i].method = b.dataset.meth; renderCfg();
+  });
+  $('#ubMeth').addEventListener('click', function(e){
+    var b = e.target.closest('button[data-logo],button[data-dsize]'); if (!b) return;
+    var d = S.edit.decorations[+b.dataset.i]; if (!d) return;
+    if (b.dataset.logo) d.logo = b.dataset.logo;
+    else { d.size = b.dataset.dsize; if (d.size === 'standard') d.width_mm = null; }
+    renderCfg();
+    if (b.dataset.dsize === 'custom'){ var w = $('input[data-wmm="'+b.dataset.i+'"]'); if (w) w.focus(); }
+  });
+  $('#ubMeth').addEventListener('input', function(e){
+    var t = e.target; if (!t.dataset || t.dataset.wmm == null) return;
+    var d = S.edit.decorations[+t.dataset.wmm]; if (!d) return;
+    var n = Math.floor(+t.value || 0); d.width_mm = n > 0 ? Math.min(600, n) : null; $('#ubDErr').textContent = '';
   });
   $('#ubDSave').addEventListener('click', saveCfg);
   // panel / mobile bar
@@ -491,7 +557,8 @@ function wire(){
   ['dragenter','dragover'].forEach(function(t){ drop.addEventListener(t, function(e){ e.preventDefault(); drop.classList.add('over'); }); });
   ['dragleave','drop'].forEach(function(t){ drop.addEventListener(t, function(e){ e.preventDefault(); drop.classList.remove('over'); }); });
   drop.addEventListener('drop', function(e){ if (e.dataTransfer) addFiles(e.dataTransfer.files); });
-  $('#ubFiles').addEventListener('click', function(e){ var b = e.target.closest('button[data-rmf]'); if (b){ S.files.splice(+b.dataset.rmf, 1); renderFiles(); } });
+  $('#ubFiles').addEventListener('click', function(e){ var b = e.target.closest('button[data-rmf]'); if (b){ S.files.splice(+b.dataset.rmf, 1); S.fileRefs.splice(+b.dataset.rmf, 1); renderFiles(); } });
+  $('#ubFiles').addEventListener('change', function(e){ var t = e.target; if (t.dataset && t.dataset.ref != null){ S.fileRefs[+t.dataset.ref] = t.value; renderFiles(); } });
   $('#ubForm').addEventListener('submit', submit);
 }
 

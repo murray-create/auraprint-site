@@ -203,3 +203,20 @@
   .ub-place p{display:none}
   .ub-facts{font-size:12px}
 }
+
+/* logo + size per position (16 Oct 2026) */
+.ub-dopt{display:flex;align-items:flex-start;gap:10px;margin:8px 0 0}
+.ub-dl{flex:0 0 40px;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:#a09a93;font-weight:700;padding-top:8px}
+.ub-pos-sm{flex:1;min-width:0}
+.ub-pos-sm button{font-size:12.5px;padding:6px 11px}
+.ub-wmm{display:inline-flex;align-items:center;gap:6px;font-size:13px;color:#6b6560}
+.ub-wmm input{width:84px;font:600 14px Inter,sans-serif;padding:6px 8px;border:1.5px solid #7C3AED;border-radius:9px}
+.ub-plan{background:#F7F3FF;border:1px solid #E4DAFB;border-radius:12px;padding:12px 14px;margin:0 0 12px;font-size:13px;line-height:1.5}
+.ub-plan b{display:block;margin-bottom:4px}
+.ub-plan p{margin:4px 0;overflow-wrap:anywhere}
+.ub-plan .tag{display:inline-block;font-weight:800;font-size:11.5px;background:#7C3AED;color:#fff;border-radius:99px;padding:1px 8px}
+.ub-plan em{font-style:normal;font-weight:700;color:#b45309}
+.ub-plan .sub{color:#6b6560;font-size:12.5px}
+.ub-fr{display:flex;align-items:center;gap:8px;flex:0 0 auto}
+.ub-fr select{font:600 12.5px Inter,sans-serif;padding:5px 6px;border:1.5px solid #e2dcd4;border-radius:8px;background:#fff}
+@media (max-width:560px){ .ub-files li{flex-wrap:wrap} .ub-dopt{flex-direction:column;gap:4px} .ub-dl{padding-top:0} }
