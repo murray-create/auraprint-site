@@ -3732,6 +3732,256 @@
 "slug": "biz-corporates-ra972l-leather-womens-belt"
 },
 {
+"id": "fb-x2006m",
+"brand": "Goodmates",
+"bslug": "fb",
+"code": "X2006M",
+"name": "Everyday Mens 1/4 Zip",
+"cat": "accessories",
+"gender": "men",
+"tag": "",
+"fabric": "80% Cotton 20% Recycled Polyester Brushed Fleece, 350gsm, Cold machine wash. Wash with like colours.Do not bleach. Do not tumble dry. Line dry in shade. Low iron on reverse. Do not dry clean.",
+"fit": "",
+"desc": "",
+"features": [
+"With its relaxed fit, 1/4 zip closure, and super-soft brushed fleece, the Everyday 1/2 Zip is your go-to for in-between weather, on-the-go comfort, or casual days when the couch is calling (but life is too). It gives you room to breathe while still feeling put together.",
+"Ribbed cuff and waist band. 1/4 Zip."
+],
+"chart": {},
+"chart_sizes": null,
+"chart_img": null,
+"industries": [],
+"stylesheet": "https://cdn.fashionbizapps.nz/honeybee/stylesheets/GOODMATES_-_Product_Sheet_-_Everyday_-_X2006M_3qDc8Sg.pdf",
+"carton": null,
+"sizes": [
+"S",
+"M",
+"L",
+"XL",
+"2XL",
+"3XL"
+],
+"colours": [
+{
+"n": "Navy",
+"h": "#393b47",
+"img": "https://media.auraprint.com.au/a/fb/x2006m/navy.webp",
+"back": "https://media.auraprint.com.au/a/fb/x2006m/navy-b.webp"
+},
+{
+"n": "Ecru",
+"h": "#f9f4ea",
+"img": "https://media.auraprint.com.au/a/fb/x2006m/ecru.webp",
+"back": "https://media.auraprint.com.au/a/fb/x2006m/ecru-b.webp"
+},
+{
+"n": "Espresso",
+"h": "#4f3429",
+"img": "https://media.auraprint.com.au/a/fb/x2006m/espresso.webp",
+"back": "https://media.auraprint.com.au/a/fb/x2006m/espresso-b.webp"
+},
+{
+"n": "Scarab Green",
+"h": "#1a3e34",
+"img": "https://media.auraprint.com.au/a/fb/x2006m/scarab-green.webp",
+"back": "https://media.auraprint.com.au/a/fb/x2006m/scarab-green-b.webp"
+},
+{
+"n": "Black",
+"h": "#000000",
+"img": "https://media.auraprint.com.au/a/fb/x2006m/black.webp",
+"back": "https://media.auraprint.com.au/a/fb/x2006m/black-b.webp"
+},
+{
+"n": "Grey Marle",
+"h": "#cccccc",
+"img": "https://media.auraprint.com.au/a/fb/x2006m/grey-marle.webp",
+"back": "https://media.auraprint.com.au/a/fb/x2006m/grey-marle-b.webp"
+}
+],
+"gallery": [
+"https://media.auraprint.com.au/a/fb/x2006m/g0.webp"
+],
+"prices": [
+{
+"c": [
+0,
+1,
+2,
+3,
+4,
+5
+],
+"s": [
+"S",
+"M",
+"L",
+"XL",
+"2XL",
+"3XL"
+],
+"x": 41.6
+}
+],
+"from_ex": 41.6,
+"from_inc": 45.76,
+"to_inc": 45.76,
+"stock": "fb",
+"slug": "goodmates-x2006m-everyday-mens-1-4-zip"
+},
+{
+"id": "fb-x2006w",
+"brand": "Goodmates",
+"bslug": "fb",
+"code": "X2006W",
+"name": "Everyday Womens 1/4 Zip",
+"cat": "accessories",
+"gender": "women",
+"tag": "",
+"fabric": "80% Cotton 20% Recycled Polyester Brushed Fleece, 350gsm, Cold machine wash. Wash with like colours.Do not bleach. Do not tumble dry. Line dry in shade. Low iron on reverse. Do not dry clean.",
+"fit": "",
+"desc": "",
+"features": [
+"With its relaxed fit, 1/4 zip closure, and super-soft brushed fleece, the Everyday 1/2 Zip is your go-to for in-between weather, on-the-go comfort, or casual days when the couch is calling (but life is too). It gives you room to breathe while still feeling put together.",
+"Ribbed cuff and waist band. 1/4 Zip."
+],
+"chart": {},
+"chart_sizes": null,
+"chart_img": null,
+"industries": [],
+"stylesheet": "https://cdn.fashionbizapps.nz/honeybee/stylesheets/GOODMATES_-_Product_Sheet_-_Everyday_-_X2006W_a3oWTH8.pdf",
+"carton": null,
+"sizes": [
+"XS",
+"S",
+"M",
+"L",
+"XL",
+"2XL"
+],
+"colours": [
+{
+"n": "Ecru",
+"h": "#f9f4ea",
+"img": "https://media.auraprint.com.au/a/fb/x2006w/ecru.webp",
+"back": "https://media.auraprint.com.au/a/fb/x2006w/ecru-b.webp"
+},
+{
+"n": "Scarab Green",
+"h": "#1a3e34",
+"img": "https://media.auraprint.com.au/a/fb/x2006w/scarab-green.webp",
+"back": "https://media.auraprint.com.au/a/fb/x2006w/scarab-green-b.webp"
+},
+{
+"n": "Black",
+"h": "#000000",
+"img": "https://media.auraprint.com.au/a/fb/x2006w/black.webp",
+"back": "https://media.auraprint.com.au/a/fb/x2006w/black-b.webp"
+},
+{
+"n": "Grey Marle",
+"h": "#cccccc",
+"img": "https://media.auraprint.com.au/a/fb/x2006w/grey-marle.webp",
+"back": "https://media.auraprint.com.au/a/fb/x2006w/grey-marle-b.webp"
+},
+{
+"n": "Navy",
+"h": "#393b47",
+"img": "https://media.auraprint.com.au/a/fb/x2006w/navy.webp",
+"back": "https://media.auraprint.com.au/a/fb/x2006w/navy-b.webp"
+},
+{
+"n": "Espresso",
+"h": "#4f3429",
+"img": "https://media.auraprint.com.au/a/fb/x2006w/espresso.webp",
+"back": "https://media.auraprint.com.au/a/fb/x2006w/espresso-b.webp"
+}
+],
+"gallery": [
+"https://media.auraprint.com.au/a/fb/x2006w/g0.webp"
+],
+"prices": [
+{
+"c": [
+0,
+1,
+2,
+3,
+4,
+5
+],
+"s": [
+"XS",
+"S",
+"M",
+"L",
+"XL",
+"2XL"
+],
+"x": 41.6
+}
+],
+"from_ex": 41.6,
+"from_inc": 45.76,
+"to_inc": 45.76,
+"stock": "fb",
+"slug": "goodmates-x2006w-everyday-womens-1-4-zip"
+},
+{
+"id": "fb-x9003u",
+"brand": "Goodmates",
+"bslug": "fb",
+"code": "X9003U",
+"name": "Nylon Shopper",
+"cat": "accessories",
+"gender": "unisex",
+"tag": "New style",
+"fabric": "100% Nylon, 145gsm, Empty bag before cleaning. Wipe the exterior with a damp cloth and mild soapy water for regular maintenance. For a deeper clean, use lukewarm water, a mild detergent, and a soft brush.",
+"fit": "",
+"desc": "",
+"features": [
+"Medium-size",
+"Drawcord-style handles with cinch closure",
+"Internal storage pocket"
+],
+"chart": {},
+"chart_sizes": null,
+"chart_img": null,
+"industries": [],
+"stylesheet": "https://cdn.fashionbizapps.nz/honeybee/stylesheets/GOODMATES_-_Product_Sheet_-_Nylon_Shopper_-_X9003U.pdf",
+"carton": null,
+"sizes": [
+"FREE SIZE"
+],
+"colours": [
+{
+"n": "Black",
+"h": "#000000",
+"img": "https://media.auraprint.com.au/a/fb/x9003u/black.webp",
+"back": "https://media.auraprint.com.au/a/fb/x9003u/black-b.webp"
+}
+],
+"gallery": [
+"https://media.auraprint.com.au/a/fb/x9003u/g0.webp"
+],
+"prices": [
+{
+"c": [
+0
+],
+"s": [
+"FREE SIZE"
+],
+"x": 20.0
+}
+],
+"from_ex": 20.0,
+"from_inc": 22.0,
+"to_inc": 22.0,
+"stock": "fb",
+"slug": "goodmates-x9003u-nylon-shopper"
+},
+{
 "id": "fb-ccs149u",
 "brand": "Inaura",
 "bslug": "fb",
@@ -90711,6 +90961,886 @@
 "slug": "biz-collection-sw762m-crew-mens-zip-hoodie"
 },
 {
+"id": "fb-x1003k",
+"brand": "Goodmates",
+"bslug": "fb",
+"code": "X1003K",
+"name": "Basis Kids Hoodie",
+"cat": "hoodies",
+"gender": "kids",
+"tag": "",
+"fabric": "80% Cotton 20% Polyester Brushed Fleece, 290gsm, Cold machine wash. Wash with like colours. Do not bleach. Do not tumble dry. Line dry in shade. Low iron on reverse. Do not dry clean.",
+"fit": "",
+"desc": "",
+"features": [
+"Made from midweight 290gsm brushed fleece, the Basis Raglan Hoodie your new cosy cool. Classic raglan fit with ribbed cuffs, hem, and a kangaroo pocket up front. Soft feel, solid durability - it's your throw-on-and-go for workdays or weekends.",
+"Ribbed cuff and waist band. Front pocket."
+],
+"chart": {},
+"chart_sizes": null,
+"chart_img": null,
+"industries": [],
+"stylesheet": "https://cdn.fashionbizapps.nz/honeybee/stylesheets/GOODMATES_-_Product_Sheet_-_Basis_-_X1003K_-_X1003Y_arKYffC.pdf",
+"carton": null,
+"sizes": [
+"4",
+"6",
+"8"
+],
+"colours": [
+{
+"n": "Grey Marle",
+"h": "#cccccc",
+"img": "https://media.auraprint.com.au/a/fb/x1003k/grey-marle.webp",
+"back": "https://media.auraprint.com.au/a/fb/x1003k/grey-marle-b.webp"
+},
+{
+"n": "Black",
+"h": "#000000",
+"img": "https://media.auraprint.com.au/a/fb/x1003k/black.webp",
+"back": "https://media.auraprint.com.au/a/fb/x1003k/black-b.webp"
+},
+{
+"n": "Navy",
+"h": "#393b47",
+"img": "https://media.auraprint.com.au/a/fb/x1003k/navy.webp",
+"back": "https://media.auraprint.com.au/a/fb/x1003k/navy-b.webp"
+},
+{
+"n": "Army",
+"h": "#555124",
+"img": "https://media.auraprint.com.au/a/fb/x1003k/army.webp",
+"back": "https://media.auraprint.com.au/a/fb/x1003k/army-b.webp"
+},
+{
+"n": "Ecru",
+"h": "#f9f4ea",
+"img": "https://media.auraprint.com.au/a/fb/x1003k/ecru.webp",
+"back": "https://media.auraprint.com.au/a/fb/x1003k/ecru-b.webp"
+}
+],
+"gallery": [
+"https://media.auraprint.com.au/a/fb/x1003k/g0.webp"
+],
+"prices": [
+{
+"c": [
+0,
+1,
+2,
+3,
+4
+],
+"s": [
+"4",
+"6",
+"8"
+],
+"x": 23.2
+}
+],
+"from_ex": 23.2,
+"from_inc": 25.52,
+"to_inc": 25.52,
+"stock": "fb",
+"slug": "goodmates-x1003k-basis-kids-hoodie"
+},
+{
+"id": "fb-x1003m",
+"brand": "Goodmates",
+"bslug": "fb",
+"code": "X1003M",
+"name": "Basis Mens Hoodie",
+"cat": "hoodies",
+"gender": "men",
+"tag": "",
+"fabric": "80% Cotton 20% Polyester Brushed Fleece, 290gsm, Cold machine wash. Wash with like colours. Do not bleach. Do not tumble dry. Line dry in shade. Low iron on reverse. Do not dry clean.",
+"fit": "",
+"desc": "",
+"features": [
+"Made from midweight 290gsm brushed fleece, the Basis Raglan Hoodie your new cosy cool. Classic raglan fit with ribbed cuffs, hem, and a kangaroo pocket up front. Soft feel, solid durability - it's your throw-on-and-go for workdays or weekends.",
+"Ribbed cuff and waist band. Front pocket."
+],
+"chart": {},
+"chart_sizes": null,
+"chart_img": null,
+"industries": [],
+"stylesheet": "https://cdn.fashionbizapps.nz/honeybee/stylesheets/GOODMATES_-_Product_Sheet_-_Basis_-_X1003M_ii9r0br.pdf",
+"carton": null,
+"sizes": [
+"S",
+"M",
+"L",
+"XL",
+"2XL",
+"3XL",
+"4XL",
+"5XL"
+],
+"colours": [
+{
+"n": "Black",
+"h": "#000000",
+"img": "https://media.auraprint.com.au/a/fb/x1003m/black.webp",
+"back": "https://media.auraprint.com.au/a/fb/x1003m/black-b.webp"
+},
+{
+"n": "Navy",
+"h": "#393b47",
+"img": "https://media.auraprint.com.au/a/fb/x1003m/navy.webp",
+"back": "https://media.auraprint.com.au/a/fb/x1003m/navy-b.webp"
+},
+{
+"n": "Grey Marle",
+"h": "#cccccc",
+"img": "https://media.auraprint.com.au/a/fb/x1003m/grey-marle.webp",
+"back": "https://media.auraprint.com.au/a/fb/x1003m/grey-marle-b.webp"
+},
+{
+"n": "Army",
+"h": "#555124",
+"img": "https://media.auraprint.com.au/a/fb/x1003m/army.webp",
+"back": "https://media.auraprint.com.au/a/fb/x1003m/army-b.webp"
+},
+{
+"n": "White",
+"h": "#dddddd",
+"img": "https://media.auraprint.com.au/a/fb/x1003m/white.webp",
+"back": "https://media.auraprint.com.au/a/fb/x1003m/white-b.webp"
+},
+{
+"n": "Ecru",
+"h": "#f9f4ea",
+"img": "https://media.auraprint.com.au/a/fb/x1003m/ecru.webp",
+"back": "https://media.auraprint.com.au/a/fb/x1003m/ecru-b.webp"
+}
+],
+"gallery": [
+"https://media.auraprint.com.au/a/fb/x1003m/g0.webp"
+],
+"prices": [
+{
+"c": [
+0,
+1,
+2,
+3,
+4,
+5
+],
+"s": [
+"S",
+"M",
+"L",
+"XL",
+"2XL",
+"3XL",
+"4XL",
+"5XL"
+],
+"x": 31.2
+}
+],
+"from_ex": 31.2,
+"from_inc": 34.32,
+"to_inc": 34.32,
+"stock": "fb",
+"slug": "goodmates-x1003m-basis-mens-hoodie"
+},
+{
+"id": "fb-x1003w",
+"brand": "Goodmates",
+"bslug": "fb",
+"code": "X1003W",
+"name": "Basis Womens Hoodie",
+"cat": "hoodies",
+"gender": "women",
+"tag": "",
+"fabric": "80% Cotton 20% Polyester Brushed Fleece, 290gsm, Cold machine wash. Wash with like colours. Do not bleach. Do not tumble dry. Line dry in shade. Low iron on reverse. Do not dry clean.",
+"fit": "",
+"desc": "",
+"features": [
+"Made from midweight 290gsm brushed fleece, the Basis Raglan Hoodie your new cosy cool. Classic raglan fit with ribbed cuffs, hem, and a kangaroo pocket up front. Soft feel, solid durability - it's your throw-on-and-go for workdays or weekends.",
+"Ribbed cuff and waist band. Front pocket."
+],
+"chart": {},
+"chart_sizes": null,
+"chart_img": null,
+"industries": [],
+"stylesheet": "https://cdn.fashionbizapps.nz/honeybee/stylesheets/GOODMATES_-_Product_Sheet_-_Basis_-_X1003W_FAzDLdb.pdf",
+"carton": null,
+"sizes": [
+"XS",
+"S",
+"M",
+"L",
+"XL",
+"2XL"
+],
+"colours": [
+{
+"n": "Grey Marle",
+"h": "#cccccc",
+"img": "https://media.auraprint.com.au/a/fb/x1003w/grey-marle.webp",
+"back": "https://media.auraprint.com.au/a/fb/x1003w/grey-marle-b.webp"
+},
+{
+"n": "Army",
+"h": "#555124",
+"img": "https://media.auraprint.com.au/a/fb/x1003w/army.webp",
+"back": "https://media.auraprint.com.au/a/fb/x1003w/army-b.webp"
+},
+{
+"n": "Ecru",
+"h": "#f9f4ea",
+"img": "https://media.auraprint.com.au/a/fb/x1003w/ecru.webp",
+"back": "https://media.auraprint.com.au/a/fb/x1003w/ecru-b.webp"
+},
+{
+"n": "Navy",
+"h": "#393b47",
+"img": "https://media.auraprint.com.au/a/fb/x1003w/navy.webp",
+"back": "https://media.auraprint.com.au/a/fb/x1003w/navy-b.webp"
+},
+{
+"n": "Black",
+"h": "#000000",
+"img": "https://media.auraprint.com.au/a/fb/x1003w/black.webp",
+"back": "https://media.auraprint.com.au/a/fb/x1003w/black-b.webp"
+},
+{
+"n": "White",
+"h": "#dddddd",
+"img": "https://media.auraprint.com.au/a/fb/x1003w/white.webp",
+"back": "https://media.auraprint.com.au/a/fb/x1003w/white-b.webp"
+}
+],
+"gallery": [
+"https://media.auraprint.com.au/a/fb/x1003w/g0.webp"
+],
+"prices": [
+{
+"c": [
+0,
+1,
+2,
+3,
+4,
+5
+],
+"s": [
+"XS",
+"S",
+"M",
+"L",
+"XL",
+"2XL"
+],
+"x": 31.2
+}
+],
+"from_ex": 31.2,
+"from_inc": 34.32,
+"to_inc": 34.32,
+"stock": "fb",
+"slug": "goodmates-x1003w-basis-womens-hoodie"
+},
+{
+"id": "fb-x1003y",
+"brand": "Goodmates",
+"bslug": "fb",
+"code": "X1003Y",
+"name": "Basis Youth Hoodie",
+"cat": "hoodies",
+"gender": "kids",
+"tag": "",
+"fabric": "80% Cotton 20% Polyester Brushed Fleece, 290gsm, Cold machine wash. Wash with like colours. Do not bleach. Do not tumble dry. Line dry in shade. Low iron on reverse. Do not dry clean.",
+"fit": "",
+"desc": "",
+"features": [
+"Made from midweight 290gsm brushed fleece, the Basis Raglan Hoodie your new cosy cool. Classic raglan fit with ribbed cuffs, hem, and a kangaroo pocket up front. Soft feel, solid durability - it's your throw-on-and-go for workdays or weekends.",
+"Ribbed cuff and waist band. Front pocket."
+],
+"chart": {},
+"chart_sizes": null,
+"chart_img": null,
+"industries": [],
+"stylesheet": "https://cdn.fashionbizapps.nz/honeybee/stylesheets/GOODMATES_-_Product_Sheet_-_Basis_-_X1003K_-_X1003Y_v47TX3t.pdf",
+"carton": null,
+"sizes": [
+"10",
+"12",
+"14",
+"16"
+],
+"colours": [
+{
+"n": "Black",
+"h": "#000000",
+"img": "https://media.auraprint.com.au/a/fb/x1003y/black.webp",
+"back": "https://media.auraprint.com.au/a/fb/x1003y/black-b.webp"
+},
+{
+"n": "Grey Marle",
+"h": "#cccccc",
+"img": "https://media.auraprint.com.au/a/fb/x1003y/grey-marle.webp",
+"back": "https://media.auraprint.com.au/a/fb/x1003y/grey-marle-b.webp"
+},
+{
+"n": "Navy",
+"h": "#393b47",
+"img": "https://media.auraprint.com.au/a/fb/x1003y/navy.webp",
+"back": "https://media.auraprint.com.au/a/fb/x1003y/navy-b.webp"
+},
+{
+"n": "Ecru",
+"h": "#f9f4ea",
+"img": "https://media.auraprint.com.au/a/fb/x1003y/ecru.webp",
+"back": "https://media.auraprint.com.au/a/fb/x1003y/ecru-b.webp"
+},
+{
+"n": "Army",
+"h": "#555124",
+"img": "https://media.auraprint.com.au/a/fb/x1003y/army.webp",
+"back": "https://media.auraprint.com.au/a/fb/x1003y/army-b.webp"
+}
+],
+"gallery": [
+"https://media.auraprint.com.au/a/fb/x1003y/g0.webp"
+],
+"prices": [
+{
+"c": [
+0,
+1,
+2,
+3,
+4
+],
+"s": [
+"10",
+"12",
+"14",
+"16"
+],
+"x": 23.92
+}
+],
+"from_ex": 23.92,
+"from_inc": 26.31,
+"to_inc": 26.31,
+"stock": "fb",
+"slug": "goodmates-x1003y-basis-youth-hoodie"
+},
+{
+"id": "fb-x2003m",
+"brand": "Goodmates",
+"bslug": "fb",
+"code": "X2003M",
+"name": "Everyday Mens Hoodie",
+"cat": "hoodies",
+"gender": "men",
+"tag": "New colour",
+"fabric": "80% Cotton 20% Recycled Polyester Brushed Fleece, 350gsm, Cold machine wash. Wash with like colours.Do not bleach. Do not tumble dry. Line dry in shade. Low iron on reverse. Do not dry clean.",
+"fit": "",
+"desc": "",
+"features": [
+"Cosy up without slouching out. With a relaxed silhouette and a super-soft 350gsm brushed fleece feel, the Everyday Hoodie brings warmth and shape together in the best way. Ribbed finishes and a classic front pocket keep it casual and clean. A no-fuss favourite you’ll reach for again and again.",
+"Ribbed cuff and waist band. Front pocket."
+],
+"chart": {},
+"chart_sizes": null,
+"chart_img": null,
+"industries": [],
+"stylesheet": "https://cdn.fashionbizapps.nz/honeybee/stylesheets/GOODMATES_-_Product_Sheet_-_Everyday_-_X2003M_UrNKf3y.pdf",
+"carton": null,
+"sizes": [
+"S",
+"M",
+"L",
+"XL",
+"2XL",
+"3XL",
+"4XL",
+"5XL"
+],
+"colours": [
+{
+"n": "Navy",
+"h": "#393b47",
+"img": "https://media.auraprint.com.au/a/fb/x2003m/navy.webp",
+"back": "https://media.auraprint.com.au/a/fb/x2003m/navy-b.webp"
+},
+{
+"n": "Grey Marle",
+"h": "#cccccc",
+"img": "https://media.auraprint.com.au/a/fb/x2003m/grey-marle.webp",
+"back": "https://media.auraprint.com.au/a/fb/x2003m/grey-marle-b.webp"
+},
+{
+"n": "Ecru",
+"h": "#f9f4ea",
+"img": "https://media.auraprint.com.au/a/fb/x2003m/ecru.webp",
+"back": "https://media.auraprint.com.au/a/fb/x2003m/ecru-b.webp"
+},
+{
+"n": "Espresso",
+"h": "#4f3429",
+"img": "https://media.auraprint.com.au/a/fb/x2003m/espresso.webp",
+"back": "https://media.auraprint.com.au/a/fb/x2003m/espresso-b.webp"
+},
+{
+"n": "Black",
+"h": "#000000",
+"img": "https://media.auraprint.com.au/a/fb/x2003m/black.webp",
+"back": "https://media.auraprint.com.au/a/fb/x2003m/black-b.webp"
+}
+],
+"gallery": [
+"https://media.auraprint.com.au/a/fb/x2003m/g0.webp"
+],
+"prices": [
+{
+"c": [
+0,
+1,
+2,
+3,
+4
+],
+"s": [
+"S",
+"M",
+"L",
+"XL",
+"2XL",
+"3XL",
+"4XL",
+"5XL"
+],
+"x": 44.8
+}
+],
+"from_ex": 44.8,
+"from_inc": 49.28,
+"to_inc": 49.28,
+"stock": "fb",
+"slug": "goodmates-x2003m-everyday-mens-hoodie"
+},
+{
+"id": "fb-x2003w",
+"brand": "Goodmates",
+"bslug": "fb",
+"code": "X2003W",
+"name": "Everyday Womens Hoodie",
+"cat": "hoodies",
+"gender": "women",
+"tag": "New colour",
+"fabric": "80% Cotton 20% Recycled Polyester Brushed Fleece, 350gsm, Cold machine wash. Wash with like colours.Do not bleach. Do not tumble dry. Line dry in shade. Low iron on reverse. Do not dry clean.",
+"fit": "",
+"desc": "",
+"features": [
+"Cosy up without slouching out. With a relaxed silhouette and a super-soft 350gsm brushed fleece feel, the Everyday Hoodie brings warmth and shape together in the best way. Ribbed finishes and a classic front pocket keep it casual and clean. A no-fuss favourite you’ll reach for again and again.",
+"Ribbed cuff and waist band. Front pocket."
+],
+"chart": {},
+"chart_sizes": null,
+"chart_img": null,
+"industries": [],
+"stylesheet": "https://cdn.fashionbizapps.nz/honeybee/stylesheets/GOODMATES_-_Product_Sheet_-_Everyday_-_X2003W_9I23MKi.pdf",
+"carton": null,
+"sizes": [
+"XS",
+"S",
+"M",
+"L",
+"XL",
+"2XL"
+],
+"colours": [
+{
+"n": "Navy",
+"h": "#393b47",
+"img": "https://media.auraprint.com.au/a/fb/x2003w/navy.webp",
+"back": "https://media.auraprint.com.au/a/fb/x2003w/navy-b.webp"
+},
+{
+"n": "Grey Marle",
+"h": "#cccccc",
+"img": "https://media.auraprint.com.au/a/fb/x2003w/grey-marle.webp",
+"back": "https://media.auraprint.com.au/a/fb/x2003w/grey-marle-b.webp"
+},
+{
+"n": "Ecru",
+"h": "#f9f4ea",
+"img": "https://media.auraprint.com.au/a/fb/x2003w/ecru.webp",
+"back": "https://media.auraprint.com.au/a/fb/x2003w/ecru-b.webp"
+},
+{
+"n": "Black",
+"h": "#000000",
+"img": "https://media.auraprint.com.au/a/fb/x2003w/black.webp",
+"back": "https://media.auraprint.com.au/a/fb/x2003w/black-b.webp"
+},
+{
+"n": "Espresso",
+"h": "#4f3429",
+"img": "https://media.auraprint.com.au/a/fb/x2003w/espresso.webp",
+"back": "https://media.auraprint.com.au/a/fb/x2003w/espresso-b.webp"
+}
+],
+"gallery": [
+"https://media.auraprint.com.au/a/fb/x2003w/g0.webp"
+],
+"prices": [
+{
+"c": [
+0,
+1,
+2,
+3,
+4
+],
+"s": [
+"XS",
+"S",
+"M",
+"L",
+"XL",
+"2XL"
+],
+"x": 44.8
+}
+],
+"from_ex": 44.8,
+"from_inc": 49.28,
+"to_inc": 49.28,
+"stock": "fb",
+"slug": "goodmates-x2003w-everyday-womens-hoodie"
+},
+{
+"id": "fb-x2005m",
+"brand": "Goodmates",
+"bslug": "fb",
+"code": "X2005M",
+"name": "Everyday Mens Zip Hoodie",
+"cat": "hoodies",
+"gender": "men",
+"tag": "",
+"fabric": "80% Cotton 20% Recycled Polyester Brushed Fleece, 350gsm, Cold machine wash. Wash with like colours.Do not bleach. Do not tumble dry. Line dry in shade. Low iron on reverse. Do not dry clean.",
+"fit": "",
+"desc": "",
+"features": [
+"A laid-back essential that works for layering, lounging, or anything in between. Made from heavyweight 350gsm fleece, the Everyday Zip Hoodie is the one you’ll throw on and keep on. With a relaxed fit, ribbed details, front pocket, and smooth zip closure, it keeps you warm without the bulk.",
+"Ribbed cuff and waist band. Front pocket. Full zip."
+],
+"chart": {},
+"chart_sizes": null,
+"chart_img": null,
+"industries": [],
+"stylesheet": "https://cdn.fashionbizapps.nz/honeybee/stylesheets/GOODMATES_-_Product_Sheet_-_Everyday_-_X2005M.pdf",
+"carton": null,
+"sizes": [
+"S",
+"M",
+"L",
+"XL",
+"2XL",
+"3XL"
+],
+"colours": [
+{
+"n": "Black",
+"h": "#000000",
+"img": "https://media.auraprint.com.au/a/fb/x2005m/black.webp",
+"back": "https://media.auraprint.com.au/a/fb/x2005m/black-b.webp"
+},
+{
+"n": "Grey Marle",
+"h": "#cccccc",
+"img": "https://media.auraprint.com.au/a/fb/x2005m/grey-marle.webp",
+"back": "https://media.auraprint.com.au/a/fb/x2005m/grey-marle-b.webp"
+}
+],
+"gallery": [
+"https://media.auraprint.com.au/a/fb/x2005m/g0.webp"
+],
+"prices": [
+{
+"c": [
+0,
+1
+],
+"s": [
+"S",
+"M",
+"L",
+"XL",
+"2XL",
+"3XL"
+],
+"x": 46.4
+}
+],
+"from_ex": 46.4,
+"from_inc": 51.04,
+"to_inc": 51.04,
+"stock": "fb",
+"slug": "goodmates-x2005m-everyday-mens-zip-hoodie"
+},
+{
+"id": "fb-x2005w",
+"brand": "Goodmates",
+"bslug": "fb",
+"code": "X2005W",
+"name": "Everyday Womens Zip Hoodie",
+"cat": "hoodies",
+"gender": "women",
+"tag": "",
+"fabric": "80% Cotton 20% Recycled Polyester Brushed Fleece, 350gsm, Cold machine wash. Wash with like colours.Do not bleach. Do not tumble dry. Line dry in shade. Low iron on reverse. Do not dry clean.",
+"fit": "",
+"desc": "",
+"features": [
+"A laid-back essential that works for layering, lounging, or anything in between. Made from heavyweight 350gsm fleece, the Everyday Zip Hoodie is the one you’ll throw on and keep on. With a relaxed fit, ribbed details, front pocket, and smooth zip closure, it keeps you warm without the bulk.",
+"Ribbed cuff and waist band. Front pocket. Full zip."
+],
+"chart": {},
+"chart_sizes": null,
+"chart_img": null,
+"industries": [],
+"stylesheet": "https://cdn.fashionbizapps.nz/honeybee/stylesheets/GOODMATES_-_Product_Sheet_-_Everyday_-_X2005W.pdf",
+"carton": null,
+"sizes": [
+"XS",
+"S",
+"M",
+"L",
+"XL",
+"2XL"
+],
+"colours": [
+{
+"n": "Black",
+"h": "#000000",
+"img": "https://media.auraprint.com.au/a/fb/x2005w/black.webp",
+"back": "https://media.auraprint.com.au/a/fb/x2005w/black-b.webp"
+},
+{
+"n": "Grey Marle",
+"h": "#cccccc",
+"img": "https://media.auraprint.com.au/a/fb/x2005w/grey-marle.webp",
+"back": "https://media.auraprint.com.au/a/fb/x2005w/grey-marle-b.webp"
+}
+],
+"gallery": [
+"https://media.auraprint.com.au/a/fb/x2005w/g0.webp"
+],
+"prices": [
+{
+"c": [
+0,
+1
+],
+"s": [
+"XS",
+"S",
+"M",
+"L",
+"XL",
+"2XL"
+],
+"x": 46.4
+}
+],
+"from_ex": 46.4,
+"from_inc": 51.04,
+"to_inc": 51.04,
+"stock": "fb",
+"slug": "goodmates-x2005w-everyday-womens-zip-hoodie"
+},
+{
+"id": "fb-x2007m",
+"brand": "Goodmates",
+"bslug": "fb",
+"code": "X2007M",
+"name": "Everyday Mens Crew Sweatshirt",
+"cat": "hoodies",
+"gender": "men",
+"tag": "",
+"fabric": "80% Cotton 20% Recycled Polyester Brushed Fleece, 350gsm, Cold machine wash. Wash with like colours.Do not bleach. Do not tumble dry. Line dry in shade. Low iron on reverse. Do not dry clean.",
+"fit": "",
+"desc": "",
+"features": [
+"Made from heavyweight 350gsm fleece, the relaxed Everyday Crew sweatshirt hits the sweet spot between cosy and cool. Ribbed neck, cuffs, and waistband keep the fit sharp while the brushed interior makes it feel like a hug. Ready for layering, lounging, or wherever the day takes you.",
+"Ribbed crew neck, cuff and waist band."
+],
+"chart": {},
+"chart_sizes": null,
+"chart_img": null,
+"industries": [],
+"stylesheet": "https://cdn.fashionbizapps.nz/honeybee/stylesheets/GOODMATES_-_Product_Sheet_-_Everyday_-_X2007M_uR52Re1.pdf",
+"carton": null,
+"sizes": [
+"S",
+"M",
+"L",
+"XL",
+"2XL",
+"3XL"
+],
+"colours": [
+{
+"n": "Scarab Green",
+"h": "#1a3e34",
+"img": "https://media.auraprint.com.au/a/fb/x2007m/scarab-green.webp",
+"back": "https://media.auraprint.com.au/a/fb/x2007m/scarab-green-b.webp"
+},
+{
+"n": "Navy",
+"h": "#393b47",
+"img": "https://media.auraprint.com.au/a/fb/x2007m/navy.webp",
+"back": "https://media.auraprint.com.au/a/fb/x2007m/navy-b.webp"
+},
+{
+"n": "Black",
+"h": "#000000",
+"img": "https://media.auraprint.com.au/a/fb/x2007m/black.webp",
+"back": "https://media.auraprint.com.au/a/fb/x2007m/black-b.webp"
+},
+{
+"n": "Espresso",
+"h": "#4f3429",
+"img": "https://media.auraprint.com.au/a/fb/x2007m/espresso.webp",
+"back": "https://media.auraprint.com.au/a/fb/x2007m/espresso-b.webp"
+},
+{
+"n": "Grey Marle",
+"h": "#cccccc",
+"img": "https://media.auraprint.com.au/a/fb/x2007m/grey-marle.webp",
+"back": "https://media.auraprint.com.au/a/fb/x2007m/grey-marle-b.webp"
+}
+],
+"gallery": [
+"https://media.auraprint.com.au/a/fb/x2007m/g0.webp"
+],
+"prices": [
+{
+"c": [
+0,
+1,
+2,
+3,
+4
+],
+"s": [
+"S",
+"M",
+"L",
+"XL",
+"2XL",
+"3XL"
+],
+"x": 35.2
+}
+],
+"from_ex": 35.2,
+"from_inc": 38.72,
+"to_inc": 38.72,
+"stock": "fb",
+"slug": "goodmates-x2007m-everyday-mens-crew-sweatshirt"
+},
+{
+"id": "fb-x2007w",
+"brand": "Goodmates",
+"bslug": "fb",
+"code": "X2007W",
+"name": "Everyday Womens Crew Sweatshirt",
+"cat": "hoodies",
+"gender": "women",
+"tag": "",
+"fabric": "80% Cotton 20% Recycled Polyester Brushed Fleece, 350gsm, Cold machine wash. Wash with like colours.Do not bleach. Do not tumble dry. Line dry in shade. Low iron on reverse. Do not dry clean.",
+"fit": "",
+"desc": "",
+"features": [
+"Made from heavyweight 350gsm fleece, the relaxed Everyday Crew sweatshirt hits the sweet spot between cosy and cool. Ribbed neck, cuffs, and waistband keep the fit sharp while the brushed interior makes it feel like a hug. Ready for layering, lounging, or wherever the day takes you.",
+"Ribbed crew neck, cuff and waist band."
+],
+"chart": {},
+"chart_sizes": null,
+"chart_img": null,
+"industries": [],
+"stylesheet": "https://cdn.fashionbizapps.nz/honeybee/stylesheets/GOODMATES_-_Product_Sheet_-_Everyday_-_X2007W_IK7jCR5.pdf",
+"carton": null,
+"sizes": [
+"XS",
+"S",
+"M",
+"L",
+"XL",
+"2XL"
+],
+"colours": [
+{
+"n": "Espresso",
+"h": "#4f3429",
+"img": "https://media.auraprint.com.au/a/fb/x2007w/espresso.webp",
+"back": "https://media.auraprint.com.au/a/fb/x2007w/espresso-b.webp"
+},
+{
+"n": "Black",
+"h": "#000000",
+"img": "https://media.auraprint.com.au/a/fb/x2007w/black.webp",
+"back": "https://media.auraprint.com.au/a/fb/x2007w/black-b.webp"
+},
+{
+"n": "Navy",
+"h": "#393b47",
+"img": "https://media.auraprint.com.au/a/fb/x2007w/navy.webp",
+"back": "https://media.auraprint.com.au/a/fb/x2007w/navy-b.webp"
+},
+{
+"n": "Grey Marle",
+"h": "#cccccc",
+"img": "https://media.auraprint.com.au/a/fb/x2007w/grey-marle.webp",
+"back": "https://media.auraprint.com.au/a/fb/x2007w/grey-marle-b.webp"
+},
+{
+"n": "Scarab Green",
+"h": "#1a3e34",
+"img": "https://media.auraprint.com.au/a/fb/x2007w/scarab-green.webp",
+"back": "https://media.auraprint.com.au/a/fb/x2007w/scarab-green-b.webp"
+}
+],
+"gallery": [
+"https://media.auraprint.com.au/a/fb/x2007w/g0.webp"
+],
+"prices": [
+{
+"c": [
+0,
+1,
+2,
+3,
+4
+],
+"s": [
+"XS",
+"S",
+"M",
+"L",
+"XL",
+"2XL"
+],
+"x": 35.2
+}
+],
+"from_ex": 35.2,
+"from_inc": 38.72,
+"to_inc": 38.72,
+"stock": "fb",
+"slug": "goodmates-x2007w-everyday-womens-crew-sweatshirt"
+},
+{
 "id": "jbs-1lst",
 "brand": "JB's Wear",
 "bslug": "jbs",
@@ -114634,7 +115764,7 @@
 "cat": "jackets",
 "gender": "women",
 "tag": "",
-"fabric": "Outer Shell: Showerproof, 100% Nylon., Lining: 100% Polyester.,  Biz Eco Insulation: 100% Certified Recycled PET Polyester.",
+"fabric": "Outer Shell: Showerproof, 100% Nylon., Lining: 100% Polyester., Biz Eco Insulation: 100% Certified Recycled PET Polyester.",
 "fit": "Modern Fit",
 "desc": "Stay warm in sustainable style with our eco-puffer vest. A lightweight shell with recycled insulation (reclaimed from plastic waste) to keep you cosy in chilly conditions.",
 "features": [
@@ -114727,7 +115857,7 @@
 "cat": "jackets",
 "gender": "men",
 "tag": "",
-"fabric": "Outer Shell: Showerproof, 100% Nylon., Lining: 100% Polyester.,  Biz Eco Insulation: 100% Certified Recycled PET Polyester.",
+"fabric": "Outer Shell: Showerproof, 100% Nylon., Lining: 100% Polyester., Biz Eco Insulation: 100% Certified Recycled PET Polyester.",
 "fit": "Modern Fit",
 "desc": "Stay warm in sustainable style with our eco-puffer vest. A lightweight shell with recycled insulation (reclaimed from plastic waste) to keep you cosy in chilly conditions.",
 "features": [
@@ -114826,7 +115956,7 @@
 "cat": "jackets",
 "gender": "women",
 "tag": "",
-"fabric": "Outer Shell: Showerproof, 100% Nylon., Lining: 100% Polyester.,  Biz Eco Insulation: 100% Certified Recycled PET Polyester.",
+"fabric": "Outer Shell: Showerproof, 100% Nylon., Lining: 100% Polyester., Biz Eco Insulation: 100% Certified Recycled PET Polyester.",
 "fit": "Modern Fit",
 "desc": "Stay warm in sustainable style with our eco-puffer jacket. A durable shell with recycled insulation (reclaimed from plastic waste) creates the ultimate warm, outdoor jacket.",
 "features": [
@@ -114919,7 +116049,7 @@
 "cat": "jackets",
 "gender": "men",
 "tag": "",
-"fabric": "Outer Shell: Showerproof, 100% Nylon., Lining: 100% Polyester.,  Biz Eco Insulation: 100% Certified Recycled PET Polyester.",
+"fabric": "Outer Shell: Showerproof, 100% Nylon., Lining: 100% Polyester., Biz Eco Insulation: 100% Certified Recycled PET Polyester.",
 "fit": "Modern Fit",
 "desc": "Stay warm in sustainable style with our eco-puffer jacket. A durable shell with recycled insulation (reclaimed from plastic waste) creates the ultimate warm, outdoor jacket.",
 "features": [
@@ -154476,6 +155606,1256 @@
 "to_inc": 60.05,
 "stock": "fb",
 "slug": "biz-corporates-rt065ls-sydney-womens-short-sleeve-t-top"
+},
+{
+"id": "fb-x1001k",
+"brand": "Goodmates",
+"bslug": "fb",
+"code": "X1001K",
+"name": "Basis Kids Short Sleeve Tee",
+"cat": "pants",
+"gender": "kids",
+"tag": "New colour",
+"fabric": "100% Cotton Combed Single Jersey, 185gsm, Cold machine wash. Wash with like colours.Do not bleach. Do not tumble dry. Line dry in shade. Low iron on reverse. Do not dry clean.",
+"fit": "",
+"desc": "",
+"features": [
+"Made from breathable 185gsm cotton with a ribbed neck and comfy fit, the Basis Short Sleeve Tee is tough enough for the playground with wash-after-wash durability. Soft feel, great colours, no fuss - just a solid tee for every kind of adventure. It's basics for little legends.",
+"Ribbed crew neck with set-in short sleeve."
+],
+"chart": {},
+"chart_sizes": null,
+"chart_img": null,
+"industries": [],
+"stylesheet": "https://cdn.fashionbizapps.nz/honeybee/stylesheets/GOODMATES_-_Product_Sheet_-_Basis_-_X1001K_-_X1001Y_fwd4p9J.pdf",
+"carton": null,
+"sizes": [
+"4",
+"6",
+"8"
+],
+"colours": [
+{
+"n": "Biscuit",
+"h": "#b5a89b",
+"img": "https://media.auraprint.com.au/a/fb/x1001k/biscuit.webp",
+"back": "https://media.auraprint.com.au/a/fb/x1001k/biscuit-b.webp"
+},
+{
+"n": "Forest",
+"h": "#1e4322",
+"img": "https://media.auraprint.com.au/a/fb/x1001k/forest.webp",
+"back": "https://media.auraprint.com.au/a/fb/x1001k/forest-b.webp"
+},
+{
+"n": "Army",
+"h": "#555124",
+"img": "https://media.auraprint.com.au/a/fb/x1001k/army.webp",
+"back": "https://media.auraprint.com.au/a/fb/x1001k/army-b.webp"
+},
+{
+"n": "White",
+"h": "#dddddd",
+"img": "https://media.auraprint.com.au/a/fb/x1001k/white.webp",
+"back": "https://media.auraprint.com.au/a/fb/x1001k/white-b.webp"
+},
+{
+"n": "Ink",
+"h": "#28324b",
+"img": "https://media.auraprint.com.au/a/fb/x1001k/ink.webp",
+"back": "https://media.auraprint.com.au/a/fb/x1001k/ink-b.webp"
+},
+{
+"n": "Navy",
+"h": "#393b47",
+"img": "https://media.auraprint.com.au/a/fb/x1001k/navy.webp",
+"back": "https://media.auraprint.com.au/a/fb/x1001k/navy-b.webp"
+},
+{
+"n": "Ecru",
+"h": "#f9f4ea",
+"img": "https://media.auraprint.com.au/a/fb/x1001k/ecru.webp",
+"back": "https://media.auraprint.com.au/a/fb/x1001k/ecru-b.webp"
+},
+{
+"n": "Ocean",
+"h": "#7ea2c6",
+"img": "https://media.auraprint.com.au/a/fb/x1001k/ocean.webp",
+"back": "https://media.auraprint.com.au/a/fb/x1001k/ocean-b.webp"
+},
+{
+"n": "Plum",
+"h": "#702840",
+"img": "https://media.auraprint.com.au/a/fb/x1001k/plum.webp",
+"back": "https://media.auraprint.com.au/a/fb/x1001k/plum-b.webp"
+},
+{
+"n": "Steel Blue",
+"h": "#39464e",
+"img": "https://media.auraprint.com.au/a/fb/x1001k/steel-blue.webp",
+"back": "https://media.auraprint.com.au/a/fb/x1001k/steel-blue-b.webp"
+},
+{
+"n": "Grey Marle",
+"h": "#cccccc",
+"img": "https://media.auraprint.com.au/a/fb/x1001k/grey-marle.webp",
+"back": "https://media.auraprint.com.au/a/fb/x1001k/grey-marle-b.webp"
+},
+{
+"n": "Black",
+"h": "#000000",
+"img": "https://media.auraprint.com.au/a/fb/x1001k/black.webp",
+"back": "https://media.auraprint.com.au/a/fb/x1001k/black-b.webp"
+},
+{
+"n": "Pink",
+"h": "#f4cdd7",
+"img": "https://media.auraprint.com.au/a/fb/x1001k/pink.webp",
+"back": "https://media.auraprint.com.au/a/fb/x1001k/pink-b.webp"
+},
+{
+"n": "Red",
+"h": "#dc0b1c",
+"img": "https://media.auraprint.com.au/a/fb/x1001k/red.webp",
+"back": "https://media.auraprint.com.au/a/fb/x1001k/red-b.webp"
+},
+{
+"n": "Pistachio",
+"h": "#8f9980",
+"img": "https://media.auraprint.com.au/a/fb/x1001k/pistachio.webp",
+"back": "https://media.auraprint.com.au/a/fb/x1001k/pistachio-b.webp"
+},
+{
+"n": "Charcoal Marle",
+"h": "#999999",
+"img": "https://media.auraprint.com.au/a/fb/x1001k/charcoal-marle.webp",
+"back": "https://media.auraprint.com.au/a/fb/x1001k/charcoal-marle-b.webp"
+}
+],
+"gallery": [
+"https://media.auraprint.com.au/a/fb/x1001k/g0.webp"
+],
+"prices": [
+{
+"c": [
+0,
+1,
+2,
+3,
+4,
+5,
+6,
+7,
+8,
+9,
+10,
+11,
+12,
+13,
+14,
+15
+],
+"s": [
+"4",
+"6",
+"8"
+],
+"x": 10.4
+}
+],
+"from_ex": 10.4,
+"from_inc": 11.44,
+"to_inc": 11.44,
+"stock": "fb",
+"slug": "goodmates-x1001k-basis-kids-short-sleeve-tee"
+},
+{
+"id": "fb-x1001m",
+"brand": "Goodmates",
+"bslug": "fb",
+"code": "X1001M",
+"name": "Basis Mens Short Sleeve Tee",
+"cat": "pants",
+"gender": "men",
+"tag": "New colour",
+"fabric": "100% Cotton Combed Single Jersey, 185gsm, Cold machine wash. Wash with like colours. Do not bleach. Do not tumble dry. Line dry in shade. Low iron on reverse. Do not dry clean.",
+"fit": "",
+"desc": "",
+"features": [
+"Your go-to essential - the Basis Short Sleeve Tee is as classic as it gets, crafted from 185gsm combed cotton that’s breathable, durable, and soft from day one. With a ribbed crew neck, set-in sleeve, and a fit that’s easy to move in, this one’s made to pull its weight. Wear it solo, layer it up, chuck it in the wash and wear it again - it’s your hard-wearing mate that always shows up.",
+"Ribbed crew neck with set-in short sleeve."
+],
+"chart": {},
+"chart_sizes": null,
+"chart_img": null,
+"industries": [],
+"stylesheet": "https://cdn.fashionbizapps.nz/honeybee/stylesheets/GOODMATES_-_Product_Sheet_-_Basis_-_X1001M_jO4RNJL.pdf",
+"carton": null,
+"sizes": [
+"S",
+"M",
+"L",
+"XL",
+"2XL",
+"3XL",
+"4XL",
+"5XL"
+],
+"colours": [
+{
+"n": "Ink",
+"h": "#28324b",
+"img": "https://media.auraprint.com.au/a/fb/x1001m/ink.webp",
+"back": "https://media.auraprint.com.au/a/fb/x1001m/ink-b.webp"
+},
+{
+"n": "White",
+"h": "#dddddd",
+"img": "https://media.auraprint.com.au/a/fb/x1001m/white.webp",
+"back": "https://media.auraprint.com.au/a/fb/x1001m/white-b.webp"
+},
+{
+"n": "Army",
+"h": "#555124",
+"img": "https://media.auraprint.com.au/a/fb/x1001m/army.webp",
+"back": "https://media.auraprint.com.au/a/fb/x1001m/army-b.webp"
+},
+{
+"n": "Ocean",
+"h": "#7ea2c6",
+"img": "https://media.auraprint.com.au/a/fb/x1001m/ocean.webp",
+"back": "https://media.auraprint.com.au/a/fb/x1001m/ocean-b.webp"
+},
+{
+"n": "Biscuit",
+"h": "#b5a89b",
+"img": "https://media.auraprint.com.au/a/fb/x1001m/biscuit.webp",
+"back": "https://media.auraprint.com.au/a/fb/x1001m/biscuit-b.webp"
+},
+{
+"n": "Black",
+"h": "#000000",
+"img": "https://media.auraprint.com.au/a/fb/x1001m/black.webp",
+"back": "https://media.auraprint.com.au/a/fb/x1001m/black-b.webp"
+},
+{
+"n": "Navy",
+"h": "#393b47",
+"img": "https://media.auraprint.com.au/a/fb/x1001m/navy.webp",
+"back": "https://media.auraprint.com.au/a/fb/x1001m/navy-b.webp"
+},
+{
+"n": "Charcoal Marle",
+"h": "#999999",
+"img": "https://media.auraprint.com.au/a/fb/x1001m/charcoal-marle.webp",
+"back": "https://media.auraprint.com.au/a/fb/x1001m/charcoal-marle-b.webp"
+},
+{
+"n": "Grey Marle",
+"h": "#cccccc",
+"img": "https://media.auraprint.com.au/a/fb/x1001m/grey-marle.webp",
+"back": "https://media.auraprint.com.au/a/fb/x1001m/grey-marle-b.webp"
+},
+{
+"n": "Pistachio",
+"h": "#8f9980",
+"img": "https://media.auraprint.com.au/a/fb/x1001m/pistachio.webp",
+"back": "https://media.auraprint.com.au/a/fb/x1001m/pistachio-b.webp"
+},
+{
+"n": "Ecru",
+"h": "#f9f4ea",
+"img": "https://media.auraprint.com.au/a/fb/x1001m/ecru.webp",
+"back": "https://media.auraprint.com.au/a/fb/x1001m/ecru-b.webp"
+},
+{
+"n": "Forest",
+"h": "#1e4322",
+"img": "https://media.auraprint.com.au/a/fb/x1001m/forest.webp",
+"back": "https://media.auraprint.com.au/a/fb/x1001m/forest-b.webp"
+},
+{
+"n": "Steel Blue",
+"h": "#39464e",
+"img": "https://media.auraprint.com.au/a/fb/x1001m/steel-blue.webp",
+"back": "https://media.auraprint.com.au/a/fb/x1001m/steel-blue-b.webp"
+},
+{
+"n": "Plum",
+"h": "#702840",
+"img": "https://media.auraprint.com.au/a/fb/x1001m/plum.webp",
+"back": "https://media.auraprint.com.au/a/fb/x1001m/plum-b.webp"
+},
+{
+"n": "Pink",
+"h": "#f4cdd7",
+"img": "https://media.auraprint.com.au/a/fb/x1001m/pink.webp",
+"back": "https://media.auraprint.com.au/a/fb/x1001m/pink-b.webp"
+},
+{
+"n": "Red",
+"h": "#dc0b1c",
+"img": "https://media.auraprint.com.au/a/fb/x1001m/red.webp",
+"back": "https://media.auraprint.com.au/a/fb/x1001m/red-b.webp"
+}
+],
+"gallery": [
+"https://media.auraprint.com.au/a/fb/x1001m/g0.webp"
+],
+"prices": [
+{
+"c": [
+0,
+1,
+2,
+3,
+4,
+5,
+6,
+7,
+8,
+9,
+10,
+11,
+12,
+13,
+14,
+15
+],
+"s": [
+"S",
+"M",
+"L",
+"XL",
+"2XL",
+"3XL",
+"4XL",
+"5XL"
+],
+"x": 12.16
+}
+],
+"from_ex": 12.16,
+"from_inc": 13.38,
+"to_inc": 13.38,
+"stock": "fb",
+"slug": "goodmates-x1001m-basis-mens-short-sleeve-tee"
+},
+{
+"id": "fb-x1001w",
+"brand": "Goodmates",
+"bslug": "fb",
+"code": "X1001W",
+"name": "Basis Womens Short Sleeve Tee",
+"cat": "pants",
+"gender": "women",
+"tag": "New colour",
+"fabric": "100% Cotton Combed Single Jersey, 185gsm, Cold machine wash. Wash with like colours.Do not bleach. Do not tumble dry. Line dry in shade. Low iron on reverse. Do not dry clean.",
+"fit": "",
+"desc": "",
+"features": [
+"Your go-to essential - the Basis Short Sleeve Tee is as classic as it gets, crafted from 185gsm combed cotton that’s breathable, durable, and soft from day one. With a ribbed crew neck, set-in sleeve, and a fit that’s easy to move in, this one’s made to pull its weight. Wear it solo, layer it up, chuck it in the wash and wear it again - it’s your hard-wearing mate that always shows up.",
+"Ribbed crew neck with set-in short sleeve."
+],
+"chart": {},
+"chart_sizes": null,
+"chart_img": null,
+"industries": [],
+"stylesheet": "https://cdn.fashionbizapps.nz/honeybee/stylesheets/GOODMATES_-_Product_Sheet_-_Basis_-_X1001W_DNcShbT.pdf",
+"carton": null,
+"sizes": [
+"XS",
+"S",
+"M",
+"L",
+"XL",
+"2XL",
+"3XL"
+],
+"colours": [
+{
+"n": "Ink",
+"h": "#28324b",
+"img": "https://media.auraprint.com.au/a/fb/x1001w/ink.webp",
+"back": "https://media.auraprint.com.au/a/fb/x1001w/ink-b.webp"
+},
+{
+"n": "Forest",
+"h": "#1e4322",
+"img": "https://media.auraprint.com.au/a/fb/x1001w/forest.webp",
+"back": "https://media.auraprint.com.au/a/fb/x1001w/forest-b.webp"
+},
+{
+"n": "Plum",
+"h": "#702840",
+"img": "https://media.auraprint.com.au/a/fb/x1001w/plum.webp",
+"back": "https://media.auraprint.com.au/a/fb/x1001w/plum-b.webp"
+},
+{
+"n": "Steel Blue",
+"h": "#39464e",
+"img": "https://media.auraprint.com.au/a/fb/x1001w/steel-blue.webp",
+"back": "https://media.auraprint.com.au/a/fb/x1001w/steel-blue-b.webp"
+},
+{
+"n": "Charcoal Marle",
+"h": "#999999",
+"img": "https://media.auraprint.com.au/a/fb/x1001w/charcoal-marle.webp",
+"back": "https://media.auraprint.com.au/a/fb/x1001w/charcoal-marle-b.webp"
+},
+{
+"n": "Army",
+"h": "#555124",
+"img": "https://media.auraprint.com.au/a/fb/x1001w/army.webp",
+"back": "https://media.auraprint.com.au/a/fb/x1001w/army-b.webp"
+},
+{
+"n": "Ecru",
+"h": "#f9f4ea",
+"img": "https://media.auraprint.com.au/a/fb/x1001w/ecru.webp",
+"back": "https://media.auraprint.com.au/a/fb/x1001w/ecru-b.webp"
+},
+{
+"n": "Black",
+"h": "#000000",
+"img": "https://media.auraprint.com.au/a/fb/x1001w/black.webp",
+"back": "https://media.auraprint.com.au/a/fb/x1001w/black-b.webp"
+},
+{
+"n": "Navy",
+"h": "#393b47",
+"img": "https://media.auraprint.com.au/a/fb/x1001w/navy.webp",
+"back": "https://media.auraprint.com.au/a/fb/x1001w/navy-b.webp"
+},
+{
+"n": "White",
+"h": "#dddddd",
+"img": "https://media.auraprint.com.au/a/fb/x1001w/white.webp",
+"back": "https://media.auraprint.com.au/a/fb/x1001w/white-b.webp"
+},
+{
+"n": "Grey Marle",
+"h": "#cccccc",
+"img": "https://media.auraprint.com.au/a/fb/x1001w/grey-marle.webp",
+"back": "https://media.auraprint.com.au/a/fb/x1001w/grey-marle-b.webp"
+},
+{
+"n": "Ocean",
+"h": "#7ea2c6",
+"img": "https://media.auraprint.com.au/a/fb/x1001w/ocean.webp",
+"back": "https://media.auraprint.com.au/a/fb/x1001w/ocean-b.webp"
+},
+{
+"n": "Red",
+"h": "#dc0b1c",
+"img": "https://media.auraprint.com.au/a/fb/x1001w/red.webp",
+"back": "https://media.auraprint.com.au/a/fb/x1001w/red-b.webp"
+},
+{
+"n": "Biscuit",
+"h": "#b5a89b",
+"img": "https://media.auraprint.com.au/a/fb/x1001w/biscuit.webp",
+"back": "https://media.auraprint.com.au/a/fb/x1001w/biscuit-b.webp"
+},
+{
+"n": "Pink",
+"h": "#f4cdd7",
+"img": "https://media.auraprint.com.au/a/fb/x1001w/pink.webp",
+"back": "https://media.auraprint.com.au/a/fb/x1001w/pink-b.webp"
+},
+{
+"n": "Pistachio",
+"h": "#8f9980",
+"img": "https://media.auraprint.com.au/a/fb/x1001w/pistachio.webp",
+"back": "https://media.auraprint.com.au/a/fb/x1001w/pistachio-b.webp"
+}
+],
+"gallery": [
+"https://media.auraprint.com.au/a/fb/x1001w/g0.webp"
+],
+"prices": [
+{
+"c": [
+0,
+1,
+2,
+3,
+4,
+5,
+6,
+7,
+8,
+9,
+10,
+11,
+12,
+13,
+14,
+15
+],
+"s": [
+"XS",
+"S",
+"M",
+"L",
+"XL",
+"2XL",
+"3XL"
+],
+"x": 12.16
+}
+],
+"from_ex": 12.16,
+"from_inc": 13.38,
+"to_inc": 13.38,
+"stock": "fb",
+"slug": "goodmates-x1001w-basis-womens-short-sleeve-tee"
+},
+{
+"id": "fb-x1001y",
+"brand": "Goodmates",
+"bslug": "fb",
+"code": "X1001Y",
+"name": "Basis Youth Short Sleeve Tee",
+"cat": "pants",
+"gender": "kids",
+"tag": "New colour",
+"fabric": "100% Cotton Combed Single Jersey, 185gsm, Cold machine wash. Wash with like colours.Do not bleach. Do not tumble dry. Line dry in shade. Low iron on reverse. Do not dry clean.",
+"fit": "",
+"desc": "",
+"features": [
+"Made from breathable 185gsm cotton with a ribbed neck and comfy fit, the Basis Short Sleeve Tee is tough enough for the playground with wash-after-wash durability. Soft feel, great colours, no fuss - just a solid tee for every kind of adventure. It's basics for little legends.",
+"Ribbed crew neck with set-in short sleeve."
+],
+"chart": {},
+"chart_sizes": null,
+"chart_img": null,
+"industries": [],
+"stylesheet": "https://cdn.fashionbizapps.nz/honeybee/stylesheets/GOODMATES_-_Product_Sheet_-_Basis_-_X1001K_-_X1001Y_5s1ez3S.pdf",
+"carton": null,
+"sizes": [
+"10",
+"12",
+"14",
+"16"
+],
+"colours": [
+{
+"n": "Pistachio",
+"h": "#8f9980",
+"img": "https://media.auraprint.com.au/a/fb/x1001y/pistachio.webp",
+"back": "https://media.auraprint.com.au/a/fb/x1001y/pistachio-b.webp"
+},
+{
+"n": "White",
+"h": "#dddddd",
+"img": "https://media.auraprint.com.au/a/fb/x1001y/white.webp",
+"back": "https://media.auraprint.com.au/a/fb/x1001y/white-b.webp"
+},
+{
+"n": "Ink",
+"h": "#28324b",
+"img": "https://media.auraprint.com.au/a/fb/x1001y/ink.webp",
+"back": "https://media.auraprint.com.au/a/fb/x1001y/ink-b.webp"
+},
+{
+"n": "Ecru",
+"h": "#f9f4ea",
+"img": "https://media.auraprint.com.au/a/fb/x1001y/ecru.webp",
+"back": "https://media.auraprint.com.au/a/fb/x1001y/ecru-b.webp"
+},
+{
+"n": "Forest",
+"h": "#1e4322",
+"img": "https://media.auraprint.com.au/a/fb/x1001y/forest.webp",
+"back": "https://media.auraprint.com.au/a/fb/x1001y/forest-b.webp"
+},
+{
+"n": "Charcoal Marle",
+"h": "#999999",
+"img": "https://media.auraprint.com.au/a/fb/x1001y/charcoal-marle.webp",
+"back": "https://media.auraprint.com.au/a/fb/x1001y/charcoal-marle-b.webp"
+},
+{
+"n": "Black",
+"h": "#000000",
+"img": "https://media.auraprint.com.au/a/fb/x1001y/black.webp",
+"back": "https://media.auraprint.com.au/a/fb/x1001y/black-b.webp"
+},
+{
+"n": "Ocean",
+"h": "#7ea2c6",
+"img": "https://media.auraprint.com.au/a/fb/x1001y/ocean.webp",
+"back": "https://media.auraprint.com.au/a/fb/x1001y/ocean-b.webp"
+},
+{
+"n": "Steel Blue",
+"h": "#39464e",
+"img": "https://media.auraprint.com.au/a/fb/x1001y/steel-blue.webp",
+"back": "https://media.auraprint.com.au/a/fb/x1001y/steel-blue-b.webp"
+},
+{
+"n": "Grey Marle",
+"h": "#cccccc",
+"img": "https://media.auraprint.com.au/a/fb/x1001y/grey-marle.webp",
+"back": "https://media.auraprint.com.au/a/fb/x1001y/grey-marle-b.webp"
+},
+{
+"n": "Plum",
+"h": "#702840",
+"img": "https://media.auraprint.com.au/a/fb/x1001y/plum.webp",
+"back": "https://media.auraprint.com.au/a/fb/x1001y/plum-b.webp"
+},
+{
+"n": "Navy",
+"h": "#393b47",
+"img": "https://media.auraprint.com.au/a/fb/x1001y/navy.webp",
+"back": "https://media.auraprint.com.au/a/fb/x1001y/navy-b.webp"
+},
+{
+"n": "Red",
+"h": "#dc0b1c",
+"img": "https://media.auraprint.com.au/a/fb/x1001y/red.webp",
+"back": "https://media.auraprint.com.au/a/fb/x1001y/red-b.webp"
+},
+{
+"n": "Pink",
+"h": "#f4cdd7",
+"img": "https://media.auraprint.com.au/a/fb/x1001y/pink.webp",
+"back": "https://media.auraprint.com.au/a/fb/x1001y/pink-b.webp"
+},
+{
+"n": "Biscuit",
+"h": "#b5a89b",
+"img": "https://media.auraprint.com.au/a/fb/x1001y/biscuit.webp",
+"back": "https://media.auraprint.com.au/a/fb/x1001y/biscuit-b.webp"
+},
+{
+"n": "Army",
+"h": "#555124",
+"img": "https://media.auraprint.com.au/a/fb/x1001y/army.webp",
+"back": "https://media.auraprint.com.au/a/fb/x1001y/army-b.webp"
+}
+],
+"gallery": [
+"https://media.auraprint.com.au/a/fb/x1001y/g0.webp"
+],
+"prices": [
+{
+"c": [
+0,
+1,
+2,
+3,
+4,
+5,
+6,
+7,
+8,
+9,
+10,
+11,
+12,
+13,
+14,
+15
+],
+"s": [
+"10",
+"12",
+"14",
+"16"
+],
+"x": 10.8
+}
+],
+"from_ex": 10.8,
+"from_inc": 11.88,
+"to_inc": 11.88,
+"stock": "fb",
+"slug": "goodmates-x1001y-basis-youth-short-sleeve-tee"
+},
+{
+"id": "fb-x1004k",
+"brand": "Goodmates",
+"bslug": "fb",
+"code": "X1004K",
+"name": "Basis Kids Track Pant",
+"cat": "pants",
+"gender": "kids",
+"tag": "",
+"fabric": "80% Cotton 20% Polyester Brushed Fleece, 290gsm, Cold machine wash. Wash with like colours.Do not bleach. Do not tumble dry. Line dry in shade. Low iron on reverse. Do not dry clean.",
+"fit": "",
+"desc": "",
+"features": [
+"These soft brushed fleece Basis trackies are made with a comfy elastic waist, easy fit, and solid construction that stands up to the rough and tumble. It's basics, built better. Great for growing bodies that don’t sit still for long. Washable, wearable, dependable.",
+"Elastic draw cord waist. Elastic cuff."
+],
+"chart": {},
+"chart_sizes": null,
+"chart_img": null,
+"industries": [],
+"stylesheet": "https://cdn.fashionbizapps.nz/honeybee/stylesheets/GOODMATES_-_Product_Sheet_-_Basis_-_X1004K_-_X1004Y_DCPt06w.pdf",
+"carton": null,
+"sizes": [
+"4",
+"6",
+"8"
+],
+"colours": [
+{
+"n": "Black",
+"h": "#000000",
+"img": "https://media.auraprint.com.au/a/fb/x1004k/black.webp",
+"back": "https://media.auraprint.com.au/a/fb/x1004k/black-b.webp"
+},
+{
+"n": "Grey Marle",
+"h": "#cccccc",
+"img": "https://media.auraprint.com.au/a/fb/x1004k/grey-marle.webp",
+"back": "https://media.auraprint.com.au/a/fb/x1004k/grey-marle-b.webp"
+},
+{
+"n": "Navy",
+"h": "#393b47",
+"img": "https://media.auraprint.com.au/a/fb/x1004k/navy.webp",
+"back": "https://media.auraprint.com.au/a/fb/x1004k/navy-b.webp"
+}
+],
+"gallery": [
+"https://media.auraprint.com.au/a/fb/x1004k/g0.webp"
+],
+"prices": [
+{
+"c": [
+0,
+1,
+2
+],
+"s": [
+"4",
+"6",
+"8"
+],
+"x": 21.6
+}
+],
+"from_ex": 21.6,
+"from_inc": 23.76,
+"to_inc": 23.76,
+"stock": "fb",
+"slug": "goodmates-x1004k-basis-kids-track-pant"
+},
+{
+"id": "fb-x1004m",
+"brand": "Goodmates",
+"bslug": "fb",
+"code": "X1004M",
+"name": "Basis Mens Track Pant",
+"cat": "pants",
+"gender": "men",
+"tag": "",
+"fabric": "80% Cotton 20% Polyester Brushed Fleece, 290gsm, Cold machine wash. Wash with like colours.Do not bleach. Do not tumble dry. Line dry in shade. Low iron on reverse. Do not dry clean.",
+"fit": "",
+"desc": "",
+"features": [
+"Low-key style meets high-wear comfort. These classic Basis trackies feature an elastic waist with drawcord and elastic cuffs for a just-right fit. Soft 290gsm brushed fleece means serious comfort. We know you’ll live in these.",
+"Elastic draw cord waist. Elastic cuff."
+],
+"chart": {},
+"chart_sizes": null,
+"chart_img": null,
+"industries": [],
+"stylesheet": "https://cdn.fashionbizapps.nz/honeybee/stylesheets/GOODMATES_-_Product_Sheet_-_Basis_-_X1004M_Nv1LzCo.pdf",
+"carton": null,
+"sizes": [
+"S",
+"M",
+"L",
+"XL",
+"2XL",
+"3XL"
+],
+"colours": [
+{
+"n": "Grey Marle",
+"h": "#cccccc",
+"img": "https://media.auraprint.com.au/a/fb/x1004m/grey-marle.webp",
+"back": "https://media.auraprint.com.au/a/fb/x1004m/grey-marle-b.webp"
+},
+{
+"n": "Black",
+"h": "#000000",
+"img": "https://media.auraprint.com.au/a/fb/x1004m/black.webp",
+"back": "https://media.auraprint.com.au/a/fb/x1004m/black-b.webp"
+},
+{
+"n": "Navy",
+"h": "#393b47",
+"img": "https://media.auraprint.com.au/a/fb/x1004m/navy.webp",
+"back": "https://media.auraprint.com.au/a/fb/x1004m/navy-b.webp"
+}
+],
+"gallery": [
+"https://media.auraprint.com.au/a/fb/x1004m/g0.webp"
+],
+"prices": [
+{
+"c": [
+0,
+1,
+2
+],
+"s": [
+"S",
+"M",
+"L",
+"XL",
+"2XL",
+"3XL"
+],
+"x": 31.2
+}
+],
+"from_ex": 31.2,
+"from_inc": 34.32,
+"to_inc": 34.32,
+"stock": "fb",
+"slug": "goodmates-x1004m-basis-mens-track-pant"
+},
+{
+"id": "fb-x1004w",
+"brand": "Goodmates",
+"bslug": "fb",
+"code": "X1004W",
+"name": "Basis Womens Track Pant",
+"cat": "pants",
+"gender": "women",
+"tag": "",
+"fabric": "80% Cotton 20% Polyester Brushed Fleece, 290gsm, Cold machine wash. Wash with like colours.Do not bleach. Do not tumble dry. Line dry in shade. Low iron on reverse. Do not dry clean.",
+"fit": "",
+"desc": "",
+"features": [
+"Low-key style meets high-wear comfort. These classic Basis trackies feature an elastic waist with drawcord and elastic cuffs for a just-right fit. Soft 290gsm brushed fleece means serious comfort. We know you’ll live in these.",
+"Elastic draw cord waist. Elastic cuff."
+],
+"chart": {},
+"chart_sizes": null,
+"chart_img": null,
+"industries": [],
+"stylesheet": "https://cdn.fashionbizapps.nz/honeybee/stylesheets/GOODMATES_-_Product_Sheet_-_Basis_-_X1004W_bjhOzp9.pdf",
+"carton": null,
+"sizes": [
+"XS",
+"S",
+"M",
+"L",
+"XL",
+"2XL"
+],
+"colours": [
+{
+"n": "Grey Marle",
+"h": "#cccccc",
+"img": "https://media.auraprint.com.au/a/fb/x1004w/grey-marle.webp",
+"back": "https://media.auraprint.com.au/a/fb/x1004w/grey-marle-b.webp"
+},
+{
+"n": "Black",
+"h": "#000000",
+"img": "https://media.auraprint.com.au/a/fb/x1004w/black.webp",
+"back": "https://media.auraprint.com.au/a/fb/x1004w/black-b.webp"
+},
+{
+"n": "Navy",
+"h": "#393b47",
+"img": "https://media.auraprint.com.au/a/fb/x1004w/navy.webp",
+"back": "https://media.auraprint.com.au/a/fb/x1004w/navy-b.webp"
+}
+],
+"gallery": [
+"https://media.auraprint.com.au/a/fb/x1004w/g0.webp"
+],
+"prices": [
+{
+"c": [
+0,
+1,
+2
+],
+"s": [
+"XS",
+"S",
+"M",
+"L",
+"XL",
+"2XL"
+],
+"x": 31.2
+}
+],
+"from_ex": 31.2,
+"from_inc": 34.32,
+"to_inc": 34.32,
+"stock": "fb",
+"slug": "goodmates-x1004w-basis-womens-track-pant"
+},
+{
+"id": "fb-x1004y",
+"brand": "Goodmates",
+"bslug": "fb",
+"code": "X1004Y",
+"name": "Basis Youth Track Pant",
+"cat": "pants",
+"gender": "kids",
+"tag": "",
+"fabric": "80% Cotton 20% Polyester Brushed Fleece, 290gsm, Cold machine wash. Wash with like colours.Do not bleach. Do not tumble dry. Line dry in shade. Low iron on reverse. Do not dry clean.",
+"fit": "",
+"desc": "",
+"features": [
+"These soft brushed fleece Basis trackies are made with a comfy elastic waist, easy fit, and solid construction that stands up to the rough and tumble. It's basics, built better. Great for growing bodies that don’t sit still for long. Washable, wearable, dependable.",
+"Elastic draw cord waist. Elastic cuff."
+],
+"chart": {},
+"chart_sizes": null,
+"chart_img": null,
+"industries": [],
+"stylesheet": "https://cdn.fashionbizapps.nz/honeybee/stylesheets/GOODMATES_-_Product_Sheet_-_Basis_-_X1004K_-_X1004Y.pdf",
+"carton": null,
+"sizes": [
+"10",
+"12",
+"14",
+"16"
+],
+"colours": [
+{
+"n": "Black",
+"h": "#000000",
+"img": "https://media.auraprint.com.au/a/fb/x1004y/black.webp",
+"back": "https://media.auraprint.com.au/a/fb/x1004y/black-b.webp"
+},
+{
+"n": "Navy",
+"h": "#393b47",
+"img": "https://media.auraprint.com.au/a/fb/x1004y/navy.webp",
+"back": "https://media.auraprint.com.au/a/fb/x1004y/navy-b.webp"
+},
+{
+"n": "Grey Marle",
+"h": "#cccccc",
+"img": "https://media.auraprint.com.au/a/fb/x1004y/grey-marle.webp",
+"back": "https://media.auraprint.com.au/a/fb/x1004y/grey-marle-b.webp"
+}
+],
+"gallery": [
+"https://media.auraprint.com.au/a/fb/x1004y/g0.webp"
+],
+"prices": [
+{
+"c": [
+0,
+1,
+2
+],
+"s": [
+"10",
+"12",
+"14",
+"16"
+],
+"x": 22.0
+}
+],
+"from_ex": 22.0,
+"from_inc": 24.2,
+"to_inc": 24.2,
+"stock": "fb",
+"slug": "goodmates-x1004y-basis-youth-track-pant"
+},
+{
+"id": "fb-x2001m",
+"brand": "Goodmates",
+"bslug": "fb",
+"code": "X2001M",
+"name": "Everyday Mens Short Sleeve Tee",
+"cat": "pants",
+"gender": "men",
+"tag": "",
+"fabric": "100% Cotton Combed Single Jersey, 225gsm, Cold machine wash. Wash with like colours.Do not bleach. Do not tumble dry. Line dry in shade. Low iron on reverse. Do not dry clean.",
+"fit": "",
+"desc": "",
+"features": [
+"The Everyday Short Sleeve Tee is a step up in weight. Made from heavier 225gsm combed cotton - it's thicker, softer, structured without being stiff, comfortable without being basic. Designed with a relaxed cut that works tucked, untucked, or layered. It’s easy to wear and even easier to rewear.",
+"Ribbed crew neck with set-in short sleeve."
+],
+"chart": {},
+"chart_sizes": null,
+"chart_img": null,
+"industries": [],
+"stylesheet": "https://cdn.fashionbizapps.nz/honeybee/stylesheets/GOODMATES_-_Product_Sheet_-_Everyday_-_X2001M.pdf",
+"carton": null,
+"sizes": [
+"S",
+"M",
+"L",
+"XL",
+"2XL",
+"3XL",
+"4XL",
+"5XL"
+],
+"colours": [
+{
+"n": "Scarab Green",
+"h": "#1a3e34",
+"img": "https://media.auraprint.com.au/a/fb/x2001m/scarab-green.webp",
+"back": "https://media.auraprint.com.au/a/fb/x2001m/scarab-green-b.webp"
+},
+{
+"n": "Navy",
+"h": "#393b47",
+"img": "https://media.auraprint.com.au/a/fb/x2001m/navy.webp",
+"back": "https://media.auraprint.com.au/a/fb/x2001m/navy-b.webp"
+},
+{
+"n": "Washed Black",
+"h": "#212620",
+"img": "https://media.auraprint.com.au/a/fb/x2001m/washed-black.webp",
+"back": "https://media.auraprint.com.au/a/fb/x2001m/washed-black-b.webp"
+},
+{
+"n": "Chalk",
+"h": "#e5dfdb",
+"img": "https://media.auraprint.com.au/a/fb/x2001m/chalk.webp",
+"back": "https://media.auraprint.com.au/a/fb/x2001m/chalk-b.webp"
+},
+{
+"n": "Ecru",
+"h": "#f9f4ea",
+"img": "https://media.auraprint.com.au/a/fb/x2001m/ecru.webp",
+"back": "https://media.auraprint.com.au/a/fb/x2001m/ecru-b.webp"
+},
+{
+"n": "Sage",
+"h": "#6a7e72",
+"img": "https://media.auraprint.com.au/a/fb/x2001m/sage.webp",
+"back": "https://media.auraprint.com.au/a/fb/x2001m/sage-b.webp"
+},
+{
+"n": "Dusty Blue",
+"h": "#b6cbce",
+"img": "https://media.auraprint.com.au/a/fb/x2001m/dusty-blue.webp",
+"back": "https://media.auraprint.com.au/a/fb/x2001m/dusty-blue-b.webp"
+},
+{
+"n": "Washed Pink",
+"h": "#ba8f88",
+"img": "https://media.auraprint.com.au/a/fb/x2001m/washed-pink.webp",
+"back": "https://media.auraprint.com.au/a/fb/x2001m/washed-pink-b.webp"
+},
+{
+"n": "Espresso",
+"h": "#4f3429",
+"img": "https://media.auraprint.com.au/a/fb/x2001m/espresso.webp",
+"back": "https://media.auraprint.com.au/a/fb/x2001m/espresso-b.webp"
+},
+{
+"n": "White",
+"h": "#dddddd",
+"img": "https://media.auraprint.com.au/a/fb/x2001m/white.webp",
+"back": "https://media.auraprint.com.au/a/fb/x2001m/white-b.webp"
+},
+{
+"n": "Grey Marle",
+"h": "#cccccc",
+"img": "https://media.auraprint.com.au/a/fb/x2001m/grey-marle.webp",
+"back": "https://media.auraprint.com.au/a/fb/x2001m/grey-marle-b.webp"
+},
+{
+"n": "Black",
+"h": "#000000",
+"img": "https://media.auraprint.com.au/a/fb/x2001m/black.webp",
+"back": "https://media.auraprint.com.au/a/fb/x2001m/black-b.webp"
+}
+],
+"gallery": [
+"https://media.auraprint.com.au/a/fb/x2001m/g0.webp"
+],
+"prices": [
+{
+"c": [
+0,
+1,
+2,
+3,
+4,
+5,
+6,
+7,
+8,
+9,
+10,
+11
+],
+"s": [
+"S",
+"M",
+"L",
+"XL",
+"2XL",
+"3XL",
+"4XL",
+"5XL"
+],
+"x": 16.0
+}
+],
+"from_ex": 16.0,
+"from_inc": 17.6,
+"to_inc": 17.6,
+"stock": "fb",
+"slug": "goodmates-x2001m-everyday-mens-short-sleeve-tee"
+},
+{
+"id": "fb-x2001w",
+"brand": "Goodmates",
+"bslug": "fb",
+"code": "X2001W",
+"name": "Everyday Womens Short Sleeve Tee",
+"cat": "pants",
+"gender": "women",
+"tag": "",
+"fabric": "100% Cotton Combed Single Jersey, 225gsm, Cold machine wash. Wash with like colours.Do not bleach. Do not tumble dry. Line dry in shade. Low iron on reverse. Do not dry clean.",
+"fit": "",
+"desc": "",
+"features": [
+"The Everyday Short Sleeve Tee is a step up in weight. Made from heavier 225gsm combed cotton - it's thicker, softer, structured without being stiff, comfortable without being basic. Designed with a relaxed cut that works tucked, untucked, or layered. It’s easy to wear and even easier to rewear.",
+"Ribbed crew neck with set-in short sleeve."
+],
+"chart": {},
+"chart_sizes": null,
+"chart_img": null,
+"industries": [],
+"stylesheet": "https://cdn.fashionbizapps.nz/honeybee/stylesheets/GOODMATES_-_Product_Sheet_-_Everyday_-_X2001W_se0eDyn.pdf",
+"carton": null,
+"sizes": [
+"XS",
+"S",
+"M",
+"L",
+"XL",
+"2XL"
+],
+"colours": [
+{
+"n": "Espresso",
+"h": "#4f3429",
+"img": "https://media.auraprint.com.au/a/fb/x2001w/espresso.webp",
+"back": "https://media.auraprint.com.au/a/fb/x2001w/espresso-b.webp"
+},
+{
+"n": "Sage",
+"h": "#6a7e72",
+"img": "https://media.auraprint.com.au/a/fb/x2001w/sage.webp",
+"back": "https://media.auraprint.com.au/a/fb/x2001w/sage-b.webp"
+},
+{
+"n": "Grey Marle",
+"h": "#cccccc",
+"img": "https://media.auraprint.com.au/a/fb/x2001w/grey-marle.webp",
+"back": "https://media.auraprint.com.au/a/fb/x2001w/grey-marle-b.webp"
+},
+{
+"n": "Black",
+"h": "#000000",
+"img": "https://media.auraprint.com.au/a/fb/x2001w/black.webp",
+"back": "https://media.auraprint.com.au/a/fb/x2001w/black-b.webp"
+},
+{
+"n": "White",
+"h": "#dddddd",
+"img": "https://media.auraprint.com.au/a/fb/x2001w/white.webp",
+"back": "https://media.auraprint.com.au/a/fb/x2001w/white-b.webp"
+},
+{
+"n": "Dusty Blue",
+"h": "#b6cbce",
+"img": "https://media.auraprint.com.au/a/fb/x2001w/dusty-blue.webp",
+"back": "https://media.auraprint.com.au/a/fb/x2001w/dusty-blue-b.webp"
+},
+{
+"n": "Navy",
+"h": "#393b47",
+"img": "https://media.auraprint.com.au/a/fb/x2001w/navy.webp",
+"back": "https://media.auraprint.com.au/a/fb/x2001w/navy-b.webp"
+},
+{
+"n": "Washed Black",
+"h": "#212620",
+"img": "https://media.auraprint.com.au/a/fb/x2001w/washed-black.webp",
+"back": "https://media.auraprint.com.au/a/fb/x2001w/washed-black-b.webp"
+},
+{
+"n": "Ecru",
+"h": "#f9f4ea",
+"img": "https://media.auraprint.com.au/a/fb/x2001w/ecru.webp",
+"back": "https://media.auraprint.com.au/a/fb/x2001w/ecru-b.webp"
+},
+{
+"n": "Scarab Green",
+"h": "#1a3e34",
+"img": "https://media.auraprint.com.au/a/fb/x2001w/scarab-green.webp",
+"back": "https://media.auraprint.com.au/a/fb/x2001w/scarab-green-b.webp"
+},
+{
+"n": "Washed Pink",
+"h": "#ba8f88",
+"img": "https://media.auraprint.com.au/a/fb/x2001w/washed-pink.webp",
+"back": "https://media.auraprint.com.au/a/fb/x2001w/washed-pink-b.webp"
+},
+{
+"n": "Chalk",
+"h": "#e5dfdb",
+"img": "https://media.auraprint.com.au/a/fb/x2001w/chalk.webp",
+"back": "https://media.auraprint.com.au/a/fb/x2001w/chalk-b.webp"
+}
+],
+"gallery": [
+"https://media.auraprint.com.au/a/fb/x2001w/g0.webp"
+],
+"prices": [
+{
+"c": [
+0,
+1,
+2,
+3,
+4,
+5,
+6,
+7,
+8,
+9,
+10,
+11
+],
+"s": [
+"XS",
+"S",
+"M",
+"L",
+"XL",
+"2XL"
+],
+"x": 16.0
+}
+],
+"from_ex": 16.0,
+"from_inc": 17.6,
+"to_inc": 17.6,
+"stock": "fb",
+"slug": "goodmates-x2001w-everyday-womens-short-sleeve-tee"
 },
 {
 "id": "jbs-3pfc",
@@ -242679,7 +245059,7 @@
 "cat": "tees",
 "gender": "women",
 "tag": "",
-"fabric": "97% Polyester, 3% Elastane , 180 GSM, BIZ COOL™ Breathable stretch honeycomb knit, UPF Rating: 50+",
+"fabric": "97% Polyester, 3% Elastane, 180 GSM, BIZ COOL™ Breathable stretch honeycomb knit, UPF Rating: 50+",
 "fit": "Modern Fit",
 "desc": "",
 "features": [
@@ -242798,7 +245178,7 @@
 "cat": "tees",
 "gender": "men",
 "tag": "",
-"fabric": "97% Polyester, 3% Elastane , 180 GSM, BIZ COOL™ Breathable stretch honeycomb knit, UPF Rating: 50+",
+"fabric": "97% Polyester, 3% Elastane, 180 GSM, BIZ COOL™ Breathable stretch honeycomb knit, UPF Rating: 50+",
 "fit": "Modern Fit",
 "desc": "",
 "features": [
@@ -244389,7 +246769,7 @@
 "cat": "tees",
 "gender": "kids",
 "tag": "",
-"fabric": "97% Polyester, 3% Elastane , 180 GSM, BIZ COOL™ Breathable stretch honeycomb knit, UPF Rating: 50+",
+"fabric": "97% Polyester, 3% Elastane, 180 GSM, BIZ COOL™ Breathable stretch honeycomb knit, UPF Rating: 50+",
 "fit": "Modern Fit",
 "desc": "",
 "features": [
@@ -244503,7 +246883,7 @@
 "cat": "tees",
 "gender": "men",
 "tag": "",
-"fabric": "97% Polyester, 3% Elastane , 180 GSM, BIZ COOL™ Breathable stretch honeycomb knit, UPF Rating: 50+",
+"fabric": "97% Polyester, 3% Elastane, 180 GSM, BIZ COOL™ Breathable stretch honeycomb knit, UPF Rating: 50+",
 "fit": "Modern Fit",
 "desc": "",
 "features": [
@@ -245557,6 +247937,588 @@
 "to_inc": 7.04,
 "stock": "fb",
 "slug": "biz-collection-t800ms-mens-aero-short-sleeve-tee"
+},
+{
+"id": "fb-x1002k",
+"brand": "Goodmates",
+"bslug": "fb",
+"code": "X1002K",
+"name": "Basis Kids Long Sleeve Tee",
+"cat": "tees",
+"gender": "kids",
+"tag": "",
+"fabric": "100% Cotton Combed Single Jersey, 185gsm, Cold machine wash. Wash with like colours.Do not bleach. Do not tumble dry. Line dry in shade. Low iron on reverse. Do not dry clean.",
+"fit": "",
+"desc": "",
+"features": [
+"Same solid fit, a bit more sleeve. The Basis Long Sleeve Tee is laidback comfort meets clean, classic design. Made with breathable 185gsm cotton and finished with ribbed cuffs and a set-in sleeve, it’s a staple that works with anything. Easy to style, easy to rely on. Your new cool-weather essential.",
+"Ribbed crew neck with set-in long sleeve."
+],
+"chart": {},
+"chart_sizes": null,
+"chart_img": null,
+"industries": [],
+"stylesheet": "https://cdn.fashionbizapps.nz/honeybee/stylesheets/GOODMATES_-_Product_Sheet_-_Basis_-_X1002K_-_X1002Y.pdf",
+"carton": null,
+"sizes": [
+"4",
+"6",
+"8"
+],
+"colours": [
+{
+"n": "White",
+"h": "#dddddd",
+"img": "https://media.auraprint.com.au/a/fb/x1002k/white.webp",
+"back": "https://media.auraprint.com.au/a/fb/x1002k/white-b.webp"
+},
+{
+"n": "Black",
+"h": "#000000",
+"img": "https://media.auraprint.com.au/a/fb/x1002k/black.webp",
+"back": "https://media.auraprint.com.au/a/fb/x1002k/black-b.webp"
+},
+{
+"n": "Grey Marle",
+"h": "#cccccc",
+"img": "https://media.auraprint.com.au/a/fb/x1002k/grey-marle.webp",
+"back": "https://media.auraprint.com.au/a/fb/x1002k/grey-marle-b.webp"
+}
+],
+"gallery": [
+"https://media.auraprint.com.au/a/fb/x1002k/g0.webp"
+],
+"prices": [
+{
+"c": [
+0,
+1,
+2
+],
+"s": [
+"4",
+"6",
+"8"
+],
+"x": 11.6
+}
+],
+"from_ex": 11.6,
+"from_inc": 12.76,
+"to_inc": 12.76,
+"stock": "fb",
+"slug": "goodmates-x1002k-basis-kids-long-sleeve-tee"
+},
+{
+"id": "fb-x1002m",
+"brand": "Goodmates",
+"bslug": "fb",
+"code": "X1002M",
+"name": "Basis Mens Long Sleeve Tee",
+"cat": "tees",
+"gender": "men",
+"tag": "New colour",
+"fabric": "100% Cotton Combed Single Jersey, 185gsm, Cold machine wash. Wash with like colours.Do not bleach. Do not tumble dry. Line dry in shade. Low iron on reverse. Do not dry clean.",
+"fit": "",
+"desc": "",
+"features": [
+"Same solid fit, a bit more sleeve. The Basis Long Sleeve Tee is laidback comfort meets clean, classic design. Made with breathable 185gsm cotton and finished with ribbed cuffs and a set-in sleeve, it’s a staple that works with anything. Easy to style, easy to rely on. Your new cool-weather essential.",
+"Ribbed crew neck with set-in long sleeve."
+],
+"chart": {},
+"chart_sizes": null,
+"chart_img": null,
+"industries": [],
+"stylesheet": "https://cdn.fashionbizapps.nz/honeybee/stylesheets/GOODMATES_-_Product_Sheet_-_Basis_-_X1002M_wqOYNIV.pdf",
+"carton": null,
+"sizes": [
+"S",
+"M",
+"L",
+"XL",
+"2XL",
+"3XL",
+"4XL",
+"5XL"
+],
+"colours": [
+{
+"n": "Grey Marle",
+"h": "#cccccc",
+"img": "https://media.auraprint.com.au/a/fb/x1002m/grey-marle.webp",
+"back": "https://media.auraprint.com.au/a/fb/x1002m/grey-marle-b.webp"
+},
+{
+"n": "Army",
+"h": "#555124",
+"img": "https://media.auraprint.com.au/a/fb/x1002m/army.webp",
+"back": "https://media.auraprint.com.au/a/fb/x1002m/army-b.webp"
+},
+{
+"n": "Ecru",
+"h": "#f9f4ea",
+"img": "https://media.auraprint.com.au/a/fb/x1002m/ecru.webp",
+"back": "https://media.auraprint.com.au/a/fb/x1002m/ecru-b.webp"
+},
+{
+"n": "White",
+"h": "#dddddd",
+"img": "https://media.auraprint.com.au/a/fb/x1002m/white.webp",
+"back": "https://media.auraprint.com.au/a/fb/x1002m/white-b.webp"
+},
+{
+"n": "Black",
+"h": "#000000",
+"img": "https://media.auraprint.com.au/a/fb/x1002m/black.webp",
+"back": "https://media.auraprint.com.au/a/fb/x1002m/black-b.webp"
+},
+{
+"n": "Navy",
+"h": "#393b47",
+"img": "https://media.auraprint.com.au/a/fb/x1002m/navy.webp",
+"back": "https://media.auraprint.com.au/a/fb/x1002m/navy-b.webp"
+},
+{
+"n": "Red",
+"h": "#dc0b1c",
+"img": "https://media.auraprint.com.au/a/fb/x1002m/red.webp",
+"back": "https://media.auraprint.com.au/a/fb/x1002m/red-b.webp"
+}
+],
+"gallery": [
+"https://media.auraprint.com.au/a/fb/x1002m/g0.webp"
+],
+"prices": [
+{
+"c": [
+0,
+1,
+2,
+3,
+4,
+5,
+6
+],
+"s": [
+"S",
+"M",
+"L",
+"XL",
+"2XL",
+"3XL",
+"4XL",
+"5XL"
+],
+"x": 16.0
+}
+],
+"from_ex": 16.0,
+"from_inc": 17.6,
+"to_inc": 17.6,
+"stock": "fb",
+"slug": "goodmates-x1002m-basis-mens-long-sleeve-tee"
+},
+{
+"id": "fb-x1002w",
+"brand": "Goodmates",
+"bslug": "fb",
+"code": "X1002W",
+"name": "Basis Womens Long Sleeve Tee",
+"cat": "tees",
+"gender": "women",
+"tag": "New colour",
+"fabric": "100% Cotton Combed Single Jersey, 185gsm, Cold machine wash. Wash with like colours.Do not bleach. Do not tumble dry. Line dry in shade. Low iron on reverse. Do not dry clean.",
+"fit": "",
+"desc": "",
+"features": [
+"Same solid fit, a bit more sleeve. The Basis Long Sleeve Tee is laidback comfort meets clean, classic design. Made with breathable 185gsm cotton and finished with ribbed cuffs and a set-in sleeve, it’s a staple that works with anything. Easy to style, easy to rely on. Your new cool-weather essential.",
+"Ribbed crew neck with set-in long sleeve."
+],
+"chart": {},
+"chart_sizes": null,
+"chart_img": null,
+"industries": [],
+"stylesheet": "https://cdn.fashionbizapps.nz/honeybee/stylesheets/GOODMATES_-_Product_Sheet_-_Basis_-_X1002W_oPIe4S6.pdf",
+"carton": null,
+"sizes": [
+"XS",
+"S",
+"M",
+"L",
+"XL",
+"2XL"
+],
+"colours": [
+{
+"n": "White",
+"h": "#dddddd",
+"img": "https://media.auraprint.com.au/a/fb/x1002w/white.webp",
+"back": "https://media.auraprint.com.au/a/fb/x1002w/white-b.webp"
+},
+{
+"n": "Ecru",
+"h": "#f9f4ea",
+"img": "https://media.auraprint.com.au/a/fb/x1002w/ecru.webp",
+"back": "https://media.auraprint.com.au/a/fb/x1002w/ecru-b.webp"
+},
+{
+"n": "Black",
+"h": "#000000",
+"img": "https://media.auraprint.com.au/a/fb/x1002w/black.webp",
+"back": "https://media.auraprint.com.au/a/fb/x1002w/black-b.webp"
+},
+{
+"n": "Red",
+"h": "#dc0b1c",
+"img": "https://media.auraprint.com.au/a/fb/x1002w/red.webp",
+"back": "https://media.auraprint.com.au/a/fb/x1002w/red-b.webp"
+},
+{
+"n": "Grey Marle",
+"h": "#cccccc",
+"img": "https://media.auraprint.com.au/a/fb/x1002w/grey-marle.webp",
+"back": "https://media.auraprint.com.au/a/fb/x1002w/grey-marle-b.webp"
+}
+],
+"gallery": [
+"https://media.auraprint.com.au/a/fb/x1002w/g0.webp"
+],
+"prices": [
+{
+"c": [
+0,
+1,
+2,
+3,
+4
+],
+"s": [
+"XS",
+"S",
+"M",
+"L",
+"XL",
+"2XL"
+],
+"x": 15.2
+}
+],
+"from_ex": 15.2,
+"from_inc": 16.72,
+"to_inc": 16.72,
+"stock": "fb",
+"slug": "goodmates-x1002w-basis-womens-long-sleeve-tee"
+},
+{
+"id": "fb-x1002y",
+"brand": "Goodmates",
+"bslug": "fb",
+"code": "X1002Y",
+"name": "Basis Youth Long Sleeve Tee",
+"cat": "tees",
+"gender": "kids",
+"tag": "",
+"fabric": "100% Cotton Combed Single Jersey, 185gsm, Cold machine wash. Wash with like colours.Do not bleach. Do not tumble dry. Line dry in shade. Low iron on reverse. Do not dry clean.",
+"fit": "",
+"desc": "",
+"features": [
+"Same solid fit, a bit more sleeve. The Basis Long Sleeve Tee is laidback comfort meets clean, classic design. Made with breathable 185gsm cotton and finished with ribbed cuffs and a set-in sleeve, it’s a staple that works with anything. Easy to style, easy to rely on. Your new cool-weather essential.",
+"Ribbed crew neck with set-in long sleeve."
+],
+"chart": {},
+"chart_sizes": null,
+"chart_img": null,
+"industries": [],
+"stylesheet": "https://cdn.fashionbizapps.nz/honeybee/stylesheets/GOODMATES_-_Product_Sheet_-_Basis_-_X1002K_-_X1002Y_bZiT17H.pdf",
+"carton": null,
+"sizes": [
+"10",
+"12",
+"14",
+"16"
+],
+"colours": [
+{
+"n": "White",
+"h": "#dddddd",
+"img": "https://media.auraprint.com.au/a/fb/x1002y/white.webp",
+"back": "https://media.auraprint.com.au/a/fb/x1002y/white-b.webp"
+},
+{
+"n": "Black",
+"h": "#000000",
+"img": "https://media.auraprint.com.au/a/fb/x1002y/black.webp",
+"back": "https://media.auraprint.com.au/a/fb/x1002y/black-b.webp"
+},
+{
+"n": "Grey Marle",
+"h": "#cccccc",
+"img": "https://media.auraprint.com.au/a/fb/x1002y/grey-marle.webp",
+"back": "https://media.auraprint.com.au/a/fb/x1002y/grey-marle-b.webp"
+}
+],
+"gallery": [
+"https://media.auraprint.com.au/a/fb/x1002y/g0.webp"
+],
+"prices": [
+{
+"c": [
+0,
+1,
+2
+],
+"s": [
+"10",
+"12",
+"14",
+"16"
+],
+"x": 12.0
+}
+],
+"from_ex": 12.0,
+"from_inc": 13.2,
+"to_inc": 13.2,
+"stock": "fb",
+"slug": "goodmates-x1002y-basis-youth-long-sleeve-tee"
+},
+{
+"id": "fb-x2008m",
+"brand": "Goodmates",
+"bslug": "fb",
+"code": "X2008M",
+"name": "Everyday Mens Box Tee",
+"cat": "tees",
+"gender": "men",
+"tag": "New style",
+"fabric": "100% Cotton Combed Single Jersey, 225gsm, Cold machine wash. Wash with like colours. Do not bleach. Do not tumble dry. Line dry in shade. Cool iron on reverse. Do not dry clean.",
+"fit": "",
+"desc": "",
+"features": [
+"Your everyday tee, with a boxier attitude. The Box Tee is made from 225gsm 100% cotton single jersey, giving it a soft, breathable feel with enough weight to hold its shape.",
+"Finished with a ribbed crew neck and set-in sleeves, the relaxed boxy fit keeps things easy without feeling oversized.",
+"Wear it loose, layer it up, a solid everyday staple that’s built to keep up."
+],
+"chart": {},
+"chart_sizes": null,
+"chart_img": null,
+"industries": [],
+"stylesheet": "https://cdn.fashionbizapps.nz/honeybee/stylesheets/GOODMATES_-_Product_Sheet_-_Everyday_-_Box_Tee_-_X2008M.pdf",
+"carton": null,
+"sizes": [
+"S",
+"M",
+"L",
+"XL",
+"2XL",
+"3XL",
+"4XL",
+"5XL"
+],
+"colours": [
+{
+"n": "Black",
+"h": "#000000",
+"img": "https://media.auraprint.com.au/a/fb/x2008m/black.webp",
+"back": "https://media.auraprint.com.au/a/fb/x2008m/black-b.webp"
+},
+{
+"n": "White",
+"h": "#dddddd",
+"img": "https://media.auraprint.com.au/a/fb/x2008m/white.webp",
+"back": "https://media.auraprint.com.au/a/fb/x2008m/white-b.webp"
+}
+],
+"gallery": [
+"https://media.auraprint.com.au/a/fb/x2008m/g0.webp"
+],
+"prices": [
+{
+"c": [
+0,
+1
+],
+"s": [
+"S",
+"M",
+"L",
+"XL",
+"2XL",
+"3XL",
+"4XL",
+"5XL"
+],
+"x": 17.52
+}
+],
+"from_ex": 17.52,
+"from_inc": 19.27,
+"to_inc": 19.27,
+"stock": "fb",
+"slug": "goodmates-x2008m-everyday-mens-box-tee"
+},
+{
+"id": "fb-x2008w",
+"brand": "Goodmates",
+"bslug": "fb",
+"code": "X2008W",
+"name": "Everyday Womens Box Tee",
+"cat": "tees",
+"gender": "women",
+"tag": "New style",
+"fabric": "100% Cotton Combed Single Jersey, 225gsm, Cold machine wash. Wash with like colours. Do not bleach. Do not tumble dry. Line dry in shade. Cool iron on reverse. Do not dry clean.",
+"fit": "",
+"desc": "",
+"features": [
+"Your everyday tee, with a boxier attitude. The Box Tee is made from 225gsm 100% cotton single jersey, giving it a soft, breathable feel with enough weight to hold its shape.",
+"Finished with a ribbed crew neck and set-in sleeves, the relaxed boxy fit keeps things easy without feeling oversized.",
+"Wear it loose, layer it up, a solid everyday staple that’s built to keep up."
+],
+"chart": {},
+"chart_sizes": null,
+"chart_img": null,
+"industries": [],
+"stylesheet": "https://cdn.fashionbizapps.nz/honeybee/stylesheets/GOODMATES_-_Product_Sheet_-_Everyday_-_Box_Tee_-_X2008W.pdf",
+"carton": null,
+"sizes": [
+"XS",
+"S",
+"M",
+"L",
+"XL",
+"2XL"
+],
+"colours": [
+{
+"n": "Black",
+"h": "#000000",
+"img": "https://media.auraprint.com.au/a/fb/x2008w/black.webp",
+"back": "https://media.auraprint.com.au/a/fb/x2008w/black-b.webp"
+},
+{
+"n": "White",
+"h": "#dddddd",
+"img": "https://media.auraprint.com.au/a/fb/x2008w/white.webp",
+"back": "https://media.auraprint.com.au/a/fb/x2008w/white-b.webp"
+}
+],
+"gallery": [
+"https://media.auraprint.com.au/a/fb/x2008w/g0.webp"
+],
+"prices": [
+{
+"c": [
+0,
+1
+],
+"s": [
+"XS",
+"S",
+"M",
+"L",
+"XL",
+"2XL"
+],
+"x": 17.52
+}
+],
+"from_ex": 17.52,
+"from_inc": 19.27,
+"to_inc": 19.27,
+"stock": "fb",
+"slug": "goodmates-x2008w-everyday-womens-box-tee"
+},
+{
+"id": "fb-x3008w",
+"brand": "Goodmates",
+"bslug": "fb",
+"code": "X3008W",
+"name": "Womens Baby Tee",
+"cat": "tees",
+"gender": "women",
+"tag": "New style",
+"fabric": "100% Cotton Combed Single Jersey, 185gsm, Cold machine wash. Wash with like colours. Do not bleach. Do not tumble dry. Line dry in shade. Cool iron on reverse. Do not dry clean.",
+"fit": "",
+"desc": "",
+"features": [
+"The little tee that does a lot. The Baby Tee is made from 160gsm 100% cotton single jersey, giving it a soft, lightweight feel that’s easy to wear every day.",
+"Cut for a fitted shape with a ribbed crew neck and set-in short sleeves, it’s made to sit close without feeling restrictive.",
+"Pair it with your favourite jeans, cargos or sweats, if it’s in your wardrobe, this tee goes with it."
+],
+"chart": {},
+"chart_sizes": null,
+"chart_img": null,
+"industries": [],
+"stylesheet": "https://cdn.fashionbizapps.nz/honeybee/stylesheets/GOODMATES_-_Product_Sheet_-_Baby_Tee_-_X3008W.pdf",
+"carton": null,
+"sizes": [
+"XS",
+"S",
+"M",
+"L",
+"XL",
+"2XL"
+],
+"colours": [
+{
+"n": "Black",
+"h": "#000000",
+"img": "https://media.auraprint.com.au/a/fb/x3008w/black.webp",
+"back": "https://media.auraprint.com.au/a/fb/x3008w/black-b.webp"
+},
+{
+"n": "White",
+"h": "#dddddd",
+"img": "https://media.auraprint.com.au/a/fb/x3008w/white.webp",
+"back": "https://media.auraprint.com.au/a/fb/x3008w/white-b.webp"
+},
+{
+"n": "Washed Black",
+"h": "#212620",
+"img": "https://media.auraprint.com.au/a/fb/x3008w/washed-black.webp",
+"back": "https://media.auraprint.com.au/a/fb/x3008w/washed-black-b.webp"
+},
+{
+"n": "Ecru",
+"h": "#f9f4ea",
+"img": "https://media.auraprint.com.au/a/fb/x3008w/ecru.webp",
+"back": "https://media.auraprint.com.au/a/fb/x3008w/ecru-b.webp"
+},
+{
+"n": "Powder Blue",
+"h": "#c3d4ec",
+"img": "https://media.auraprint.com.au/a/fb/x3008w/powder-blue.webp",
+"back": "https://media.auraprint.com.au/a/fb/x3008w/powder-blue-b.webp"
+}
+],
+"gallery": [
+"https://media.auraprint.com.au/a/fb/x3008w/g0.webp"
+],
+"prices": [
+{
+"c": [
+0,
+1,
+2,
+3,
+4
+],
+"s": [
+"XS",
+"S",
+"M",
+"L",
+"XL",
+"2XL"
+],
+"x": 11.12
+}
+],
+"from_ex": 11.12,
+"from_inc": 12.23,
+"to_inc": 12.23,
+"stock": "fb",
+"slug": "goodmates-x3008w-womens-baby-tee"
 },
 {
 "id": "jbs-1bt3",
