@@ -164,3 +164,6 @@
   .ap-bt div:first-child{grid-column:1/-1}
   .ap-pill{right:12px;bottom:76px}
 }
+
+/* 16 Oct 2026: author display rules (.ap-card flex, .ap-more block) beat the browser's [hidden]{display:none}, so filtered-out cards stayed visible. */
+.ap-card[hidden],.ap-more[hidden],.ap-empty[hidden]{display:none!important}
