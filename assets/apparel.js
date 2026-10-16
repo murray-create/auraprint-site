@@ -77,7 +77,7 @@ function cardHtml(x){
     '<a class="ph" href="/apparel/p/'+esc(x.u)+'.html" tabindex="-1"><img loading="lazy" src="'+esc(x.i)+'" alt="'+esc(x.b+' '+x.n)+'" width="480" height="480"><span class="badges">'+badges+'</span></a>'+
     '<div class="bd"><span class="br">'+esc(x.b)+' · '+esc(x.c)+'</span><h3><a href="/apparel/p/'+esc(x.u)+'.html">'+esc(x.n)+'</a></h3>'+
     '<div class="ap-dots">'+dots+(cl.length > 9 ? '<em>+'+(cl.length-9)+'</em>' : '')+'</div>'+
-    '<div class="pr">From '+money(x.p)+' <small>inc GST</small></div></div></article>';
+    '<div class="pr">From '+money(x.p)+' <small>inc GST</small>'+(x.r ? '<s class="ap-rrp" title="Brand recommended retail price">RRP '+money(x.r)+'</s>' : '')+'</div></div></article>';
 }
 function initList(root){
   var grid = $('.ap-grid', root), more = $('.ap-more', root), countEl = $('.ap-count', root);
