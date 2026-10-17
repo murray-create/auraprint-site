@@ -200,6 +200,7 @@ function renderPanel(){
         '<p>'+esc(s.sz)+'</p><p>'+esc(s.dec)+'</p>'+
         '<div class="acts"><button type="button" data-act="edit" data-id="'+l.id+'">Edit</button><button type="button" data-act="dup" data-id="'+l.id+'">Add another colour</button><button type="button" class="rm" data-act="rm" data-id="'+l.id+'">Remove</button></div></div></div>';
     }).join('');
+  renderPrice();
   var warn = '';
   if (S.lines.some(function(l){ return !(l.decorations||[]).length; })) warn = 'One or more garments has no decoration chosen. That is fine for plain garments, otherwise tap Edit.';
   $('#ubWarn').innerHTML = warn; $('#ubWarn').hidden = !warn;
@@ -207,6 +208,70 @@ function renderPanel(){
   $('#ubBar').classList.toggle('hide', !n);
   renderGrid();
   store();
+}
+
+/* ---------- running price + discount code (17 Oct 2026) ----------
+   Garments only: decoration is quoted once we see the logo. The "from" price is
+   the lowest for that style, so larger sizes can cost more. The code is checked
+   with coupon_peek for a live estimate; the real discount is worked out on the
+   quote against supplier cost, so everything here is labelled an estimate. */
+var CODE_KEY = 'aura_ub_code_v1';
+try { S.coupon = JSON.parse(localStorage.getItem(CODE_KEY) || 'null'); } catch(e){ S.coupon = null; }
+function money(c){ return '$' + (Math.round(c)/100).toLocaleString('en-AU',{minimumFractionDigits:2,maximumFractionDigits:2}); }
+function garmentCents(){
+  var cents = 0, unpriced = 0;
+  S.lines.forEach(function(l){
+    var g = S.byCode[l.code], p = g && +g.from_inc;
+    if (p > 0) cents += Math.round(p*100) * qtyOf(l); else unpriced++;
+  });
+  return { cents:cents, unpriced:unpriced };
+}
+function renderPrice(){
+  var el = $('#ubPrice'); if (!el) return;
+  var gp = garmentCents(), c = S.coupon;
+  if (!S.lines.length || !gp.cents){ el.hidden = true; el.innerHTML = ''; return; }
+  var disc = 0;
+  if (c){ disc = c.kind === 'percent' ? Math.round(gp.cents * (+c.percent_off) / 100) : Math.min(+c.amount_off_cents||0, gp.cents); }
+  el.innerHTML =
+    '<div class="r"><span>Garments from</span><b>'+money(gp.cents)+'</b></div>'+
+    (disc ? '<div class="r disc"><span>Code '+esc(c.code)+' ('+esc(c.label)+')</span><b>&minus;'+money(disc)+'</b></div>'+
+            '<div class="r tot"><span>Garments after discount</span><b>'+money(gp.cents - disc)+'</b></div>' : '')+
+    '<div class="r muted"><span>Decoration</span><b>Quoted with your logo</b></div>'+
+    '<p class="fine">Estimate, inc GST. Garment prices start from the price shown and can be higher for bigger sizes'+
+      (gp.unpriced ? ', and '+gp.unpriced+' style'+(gp.unpriced===1?' has':'s have')+' no online price yet' : '')+
+      '. Your exact price comes on your quote'+(c ? ', with your code applied' : '')+'.</p>';
+  el.hidden = false;
+}
+function showCodeMsg(cls, txt){ var m = $('#ubCodeMsg'); if (!m) return; m.className = 'ub-code-msg ' + cls; m.textContent = txt; }
+function applyCode(){
+  var inp = $('#ubCode'); if (!inp) return;
+  var code = String(inp.value||'').trim().toUpperCase();
+  if (!code){ setCoupon(null); showCodeMsg('', ''); return; }
+  var btn = $('#ubCodeApply'); btn.disabled = true; btn.textContent = 'Checking…';
+  post('/rest/v1/rpc/coupon_peek', { p_code:code, p_context:'quote' }).then(function(d){
+    btn.disabled = false; btn.textContent = 'Apply';
+    if (!d || !d.ok){ setCoupon(null); showCodeMsg('bad', (d && (d.message||d.error)) || 'That code is not valid.'); return; }
+    inp.value = d.code;
+    setCoupon({ code:d.code, kind:d.kind, percent_off:d.percent_off, amount_off_cents:d.amount_off_cents, label:d.label });
+    showCodeMsg('ok', d.label + ' applied. Your estimate is updated in Your order.');
+  }, function(){
+    btn.disabled = false; btn.textContent = 'Apply';
+    showCodeMsg('bad', 'We could not check that code. You can still send it with your request.');
+  });
+}
+function setCoupon(c){
+  S.coupon = c;
+  try { c ? localStorage.setItem(CODE_KEY, JSON.stringify(c)) : localStorage.removeItem(CODE_KEY); } catch(e){}
+  renderPrice();
+}
+function wireCode(){
+  var inp = $('#ubCode'), btn = $('#ubCodeApply'); if (!inp || !btn) return;
+  if (S.coupon){ inp.value = S.coupon.code; showCodeMsg('ok', S.coupon.label + ' applied. Your estimate is updated in Your order.'); }
+  btn.addEventListener('click', function(e){ e.preventDefault(); applyCode(); });
+  inp.addEventListener('keydown', function(e){ if (e.key === 'Enter'){ e.preventDefault(); applyCode(); } });
+  inp.addEventListener('input', function(){
+    if (S.coupon && inp.value.trim().toUpperCase() !== S.coupon.code){ setCoupon(null); showCodeMsg('', 'Tap Apply to check the code.'); }
+  });
 }
 
 /* ---------- configurator ---------- */
@@ -464,7 +529,7 @@ function submit(ev){
       }
       track('generate_lead', { form_name:'Uniform order builder', page_path:location.pathname, stored:true, emailed:!!CFG.web3formsKey });
       try { if (window.auraAdsConvert) window.auraAdsConvert('lead'); } catch(e){}
-      S.lines = []; S.files = []; S.fileRefs = []; store();
+      S.lines = []; S.files = []; S.fileRefs = []; store(); setCoupon(null);
       $('#ubDoneRef').textContent = res.ref;
       $('#ubDoneQty').textContent = res.total_qty;
       $('#ubDoneFiles').hidden = !failed;
@@ -483,6 +548,7 @@ function submit(ev){
 
 /* ---------- wiring ---------- */
 function wire(){
+  wireCode();
   $('#ubCats').addEventListener('click', function(e){ var b = e.target.closest('button[data-cat]'); if (!b) return; S.cat = b.dataset.cat; S.show = PAGE; renderCats(); renderGrid(); });
   $('#ubSearch').addEventListener('input', function(e){ S.q = e.target.value; S.show = PAGE; renderGrid(); });
   $('#ubBrand').addEventListener('change', function(e){ S.brand = e.target.value; S.show = PAGE; renderGrid(); });

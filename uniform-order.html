@@ -22,7 +22,7 @@
 <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
 <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
 <link rel="mask-icon" href="assets/aura-mark-black.svg" color="#EC4899">
-<link rel="stylesheet" href="assets/uniform-builder.css?v=20261016c">
+<link rel="stylesheet" href="assets/uniform-builder.css?v=20261017b">
 </head>
 <body>
 <!-- AURA:HEADER start (static so crawlers see the menu; aura.js only wires the burger) -->
@@ -210,6 +210,7 @@
         <div class="ub-panel-h"><h2>Your order</h2><span class="ub-units">0 items</span><button type="button" class="ub-panel-x" id="ubPanelX" aria-label="Close order">&times;</button></div>
         <div class="ub-lines" id="ubLines"></div>
         <div class="ub-panel-f">
+          <div class="ub-price" id="ubPrice" hidden></div>
           <p class="ub-warn" id="ubWarn" hidden></p>
           <button type="button" class="btn btn-aura ub-go" disabled>Next: logo &amp; details &rarr;</button>
           <p class="note">No payment now. We quote first and send a proof before anything is made.</p>
@@ -240,7 +241,9 @@
         <label>Mobile<input name="phone" type="tel" autocomplete="tel" inputmode="tel" maxlength="20" placeholder="04xx xxx xxx" required></label>
         <label><span class="lb">Needed by <em class="ub-opt">optional</em></span><input name="needed_by" type="date"></label>
         <label><span class="lb">Delivery postcode <em class="ub-opt">optional</em></span><input name="delivery_postcode" inputmode="numeric" maxlength="4" pattern="[0-9]{4}"></label>
-        <label><span class="lb">Discount code <em class="ub-opt">optional</em></span><input name="coupon_code" autocomplete="off" maxlength="30" style="text-transform:uppercase;letter-spacing:.06em" placeholder="e.g. FAMILY15"></label>
+        <label class="full"><span class="lb">Discount code <em class="ub-opt">optional</em></span>
+          <span class="ub-code"><input name="coupon_code" id="ubCode" autocomplete="off" maxlength="30" placeholder="e.g. FAMILY15"><button type="button" class="btn btn-ghost" id="ubCodeApply">Apply</button></span>
+          <span class="ub-code-msg" id="ubCodeMsg" role="status"></span></label>
         <label class="full"><span class="lb">Anything else? <em class="ub-opt">optional</em></span><textarea name="notes" maxlength="1500" placeholder="Thread colours, staff names, an event date, a garment you could not find..."></textarea></label>
       </div>
       <div class="hp" aria-hidden="true"><label>Website<input name="website" tabindex="-1" autocomplete="off"></label></div>
@@ -333,6 +336,6 @@
 <script src="assets/config.js?v=20260922a"></script>
 <script src="assets/aura.js?v=20261003b"></script>
 <script>window.UB_VER="20261016b";</script>
-<script src="assets/uniform-builder.js?v=20261017a"></script>
+<script src="assets/uniform-builder.js?v=20261017b"></script>
 </body>
 </html>
