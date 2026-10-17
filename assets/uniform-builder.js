@@ -420,7 +420,7 @@ function submit(ev){
   var attr = {}; try { attr = (window.auraAttribution && window.auraAttribution()) || {}; } catch(e){}
   var payload = {
     name:v('name'), email:v('email'), phone:v('phone'), company:v('company'), needed_by:v('needed_by'),
-    delivery_postcode:v('delivery_postcode'), notes:v('notes'), website:(f.elements.website||{}).value||'',
+    delivery_postcode:v('delivery_postcode'), notes:v('notes'), coupon_code:v('coupon_code').toUpperCase(), website:(f.elements.website||{}).value||'',
     source_page:'uniform-order.html', attribution:attr,
     lines:S.lines.map(function(l){
       var g = S.byCode[l.code];
