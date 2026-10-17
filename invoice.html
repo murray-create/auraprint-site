@@ -74,7 +74,7 @@
     if(!L.length) return '';
     return '<div class="iname">'+esc(L[0])+'</div>'+(L.length>1?'<div class="ispec">'+L.slice(1).map(esc).join('<br>')+'</div>':'');
   }
-  function money(c){ return '$' + (c/100).toLocaleString('en-AU',{minimumFractionDigits:2,maximumFractionDigits:2}); }
+  function money(c){ return (c<0?'−':'') + '$' + (Math.abs(c)/100).toLocaleString('en-AU',{minimumFractionDigits:2,maximumFractionDigits:2}); }
   function fmtDate(s){ var d=new Date(s); return d.toLocaleDateString('en-AU',{day:'2-digit',month:'short',year:'numeric'}); }
   function fail(msg){ document.getElementById('doc').innerHTML = '<div class="err"><h2>Invoice unavailable</h2><p class="muted">'+msg+'</p><p class="muted">Need help? Email admin@auraprint.com.au</p></div>'; }
 

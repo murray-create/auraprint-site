@@ -59,6 +59,13 @@
   .acceptbtn{background:var(--go);color:#fff;font-weight:800;font-size:15px;padding:13px 28px;border-radius:8px;border:none;cursor:pointer}
   .declinebtn{background:#efe9e1;color:#6b6560;font-weight:700;font-size:14px;padding:13px 22px;border-radius:8px;border:none;cursor:pointer}
   .msg{margin-top:12px;font-size:14px}
+  .coupon{margin:14px 0 4px;padding:14px 16px;border:2px dashed var(--line);border-radius:10px;max-width:560px}
+  .coupon .crow{display:flex;gap:10px;flex-wrap:wrap}
+  .coupon input{flex:1;min-width:160px;max-width:260px;text-transform:uppercase;letter-spacing:.06em}
+  .coupon button{background:#efe9e1;color:#1a1a1a;font-weight:700;font-size:14px;padding:11px 18px;border-radius:8px;border:none;cursor:pointer}
+  .coupon .msg{margin-top:8px}
+  #discTbl td{color:#15803d}
+  #discTbl tr:last-child td{color:inherit}
   .msg.err{color:#b91c1c}
   .msg.ok{color:#15803d}
   .footer{margin-top:34px;font-size:11.5px;color:var(--mut);border-top:1px solid var(--line);padding-top:12px}
@@ -114,6 +121,7 @@
         sb.rpc('mark_link_viewed',{p_kind:'quote',p_token:t}).then(function(){}, function(){});
       }); } catch(e){}
       render(q);
+      paintDiscount();
     });
   }
   load();
@@ -216,6 +224,8 @@
       '<table class="totals" id="totals"'+((isOpts&&!chosen)||(isAny&&!chosenSet.length)?' style="display:none"':'')+'><tr><td style="width:70%"></td><td><b>Subtotal</b></td><td style="text-align:right" id="totEx">'+money(q.subtotal_ex_cents)+'</td></tr>'+
       '<tr><td></td><td><b>Total GST</b></td><td style="text-align:right" id="totGst">'+money(q.gst_cents)+'</td></tr>'+
       '<tr><td></td><td>'+(isOpts?'Chosen option':'Total')+'</td><td style="text-align:right" id="totAll">'+money(q.total_inc_cents)+'</td></tr></table>'+
+      '<table class="totals" id="discTbl" style="display:none"><tr><td style="width:70%"></td><td>Discount <span id="discCode"></span></td><td style="text-align:right" id="discAmt"></td></tr>'+
+      '<tr><td></td><td>Total payable</td><td style="text-align:right" id="payAmt"></td></tr></table>'+
 
       (q.customer_notes?'<div class="notes"><div class="lbl" style="margin-bottom:6px">Notes</div>'+esc(q.customer_notes)+'</div>':'');
 
@@ -225,6 +235,12 @@
         '<p class="muted" style="margin:4px 0 0">Accept below and we\'ll email your tax invoice. Nothing goes to print until you\'ve paid and approved your artwork proof. Forwarded this by a colleague? That\'s fine — just enter your own name.</p>'+
         '<div class="field"><label>Your name *</label><input id="dName" placeholder="Full name"></div>'+
         '<div class="field"><label>Comments (required if declining)</label><textarea id="dComments" placeholder="Optional — anything we should know?"></textarea></div>'+
+        '<div class="coupon"><label for="cCode">Have a discount code?</label>'+
+          '<div class="crow"><input id="cCode" maxlength="30" autocomplete="off" value="'+esc(q.coupon_code||'')+'">'+
+          '<button type="button" id="cApply">Apply</button>'+
+          '<button type="button" id="cRemove"'+(q.coupon_code?'':' style="display:none"')+'>Remove</button></div>'+
+          '<div class="msg" id="cMsg"></div>'+
+        '</div>'+
         '<div class="btnrow">'+
           '<button class="acceptbtn" id="dAccept">✓ Accept quote</button>'+
           '<button class="declinebtn" id="dDecline">Decline</button>'+
@@ -247,7 +263,13 @@
     if (canDecide){
       document.getElementById('dAccept').addEventListener('click', function(){ decide('accepted', this); });
       document.getElementById('dDecline').addEventListener('click', function(){ decide('declined', this); });
+      document.getElementById('cApply').addEventListener('click', function(){ applyCode(null, false); });
+      document.getElementById('cRemove').addEventListener('click', removeCode);
+      document.getElementById('cCode').addEventListener('keydown', function(e){ if(e.key==='Enter'){ e.preventDefault(); applyCode(null, false); } });
     }
+    window._q = q;
+    window._canDecide = canDecide;
+    window._coupon = (q.coupon_code && q.discount_inc_cents>0) ? { code:q.coupon_code, discount:q.discount_inc_cents } : null;
     window._opts = null; window._any = null;
     if (isOpts && canDecide){
       window._opts = q.items||[];
@@ -317,6 +339,95 @@
       document.getElementById('totals').style.display = 'none';
     }
     var m = document.getElementById('dMsg'); if (m && m.className.indexOf('err')>-1){ m.className='msg'; m.textContent=''; }
+    afterPick();
+  }
+
+  /* ---- discount codes ----
+     The server judges every code against the lines the customer has picked,
+     so the preview here is display only. */
+  function currentInc(){
+    var q = window._q || {};
+    if (window._opts && window._opts.length){
+      var it = window._opts.filter(function(i){ return i.item_no===window._chosenOpt; })[0];
+      return it ? it.price_inc_cents : null;
+    }
+    if (window._any && window._any.length){
+      var set = window._chosenSet || [];
+      if (!set.length) return null;
+      return window._any.filter(function(i){ return set.indexOf(i.item_no)>-1; })
+        .reduce(function(a,i){ return a + i.price_inc_cents; }, 0);
+    }
+    return q.total_inc_cents;
+  }
+  function paintDiscount(){
+    var tbl = document.getElementById('discTbl'); if (!tbl) return;
+    var c = window._coupon, inc = currentInc();
+    if (!c || inc==null){ tbl.style.display='none'; return; }
+    tbl.style.display = '';
+    document.getElementById('discCode').textContent = '('+c.code+')';
+    document.getElementById('discAmt').textContent = '−' + money(c.discount);
+    document.getElementById('payAmt').textContent = money(inc - c.discount);
+    var ti = document.getElementById('totInc');
+    if (ti && !ti.classList.contains('range')) ti.textContent = money(inc - c.discount);
+  }
+  function pickedArgs(){
+    return {
+      p_chosen_item_no: (window._opts && window._opts.length) ? (window._chosenOpt||null) : null,
+      p_chosen_item_nos: (window._any && window._any.length && (window._chosenSet||[]).length) ? window._chosenSet.slice() : null
+    };
+  }
+  function needsPick(){
+    return (window._opts && window._opts.length && !window._chosenOpt) ||
+           (window._any && window._any.length && !(window._chosenSet||[]).length);
+  }
+  /* Resolves true when the code is on the quote, false when it is not. */
+  function applyCode(code, quiet){
+    var inp = document.getElementById('cCode'), msg = document.getElementById('cMsg');
+    code = String(code==null ? (inp ? inp.value : '') : code).trim().toUpperCase();
+    if (!code) return Promise.resolve(true);
+    if (needsPick()){
+      msg.className='msg err'; msg.textContent='Please choose what you would like first, then apply the code.';
+      return Promise.resolve(false);
+    }
+    var a = pickedArgs();
+    var btn = document.getElementById('cApply'); if (btn){ btn.disabled = true; btn.textContent = 'Checking…'; }
+    return sb.rpc('quote_coupon_by_token', { p_token:t, p_code:code, p_chosen_item_no:a.p_chosen_item_no, p_chosen_item_nos:a.p_chosen_item_nos })
+      .then(function(res){
+        if (btn){ btn.disabled = false; btn.textContent = 'Apply'; }
+        var d = res.data;
+        if (res.error || !d || !d.ok){
+          window._coupon = null; paintDiscount();
+          msg.className = 'msg err';
+          msg.textContent = (d && d.message) || (res.error && res.error.message) || 'That code is not valid.';
+          document.getElementById('cRemove').style.display = 'none';
+          return false;
+        }
+        window._coupon = { code:d.code, discount:d.discount_inc_cents, label:d.label };
+        if (inp) inp.value = d.code;
+        msg.className = 'msg ok';
+        msg.textContent = d.label + ' applied. You save ' + money(d.discount_inc_cents) + '.';
+        document.getElementById('cRemove').style.display = '';
+        paintDiscount();
+        return true;
+      }, function(){
+        if (btn){ btn.disabled = false; btn.textContent = 'Apply'; }
+        msg.className='msg err'; msg.textContent='We could not check that code. Please try again.';
+        return false;
+      });
+  }
+  function removeCode(){
+    sb.rpc('quote_coupon_by_token', { p_token:t, p_code:'' }).then(function(){
+      window._coupon = null;
+      document.getElementById('cCode').value = '';
+      var msg = document.getElementById('cMsg'); msg.className='msg'; msg.textContent='';
+      document.getElementById('cRemove').style.display = 'none';
+      paintDiscount();
+    });
+  }
+  /* The discount depends on what is picked, so re-check it when the pick changes. */
+  function afterPick(){
+    if (window._coupon && window._canDecide) applyCode(window._coupon.code, true);
+    else paintDiscount();
   }
 
   function pickOption(no){
@@ -337,6 +448,7 @@
     document.getElementById('totAll').textContent = money(it.price_inc_cents);
     document.getElementById('totals').style.display = '';
     var m = document.getElementById('dMsg'); if (m && m.className.indexOf('err')>-1){ m.className='msg'; m.textContent=''; }
+    afterPick();
   }
 
   function decide(decision, btn){
@@ -357,6 +469,10 @@
       if (decision==='accepted' && !chosenSet.length){ msg.className = 'msg err'; msg.textContent = 'Please tick at least one item you\'d like first.'; return; }
     }
     btn.disabled = true; msg.textContent = 'Sending…';
+    var typed = document.getElementById('cCode') ? document.getElementById('cCode').value.trim() : '';
+    var pre = (decision==='accepted' && typed) ? applyCode(typed, false) : Promise.resolve(true);
+    pre.then(function(codeOk){
+    if (!codeOk){ btn.disabled = false; msg.className = 'msg err'; msg.textContent = 'Please fix or remove the discount code, then accept again.'; return; }
     sb.rpc('decide_quote', { p_token: t, p_decision: decision, p_name: name, p_comments: comments||null, p_chosen_item_no: chosenOpt, p_chosen_item_nos: chosenSet })
       .then(function(res){
         if (res.error){ msg.className = 'msg err'; msg.textContent = res.error.message; btn.disabled = false; return; }
@@ -374,6 +490,7 @@
           : 'Thanks for letting us know.';
         setTimeout(load, 1200);
       });
+    });
   }
 })();
 </script>

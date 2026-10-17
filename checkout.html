@@ -55,6 +55,16 @@
 .terms{display:flex;gap:11px;align-items:flex-start;margin-top:20px;font-size:13.5px;color:#6f6960;cursor:pointer}
 .terms input{width:18px;height:18px;margin-top:2px;accent-color:#EC4899;flex:none}
 .busy{opacity:.6;pointer-events:none}
+.coupon{border:1.5px dashed #ece6de;border-radius:14px;padding:16px 18px;margin-top:20px;background:#faf8f5}
+.coupon label{display:block;font-size:13.5px;font-weight:600;color:#0F0F10;margin-bottom:8px}
+.coupon .row{display:flex;gap:10px}
+.coupon input{flex:1;min-width:0;text-transform:uppercase;letter-spacing:.06em}
+.coupon .btn{white-space:nowrap;padding:10px 18px}
+.coupon .msg{font-size:13.5px;margin-top:9px}
+.coupon .msg.ok{color:#1f7a4c;font-weight:600}
+.coupon .msg.bad{color:#a8342b}
+.coupon .link{background:none;border:none;color:#7C3AED;text-decoration:underline;cursor:pointer;font-size:13px;padding:0;margin-left:8px}
+.sumrow.disc b{color:#1f7a4c}
 </style>
 </head>
 <body>
@@ -96,12 +106,18 @@
     }).join('');
   }
 
-  function summary(lines, total){
+  /* Coupon state for step 1. The server re-judges the code when the order is
+     placed, so this preview can only ever show a discount, never grant one. */
+  var coupon = null;
+
+  function summary(lines, total, disc, code){
+    disc = disc || 0;
     var ex = Math.round(total/1.1);
     return '<div class="panel">' +
       lines.map(function(l){
         return '<div class="sumrow"><span>'+C.esc(l.name)+' &times; '+Number(l.qty).toLocaleString('en-AU')+'</span><b>'+C.money(l.price_cents)+'</b></div>';
       }).join('') +
+      (disc > 0 ? '<div class="sumrow disc"><span>Discount'+(code?' ('+C.esc(code)+')':'')+'</span><b>&minus;'+C.money(disc)+'</b></div>' : '') +
       '<div class="sumrow"><span>GST included</span><b>'+C.money(total-ex)+'</b></div>' +
       '<div class="sumrow"><span>Delivery</span><b>Included</b></div>' +
       '<div class="sumrow tot"><span>Total</span><b>'+C.money(total)+'</b></div>' +
@@ -114,6 +130,7 @@
     var list = C.items();
     if(!list.length){ location.replace('cart.html'); return; }
     var total = C.total();
+    var disc = coupon ? coupon.discount_inc_cents : 0;
 
     bodyEl.innerHTML =
     '<div class="cogrid"><div class="panel">' +
@@ -132,14 +149,76 @@
         '<div class="field"><label>Postcode *</label><input type="text" id="f_postcode" inputmode="numeric" maxlength="4" required></div>' +
         '<div class="field"><label>Delivery notes (optional)</label><input type="text" id="f_notes" placeholder="Leave at reception"></div>' +
       '</div>' +
+      '<div class="coupon"><label for="f_code">Have a discount code?</label>' +
+        '<div class="row"><input type="text" id="f_code" maxlength="30" autocomplete="off" value="'+(coupon?C.esc(coupon.code):'')+'"' +
+          (coupon?' readonly':'') + '>' +
+          (coupon ? '<button type="button" class="btn btn-ghost" id="codeRemove">Remove</button>'
+                  : '<button type="button" class="btn btn-ghost" id="codeApply">Apply</button>') +
+        '</div>' +
+        '<div class="msg ok" id="codeMsg"'+(coupon?'':' style="display:none"')+'>' +
+          (coupon ? C.esc(coupon.label)+' applied. You save '+C.money(coupon.discount_inc_cents)+'.' +
+            (coupon.partial ? ' Some items in your cart are not included in this discount.' : '') : '') +
+        '</div>' +
+      '</div>' +
       '<label class="terms"><input type="checkbox" id="f_terms">' +
         '<span>I have checked my artwork and agree to the <a href="trade-terms.html" target="_blank">trade terms</a> and ' +
         '<a href="refund-policy.html" target="_blank">refund policy</a>. Custom printed work cannot be cancelled once it goes to press.</span>' +
       '</label>' +
       '<button class="btn btn-aura" id="place" style="width:100%;margin-top:22px">Continue to artwork &rarr;</button>' +
-    '</div>' + summary(list, total) + '</div>';
+    '</div>' + summary(list, total - disc, disc, coupon && coupon.code) + '</div>';
 
     document.getElementById('place').addEventListener('click', placeOrder);
+    var ap = document.getElementById('codeApply'), rm = document.getElementById('codeRemove');
+    if(ap){
+      ap.addEventListener('click', applyCode);
+      document.getElementById('f_code').addEventListener('keydown', function(e){ if(e.key==='Enter'){ e.preventDefault(); applyCode(); } });
+    }
+    if(rm) rm.addEventListener('click', function(){ coupon = null; keepDraft(); renderDetails(); restoreDraft(); });
+  }
+
+  /* Keep what the customer typed when the panel redraws for a code. */
+  var draft = {};
+  var DRAFT_IDS = ['f_name','f_company','f_email','f_phone','f_line1','f_suburb','f_state','f_postcode','f_notes'];
+  function keepDraft(){
+    DRAFT_IDS.forEach(function(id){ var el=document.getElementById(id); if(el) draft[id]=el.value; });
+    var t=document.getElementById('f_terms'); if(t) draft.terms=t.checked;
+  }
+  function restoreDraft(){
+    DRAFT_IDS.forEach(function(id){ var el=document.getElementById(id); if(el && draft[id]!=null) el.value=draft[id]; });
+    var t=document.getElementById('f_terms'); if(t && draft.terms!=null) t.checked=draft.terms;
+  }
+
+  function cartLines(list){
+    return list.map(function(it){
+      return { product_slug:it.slug, description:it.name, qty:it.qty, spec:it.spec||{},
+               stock:it.stock, finish:it.finish, corners:it.corners, sides:it.sides,
+               turnaround:it.turnaround, artwork_mode:'needs_proof' };
+    });
+  }
+
+  async function applyCode(){
+    var inp = document.getElementById('f_code'), msg = document.getElementById('codeMsg');
+    var code = (inp.value||'').trim().toUpperCase();
+    if(!code){ inp.focus(); return; }
+    var btn = document.getElementById('codeApply');
+    btn.disabled = true; btn.textContent = 'Checking…';
+    var CFG = window.AURA_CONFIG || {}, d = null;
+    try {
+      var r = await fetch(CFG.supabaseUrl + '/rest/v1/rpc/coupon_check', {
+        method:'POST',
+        headers:{ 'Content-Type':'application/json', apikey:CFG.supabaseKey, Authorization:'Bearer '+CFG.supabaseKey },
+        body: JSON.stringify({ p_code:code, p_context:'shop', p_items: cartLines(C.items()) })
+      });
+      d = await r.json();
+    } catch(e) { d = { ok:false, message:'We could not check that code. Please try again.' }; }
+    btn.disabled = false; btn.textContent = 'Apply';
+    if(!d || !d.ok){
+      msg.className = 'msg bad'; msg.style.display = 'block';
+      msg.textContent = (d && (d.message || d.error)) || 'That code is not valid.';
+      return;
+    }
+    coupon = { code:d.code, label:d.label, discount_inc_cents:d.discount_inc_cents, partial:!!d.partial };
+    keepDraft(); renderDetails(); restoreDraft();
   }
 
   async function placeOrder(){
@@ -160,11 +239,9 @@
       contact:{ name:v('f_name'), email:v('f_email'), phone:v('f_phone'), company:v('f_company') },
       ship:{ line1:v('f_line1'), suburb:v('f_suburb'), state:document.getElementById('f_state').value, postcode:v('f_postcode') },
       notes:v('f_notes'),
-      items: list.map(function(it){
-        return { product_slug:it.slug, description:it.name, qty:it.qty, spec:it.spec||{},
-                 stock:it.stock, finish:it.finish, corners:it.corners, sides:it.sides,
-                 turnaround:it.turnaround, artwork_mode:'needs_proof' };
-      })
+      /* A code typed but not applied still goes up; the server is the judge. */
+      coupon_code: coupon ? coupon.code : (v('f_code') || null),
+      items: cartLines(list)
     };
 
     /* The server re-prices every line from the live price table and ignores
@@ -199,8 +276,11 @@
       invoice_number: res.data.invoice_number,
       invoice_token: res.data.invoice_token,
       total_inc_cents: res.data.total_inc_cents,
-      repriced: (res.data.total_inc_cents !== cartTotal)
-        ? { from: cartTotal, to: res.data.total_inc_cents } : null,
+      discount_inc_cents: res.data.discount_inc_cents || 0,
+      coupon_code: res.data.coupon_code || null,
+      /* Compare like with like: the full price before any code. */
+      repriced: ((res.data.before_discount_inc_cents || res.data.total_inc_cents) !== cartTotal)
+        ? { from: cartTotal, to: (res.data.before_discount_inc_cents || res.data.total_inc_cents) } : null,
       email: v('f_email'),
       lines: list.map(function(it,i){ return { item_no:i+1, name:it.name, qty:it.qty,
                 price_cents:it.price_cents, spec:C.specLine(it), uploaded:null, mode:'needs_proof' }; })
@@ -274,7 +354,7 @@
       '<button class="btn btn-aura" id="toPay" style="width:100%;margin-top:16px">Continue to payment &rarr;</button>' +
       '<p style="font-size:13px;color:#948d83;margin-top:12px;text-align:center">' +
         'No artwork handy? Continue and send it later quoting '+C.esc(o.order_number)+'.</p>' +
-    '</div>' + summary(o.lines, o.total_inc_cents) + '</div>';
+    '</div>' + summary(o.lines, o.total_inc_cents, o.discount_inc_cents, o.coupon_code) + '</div>';
 
     var wtBtn = document.getElementById('wtSave');
     if(wtBtn) wtBtn.addEventListener('click', saveTransferLink);
@@ -395,7 +475,7 @@
       '</div>' +
 
       '<a class="btn btn-ghost" href="order.html?t='+encodeURIComponent(o.order_token)+'" style="width:100%;text-align:center;margin-top:16px">I have paid by PayID or transfer &rarr;</a>' +
-    '</div>' + summary(o.lines, o.total_inc_cents) + '</div>';
+    '</div>' + summary(o.lines, o.total_inc_cents, o.discount_inc_cents, o.coupon_code) + '</div>';
 
     document.getElementById('payCard').addEventListener('click', payCard);
   }

@@ -183,6 +183,7 @@
 
       '<div class="panel" style="margin-top:18px">' +
         '<h2 style="font-size:20px;margin-bottom:10px">What we are printing</h2>' + lines +
+        (d.discount_inc_cents > 0 ? '<div class="tot" style="font-size:15px;color:#1f7a4c"><span>Discount' + (d.coupon_code ? ' (' + C.esc(d.coupon_code) + ')' : '') + '</span><b>&minus;' + C.money(d.discount_inc_cents) + '</b></div>' : '') +
         '<div class="tot"><span>Total (inc GST &amp; delivery)</span><b>' + C.money(d.total_inc_cents) + '</b></div>' +
         (d.invoice ? '<p style="margin-top:14px;font-size:14px"><a href="invoice.html?t=' +
           encodeURIComponent(d.invoice.access_token) + '">View your tax invoice &rarr;</a></p>' : '') +
