@@ -248,7 +248,7 @@ function initPdp(root){
   /* stock */
   function loadStock(){
     if (!D.stock) return;
-    var url = D.stock === 'ap' ? MEDIA + 'stock/ap/' + encodeURIComponent(D.code) : MEDIA + 'stock/' + (D.stock === 'ws' ? 'ws' : 'fb') + '/' + D.code.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'') + '.json';
+    var url = D.stock === 'ap' ? MEDIA + 'stock/ap/' + encodeURIComponent(D.code) : MEDIA + 'stock/' + (D.stock === 'ws' || D.stock === 'jb' ? D.stock : 'fb') + '/' + D.code.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'') + '.json';
     fetch(url).then(function(r){ return r.ok ? r.json() : null; }).then(function(j){
       if (!j || !j.stock) return;
       var m = {}; for (var k in j.stock) m[k.toLowerCase()] = j.stock[k];
