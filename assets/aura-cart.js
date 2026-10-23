@@ -103,7 +103,7 @@
       if (it[k]) bits.push(k === 'sides' ? (it[k] === '2S' ? 'Double sided' : 'Single sided') : it[k]);
     });
     if (it.turnaround && it.turnaround !== 'standard') {
-      bits.push(it.turnaround === 'sameday' ? 'Same day' : 'Next day');
+      bits.push(it.turnaround === 'sameday' ? 'Same day dispatch' : 'Next day dispatch');
     }
     return bits.join(' · ');
   }

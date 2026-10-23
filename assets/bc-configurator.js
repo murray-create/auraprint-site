@@ -12,8 +12,8 @@
 
   var SPEEDS = [
     { key: 'standard', label: 'Standard', cut: '3-5 business days' },
-    { key: 'nextday',  label: 'Next Day', cut: 'paid by 12pm' },
-    { key: 'sameday',  label: 'Same Day', cut: 'paid by 8am' }
+    { key: 'nextday',  label: 'Next Day Dispatch', cut: 'paid by 12pm' },
+    { key: 'sameday',  label: 'Same Day Dispatch', cut: 'paid by 8am' }
   ];
   var STOCKS = [
     { val: 'Deluxe 310gsm', label: '310gsm Deluxe Artboard', group: 'Deluxe Artboard' },
@@ -155,7 +155,7 @@
     var priceHtml = '<div class="amount grad-text" id="price">' + (row ? money(row) : 'POA') + '</div>';
 
     host.innerHTML =
-      '<div class="optlabel">Production speed <span style="text-transform:none;letter-spacing:0;font-weight:600;color:#8a847d">&mdash; when it leaves us</span></div>' +
+      '<div class="optlabel">Dispatch speed <span style="text-transform:none;letter-spacing:0;font-weight:600;color:#8a847d">when it leaves us</span></div>' +
       speedBtns(aTurn) +
       '<div class="optlabel">Stock</div>' + stockSelect(aStock) +
       '<div class="optlabel" style="margin-top:16px">Finish</div>' + optBtns('finish', FINISHES, aFin) +

@@ -825,8 +825,8 @@ function wireAnalytics(){
    visitor's clock, so a customer in Perth is not told the wrong cut-off. */
 const TURN_SPEEDS = {
   standard: { label:'Standard', cut:'3-5 business days' },
-  nextday:  { label:'Next Day', cut:'ordered, approved and paid by 12pm', hour:12 },
-  sameday:  { label:'Same Day', cut:'ordered, approved and paid by 8am',  hour:8  }
+  nextday:  { label:'Next Day Dispatch', cut:'ordered, approved and paid by 12pm', hour:12 },
+  sameday:  { label:'Same Day Dispatch', cut:'ordered, approved and paid by 8am',  hour:8  }
 };
 function brisNow(){
   try { return new Date(new Date().toLocaleString('en-US',{timeZone:'Australia/Brisbane'})); }
