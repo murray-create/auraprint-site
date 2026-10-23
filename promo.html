@@ -466,7 +466,10 @@ fetch('data/promo-catalogue.json').then(r=>r.json()).then(data=>{
     const b=document.createElement('button'); b.dataset.f=name; b.textContent=name; filters.appendChild(b);
   });
   const eco=document.createElement('button'); eco.dataset.f='__eco'; eco.textContent='Eco Range'; filters.appendChild(eco);
+  // ?q=umbrella pre-fills the search (used by the homepage promo slider)
+  try{const q0=new URLSearchParams(location.search).get('q');if(q0){search.value=q0;}}catch(e){}
   renderCatalogue();
+  if(search.value&&location.hash==='#catalogue')grid.scrollIntoView({block:'start'});
 });
 
 function matches(p,q){
