@@ -46,7 +46,7 @@ const HEADER = `
       <div><a href="promo.html">Promo &amp; Uniforms ▾</a>
         <div class="mega">
           <div><h4>Drinkware &amp; Bags</h4><ul><li><a href="promotional-drink-bottles.html">Drink Bottles &amp; Tumblers</a></li><li><a href="promotional-mugs.html">Mugs &amp; Cups</a></li><li><a href="promotional-tote-bags.html">Tote &amp; Cooler Bags</a></li><li><a href="promotional-keyrings.html">Keyrings</a></li></ul></div>
-          <div><h4>Ranges</h4><ul><li><a href="promo.html"><b>All 800+ products →</b></a></li><li><a href="eco-promotional-products.html">Eco Range</a></li><li><a href="australian-made-promotional-products.html">Australian Made</a></li><li><a href="event-merchandise.html">Event &amp; Tradeshow</a></li><li><a href="/apparel/">Uniforms &amp; Apparel</a></li></ul></div>
+          <div><h4>Ranges</h4><ul><li><a href="promo.html"><b>All 3,500+ products →</b></a></li><li><a href="eco-promotional-products.html">Eco Range</a></li><li><a href="australian-made-promotional-products.html">Australian Made</a></li><li><a href="event-merchandise.html">Event &amp; Tradeshow</a></li><li><a href="/apparel/">Uniforms &amp; Apparel</a></li></ul></div>
           <div><h4>Office &amp; Tech</h4><ul><li><a href="promotional-pens.html">Promotional Pens</a></li><li><a href="promotional-notebooks.html">Notebooks &amp; Journals</a></li><li><a href="custom-lanyards.html">Lanyards &amp; Badges</a></li><li><a href="promotional-tech.html">Tech &amp; Power Banks</a></li></ul></div>
           <div><h4>Magnets</h4><ul><li><a href="magnets.html">All Fridge Magnets →</a></li><li><a href="magnets.html">Business Card Magnets</a></li><li><a href="magnets.html">Photo Frame Magnets</a></li><li><a href="magnets.html">Whiteboard Magnets</a></li><li><a href="vehicle-magnets.html">Vehicle Magnets</a></li></ul></div>
         </div>
@@ -107,7 +107,7 @@ const HEADER = `
     <div class="drawer-group">
       <button class="drawer-toggle" aria-expanded="false">Promo Products <span>▾</span></button>
       <ul class="drawer-sub" hidden>
-        <li><a href="promo.html"><b>All 800+ products - price online →</b></a></li>
+        <li><a href="promo.html"><b>All 3,500+ products - price online →</b></a></li>
         <li><a href="promotional-pens.html">Promotional Pens</a></li>
         <li><a href="promotional-drink-bottles.html">Drink Bottles &amp; Tumblers</a></li>
         <li><a href="promotional-tote-bags.html">Tote &amp; Cooler Bags</a></li>
