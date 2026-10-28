@@ -46,6 +46,16 @@
 .card .thumb.photo{background:#f5f1ea}
 .card .thumb.photo img{width:100%;height:100%;object-fit:contain;mix-blend-mode:multiply;padding:10px}
 #loadmore{display:block;margin:36px auto 0}
+/* Category tiles: a three-product photo collage instead of emoji. The price quoted is the large (left) product. */
+.card .thumb.collage{display:grid;grid-template-columns:1.3fr 1fr;grid-template-rows:1fr 1fr;gap:6px;padding:8px;background:#f1ebe3;font-size:0}
+.card .thumb.collage img{width:100%;height:100%;min-height:0;object-fit:contain;background:#fff;border-radius:9px;padding:8px;display:block;transition:transform .45s ease}
+.card .thumb.collage img.h{grid-row:1 / span 2}
+.card .thumb.collage img.cv{object-fit:cover;padding:0}
+.card .thumb.collage.one{grid-template-columns:1fr;grid-template-rows:1fr}
+.card .thumb.collage.one img.h{grid-row:auto}
+.card:hover .thumb.collage img.h{transform:scale(1.03)}
+.card .cardprice{font-size:13px;color:#6b6560;line-height:1.45;margin:-4px 0 12px}
+.card .cardprice b{color:var(--ink);font-size:14.5px}
 </style></head>
 <body>
 <!-- AURA:HEADER start (static so crawlers see the menu; aura.js only wires the burger) -->
@@ -479,7 +489,7 @@ function calc(){
   let q=Math.max(1,Math.round(+document.getElementById('dQty').value||0));
   const {u,minQ}=unitAt(t.breaks,q);
   const billQ=minQ?Math.max(q,minQ):q;
-  const setup=imp?p.setup:0;
+  const setup=imp?(imp.s!=null?imp.s:p.setup):(p.fs||0);
   const ex=Math.round(u*billQ+(imp?imp.u*billQ:0)+setup);
   const inc=Math.round(ex*(1+GST)*100)/100;
   document.getElementById('dPrice').textContent=money(ex);
