@@ -154,6 +154,19 @@ input[type=range]{accent-color:var(--magenta);height:34px}
 .feat-lb .feat-strip-copy{flex:none;order:0}
 .feat-lb-go{font-weight:800;color:#dc1928;font-size:15px;margin-top:4px}
 @media(max-width:700px){.feat-lb{grid-template-columns:minmax(0,1fr)}.feat-lb-media img{height:auto}.feat-lb-body{padding:20px}}
+/* Christmas banner (added 31 Oct 2026). Hides itself after data-until via the script below the section. */
+.xmas-band{padding:34px 0 10px}
+.xmas-card{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.05fr);gap:30px;align-items:center;border-radius:var(--radius);background:linear-gradient(135deg,#b3101d 0%,#dc1928 55%,#f05a28 100%);color:#fff;padding:34px 36px;overflow:hidden}
+.xmas-card .kicker{color:#ffe1c2}
+.xmas-card h2{color:#fff;font-size:clamp(28px,3.4vw,44px);line-height:1.05;margin:8px 0 12px}
+.xmas-card p{color:rgba(255,255,255,.9);font-size:16px;max-width:520px}
+.xmas-ctas{display:flex;flex-wrap:wrap;gap:12px;margin-top:20px}
+.xmas-ctas .btn-xw{background:#fff;color:#b3101d;font-weight:800}
+.xmas-ctas .btn-xg{background:transparent;color:#fff;border:2px solid rgba(255,255,255,.7);font-weight:700}
+.xmas-pics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.xmas-pics img{display:block;width:100%;height:300px;object-fit:cover;border-radius:12px;box-shadow:0 10px 24px rgba(0,0,0,.18)}
+.xmas-pics img:nth-child(2){transform:translateY(-12px)}
+@media(max-width:860px){.xmas-card{grid-template-columns:minmax(0,1fr);padding:26px 20px;gap:22px}.xmas-pics img:nth-child(2){transform:none}.xmas-pics img{height:150px}}
 .feat-badge.alt{background:var(--aura)}
 .feat-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:6px}
 .feat-stats b{display:block;font-size:22px;background:var(--aura);-webkit-background-clip:text;background-clip:text;color:transparent}
@@ -399,8 +412,28 @@ input[type=range]{accent-color:var(--magenta);height:34px}
 </header>
 
 <div class="marquee"><div class="track" id="marq">
-  <span>Business Cards</span><span>✺</span><span>Letterbox Drops</span><span>✺</span><span>Pull Up Banners</span><span>✺</span><span>Corflute Signs</span><span>✺</span><span>Flyers</span><span>✺</span><span>Stickers</span><span>✺</span><span>Teardrop Flags</span><span>✺</span><span>Booklets</span><span>✺</span><span>Mugs & Merch</span><span>✺</span><span>Workwear</span><span>✺</span>
+  <span>Business Cards</span><span>✺</span><span>Christmas Gifts</span><span>✺</span><span>Pull Up Banners</span><span>✺</span><span>Corflute Signs</span><span>✺</span><span>Flyers</span><span>✺</span><span>Stickers</span><span>✺</span><span>Teardrop Flags</span><span>✺</span><span>Booklets</span><span>✺</span><span>Mugs & Merch</span><span>✺</span><span>Workwear</span><span>✺</span>
 </div></div>
+
+<!-- CHRISTMAS BANNER (31 Oct 2026). Remove after Christmas, or it hides itself after data-until. -->
+<section class="xmas-band" id="christmas" data-until="2026-12-24">
+  <div class="wrap">
+    <a class="xmas-card" href="christmas-corporate-gifts.html" style="text-decoration:none">
+      <div>
+        <span class="kicker">Christmas 2026</span>
+        <h2>Corporate Christmas gifts with your logo on them.</h2>
+        <p>Branded gifts for your clients and your team, chosen for a Sunshine Coast summer. Cooler bags, drink bottles, coffee cups, wine gifts and more. You approve a proof before anything is made. Order early so your gifts arrive before the break.</p>
+        <div class="xmas-ctas"><span class="btn btn-xw">Shop Christmas gifts &#8594;</span><span class="btn btn-xg">Get a quote</span></div>
+      </div>
+      <div class="xmas-pics" aria-hidden="true">
+        <img src="https://media.auraprint.com.au/xmas/115252_11.webp" alt="" width="900" height="900" loading="lazy">
+        <img src="https://media.auraprint.com.au/xmas/117602_4.webp" alt="" width="900" height="900" loading="lazy">
+        <img src="https://media.auraprint.com.au/xmas/128096_18.webp" alt="" width="900" height="900" loading="lazy">
+      </div>
+    </a>
+  </div>
+</section>
+<script>(function(){var e=document.getElementById('christmas');if(e&&new Date()>new Date(e.getAttribute('data-until')+'T23:59:59+10:00'))e.style.display='none';})();</script>
 
 <!-- Instant price moved out of the hero 16 Oct 2026 when the hero went apparel-first. Keep the quoter id: the nav "Instant Price" link and hero button point at it. -->
 <section class="pad qband" id="instant-price">
@@ -410,7 +443,7 @@ input[type=range]{accent-color:var(--magenta);height:34px}
       <h2>Need print too? <span class="grad-text">Price it right here.</span></h2>
       <p class="lead">Business cards, flyers, brochures, banners and corflute signs with live online pricing. Pick a product and a quantity and see what you pay. No email needed.</p>
       <div class="stats">
-        <div><b class="grad-text">800+</b><span>promo products</span></div>
+        <div><b class="grad-text">3,500+</b><span>promo products</span></div>
         <div><b class="grad-text">Proof</b><span>nothing made until you approve</span></div>
         <div><b class="grad-text">100%</b><span>Australian owned</span></div>
       </div>
@@ -434,7 +467,7 @@ input[type=range]{accent-color:var(--magenta);height:34px}
   </div>
 </section>
 
-<!-- FEATURED SERVICES: fixed slots, letterbox first. Swap a card here when the focus changes; keep three. -->
+<!-- FEATURED SERVICES: fixed slots. Swap a card here when the focus changes; keep three. -->
 <section class="pad feat" id="featured">
   <div class="wrap">
     <div class="sec-head">
@@ -725,17 +758,8 @@ input[type=range]{accent-color:var(--magenta);height:34px}
   <div class="body"><h3>Decoration Methods</h3><p>Embroidery, screen print, DTF and vinyl compared, with positions, sizes and minimums.</p>
   <div class="cardfoot"><div class="from">Free guide</div><span class="cardtag">Read the guide &#8594;</span></div></div></a>
       </div>
-      <div class="cat-foot"><p class="cat-more">Not sure which method suits your logo? <a href="uniform-decoration.html">Compare decoration methods</a></p><a class="btn btn-ghost" href="/apparel/">All 125 garments &#8594;</a></div>
+      <div class="cat-foot"><p class="cat-more">Not sure which method suits your logo? <a href="uniform-decoration.html">Compare decoration methods</a></p><a class="btn btn-ghost" href="/apparel/">Shop all uniforms &#8594;</a></div>
     </div>
-    <a class="feat-lb" style="margin-top:34px" href="letterbox-distribution.html">
-      <span class="feat-lb-media"><img src="assets/img/letterbox-drop.svg" alt="Printed flyers delivered into a Sunshine Coast letterbox" width="400" height="300" loading="lazy"></span>
-      <span class="feat-lb-body">
-        <span class="feat-strip-tag">Letterbox Drops</span>
-        <h3>Put your flyer in <span class="grad-text">127,958 Sunshine Coast letterboxes.</span></h3>
-        <span class="feat-strip-copy">Delivered by Australia Post Unaddressed Mail, from 47.6c each inc GST. Print and delivery on one quote.</span>
-        <span class="feat-lb-go">Plan a letterbox drop &#8594;</span>
-      </span>
-    </a>
   </div>
 </section>
 

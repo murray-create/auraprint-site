@@ -493,3 +493,7 @@ footer .social svg{width:19px;height:19px;fill:currentColor}
   .navlinks>div.nav-print:hover .mega{display:grid}
 }
 .navlinks>div.nav-uni .mega{left:auto;right:-20px}
+
+/* Letterbox Drops hidden from the menu, drawer and footer (31 Oct 2026). Pages stay live.
+   To bring it back, delete this block. */
+.navlinks>div.nav-lb,.drawer-group.drawer-lb,footer .fcols>div.lb{display:none!important}
