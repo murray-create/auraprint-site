@@ -40,6 +40,9 @@ function restore(){
     if (d && Array.isArray(d.lines) && Date.now() - (d.saved||0) < 30*864e5)
       S.lines = d.lines.filter(function(l){ return S.byCode[l.code]; }).map(function(l){
         (l.decorations||[]).forEach(function(x){ if (!x.logo) x.logo = 'A'; if (!x.size) x.size = 'standard'; });
+        /* saved lines keyed by a supplier one-size code (FRE, OSFA) become "One size" */
+        var sl = S.byCode[l.code].size_list, ks = Object.keys(l.sizes||{});
+        if (sl && sl.length === 1 && sl[0] === 'One size' && ks.length === 1 && ks[0] !== 'One size'){ l.sizes = { 'One size': l.sizes[ks[0]] }; }
         return l; });
   } catch(e){}
 }
@@ -196,7 +199,7 @@ function renderPanel(){
     S.lines.map(function(l){
       var g = S.byCode[l.code], s = lineSummary(l), img = l.photo || photoFor(g, l.colour);
       return '<div class="ub-line"><div class="th">'+(img ? '<img src="'+esc(img)+'" alt="">' : '<i style="background:'+esc(l.colour_hex||'#eee')+'"></i>')+'</div><div>'+
-        '<h4>'+esc(g.name)+'</h4><p><b>'+esc(l.colour||'Colour to confirm')+'</b> &middot; '+qtyOf(l)+' units</p>'+
+        '<h4>'+esc(g.name)+'</h4><p><b>'+esc(l.colour||'Colour to confirm')+'</b> &middot; '+qtyOf(l)+(qtyOf(l)===1?' unit':' units')+'</p>'+
         '<p>'+esc(s.sz)+'</p><p>'+esc(s.dec)+'</p>'+
         '<div class="acts"><button type="button" data-act="edit" data-id="'+l.id+'">Edit</button><button type="button" data-act="dup" data-id="'+l.id+'">Add another colour</button><button type="button" class="rm" data-act="rm" data-id="'+l.id+'">Remove</button></div></div></div>';
     }).join('');
@@ -234,7 +237,7 @@ function renderPrice(){
   if (c){ disc = c.kind === 'percent' ? Math.round(gp.cents * (+c.percent_off) / 100) : Math.min(+c.amount_off_cents||0, gp.cents); }
   el.innerHTML =
     '<div class="r"><span>Garments from</span><b>'+money(gp.cents)+'</b></div>'+
-    (disc ? '<div class="r disc"><span>Code '+esc(c.code)+' ('+esc(c.label)+')</span><b>&minus;'+money(disc)+'</b></div>'+
+    (disc ? '<div class="r disc"><span>Code '+esc(c.code)+' ('+esc(c.label)+') <button type="button" class="ub-code-rm" data-act="rmcode" aria-label="Remove discount code">Remove</button></span><b>&minus;'+money(disc)+'</b></div>'+
             '<div class="r tot"><span>Garments after discount</span><b>'+money(gp.cents - disc)+'</b></div>' : '')+
     '<div class="r muted"><span>Decoration</span><b>Quoted with your logo</b></div>'+
     '<p class="fine">Estimate, inc GST. Garment prices start from the price shown and can be higher for bigger sizes'+
@@ -268,6 +271,11 @@ function wireCode(){
   var inp = $('#ubCode'), btn = $('#ubCodeApply'); if (!inp || !btn) return;
   if (S.coupon){ inp.value = S.coupon.code; showCodeMsg('ok', S.coupon.label + ' applied. Your estimate is updated in Your order.'); }
   btn.addEventListener('click', function(e){ e.preventDefault(); applyCode(); });
+  var pr = $('#ubPrice');
+  if (pr) pr.addEventListener('click', function(e){
+    if (!e.target.closest('[data-act="rmcode"]')) return;
+    inp.value = ''; setCoupon(null); showCodeMsg('', 'Discount code removed.');
+  });
   inp.addEventListener('keydown', function(e){ if (e.key === 'Enter'){ e.preventDefault(); applyCode(); } });
   inp.addEventListener('input', function(){
     if (S.coupon && inp.value.trim().toUpperCase() !== S.coupon.code){ setCoupon(null); showCodeMsg('', 'Tap Apply to check the code.'); }
@@ -634,10 +642,11 @@ function wire(){
 var SHOP_CAT = { 'hi-vis':'hivis', workwear:'hivis', headwear:'caps', shirts:'corporate', suiting:'corporate',
   knitwear:'corporate', pants:'corporate', jackets:'hoodies', hoodies:'hoodies', hospitality:'hospitality',
   polos:'polos', tees:'tees' };
+var ONE_SIZE = /^(OSFA|FRE|FREE SIZE|ONE SIZE|O\/S|OS)$/i;
 function fromShop(x){
   return { code:x.c, shop_id:x.id, brand:x.b, name:x.n, cat:SHOP_CAT[x.k] || x.k, fabric:'', sizes:(x.sz||[]).join(', '),
            url:'/apparel/p/' + x.u + '.html', from_inc:x.p,
-           size_list:(x.sz && x.sz.length && x.sz[0] !== 'OSFA') ? x.sz : ['One size'],
+           size_list:(x.sz && x.sz.length && !(x.sz.length === 1 && ONE_SIZE.test(x.sz[0]))) ? x.sz : ['One size'],
            swatches:(x.cl||[]).map(function(c){ return { n:c[0], h:c[1], img:c[2], g:c[3] }; }) };
 }
 function init(){
