@@ -41,12 +41,34 @@ function toast(html){
 function addLines(add){
   var lines = draft();
   add.forEach(function(a){
-    var ex = lines.filter(function(l){ return l.code === a.code && l.colour === a.colour && !(l.decorations||[]).length; })[0];
+    var dec = a.decorations || [], dk = JSON.stringify(dec);
+    var ex = lines.filter(function(l){ return l.code === a.code && l.colour === a.colour && JSON.stringify(l.decorations||[]) === dk; })[0];
     if (ex){ for (var s in a.sizes) ex.sizes[s] = (+ex.sizes[s]||0) + a.sizes[s]; }
     else lines.push({ id:'l'+Date.now().toString(36)+Math.random().toString(36).slice(2,6), code:a.code, colour:a.colour,
-                      colour_hex:a.colour_hex, photo:a.photo, sizes:a.sizes, decorations:[], notes:'' });
+                      colour_hex:a.colour_hex, photo:a.photo, sizes:a.sizes, decorations:dec, notes:'' });
   });
   saveDraft(lines); pill();
+}
+
+/* ---------- logo preview (assets/logo-preview.js, 17 Nov 2026) ----------
+   The customer uploads a logo and sees it on the garment. The positions they save
+   ride along on the quote line as decorations, and the logo file itself is kept in
+   the browser for uniform-order.html to send. */
+var LP_VER = '20261117a', LP_KEY = 'aura-logo-placement-v1';
+function lpLoad(){
+  if (window.AuraLogo) return Promise.resolve(window.AuraLogo);
+  if (!lpLoad.p) lpLoad.p = new Promise(function(res, rej){
+    var s = document.createElement('script'); s.src = '/assets/logo-preview.js?v=' + LP_VER;
+    s.onload = function(){ res(window.AuraLogo); }; s.onerror = rej; document.head.appendChild(s); });
+  return lpLoad.p;
+}
+function lpDecos(code, cat){
+  var list; try { list = (JSON.parse(localStorage.getItem(LP_KEY) || '{}') || {})[code]; } catch(e){}
+  if (!Array.isArray(list)) return [];
+  return list.map(function(p){
+    var method = cat === 'tees' ? 'DTF print' : /chest|^Front$/.test(p.position) ? 'Embroidery' : 'Not sure';
+    return { position:p.position, method:method, logo:'A', size:'custom', width_mm:p.width_mm };
+  });
 }
 
 /* ---------- listing ---------- */
@@ -193,7 +215,7 @@ function initPdp(root){
     else if (e.target.closest('#apGridAdd')) addGrid();
     else if (e.target.closest('#apGridClear')){ $$('#apTable input').forEach(function(i){ i.value = ''; i.classList.remove('has'); }); gridTotals(); }
   });
-  function line(ci, sizesObj){ var c = cols[ci], o = {}; for (var k in sizesObj) o[k === 'OSFA' ? 'One size' : k] = sizesObj[k]; sizesObj = o; return { code:D.id, colour:c.n, colour_hex:c.h, photo:c.img, sizes:sizesObj }; }
+  function line(ci, sizesObj){ var c = cols[ci], o = {}; for (var k in sizesObj) o[k === 'OSFA' ? 'One size' : k] = sizesObj[k]; sizesObj = o; return { code:D.id, colour:c.n, colour_hex:c.h, photo:c.img, sizes:sizesObj, decorations:lpDecos(D.id, D.cat) }; }
   function done(q){
     toast('Added ' + q + ' × ' + esc(D.name) + ' to your quote. <a href="/uniform-order.html">Add your logo &rarr;</a>');
     track('add_to_quote', { item_id:D.id, item_brand:D.brand, quantity:q });
@@ -261,6 +283,25 @@ function initPdp(root){
     }).catch(function(){});
   }
   renderGal(); renderBuy(); buildGrid(); loadStock();
+  /* logo preview button, only on garments a logo can be placed on */
+  lpLoad().then(function(A){
+    var shape = A && A.supports(D.cat, D.name), buy = $('.ap-buy', root); if (!shape || !buy) return;
+    var b = document.createElement('button'); b.type = 'button'; b.className = 'lp-open'; b.id = 'apLogo';
+    function label(){ b.innerHTML = A.placement(D.id).length ? 'Logo added. <small>Change the preview</small>' : 'Preview your logo on this ' + (shape === 'cap' ? 'cap' : 'garment'); }
+    label(); buy.parentNode.insertBefore(b, buy);
+    b.addEventListener('click', function(){
+      var c = cols[S.ci];
+      A.open({ shape:shape, front:c.img, back:c.back, hex:c.h, colour:c.n, sub:D.brand + ' ' + D.name + ', ' + c.n,
+        placements:A.placement(D.id), saveLabel:'Save logo to my quote',
+        onSave:function(list){
+          A.setPlacement(D.id, list); label();
+          var dec = lpDecos(D.id, D.cat), lines = draft(), n = 0;
+          lines.forEach(function(l){ if (l.code === D.id && !(l.decorations||[]).length){ l.decorations = JSON.parse(JSON.stringify(dec)); n++; } });
+          if (n) saveDraft(lines);
+          toast(n || draftQty() ? 'Logo saved to your quote. <a href="/uniform-order.html">Review your quote &rarr;</a>' : 'Logo saved. Now pick your sizes and add to quote.');
+        } });
+    });
+  }).catch(function(){});
   var pre = new URLSearchParams(location.search).get('colour');
   if (pre){ cols.forEach(function(c, i){ if (c.n.toLowerCase() === pre.toLowerCase()) setColour(i); }); }
   track('view_item', { item_id:D.id, item_brand:D.brand, item_category:D.cat });

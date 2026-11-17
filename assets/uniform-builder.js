@@ -311,7 +311,8 @@ function renderCfg(){
   // photo
   var img = photoFor(g, e.colour);
   $('#ubPhoto').innerHTML = img ? '<img src="'+esc(img)+'" alt="'+esc(g.name+' in '+(e.colour||''))+'">' : '<span class="noimg">Photo on request. Colours and fit confirmed on your quote.</span>';
-  $('#ubPlace').innerHTML = placementSvg(g, e.decorations) + '<p>'+(shape==='top' ? 'Left chest means the wearer\'s left.' : shape==='cap' ? 'Front panel is about 90 to 120mm wide.' : 'Positions shown as a guide.')+'</p>';
+  $('#ubPlace').innerHTML = placementSvg(g, e.decorations) + '<p>'+(shape==='top' ? 'Left chest means the wearer\'s left.' : shape==='cap' ? 'Front panel is about 90 to 120mm wide.' : 'Positions shown as a guide.')+'</p>' +
+    (lpShape(g) ? '<button type="button" class="lp-open" id="ubLp">See your logo on this ' + (shape==='cap' ? 'cap' : 'garment') + '</button>' : '');
   // colour
   var sw = g.swatches||[];
   $('#ubColName').textContent = e.colour || (sw.length ? 'Choose a colour' : '');
@@ -404,6 +405,38 @@ function flashBar(){
   b.animate && b.animate([{transform:'translateY(6px)'},{transform:'none'}], {duration:220});
 }
 
+/* ---------- logo preview (assets/logo-preview.js, 17 Nov 2026) ----------
+   The same preview the apparel product pages use. Positions and widths chosen there
+   come back into this line's decorations; the logo file joins the upload list. */
+var LP_NAMES = { top:['Left chest','Right chest','Centre front','Full front','Upper back','Full back'], cap:['Front'] };
+function lpShape(g){
+  var A = window.AuraLogo; if (!A || shapeOf(g) === 'apron') return null;
+  return A.supports(g.cat === 'caps' ? 'headwear' : g.cat, g.name);
+}
+function lpAddFile(f){
+  if (!f || S.files.some(function(x){ return x.name === f.name && x.size === f.size; })) return;
+  if (S.files.length >= 5) return;
+  S.files.push(f); S.fileRefs.push(S.fileRefs.indexOf('A') < 0 ? 'A' : nextRef());
+}
+function lpOpen(){
+  var e = S.edit, g = e && S.byCode[e.code], shape = g && lpShape(g); if (!shape) return;
+  var names = LP_NAMES[shape];
+  window.AuraLogo.open({ shape:shape, front:photoFor(g, e.colour), hex:hexFor(g, e.colour), colour:e.colour || '',
+    sub:g.brand + ' ' + g.name + (e.colour ? ', ' + e.colour : ''), saveLabel:'Use this placement',
+    placements:e.decorations.filter(function(d){ return names.indexOf(d.position) > -1; }).map(function(d){ return { position:d.position, width_mm:d.size === 'custom' ? d.width_mm : null }; }),
+    onSave:function(list, file){
+      var keep = {}; list.forEach(function(p){ keep[p.position] = p.width_mm; });
+      e.decorations = e.decorations.filter(function(d){ return names.indexOf(d.position) < 0 || keep[d.position] != null; });
+      list.forEach(function(p){
+        var d = e.decorations.filter(function(x){ return x.position === p.position; })[0];
+        if (!d){ var rec = recommended(g, p.position); /* a large back or front logo is rarely stitched: let us recommend */
+          d = newDeco(g, p.position, rec === 'Embroidery' && !/chest|^Front$/.test(p.position) ? 'Not sure' : rec); e.decorations.push(d); }
+        d.size = 'custom'; d.width_mm = p.width_mm;
+      });
+      lpAddFile(file); renderCfg();
+    } });
+}
+
 /* ---------- send step ---------- */
 function showSend(on){
   $('#ubBrowse').hidden = on;
@@ -422,6 +455,8 @@ function addFiles(list){
     if (!EXT_OK.test(f.name)){ alert(f.name + ' is not a logo file we can use. Please send PDF, AI, EPS, SVG, PNG or JPG.'); return; }
     if (f.size > 25*1024*1024){ alert(f.name + ' is over 25 MB. Paste a WeTransfer or Dropbox link in the notes instead.'); return; }
     S.files.push(f); S.fileRefs.push(nextRef());
+    /* first picture file becomes the logo the preview shows */
+    var A = window.AuraLogo; if (A && A.canShow(f.name)) A.getFile().then(function(x){ if (!x) A.setFile(f); });
   });
   renderFiles();
 }
@@ -538,6 +573,7 @@ function submit(ev){
       track('generate_lead', { form_name:'Uniform order builder', page_path:location.pathname, stored:true, emailed:!!CFG.web3formsKey });
       try { if (window.auraAdsConvert) window.auraAdsConvert('lead'); } catch(e){}
       S.lines = []; S.files = []; S.fileRefs = []; store(); setCoupon(null);
+      if (window.AuraLogo) window.AuraLogo.clear();
       $('#ubDoneRef').textContent = res.ref;
       $('#ubDoneQty').textContent = res.total_qty;
       $('#ubDoneFiles').hidden = !failed;
@@ -576,6 +612,7 @@ function wire(){
   });
   // dialog
   var d = $('#ubDlg');
+  $('#ubPlace').addEventListener('click', function(e){ if (e.target.closest('#ubLp')) lpOpen(); });
   $('#ubDClose').addEventListener('click', closeCfg);
   d.addEventListener('click', function(e){ if (e.target === d) closeCfg(); });
   d.addEventListener('cancel', function(){ S.edit = null; });
@@ -662,6 +699,10 @@ function init(){
     var p = new URLSearchParams(location.search);
     if (p.get('cat') && CATS.some(function(c){ return c[0] === p.get('cat'); })) S.cat = p.get('cat');
     restore(); wire(); renderCats(); renderPanel();
+    /* logo preview: load it, then pick up a logo the customer already uploaded on a product page */
+    var lp = document.createElement('script'); lp.src = 'assets/logo-preview.js?v=20261117a';
+    lp.onload = function(){ window.AuraLogo.getFile().then(function(f){ if (f){ lpAddFile(f); if ($('#ubSend').classList.contains('on')) renderFiles(); } if (S.edit) renderCfg(); }); };
+    document.head.appendChild(lp);
     var add = p.get('add') || p.get('product');
     if (add && S.byCode[add]) openCfg(add);
   }).catch(function(){
