@@ -232,6 +232,10 @@
     }
 
     var spec = {};
+    /* Style pages (a-frames, magnets, stickers): product_prices.options carries
+       the "style" key, and the server price lock matches options exactly, so
+       the style must travel in the spec or checkout rejects the line. */
+    if (STYLES) spec.style = sel.style;
     axesFor(sel.style).forEach(function (a) { spec[a[0]] = sel[a[0]]; });
 
     buyable = { spec: spec, qty: qty, cents: p.cents };

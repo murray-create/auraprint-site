@@ -133,15 +133,27 @@
     if(justPaid || paid){
       banner = '<div class="okbanner"><div class="tick">&#10003;</div><div>' +
         '<h2>Payment received</h2>' +
-        '<p>Thanks. Your job is in the queue and we have emailed your receipt' +
+        '<p>Thanks. We check your artwork next and email your proof to approve. We have emailed your receipt' +
         (d.invoice ? ' and tax invoice ' + C.esc(d.invoice.invoice_number) : '') + '.</p></div></div>';
     }
 
+    /* ---- proofs: every online order is proofed before it prints ---------
+       get_order_by_token returns each line's latest live proof. The customer
+       approves from here or from the emailed link; both open proof.html. */
+    var its = d.items || [];
+    var okStatus = ['approved','in_production','dispatched','complete'];
+    var allApproved = its.length > 0 && its.every(function(i){ return okStatus.indexOf(i.status) > -1; });
+    var waiting = its.filter(function(i){ return i.proof && i.proof.status === 'sent'; });
+    var proofNote = allApproved ? 'Approved'
+      : waiting.length ? 'Your proof is ready. Review and approve it below'
+      : 'We check your artwork, then email your proof to approve';
+
     var steps = [
-      { on: true,    t:'Order placed',  s:'Order ' + d.order_number + (d.invoice ? ' · invoice ' + d.invoice.invoice_number : '') },
-      { on: paid,    t:'Payment',       s: paid ? 'Received in full' : 'Waiting on payment — nothing prints until it clears' },
-      { on: inProd,  t:'In production', s: inProd ? 'On press now' : 'Starts as soon as payment and artwork are sorted' },
-      { on: shipped, t:'Dispatched',    s: shipped ? (C.esc(d.tracking.carrier||'Courier') + ' · ' + C.esc(d.tracking.number)) : 'We email tracking the moment it leaves' }
+      { on: true,        t:'Order placed',   s:'Order ' + d.order_number + (d.invoice ? ' · invoice ' + d.invoice.invoice_number : '') },
+      { on: paid,        t:'Payment',        s: paid ? 'Received in full' : 'Waiting on payment — nothing prints until it clears' },
+      { on: allApproved, t:'Proof approved', s: proofNote },
+      { on: inProd,      t:'In production',  s: inProd ? 'On press now' : 'Starts once payment clears and your proof is approved' },
+      { on: shipped,     t:'Dispatched',     s: shipped ? (C.esc(d.tracking.carrier||'Courier') + ' · ' + C.esc(d.tracking.number)) : 'We email tracking the moment it leaves' }
     ];
     var cur = steps.findIndex(function(x){ return !x.on; });
 
@@ -149,6 +161,27 @@
       return '<div class="linerow"><span>' + C.esc(i.description) + ' &times; ' +
         Number(i.qty).toLocaleString('en-AU') + '</span><b>' + C.money(i.price_inc_cents) + '</b></div>';
     }).join('');
+
+    var proofBlock = '';
+    if (its.some(function(i){ return i.proof; })) {
+      proofBlock = '<div class="panel" style="margin-top:18px' + (waiting.length ? ';border:2px solid #EC4899' : '') + '">' +
+        '<h2 style="font-size:20px;margin-bottom:4px">Your proof' + (its.length > 1 ? 's' : '') + '</h2>' +
+        '<p style="color:#6f6960;font-size:14px;margin-bottom:12px">' +
+          (waiting.length ? 'Check spelling, phone numbers, layout and colours. Nothing prints until you approve.'
+                          : 'A record of what you approved for print.') + '</p>' +
+        its.map(function(i){
+          var p = i.proof, right;
+          if (!p) right = '<span style="color:#948d83;font-size:14px">Proof on its way</span>';
+          else if (p.status === 'sent') right = '<a class="btn btn-aura" style="padding:9px 18px;font-size:14px" href="proof.html?t=' +
+            encodeURIComponent(p.token) + '">View and approve proof &rarr;</a>';
+          else if (p.status === 'approved') right = '<span style="color:#1f7a4c;font-weight:700;font-size:14px">&#10003; Approved' +
+            (p.approver_name ? ' by ' + C.esc(p.approver_name) : '') + '</span>';
+          else right = '<span style="color:#6f6960;font-size:14px">Changes requested. A new proof is on its way.</span>';
+          return '<div class="linerow" style="align-items:center;gap:12px;flex-wrap:wrap"><span>' + C.esc(i.description) +
+            (p ? ' <span style="color:#948d83;font-size:13px">&middot; proof v' + Number(p.version) + '</span>' : '') +
+            '</span>' + right + '</div>';
+        }).join('') + '</div>';
+    }
 
     var payBlock = '';
     if(!paid){
@@ -180,6 +213,8 @@
             '<span><b>' + x.t + '</b><span>' + x.s + '</span></span></li>';
         }).join('') + '</ul>' +
       '</div>' +
+
+      proofBlock +
 
       '<div class="panel" style="margin-top:18px">' +
         '<h2 style="font-size:20px;margin-bottom:10px">What we are printing</h2>' + lines +

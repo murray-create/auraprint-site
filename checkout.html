@@ -320,12 +320,9 @@
               '<div class="types">PDF ONLY &middot; UP TO 50MB &middot; 3MM BLEED &middot; CMYK</div>' +
               '<div style="font-size:13px;color:#948d83;margin-top:8px" id="msg_'+i+'"></div></div>') +
           '<div style="margin-top:14px">' +
-            '<div class="choice '+(l.mode==='print_ready'?'sel':'')+'" data-mode="print_ready" data-i="'+i+'">' +
-              '<span class="radio"></span><div><h4>My file is print ready <span class="pill fast">Fastest</span></h4>' +
-              '<p>Goes straight to press once payment clears. You are confirming the artwork is correct, spelling included.</p></div></div>' +
-            '<div class="choice '+(l.mode==='needs_proof'?'sel':'')+'" data-mode="needs_proof" data-i="'+i+'">' +
-              '<span class="radio"></span><div><h4>Send me a proof first <span class="pill safe">Adds a step</span></h4>' +
-              '<p>We prepare a proof and email you a link. Nothing prints until you approve it.</p></div></div>' +
+            '<div class="choice sel" data-mode="needs_proof" data-i="'+i+'" style="cursor:default;margin-bottom:0">' +
+              '<span class="radio"></span><div><h4>You approve a proof before we print <span class="pill safe">Included</span></h4>' +
+              '<p>We check your file, then email you a link to your proof. You approve it online. Nothing prints until you do.</p></div></div>' +
           '</div>' +
         '</div>';
       }).join('') +
